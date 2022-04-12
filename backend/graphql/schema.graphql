@@ -1,0 +1,111 @@
+# Maps a Time GraphQL scalar to a Go time.Time struct.
+scalar Time
+
+# Define an enumeration type and map it later to Ent enum (Go type).
+# https://graphql.org/learn/schema/#enumeration-types
+enum Status {
+    IN_PROGRESS
+    COMPLETED
+}
+
+interface Node {
+    id: ID!
+}
+
+# Define an object type and map it later to the generated Ent model.
+# https://graphql.org/learn/schema/#object-types-and-fields
+type Movie implements Node   {
+    id: ID!
+    name: String!
+    rank: Int!
+    description: String!
+    director: Director!
+    reviews: [Review!]
+}
+
+type Director {
+    id: ID!
+    name: String!
+    movies: [Movie!]
+}
+
+type Review {
+    id: ID!
+    text: String!
+    rank: Int!
+    movie: Movie!
+}
+
+type User {
+    id: ID!
+    firstname: String!
+    lastname: String!
+    nickname: String!
+    description: String!
+    password: String!
+    email: String!
+    birthday: String!
+    reviews: [Review!]
+}
+
+
+# These enums are matched the entgql annotations in the ent/schema.
+enum MovieOrderField {
+    MOVIE_NAME
+    MOVIE_DESCRIPTION
+    MOVIE_RANK
+}
+
+enum DirectorOrderField {
+    DIRECTOR_NAME
+}
+
+enum UserOrderField {
+    NICKNAME
+}
+
+# Define an input type for the mutation below.
+# https://graphql.org/learn/schema/#input-types
+input MovieInput {
+    description: String!
+    name: String!
+    rank: Int!
+    director_id: Int!
+}
+
+input DirectorInput {
+    name: String!
+}
+
+input ReviewInput {
+    text: String!
+    rank: Int!
+}
+
+input UserInput {
+    firstname: String!
+    lastname: String!
+    nickname: String!
+    description: String!
+    password: String!
+    email: String!
+    birthday: String!
+}
+
+# Define a mutation for creating movies.
+# https://graphql.org/learn/queries/#mutations
+type Mutation {
+    createMovie(movie: MovieInput!): Movie!
+    createDirector(director: DirectorInput!): Director!
+    createReview(review: ReviewInput!): Review!
+    createUser(user: UserInput!): User!
+}
+
+# Define a query for getting all movies.
+type Query {
+    movies: [Movie!]
+    directors: [Director!]
+    users: [User!]
+    node(id: ID!): Node
+    nodes(ids: [ID!]!): [Node]!
+}
