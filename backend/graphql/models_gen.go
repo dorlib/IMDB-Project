@@ -10,6 +10,7 @@ type MovieInput struct {
 	Description string `json:"description"`
 	Title       string `json:"title"`
 	Rank        int    `json:"rank"`
+	Genre       string `json:"genre"`
 	DirectorID  int    `json:"director_id"`
 }
 

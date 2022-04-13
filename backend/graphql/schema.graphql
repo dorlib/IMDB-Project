@@ -19,6 +19,7 @@ type Movie implements Node   {
     title: String!
     rank: Int!
     description: String!
+    genre: String!
     director: Director!
     reviews: [Review!]
 }
@@ -54,6 +55,7 @@ enum MovieOrderField {
     MOVIE_TITLE
     MOVIE_DESCRIPTION
     MOVIE_RANK
+    GENRE
 }
 
 enum DirectorOrderField {
@@ -70,7 +72,9 @@ input MovieInput {
     description: String!
     title: String!
     rank: Int!
+    genre: String!
     director_id: Int!
+    director: String!
 }
 
 input DirectorInput {

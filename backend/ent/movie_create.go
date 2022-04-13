@@ -39,6 +39,12 @@ func (mc *MovieCreate) SetRank(i int) *MovieCreate {
 	return mc
 }
 
+// SetGenre sets the "genre" field.
+func (mc *MovieCreate) SetGenre(s string) *MovieCreate {
+	mc.mutation.SetGenre(s)
+	return mc
+}
+
 // SetDirectorID sets the "director_id" field.
 func (mc *MovieCreate) SetDirectorID(i int) *MovieCreate {
 	mc.mutation.SetDirectorID(i)
@@ -152,6 +158,9 @@ func (mc *MovieCreate) check() error {
 	if _, ok := mc.mutation.Rank(); !ok {
 		return &ValidationError{Name: "rank", err: errors.New(`ent: missing required field "Movie.rank"`)}
 	}
+	if _, ok := mc.mutation.Genre(); !ok {
+		return &ValidationError{Name: "genre", err: errors.New(`ent: missing required field "Movie.genre"`)}
+	}
 	return nil
 }
 
@@ -202,6 +211,14 @@ func (mc *MovieCreate) createSpec() (*Movie, *sqlgraph.CreateSpec) {
 			Column: movie.FieldRank,
 		})
 		_node.Rank = value
+	}
+	if value, ok := mc.mutation.Genre(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: movie.FieldGenre,
+		})
+		_node.Genre = value
 	}
 	if nodes := mc.mutation.DirectorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -53,6 +53,7 @@ type ComplexityRoot struct {
 	Movie struct {
 		Description func(childComplexity int) int
 		Director    func(childComplexity int) int
+		Genre       func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Rank        func(childComplexity int) int
 		Reviews     func(childComplexity int) int
@@ -157,6 +158,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Movie.Director(childComplexity), true
+
+	case "Movie.genre":
+		if e.complexity.Movie.Genre == nil {
+			break
+		}
+
+		return e.complexity.Movie.Genre(childComplexity), true
 
 	case "Movie.id":
 		if e.complexity.Movie.ID == nil {
@@ -455,6 +463,7 @@ type Movie implements Node   {
     title: String!
     rank: Int!
     description: String!
+    genre: String!
     director: Director!
     reviews: [Review!]
 }
@@ -490,6 +499,7 @@ enum MovieOrderField {
     MOVIE_TITLE
     MOVIE_DESCRIPTION
     MOVIE_RANK
+    GENRE
 }
 
 enum DirectorOrderField {
@@ -506,6 +516,7 @@ input MovieInput {
     description: String!
     title: String!
     rank: Int!
+    genre: String!
     director_id: Int!
 }
 
@@ -921,6 +932,41 @@ func (ec *executionContext) _Movie_description(ctx context.Context, field graphq
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Description, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Movie_genre(ctx context.Context, field graphql.CollectedField, obj *ent.Movie) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Movie",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Genre, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3114,6 +3160,14 @@ func (ec *executionContext) unmarshalInputMovieInput(ctx context.Context, obj in
 			if err != nil {
 				return it, err
 			}
+		case "genre":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("genre"))
+			it.Genre, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "director_id":
 			var err error
 
@@ -3353,6 +3407,16 @@ func (ec *executionContext) _Movie(ctx context.Context, sel ast.SelectionSet, ob
 		case "description":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Movie_description(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "genre":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Movie_genre(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

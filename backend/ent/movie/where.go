@@ -113,6 +113,13 @@ func Rank(v int) predicate.Movie {
 	})
 }
 
+// Genre applies equality check predicate on the "genre" field. It's identical to GenreEQ.
+func Genre(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGenre), v))
+	})
+}
+
 // DirectorID applies equality check predicate on the "director_id" field. It's identical to DirectorIDEQ.
 func DirectorID(v int) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
@@ -415,6 +422,117 @@ func RankLT(v int) predicate.Movie {
 func RankLTE(v int) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldRank), v))
+	})
+}
+
+// GenreEQ applies the EQ predicate on the "genre" field.
+func GenreEQ(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGenre), v))
+	})
+}
+
+// GenreNEQ applies the NEQ predicate on the "genre" field.
+func GenreNEQ(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldGenre), v))
+	})
+}
+
+// GenreIn applies the In predicate on the "genre" field.
+func GenreIn(vs ...string) predicate.Movie {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Movie(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldGenre), v...))
+	})
+}
+
+// GenreNotIn applies the NotIn predicate on the "genre" field.
+func GenreNotIn(vs ...string) predicate.Movie {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Movie(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldGenre), v...))
+	})
+}
+
+// GenreGT applies the GT predicate on the "genre" field.
+func GenreGT(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldGenre), v))
+	})
+}
+
+// GenreGTE applies the GTE predicate on the "genre" field.
+func GenreGTE(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldGenre), v))
+	})
+}
+
+// GenreLT applies the LT predicate on the "genre" field.
+func GenreLT(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldGenre), v))
+	})
+}
+
+// GenreLTE applies the LTE predicate on the "genre" field.
+func GenreLTE(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldGenre), v))
+	})
+}
+
+// GenreContains applies the Contains predicate on the "genre" field.
+func GenreContains(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldGenre), v))
+	})
+}
+
+// GenreHasPrefix applies the HasPrefix predicate on the "genre" field.
+func GenreHasPrefix(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldGenre), v))
+	})
+}
+
+// GenreHasSuffix applies the HasSuffix predicate on the "genre" field.
+func GenreHasSuffix(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldGenre), v))
+	})
+}
+
+// GenreEqualFold applies the EqualFold predicate on the "genre" field.
+func GenreEqualFold(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldGenre), v))
+	})
+}
+
+// GenreContainsFold applies the ContainsFold predicate on the "genre" field.
+func GenreContainsFold(v string) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldGenre), v))
 	})
 }
 

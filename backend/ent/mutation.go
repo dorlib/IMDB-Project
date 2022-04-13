@@ -445,6 +445,7 @@ type MovieMutation struct {
 	description     *string
 	rank            *int
 	addrank         *int
+	genre           *string
 	clearedFields   map[string]struct{}
 	director        *int
 	cleareddirector bool
@@ -682,6 +683,42 @@ func (m *MovieMutation) ResetRank() {
 	m.addrank = nil
 }
 
+// SetGenre sets the "genre" field.
+func (m *MovieMutation) SetGenre(s string) {
+	m.genre = &s
+}
+
+// Genre returns the value of the "genre" field in the mutation.
+func (m *MovieMutation) Genre() (r string, exists bool) {
+	v := m.genre
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGenre returns the old "genre" field's value of the Movie entity.
+// If the Movie object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MovieMutation) OldGenre(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGenre is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGenre requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGenre: %w", err)
+	}
+	return oldValue.Genre, nil
+}
+
+// ResetGenre resets all changes to the "genre" field.
+func (m *MovieMutation) ResetGenre() {
+	m.genre = nil
+}
+
 // SetDirectorID sets the "director_id" field.
 func (m *MovieMutation) SetDirectorID(i int) {
 	m.director = &i
@@ -830,7 +867,7 @@ func (m *MovieMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *MovieMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.title != nil {
 		fields = append(fields, movie.FieldTitle)
 	}
@@ -839,6 +876,9 @@ func (m *MovieMutation) Fields() []string {
 	}
 	if m.rank != nil {
 		fields = append(fields, movie.FieldRank)
+	}
+	if m.genre != nil {
+		fields = append(fields, movie.FieldGenre)
 	}
 	if m.director != nil {
 		fields = append(fields, movie.FieldDirectorID)
@@ -857,6 +897,8 @@ func (m *MovieMutation) Field(name string) (ent.Value, bool) {
 		return m.Description()
 	case movie.FieldRank:
 		return m.Rank()
+	case movie.FieldGenre:
+		return m.Genre()
 	case movie.FieldDirectorID:
 		return m.DirectorID()
 	}
@@ -874,6 +916,8 @@ func (m *MovieMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldDescription(ctx)
 	case movie.FieldRank:
 		return m.OldRank(ctx)
+	case movie.FieldGenre:
+		return m.OldGenre(ctx)
 	case movie.FieldDirectorID:
 		return m.OldDirectorID(ctx)
 	}
@@ -905,6 +949,13 @@ func (m *MovieMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetRank(v)
+		return nil
+	case movie.FieldGenre:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGenre(v)
 		return nil
 	case movie.FieldDirectorID:
 		v, ok := value.(int)
@@ -994,6 +1045,9 @@ func (m *MovieMutation) ResetField(name string) error {
 		return nil
 	case movie.FieldRank:
 		m.ResetRank()
+		return nil
+	case movie.FieldGenre:
+		m.ResetGenre()
 		return nil
 	case movie.FieldDirectorID:
 		m.ResetDirectorID()

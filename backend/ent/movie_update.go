@@ -54,6 +54,12 @@ func (mu *MovieUpdate) AddRank(i int) *MovieUpdate {
 	return mu
 }
 
+// SetGenre sets the "genre" field.
+func (mu *MovieUpdate) SetGenre(s string) *MovieUpdate {
+	mu.mutation.SetGenre(s)
+	return mu
+}
+
 // SetDirectorID sets the "director_id" field.
 func (mu *MovieUpdate) SetDirectorID(i int) *MovieUpdate {
 	mu.mutation.SetDirectorID(i)
@@ -226,6 +232,13 @@ func (mu *MovieUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: movie.FieldRank,
 		})
 	}
+	if value, ok := mu.mutation.Genre(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: movie.FieldGenre,
+		})
+	}
 	if mu.mutation.DirectorCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -356,6 +369,12 @@ func (muo *MovieUpdateOne) SetRank(i int) *MovieUpdateOne {
 // AddRank adds i to the "rank" field.
 func (muo *MovieUpdateOne) AddRank(i int) *MovieUpdateOne {
 	muo.mutation.AddRank(i)
+	return muo
+}
+
+// SetGenre sets the "genre" field.
+func (muo *MovieUpdateOne) SetGenre(s string) *MovieUpdateOne {
+	muo.mutation.SetGenre(s)
 	return muo
 }
 
@@ -553,6 +572,13 @@ func (muo *MovieUpdateOne) sqlSave(ctx context.Context) (_node *Movie, err error
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: movie.FieldRank,
+		})
+	}
+	if value, ok := muo.mutation.Genre(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: movie.FieldGenre,
 		})
 	}
 	if muo.mutation.DirectorCleared() {

@@ -18,6 +18,7 @@ func (Movie) Fields() []ent.Field {
 		field.String("title").Unique().Annotations(entgql.OrderField("MOVIE_TITLE")),
 		field.String("description").Annotations(entgql.OrderField("MOVIE_DESCRIPTION")),
 		field.Int("rank").Annotations(entgql.OrderField("MOVIE_RANK")),
+		field.String("genre").Annotations(entgql.OrderField("GENRE")),
 		field.Int("director_id").Optional(),
 	}
 }

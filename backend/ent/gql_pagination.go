@@ -729,6 +729,16 @@ var (
 			}
 		},
 	}
+	// MovieOrderFieldGenre orders Movie by genre.
+	MovieOrderFieldGenre = &MovieOrderField{
+		field: movie.FieldGenre,
+		toCursor: func(m *Movie) Cursor {
+			return Cursor{
+				ID:    m.ID,
+				Value: m.Genre,
+			}
+		},
+	}
 )
 
 // String implement fmt.Stringer interface.
@@ -741,6 +751,8 @@ func (f MovieOrderField) String() string {
 		str = "MOVIE_DESCRIPTION"
 	case movie.FieldRank:
 		str = "MOVIE_RANK"
+	case movie.FieldGenre:
+		str = "GENRE"
 	}
 	return str
 }
@@ -763,6 +775,8 @@ func (f *MovieOrderField) UnmarshalGQL(v interface{}) error {
 		*f = *MovieOrderFieldDescription
 	case "MOVIE_RANK":
 		*f = *MovieOrderFieldRank
+	case "GENRE":
+		*f = *MovieOrderFieldGenre
 	default:
 		return fmt.Errorf("%s is not a valid MovieOrderField", str)
 	}

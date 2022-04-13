@@ -91,7 +91,7 @@ function NewMovieForm(props) {
 
         <div className={classes.control}>
           <label htmlFor="genre">What is the genre of this movie?</label>
-          <select name="genre" id="genre" ref={genreInputRef}>
+          <select name="genre" id="genre" ref={genreInputRef} required>
             <option value="action">Action</option>
             <option value="drama">Drama</option>
             <option value="comedy">Comedy</option>

@@ -25,6 +25,7 @@ var (
 		{Name: "title", Type: field.TypeString, Unique: true},
 		{Name: "description", Type: field.TypeString},
 		{Name: "rank", Type: field.TypeInt},
+		{Name: "genre", Type: field.TypeString},
 		{Name: "director_id", Type: field.TypeInt, Nullable: true},
 	}
 	// MoviesTable holds the schema information for the "movies" table.
@@ -35,7 +36,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "movies_directors_movies",
-				Columns:    []*schema.Column{MoviesColumns[4]},
+				Columns:    []*schema.Column{MoviesColumns[5]},
 				RefColumns: []*schema.Column{DirectorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

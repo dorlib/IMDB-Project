@@ -13,6 +13,8 @@ const (
 	FieldDescription = "description"
 	// FieldRank holds the string denoting the rank field in the database.
 	FieldRank = "rank"
+	// FieldGenre holds the string denoting the genre field in the database.
+	FieldGenre = "genre"
 	// FieldDirectorID holds the string denoting the director_id field in the database.
 	FieldDirectorID = "director_id"
 	// EdgeDirector holds the string denoting the director edge name in mutations.
@@ -43,6 +45,7 @@ var Columns = []string{
 	FieldTitle,
 	FieldDescription,
 	FieldRank,
+	FieldGenre,
 	FieldDirectorID,
 }
 

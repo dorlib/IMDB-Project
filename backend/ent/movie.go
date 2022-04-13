@@ -22,6 +22,8 @@ type Movie struct {
 	Description string `json:"description,omitempty"`
 	// Rank holds the value of the "rank" field.
 	Rank int `json:"rank,omitempty"`
+	// Genre holds the value of the "genre" field.
+	Genre string `json:"genre,omitempty"`
 	// DirectorID holds the value of the "director_id" field.
 	DirectorID int `json:"director_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -70,7 +72,7 @@ func (*Movie) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case movie.FieldID, movie.FieldRank, movie.FieldDirectorID:
 			values[i] = new(sql.NullInt64)
-		case movie.FieldTitle, movie.FieldDescription:
+		case movie.FieldTitle, movie.FieldDescription, movie.FieldGenre:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Movie", columns[i])
@@ -110,6 +112,12 @@ func (m *Movie) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field rank", values[i])
 			} else if value.Valid {
 				m.Rank = int(value.Int64)
+			}
+		case movie.FieldGenre:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field genre", values[i])
+			} else if value.Valid {
+				m.Genre = value.String
 			}
 		case movie.FieldDirectorID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -161,6 +169,8 @@ func (m *Movie) String() string {
 	builder.WriteString(m.Description)
 	builder.WriteString(", rank=")
 	builder.WriteString(fmt.Sprintf("%v", m.Rank))
+	builder.WriteString(", genre=")
+	builder.WriteString(m.Genre)
 	builder.WriteString(", director_id=")
 	builder.WriteString(fmt.Sprintf("%v", m.DirectorID))
 	builder.WriteByte(')')
