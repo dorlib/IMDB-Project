@@ -9,7 +9,7 @@ function DirectorList(props) {
                     key={director.id}
                     id={director.id}
                     image={director.image}
-                    name={director.title}
+                    name={director.name}
                 />
             ))}
         </ul>

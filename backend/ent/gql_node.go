@@ -86,12 +86,12 @@ func (m *Movie) Node(ctx context.Context) (node *Node, err error) {
 		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
-	if buf, err = json.Marshal(m.Name); err != nil {
+	if buf, err = json.Marshal(m.Title); err != nil {
 		return nil, err
 	}
 	node.Fields[0] = &Field{
 		Type:  "string",
-		Name:  "name",
+		Name:  "title",
 		Value: string(buf),
 	}
 	if buf, err = json.Marshal(m.Description); err != nil {

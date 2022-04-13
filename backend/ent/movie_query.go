@@ -328,12 +328,12 @@ func (mq *MovieQuery) WithReviews(opts ...func(*ReviewQuery)) *MovieQuery {
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		Title string `json:"title,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Movie.Query().
-//		GroupBy(movie.FieldName).
+//		GroupBy(movie.FieldTitle).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -355,11 +355,11 @@ func (mq *MovieQuery) GroupBy(field string, fields ...string) *MovieGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		Title string `json:"title,omitempty"`
 //	}
 //
 //	client.Movie.Query().
-//		Select(movie.FieldName).
+//		Select(movie.FieldTitle).
 //		Scan(ctx, &v)
 //
 func (mq *MovieQuery) Select(fields ...string) *MovieSelect {

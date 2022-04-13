@@ -82,16 +82,15 @@ function MainNavigation() {
               />
             </RadioGroup>
           </FormControl>
-          <PopupState variant="popover" popupId="demo-popup-menu">
+          <PopupState variant="popover" popupId="demo-popup-menu" >
             {(popupState) => (
                 <React.Fragment >
                   <Button variant="contained" {...bindTrigger(popupState)} className={classes.menu}>
                     Menu
                   </Button>
-                  <Menu {...bindMenu(popupState)}>
+                  <Menu {...bindMenu(popupState)} >
                     <MenuItem><Link to={"/"}>All Movies</Link></MenuItem>
                     <MenuItem><Link to={"/directors"}>All Directors</Link></MenuItem>
-                    <MenuItem onClick={popupState.close}>Logout</MenuItem>
                   </Menu>
                 </React.Fragment>
             )}

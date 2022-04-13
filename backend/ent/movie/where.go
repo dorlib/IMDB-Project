@@ -92,10 +92,10 @@ func IDLTE(id int) predicate.Movie {
 	})
 }
 
-// Name applies equality check predicate on the "name" field. It's identical to NameEQ.
-func Name(v string) predicate.Movie {
+// Title applies equality check predicate on the "title" field. It's identical to TitleEQ.
+func Title(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldName), v))
+		s.Where(sql.EQ(s.C(FieldTitle), v))
 	})
 }
 
@@ -120,22 +120,22 @@ func DirectorID(v int) predicate.Movie {
 	})
 }
 
-// NameEQ applies the EQ predicate on the "name" field.
-func NameEQ(v string) predicate.Movie {
+// TitleEQ applies the EQ predicate on the "title" field.
+func TitleEQ(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldName), v))
+		s.Where(sql.EQ(s.C(FieldTitle), v))
 	})
 }
 
-// NameNEQ applies the NEQ predicate on the "name" field.
-func NameNEQ(v string) predicate.Movie {
+// TitleNEQ applies the NEQ predicate on the "title" field.
+func TitleNEQ(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldName), v))
+		s.Where(sql.NEQ(s.C(FieldTitle), v))
 	})
 }
 
-// NameIn applies the In predicate on the "name" field.
-func NameIn(vs ...string) predicate.Movie {
+// TitleIn applies the In predicate on the "title" field.
+func TitleIn(vs ...string) predicate.Movie {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -147,12 +147,12 @@ func NameIn(vs ...string) predicate.Movie {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldName), v...))
+		s.Where(sql.In(s.C(FieldTitle), v...))
 	})
 }
 
-// NameNotIn applies the NotIn predicate on the "name" field.
-func NameNotIn(vs ...string) predicate.Movie {
+// TitleNotIn applies the NotIn predicate on the "title" field.
+func TitleNotIn(vs ...string) predicate.Movie {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -164,70 +164,70 @@ func NameNotIn(vs ...string) predicate.Movie {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldName), v...))
+		s.Where(sql.NotIn(s.C(FieldTitle), v...))
 	})
 }
 
-// NameGT applies the GT predicate on the "name" field.
-func NameGT(v string) predicate.Movie {
+// TitleGT applies the GT predicate on the "title" field.
+func TitleGT(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldName), v))
+		s.Where(sql.GT(s.C(FieldTitle), v))
 	})
 }
 
-// NameGTE applies the GTE predicate on the "name" field.
-func NameGTE(v string) predicate.Movie {
+// TitleGTE applies the GTE predicate on the "title" field.
+func TitleGTE(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldName), v))
+		s.Where(sql.GTE(s.C(FieldTitle), v))
 	})
 }
 
-// NameLT applies the LT predicate on the "name" field.
-func NameLT(v string) predicate.Movie {
+// TitleLT applies the LT predicate on the "title" field.
+func TitleLT(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldName), v))
+		s.Where(sql.LT(s.C(FieldTitle), v))
 	})
 }
 
-// NameLTE applies the LTE predicate on the "name" field.
-func NameLTE(v string) predicate.Movie {
+// TitleLTE applies the LTE predicate on the "title" field.
+func TitleLTE(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldName), v))
+		s.Where(sql.LTE(s.C(FieldTitle), v))
 	})
 }
 
-// NameContains applies the Contains predicate on the "name" field.
-func NameContains(v string) predicate.Movie {
+// TitleContains applies the Contains predicate on the "title" field.
+func TitleContains(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldName), v))
+		s.Where(sql.Contains(s.C(FieldTitle), v))
 	})
 }
 
-// NameHasPrefix applies the HasPrefix predicate on the "name" field.
-func NameHasPrefix(v string) predicate.Movie {
+// TitleHasPrefix applies the HasPrefix predicate on the "title" field.
+func TitleHasPrefix(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldName), v))
+		s.Where(sql.HasPrefix(s.C(FieldTitle), v))
 	})
 }
 
-// NameHasSuffix applies the HasSuffix predicate on the "name" field.
-func NameHasSuffix(v string) predicate.Movie {
+// TitleHasSuffix applies the HasSuffix predicate on the "title" field.
+func TitleHasSuffix(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldName), v))
+		s.Where(sql.HasSuffix(s.C(FieldTitle), v))
 	})
 }
 
-// NameEqualFold applies the EqualFold predicate on the "name" field.
-func NameEqualFold(v string) predicate.Movie {
+// TitleEqualFold applies the EqualFold predicate on the "title" field.
+func TitleEqualFold(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldName), v))
+		s.Where(sql.EqualFold(s.C(FieldTitle), v))
 	})
 }
 
-// NameContainsFold applies the ContainsFold predicate on the "name" field.
-func NameContainsFold(v string) predicate.Movie {
+// TitleContainsFold applies the ContainsFold predicate on the "title" field.
+func TitleContainsFold(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldName), v))
+		s.Where(sql.ContainsFold(s.C(FieldTitle), v))
 	})
 }
 

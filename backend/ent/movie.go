@@ -16,8 +16,8 @@ type Movie struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
+	// Title holds the value of the "title" field.
+	Title string `json:"title,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
 	// Rank holds the value of the "rank" field.
@@ -70,7 +70,7 @@ func (*Movie) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case movie.FieldID, movie.FieldRank, movie.FieldDirectorID:
 			values[i] = new(sql.NullInt64)
-		case movie.FieldName, movie.FieldDescription:
+		case movie.FieldTitle, movie.FieldDescription:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Movie", columns[i])
@@ -93,11 +93,11 @@ func (m *Movie) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			m.ID = int(value.Int64)
-		case movie.FieldName:
+		case movie.FieldTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field name", values[i])
+				return fmt.Errorf("unexpected type %T for field title", values[i])
 			} else if value.Valid {
-				m.Name = value.String
+				m.Title = value.String
 			}
 		case movie.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -155,8 +155,8 @@ func (m *Movie) String() string {
 	var builder strings.Builder
 	builder.WriteString("Movie(")
 	builder.WriteString(fmt.Sprintf("id=%v", m.ID))
-	builder.WriteString(", name=")
-	builder.WriteString(m.Name)
+	builder.WriteString(", title=")
+	builder.WriteString(m.Title)
 	builder.WriteString(", description=")
 	builder.WriteString(m.Description)
 	builder.WriteString(", rank=")

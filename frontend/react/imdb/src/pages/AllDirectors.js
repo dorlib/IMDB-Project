@@ -1,32 +1,41 @@
-import React, { useState, useEffect } from "react";
-import DirectorList from "../components/movies/DirectorList";
+import React from "react";
 import {gql, useQuery} from "@apollo/client";
+import allDirectors from "./AllDirectors";
+
 
 function AllDirectorsPage() {
     const GET_DIRECTORS = gql`
-        query Directors{
+        query Directors {
             directors {
                 name
+                id
                 movies {
-                    name
+                    title
+                    id
                 }
             }
         }
     `;
 
-    const { loading, error, data } = useQuery(GET_DIRECTORS)
-    console.log(data, loading, error)
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :</p>;
+    const { data, loading, error} = useQuery(GET_DIRECTORS)
+    if (loading) return <p style={{color: "yellow"}}>Loading...</p>;
+    if (error) return <p style={{color: "yellow"}}>Error :</p>;
+    let loaded
 
-    return data.movies.map(( {name, rank,}) => (
-        <div key={name}>
-            <p style={{color: "yellow"}}>
-                {name}: {name}
-            </p>
+    loaded = data.directors.map(({name, movies},id) => (
+        <div style={{color: "yellow"}} key={id}>
+            <div>
+                {name}:
+                {movies.map(({title,id}) => (
+                    <li key={movies.id}>
+                        {title}
+                    </li>
+                ))}
+            </div>
         </div>
     ));
 
+    return loaded
 }
 
 export default AllDirectorsPage;

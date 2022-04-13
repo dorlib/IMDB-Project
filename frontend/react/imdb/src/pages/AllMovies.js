@@ -1,29 +1,32 @@
-import React, { useState, useEffect } from "react";
-import MovieList from "../components/movies/MovieList";
+import React, {useState} from "react";
 import {gql, useQuery} from "@apollo/client";
 
 function AllMoviesPage() {
+    const [loadedMovies, setLoadedMovies] = useState([]);
     const GET_MOVIES = gql`
         query Movies{
             movies {
                 rank
-                name
+                id
+                title
             }
         }
     `;
 
     const { loading, error, data } = useQuery(GET_MOVIES)
-        console.log(data, loading, error)
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :</p>;
+        let loaded
 
-        return data.movies.map(( {name, rank}) => (
-            <div key={rank}>
+        loaded = data.movies.map(( {title, rank, id}) => (
+            <div key={id}>
                 <p style={{color: "yellow"}}>
-                    {name}: {rank}
+                    {title}: {rank}
                 </p>
             </div>
         ));
+
+        return loaded
 
 }
 

@@ -7,7 +7,6 @@ import {
     InMemoryCache,
     ApolloProvider,
 } from "@apollo/client";
-import { createHttpLink} from "@apollo/client";
 
 import "./index.css";
 import App from "./App";

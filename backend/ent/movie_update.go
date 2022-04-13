@@ -29,9 +29,9 @@ func (mu *MovieUpdate) Where(ps ...predicate.Movie) *MovieUpdate {
 	return mu
 }
 
-// SetName sets the "name" field.
-func (mu *MovieUpdate) SetName(s string) *MovieUpdate {
-	mu.mutation.SetName(s)
+// SetTitle sets the "title" field.
+func (mu *MovieUpdate) SetTitle(s string) *MovieUpdate {
+	mu.mutation.SetTitle(s)
 	return mu
 }
 
@@ -198,11 +198,11 @@ func (mu *MovieUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := mu.mutation.Name(); ok {
+	if value, ok := mu.mutation.Title(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: movie.FieldName,
+			Column: movie.FieldTitle,
 		})
 	}
 	if value, ok := mu.mutation.Description(); ok {
@@ -334,9 +334,9 @@ type MovieUpdateOne struct {
 	mutation *MovieMutation
 }
 
-// SetName sets the "name" field.
-func (muo *MovieUpdateOne) SetName(s string) *MovieUpdateOne {
-	muo.mutation.SetName(s)
+// SetTitle sets the "title" field.
+func (muo *MovieUpdateOne) SetTitle(s string) *MovieUpdateOne {
+	muo.mutation.SetTitle(s)
 	return muo
 }
 
@@ -527,11 +527,11 @@ func (muo *MovieUpdateOne) sqlSave(ctx context.Context) (_node *Movie, err error
 			}
 		}
 	}
-	if value, ok := muo.mutation.Name(); ok {
+	if value, ok := muo.mutation.Title(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: movie.FieldName,
+			Column: movie.FieldTitle,
 		})
 	}
 	if value, ok := muo.mutation.Description(); ok {

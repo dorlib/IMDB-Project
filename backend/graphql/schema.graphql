@@ -16,7 +16,7 @@ interface Node {
 # https://graphql.org/learn/schema/#object-types-and-fields
 type Movie implements Node   {
     id: ID!
-    name: String!
+    title: String!
     rank: Int!
     description: String!
     director: Director!
@@ -51,7 +51,7 @@ type User {
 
 # These enums are matched the entgql annotations in the ent/schema.
 enum MovieOrderField {
-    MOVIE_NAME
+    MOVIE_TITLE
     MOVIE_DESCRIPTION
     MOVIE_RANK
 }
@@ -68,7 +68,7 @@ enum UserOrderField {
 # https://graphql.org/learn/schema/#input-types
 input MovieInput {
     description: String!
-    name: String!
+    title: String!
     rank: Int!
     director_id: Int!
 }

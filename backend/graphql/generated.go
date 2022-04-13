@@ -54,9 +54,9 @@ type ComplexityRoot struct {
 		Description func(childComplexity int) int
 		Director    func(childComplexity int) int
 		ID          func(childComplexity int) int
-		Name        func(childComplexity int) int
 		Rank        func(childComplexity int) int
 		Reviews     func(childComplexity int) int
+		Title       func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -165,13 +165,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Movie.ID(childComplexity), true
 
-	case "Movie.name":
-		if e.complexity.Movie.Name == nil {
-			break
-		}
-
-		return e.complexity.Movie.Name(childComplexity), true
-
 	case "Movie.rank":
 		if e.complexity.Movie.Rank == nil {
 			break
@@ -185,6 +178,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Movie.Reviews(childComplexity), true
+
+	case "Movie.title":
+		if e.complexity.Movie.Title == nil {
+			break
+		}
+
+		return e.complexity.Movie.Title(childComplexity), true
 
 	case "Mutation.createDirector":
 		if e.complexity.Mutation.CreateDirector == nil {
@@ -452,7 +452,7 @@ interface Node {
 # https://graphql.org/learn/schema/#object-types-and-fields
 type Movie implements Node   {
     id: ID!
-    name: String!
+    title: String!
     rank: Int!
     description: String!
     director: Director!
@@ -487,7 +487,7 @@ type User {
 
 # These enums are matched the entgql annotations in the ent/schema.
 enum MovieOrderField {
-    MOVIE_NAME
+    MOVIE_TITLE
     MOVIE_DESCRIPTION
     MOVIE_RANK
 }
@@ -504,7 +504,7 @@ enum UserOrderField {
 # https://graphql.org/learn/schema/#input-types
 input MovieInput {
     description: String!
-    name: String!
+    title: String!
     rank: Int!
     director_id: Int!
 }
@@ -832,7 +832,7 @@ func (ec *executionContext) _Movie_id(ctx context.Context, field graphql.Collect
 	return ec.marshalNID2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Movie_name(ctx context.Context, field graphql.CollectedField, obj *ent.Movie) (ret graphql.Marshaler) {
+func (ec *executionContext) _Movie_title(ctx context.Context, field graphql.CollectedField, obj *ent.Movie) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -850,7 +850,7 @@ func (ec *executionContext) _Movie_name(ctx context.Context, field graphql.Colle
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
+		return obj.Title, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3098,11 +3098,11 @@ func (ec *executionContext) unmarshalInputMovieInput(ctx context.Context, obj in
 			if err != nil {
 				return it, err
 			}
-		case "name":
+		case "title":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3330,9 +3330,9 @@ func (ec *executionContext) _Movie(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "name":
+		case "title":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Movie_name(ctx, field, obj)
+				return ec._Movie_title(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

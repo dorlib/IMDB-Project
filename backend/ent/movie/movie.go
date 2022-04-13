@@ -7,8 +7,8 @@ const (
 	Label = "movie"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldName holds the string denoting the name field in the database.
-	FieldName = "name"
+	// FieldTitle holds the string denoting the title field in the database.
+	FieldTitle = "title"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
 	// FieldRank holds the string denoting the rank field in the database.
@@ -40,7 +40,7 @@ const (
 // Columns holds all SQL columns for movie fields.
 var Columns = []string{
 	FieldID,
-	FieldName,
+	FieldTitle,
 	FieldDescription,
 	FieldRank,
 	FieldDirectorID,

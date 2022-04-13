@@ -21,9 +21,9 @@ type MovieCreate struct {
 	hooks    []Hook
 }
 
-// SetName sets the "name" field.
-func (mc *MovieCreate) SetName(s string) *MovieCreate {
-	mc.mutation.SetName(s)
+// SetTitle sets the "title" field.
+func (mc *MovieCreate) SetTitle(s string) *MovieCreate {
+	mc.mutation.SetTitle(s)
 	return mc
 }
 
@@ -143,8 +143,8 @@ func (mc *MovieCreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (mc *MovieCreate) check() error {
-	if _, ok := mc.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Movie.name"`)}
+	if _, ok := mc.mutation.Title(); !ok {
+		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Movie.title"`)}
 	}
 	if _, ok := mc.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Movie.description"`)}
@@ -179,13 +179,13 @@ func (mc *MovieCreate) createSpec() (*Movie, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := mc.mutation.Name(); ok {
+	if value, ok := mc.mutation.Title(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: movie.FieldName,
+			Column: movie.FieldTitle,
 		})
-		_node.Name = value
+		_node.Title = value
 	}
 	if value, ok := mc.mutation.Description(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

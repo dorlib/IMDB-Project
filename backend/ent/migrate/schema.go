@@ -22,7 +22,7 @@ var (
 	// MoviesColumns holds the columns for the "movies" table.
 	MoviesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "title", Type: field.TypeString, Unique: true},
 		{Name: "description", Type: field.TypeString},
 		{Name: "rank", Type: field.TypeInt},
 		{Name: "director_id", Type: field.TypeInt, Nullable: true},

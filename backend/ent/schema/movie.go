@@ -15,7 +15,7 @@ type Movie struct {
 // Fields of the Movie.
 func (Movie) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").Unique().Annotations(entgql.OrderField("MOVIE_NAME")),
+		field.String("title").Unique().Annotations(entgql.OrderField("MOVIE_TITLE")),
 		field.String("description").Annotations(entgql.OrderField("MOVIE_DESCRIPTION")),
 		field.Int("rank").Annotations(entgql.OrderField("MOVIE_RANK")),
 		field.Int("director_id").Optional(),

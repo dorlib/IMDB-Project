@@ -441,7 +441,7 @@ type MovieMutation struct {
 	op              Op
 	typ             string
 	id              *int
-	name            *string
+	title           *string
 	description     *string
 	rank            *int
 	addrank         *int
@@ -554,40 +554,40 @@ func (m *MovieMutation) IDs(ctx context.Context) ([]int, error) {
 	}
 }
 
-// SetName sets the "name" field.
-func (m *MovieMutation) SetName(s string) {
-	m.name = &s
+// SetTitle sets the "title" field.
+func (m *MovieMutation) SetTitle(s string) {
+	m.title = &s
 }
 
-// Name returns the value of the "name" field in the mutation.
-func (m *MovieMutation) Name() (r string, exists bool) {
-	v := m.name
+// Title returns the value of the "title" field in the mutation.
+func (m *MovieMutation) Title() (r string, exists bool) {
+	v := m.title
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldName returns the old "name" field's value of the Movie entity.
+// OldTitle returns the old "title" field's value of the Movie entity.
 // If the Movie object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MovieMutation) OldName(ctx context.Context) (v string, err error) {
+func (m *MovieMutation) OldTitle(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldName is only allowed on UpdateOne operations")
+		return v, errors.New("OldTitle is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldName requires an ID field in the mutation")
+		return v, errors.New("OldTitle requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldName: %w", err)
+		return v, fmt.Errorf("querying old value for OldTitle: %w", err)
 	}
-	return oldValue.Name, nil
+	return oldValue.Title, nil
 }
 
-// ResetName resets all changes to the "name" field.
-func (m *MovieMutation) ResetName() {
-	m.name = nil
+// ResetTitle resets all changes to the "title" field.
+func (m *MovieMutation) ResetTitle() {
+	m.title = nil
 }
 
 // SetDescription sets the "description" field.
@@ -831,8 +831,8 @@ func (m *MovieMutation) Type() string {
 // AddedFields().
 func (m *MovieMutation) Fields() []string {
 	fields := make([]string, 0, 4)
-	if m.name != nil {
-		fields = append(fields, movie.FieldName)
+	if m.title != nil {
+		fields = append(fields, movie.FieldTitle)
 	}
 	if m.description != nil {
 		fields = append(fields, movie.FieldDescription)
@@ -851,8 +851,8 @@ func (m *MovieMutation) Fields() []string {
 // schema.
 func (m *MovieMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case movie.FieldName:
-		return m.Name()
+	case movie.FieldTitle:
+		return m.Title()
 	case movie.FieldDescription:
 		return m.Description()
 	case movie.FieldRank:
@@ -868,8 +868,8 @@ func (m *MovieMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *MovieMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case movie.FieldName:
-		return m.OldName(ctx)
+	case movie.FieldTitle:
+		return m.OldTitle(ctx)
 	case movie.FieldDescription:
 		return m.OldDescription(ctx)
 	case movie.FieldRank:
@@ -885,12 +885,12 @@ func (m *MovieMutation) OldField(ctx context.Context, name string) (ent.Value, e
 // type.
 func (m *MovieMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case movie.FieldName:
+	case movie.FieldTitle:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetName(v)
+		m.SetTitle(v)
 		return nil
 	case movie.FieldDescription:
 		v, ok := value.(string)
@@ -986,8 +986,8 @@ func (m *MovieMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *MovieMutation) ResetField(name string) error {
 	switch name {
-	case movie.FieldName:
-		m.ResetName()
+	case movie.FieldTitle:
+		m.ResetTitle()
 		return nil
 	case movie.FieldDescription:
 		m.ResetDescription()

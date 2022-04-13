@@ -699,13 +699,13 @@ func (m *MovieQuery) Paginate(
 }
 
 var (
-	// MovieOrderFieldName orders Movie by name.
-	MovieOrderFieldName = &MovieOrderField{
-		field: movie.FieldName,
+	// MovieOrderFieldTitle orders Movie by title.
+	MovieOrderFieldTitle = &MovieOrderField{
+		field: movie.FieldTitle,
 		toCursor: func(m *Movie) Cursor {
 			return Cursor{
 				ID:    m.ID,
-				Value: m.Name,
+				Value: m.Title,
 			}
 		},
 	}
@@ -735,8 +735,8 @@ var (
 func (f MovieOrderField) String() string {
 	var str string
 	switch f.field {
-	case movie.FieldName:
-		str = "MOVIE_NAME"
+	case movie.FieldTitle:
+		str = "MOVIE_TITLE"
 	case movie.FieldDescription:
 		str = "MOVIE_DESCRIPTION"
 	case movie.FieldRank:
@@ -757,8 +757,8 @@ func (f *MovieOrderField) UnmarshalGQL(v interface{}) error {
 		return fmt.Errorf("MovieOrderField %T must be a string", v)
 	}
 	switch str {
-	case "MOVIE_NAME":
-		*f = *MovieOrderFieldName
+	case "MOVIE_TITLE":
+		*f = *MovieOrderFieldTitle
 	case "MOVIE_DESCRIPTION":
 		*f = *MovieOrderFieldDescription
 	case "MOVIE_RANK":

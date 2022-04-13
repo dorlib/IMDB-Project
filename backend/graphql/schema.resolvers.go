@@ -11,7 +11,7 @@ import (
 
 func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error) {
 	return r.client.Movie.Create().
-		SetName(movie.Name).
+		SetTitle(movie.Title).
 		SetDescription(movie.Description).
 		SetRank(movie.Rank).
 		SetDirectorID(movie.DirectorID).
