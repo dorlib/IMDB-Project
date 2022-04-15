@@ -68,11 +68,12 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Directors func(childComplexity int) int
-		Movies    func(childComplexity int) int
-		Node      func(childComplexity int, id int) int
-		Nodes     func(childComplexity int, ids []int) int
-		Users     func(childComplexity int) int
+		DirectorIDByName func(childComplexity int, name string) int
+		Directors        func(childComplexity int) int
+		Movies           func(childComplexity int) int
+		Node             func(childComplexity int, id int) int
+		Nodes            func(childComplexity int, ids []int) int
+		Users            func(childComplexity int) int
 	}
 
 	Review struct {
@@ -104,6 +105,7 @@ type MutationResolver interface {
 type QueryResolver interface {
 	Movies(ctx context.Context) ([]*ent.Movie, error)
 	Directors(ctx context.Context) ([]*ent.Director, error)
+	DirectorIDByName(ctx context.Context, name string) (*int, error)
 	Users(ctx context.Context) ([]*ent.User, error)
 	Node(ctx context.Context, id int) (ent.Noder, error)
 	Nodes(ctx context.Context, ids []int) ([]ent.Noder, error)
@@ -241,6 +243,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateUser(childComplexity, args["user"].(UserInput)), true
+
+	case "Query.directorIdByName":
+		if e.complexity.Query.DirectorIDByName == nil {
+			break
+		}
+
+		args, err := ec.field_Query_directorIdByName_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.DirectorIDByName(childComplexity, args["name"].(string)), true
 
 	case "Query.directors":
 		if e.complexity.Query.Directors == nil {
@@ -517,7 +531,7 @@ input MovieInput {
     title: String!
     rank: Int!
     genre: String!
-    director_id: Int!
+    director_id: ID!
 }
 
 input DirectorInput {
@@ -552,6 +566,7 @@ type Mutation {
 type Query {
     movies: [Movie!]
     directors: [Director!]
+    directorIdByName(name: String!): ID
     users: [User!]
     node(id: ID!): Node
     nodes(ids: [ID!]!): [Node]!
@@ -624,6 +639,21 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 }
 
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_directorIdByName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -1280,6 +1310,45 @@ func (ec *executionContext) _Query_directors(ctx context.Context, field graphql.
 	res := resTmp.([]*ent.Director)
 	fc.Result = res
 	return ec.marshalODirector2ᚕᚖimdbv2ᚋentᚐDirectorᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_directorIdByName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_directorIdByName_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().DirectorIDByName(rctx, args["name"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOID2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_users(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3172,7 +3241,7 @@ func (ec *executionContext) unmarshalInputMovieInput(ctx context.Context, obj in
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("director_id"))
-			it.DirectorID, err = ec.unmarshalNInt2int(ctx, v)
+			it.DirectorID, err = ec.unmarshalNID2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3591,6 +3660,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_directors(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "directorIdByName":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_directorIdByName(ctx, field)
 				return res
 			}
 
@@ -4831,6 +4920,22 @@ func (ec *executionContext) marshalODirector2ᚕᚖimdbv2ᚋentᚐDirectorᚄ(ct
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalOID2ᚖint(ctx context.Context, v interface{}) (*int, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalIntID(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOID2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalIntID(*v)
+	return res
 }
 
 func (ec *executionContext) marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovieᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Movie) graphql.Marshaler {

@@ -24,9 +24,6 @@ function SignInForm(props) {
 
   return (
     <Card>
-      <Typography variant="h6" align="center" color="yellow">
-        Hello Dear Future User! Thank You For Signing In To My WebSite!
-      </Typography>
       <form className={classes.form} onSubmit={submitHandler}>
 
         <div className={classes.control}>

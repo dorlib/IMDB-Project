@@ -2,6 +2,7 @@ import { useRef } from "react";
 
 import Card from "../ui/Card";
 import classes from "./NewUserForm.module.css";
+import {Typography} from "@mui/material";
 
 function NewUserForm(props) {
   const firstNameInputRef = useRef();
@@ -44,6 +45,9 @@ function NewUserForm(props) {
 
   return (
     <Card>
+      <Typography variant="h6" align="center" color="yellow">
+        Hello Dear Future User! Thank You For Signing In To My WebSite!
+      </Typography>
       <form className={classes.form} onSubmit={submitHandler}>
 
         <div className={classes.control}>

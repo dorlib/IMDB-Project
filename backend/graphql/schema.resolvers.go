@@ -7,11 +7,13 @@ import (
 	"context"
 	"fmt"
 	"imdbv2/ent"
+	"imdbv2/ent/director"
 )
 
 func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error) {
 	return r.client.Movie.Create().
 		SetTitle(movie.Title).
+		SetGenre(movie.Genre).
 		SetDescription(movie.Description).
 		SetRank(movie.Rank).
 		SetDirectorID(movie.DirectorID).
@@ -60,6 +62,14 @@ func (r *queryResolver) Node(ctx context.Context, id int) (ent.Noder, error) {
 
 func (r *queryResolver) Nodes(ctx context.Context, ids []int) ([]ent.Noder, error) {
 	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) DirectorIDByName(ctx context.Context, name string) (*int, error) {
+	id, err := r.client.Director.Query().Where(director.Name(name)).OnlyID(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return &id, nil
 }
 
 // Mutation returns imdbv2.MutationResolver implementation.

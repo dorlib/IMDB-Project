@@ -73,8 +73,7 @@ input MovieInput {
     title: String!
     rank: Int!
     genre: String!
-    director_id: Int!
-    director: String!
+    director_id: ID!
 }
 
 input DirectorInput {
@@ -109,6 +108,7 @@ type Mutation {
 type Query {
     movies: [Movie!]
     directors: [Director!]
+    directorIdByName(name: String!): ID
     users: [User!]
     node(id: ID!): Node
     nodes(ids: [ID!]!): [Node]!
