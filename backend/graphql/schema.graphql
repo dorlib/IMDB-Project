@@ -99,6 +99,7 @@ input UserInput {
 # https://graphql.org/learn/queries/#mutations
 type Mutation {
     createMovie(movie: MovieInput!): Movie!
+    createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String! directorName: String!): Movie!
     createDirector(director: DirectorInput!): Director!
     createReview(review: ReviewInput!): Review!
     createUser(user: UserInput!): User!

@@ -10,7 +10,9 @@ import Button from "@mui/material/Button";
 
 
 function NewMovieForm() {
-    const NEW_MOVIE = gql`
+    let NEW
+
+    let NEW_MOVIE = gql`
         mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID!) {
             createMovie(movie: {title: $title , description: $description, genre: $genre , rank: $rank, director_id: $director_id}) {
                 id
@@ -21,6 +23,14 @@ function NewMovieForm() {
     const DIRECTOR_ID = gql`
         query DirectorIdByName($director: String!) {
             directorIdByName(name: $director)
+        }
+    `;
+
+    let NEW_MOVIE_AND_DIRECTOR = gql`
+        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!){
+            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name) {
+                id
+            }
         }
     `;
 
@@ -44,15 +54,19 @@ function NewMovieForm() {
             }
         }).data
 
-    let int
-    let index
+    let int = NaN
+    let index = NaN
     let data = JSON.stringify(id)
 
-    if (data) {
+    if (id && id["directorIdByName"]) {
         index = data.indexOf(":")
         int = parseInt(data.slice(index + 2, data.length - 2), 10)
+        NEW = NEW_MOVIE
+    } else {
+        NEW = NEW_MOVIE_AND_DIRECTOR
     }
-    const [addMovie, {error}] = useMutation(NEW_MOVIE,
+
+    const [addMovie, {error}] = useMutation(NEW,
         {
             variables: {
                 title: titleInputRef.current?.value || 'Unknown',
@@ -63,9 +77,15 @@ function NewMovieForm() {
                 worth: worthInputRef.current?.value || 'No Worth Was Given',
                 genre: genreInputRef.current?.value || 'No Genre Given',
                 director_id: int || 0,
+                director_name: directorInputRef.current?.value || 'No Director Given',
+            },
+            onCompleted: function (data) {
+                console.log("data:",data)
+            },
+            onError: function (error) {
+                console.log("error:",error)
             }
         });
-
     return (
         <Card>
             <form className={classes.form}>

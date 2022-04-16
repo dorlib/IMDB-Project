@@ -72,6 +72,25 @@ func (r *queryResolver) DirectorIDByName(ctx context.Context, name string) (*int
 	return &id, nil
 }
 
+func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string) (*ent.Movie, error) {
+	newDirector, err := r.client.Director.Create().
+		SetName(directorName).
+		Save(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+
+	fmt.Println("new director made", newDirector)
+
+	return r.client.Movie.Create().
+		SetTitle(title).
+		SetGenre(genre).
+		SetDescription(description).
+		SetRank(rank).
+		SetDirectorID(newDirector.ID).
+		Save(ctx)
+}
+
 // Mutation returns imdbv2.MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
@@ -79,4 +98,5 @@ func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
+
 type queryResolver struct{ *Resolver }

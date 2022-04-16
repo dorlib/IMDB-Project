@@ -61,10 +61,11 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateDirector func(childComplexity int, director DirectorInput) int
-		CreateMovie    func(childComplexity int, movie MovieInput) int
-		CreateReview   func(childComplexity int, review ReviewInput) int
-		CreateUser     func(childComplexity int, user UserInput) int
+		CreateDirector         func(childComplexity int, director DirectorInput) int
+		CreateMovie            func(childComplexity int, movie MovieInput) int
+		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string) int
+		CreateReview           func(childComplexity int, review ReviewInput) int
+		CreateUser             func(childComplexity int, user UserInput) int
 	}
 
 	Query struct {
@@ -98,6 +99,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error)
+	CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string) (*ent.Movie, error)
 	CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error)
 	CreateReview(ctx context.Context, review ReviewInput) (*ent.Review, error)
 	CreateUser(ctx context.Context, user UserInput) (*ent.User, error)
@@ -219,6 +221,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateMovie(childComplexity, args["movie"].(MovieInput)), true
+
+	case "Mutation.createMovieAndDirector":
+		if e.complexity.Mutation.CreateMovieAndDirector == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createMovieAndDirector_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateMovieAndDirector(childComplexity, args["title"].(string), args["description"].(string), args["rank"].(int), args["genre"].(string), args["directorName"].(string)), true
 
 	case "Mutation.createReview":
 		if e.complexity.Mutation.CreateReview == nil {
@@ -557,6 +571,7 @@ input UserInput {
 # https://graphql.org/learn/queries/#mutations
 type Mutation {
     createMovie(movie: MovieInput!): Movie!
+    createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String! directorName: String!): Movie!
     createDirector(director: DirectorInput!): Director!
     createReview(review: ReviewInput!): Review!
     createUser(user: UserInput!): User!
@@ -590,6 +605,57 @@ func (ec *executionContext) field_Mutation_createDirector_args(ctx context.Conte
 		}
 	}
 	args["director"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createMovieAndDirector_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["title"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["title"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["description"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["description"] = arg1
+	var arg2 int
+	if tmp, ok := rawArgs["rank"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rank"))
+		arg2, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["rank"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["genre"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("genre"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["genre"] = arg3
+	var arg4 string
+	if tmp, ok := rawArgs["directorName"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("directorName"))
+		arg4, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["directorName"] = arg4
 	return args, nil
 }
 
@@ -1106,6 +1172,48 @@ func (ec *executionContext) _Mutation_createMovie(ctx context.Context, field gra
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().CreateMovie(rctx, args["movie"].(MovieInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Movie)
+	fc.Result = res
+	return ec.marshalNMovie2ᚖimdbv2ᚋentᚐMovie(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createMovieAndDirector(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createMovieAndDirector_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateMovieAndDirector(rctx, args["title"].(string), args["description"].(string), args["rank"].(int), args["genre"].(string), args["directorName"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3563,6 +3671,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createMovie":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createMovie(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createMovieAndDirector":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createMovieAndDirector(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
