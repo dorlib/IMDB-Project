@@ -11,12 +11,13 @@ import Button from "@mui/material/Button";
 
 function NewMovieForm() {
     const NEW_MOVIE = gql`
-        mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID) {
+        mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID!) {
             createMovie(movie: {title: $title , description: $description, genre: $genre , rank: $rank, director_id: $director_id}) {
                 id
             }
         }
     `;
+
     const DIRECTOR_ID = gql`
         query DirectorIdByName($director: String!) {
             directorIdByName(name: $director)
@@ -43,7 +44,15 @@ function NewMovieForm() {
             }
         }).data
 
-    const [addMovie, {data, loading, error}] = useMutation(NEW_MOVIE,
+    let int
+    let index
+    let data = JSON.stringify(id)
+
+    if (data) {
+        index = data.indexOf(":")
+        int = parseInt(data.slice(index + 2, data.length - 2), 10)
+    }
+    const [addMovie, {error}] = useMutation(NEW_MOVIE,
         {
             variables: {
                 title: titleInputRef.current?.value || 'Unknown',
@@ -53,9 +62,10 @@ function NewMovieForm() {
                 rank: rankInputRef.current?.value || 'No Rank Was Given',
                 worth: worthInputRef.current?.value || 'No Worth Was Given',
                 genre: genreInputRef.current?.value || 'No Genre Given',
-                director_id: id.value,
+                director_id: int || 0,
             }
         });
+
     return (
         <Card>
             <form className={classes.form}>
