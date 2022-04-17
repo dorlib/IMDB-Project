@@ -8,7 +8,6 @@ import {gql, useMutation, useQuery} from "@apollo/client";
 import {Stack} from "@mui/material";
 import Button from "@mui/material/Button";
 
-
 function NewMovieForm() {
     let NEW
 
@@ -66,7 +65,7 @@ function NewMovieForm() {
         NEW = NEW_MOVIE_AND_DIRECTOR
     }
 
-    const [addMovie, {error}] = useMutation(NEW,
+    const [addMovie] = useMutation(NEW,
         {
             variables: {
                 title: titleInputRef.current?.value || 'Unknown',
@@ -80,12 +79,15 @@ function NewMovieForm() {
                 director_name: directorInputRef.current?.value || 'No Director Given',
             },
             onCompleted: function (data) {
-                console.log("data:",data)
+                console.log("data:", data)
+                const uniqe = String(titleInputRef.current?.value || "no name")
+                return window.location.replace(uniqe)
             },
             onError: function (error) {
                 console.log("error:",error)
             }
         });
+
     return (
         <Card>
             <form className={classes.form}>
