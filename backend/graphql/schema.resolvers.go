@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"imdbv2/ent"
 	"imdbv2/ent/director"
+	"imdbv2/ent/movie"
 )
 
 func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error) {
@@ -100,3 +101,11 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 type mutationResolver struct{ *Resolver }
 
 type queryResolver struct{ *Resolver }
+
+func (r *queryResolver) MovieByID(ctx context.Context, id int) ([]*ent.Movie, error) {
+	data, err := r.client.Movie.Query().Where(movie.ID(id)).All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}

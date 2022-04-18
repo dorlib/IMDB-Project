@@ -80,8 +80,8 @@ function NewMovieForm() {
             },
             onCompleted: function (data) {
                 console.log("data:", data)
-                const uniqe = String(titleInputRef.current?.value || "no name")
-                return window.location.replace(uniqe)
+                const uniqe = data["createMovieAndDirector"]["id"]
+                return window.location.replace("/moviePage/" + uniqe)
             },
             onError: function (error) {
                 console.log("error:",error)

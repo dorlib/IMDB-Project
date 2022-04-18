@@ -1,6 +1,10 @@
 .item {
     margin: 1rem 0;
   }
+
+.title {
+  color: white;
+}
   
   .image {
     width: 100%;

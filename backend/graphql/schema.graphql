@@ -110,6 +110,7 @@ type Query {
     movies: [Movie!]
     directors: [Director!]
     directorIdByName(name: String!): ID
+    movieById(id: ID!) : [Movie!]
     users: [User!]
     node(id: ID!): Node
     nodes(ids: [ID!]!): [Node]!
