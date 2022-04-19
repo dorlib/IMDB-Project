@@ -38,6 +38,7 @@ type Config struct {
 type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
+	Review() ReviewResolver
 }
 
 type DirectiveRoot struct {
@@ -64,7 +65,7 @@ type ComplexityRoot struct {
 		CreateDirector         func(childComplexity int, director DirectorInput) int
 		CreateMovie            func(childComplexity int, movie MovieInput) int
 		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string) int
-		CreateReview           func(childComplexity int, review ReviewInput) int
+		CreateReview           func(childComplexity int, review ReviewInput, id int) int
 		CreateUser             func(childComplexity int, user UserInput) int
 	}
 
@@ -79,10 +80,11 @@ type ComplexityRoot struct {
 	}
 
 	Review struct {
-		ID    func(childComplexity int) int
-		Movie func(childComplexity int) int
-		Rank  func(childComplexity int) int
-		Text  func(childComplexity int) int
+		ID      func(childComplexity int) int
+		Movie   func(childComplexity int) int
+		MovieID func(childComplexity int) int
+		Rank    func(childComplexity int) int
+		Text    func(childComplexity int) int
 	}
 
 	User struct {
@@ -102,7 +104,7 @@ type MutationResolver interface {
 	CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error)
 	CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string) (*ent.Movie, error)
 	CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error)
-	CreateReview(ctx context.Context, review ReviewInput) (*ent.Review, error)
+	CreateReview(ctx context.Context, review ReviewInput, id int) (*ent.Review, error)
 	CreateUser(ctx context.Context, user UserInput) (*ent.User, error)
 }
 type QueryResolver interface {
@@ -113,6 +115,9 @@ type QueryResolver interface {
 	Users(ctx context.Context) ([]*ent.User, error)
 	Node(ctx context.Context, id int) (ent.Noder, error)
 	Nodes(ctx context.Context, ids []int) ([]ent.Noder, error)
+}
+type ReviewResolver interface {
+	MovieID(ctx context.Context, obj *ent.Review) (int, error)
 }
 
 type executableSchema struct {
@@ -246,7 +251,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateReview(childComplexity, args["review"].(ReviewInput)), true
+		return e.complexity.Mutation.CreateReview(childComplexity, args["review"].(ReviewInput), args["id"].(int)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -342,6 +347,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Review.Movie(childComplexity), true
+
+	case "Review.movieID":
+		if e.complexity.Review.MovieID == nil {
+			break
+		}
+
+		return e.complexity.Review.MovieID(childComplexity), true
 
 	case "Review.rank":
 		if e.complexity.Review.Rank == nil {
@@ -518,6 +530,7 @@ type Director {
 
 type Review {
     id: ID!
+    movieID: ID!
     text: String!
     rank: Int!
     movie: Movie!
@@ -552,6 +565,10 @@ enum UserOrderField {
     NICKNAME
 }
 
+enum ReviewOrderField {
+    MOVIE_ID
+}
+
 # Define an input type for the mutation below.
 # https://graphql.org/learn/schema/#input-types
 input MovieInput {
@@ -569,6 +586,7 @@ input DirectorInput {
 input ReviewInput {
     text: String!
     rank: Int!
+    movieID: ID!
 }
 
 input UserInput {
@@ -587,7 +605,7 @@ type Mutation {
     createMovie(movie: MovieInput!): Movie!
     createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String! directorName: String!): Movie!
     createDirector(director: DirectorInput!): Director!
-    createReview(review: ReviewInput!): Review!
+    createReview(review: ReviewInput!, id: ID!): Review!
     createUser(user: UserInput!): User!
 }
 
@@ -701,6 +719,15 @@ func (ec *executionContext) field_Mutation_createReview_args(ctx context.Context
 		}
 	}
 	args["review"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg1, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg1
 	return args, nil
 }
 
@@ -1327,7 +1354,7 @@ func (ec *executionContext) _Mutation_createReview(ctx context.Context, field gr
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateReview(rctx, args["review"].(ReviewInput))
+		return ec.resolvers.Mutation().CreateReview(rctx, args["review"].(ReviewInput), args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1731,6 +1758,41 @@ func (ec *executionContext) _Review_id(ctx context.Context, field graphql.Collec
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNID2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Review_movieID(ctx context.Context, field graphql.CollectedField, obj *ent.Review) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Review",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Review().MovieID(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3453,6 +3515,14 @@ func (ec *executionContext) unmarshalInputReviewInput(ctx context.Context, obj i
 			if err != nil {
 				return it, err
 			}
+		case "movieID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movieID"))
+			it.MovieID, err = ec.unmarshalNID2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -4005,6 +4075,26 @@ func (ec *executionContext) _Review(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "movieID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Review_movieID(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "text":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Review_text(ctx, field, obj)

@@ -10,6 +10,7 @@ import AllDirectorsPage from "./pages/AllDirectors";
 import NewMovieForm from "./components/movies/NewMovieForm";
 import AllMovies from "./pages/AllMovies";
 import MovieItem from "./components/movies/MovieItem";
+import ReviewsOfMovie from "./components/movies/ReviewsOfMovie";
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/new-user" element={<NewUserPage />} />
         <Route path='/sign-in' element={<SignInPage />} />
-        <Route path="/moviePage/:id" element={<MovieItem />} />
+        <Route path="/moviePage/:id" element={<><MovieItem /><ReviewsOfMovie/></>} />
       </Routes>
     </Layout>
   );

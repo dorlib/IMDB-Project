@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useRef} from "react";
 import {Link} from 'react-router-dom';
 
 import Card from "../ui/Card";
@@ -60,7 +60,6 @@ import MenuItem from "@mui/material/MenuItem";
 // }
 
 function MovieItem() {
-
     const MOVIE_DATA = gql`
         query MovieById($id : ID!) {
             movieById(id: $id) {
@@ -80,6 +79,15 @@ function MovieItem() {
         }
     `;
 
+    // const ADD_REVIEW = gql`
+    //     mutation CreateReview ($text: String!, $rank: Int!, $movieID: ID!) {
+    //         createMovie(movie: {text: $text, rank: $rank, movieID: $movieID}) {
+    //             text
+    //             rank
+    //         }
+    //     }
+    // `;
+
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
 
@@ -92,12 +100,28 @@ function MovieItem() {
         })
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
+
     let title = data["movieById"]["0"]["title"]
     let rank = data["movieById"]["0"]["rank"]
     let description = data["movieById"]["0"]["description"]
 
+    // const reviewInputRef = useRef();
+    // const rankInputRef = useRef();
+    //
+    // const [addReview] = useMutation(ADD_REVIEW,
+    //     {
+    //         variables: {
+    //             movieId: lastSegment || 0,
+    //             review: reviewInputRef.current?.value || 'Doesnt Have Any Reviews',
+    //             rank: rankInputRef.current?.value || 'No Rank Was Given',
+    //         },
+    //         onError: function (error) {
+    //             console.log("error:",error)
+    //         },
+    //     })
 
-    let loaded = (
+
+    let loaded =  (
         <Card>
         <div>
             <p style={{color: "yellow"}}>
@@ -112,8 +136,39 @@ function MovieItem() {
                 {description}
             </p>
         </div>
+
+
+        {/*<form className={classes.form}>*/}
+        {/*    <div className={classes.control}>*/}
+        {/*        <label htmlFor="review">Add Your Review!</label>*/}
+        {/*        <textarea*/}
+        {/*            id="review"*/}
+        {/*            type="text"*/}
+        {/*            datatype="String"*/}
+        {/*            required*/}
+        {/*            ref={reviewInputRef}*/}
+        {/*            rows="5"*/}
+        {/*        ></textarea>*/}
+        {/*    </div>*/}
+        {/*    <div className={classes.ctrl}>*/}
+        {/*        <label htmlFor="rank">Add Your Rank</label>*/}
+        {/*        <input*/}
+        {/*            type="number"*/}
+        {/*            name="ranking"*/}
+        {/*            id="ranking"*/}
+        {/*            min="0"*/}
+        {/*            max="100"*/}
+        {/*            ref={rankInputRef}*/}
+        {/*            datatype="Int"*/}
+        {/*        ></input>*/}
+        {/*    </div>*/}
+        {/*    <div className={classes.actions}>*/}
+        {/*        <button onClick={addReview} type="button">Add Review</button>*/}
+        {/*    </div>*/}
+        {/*</form>*/}
         </Card>
-)
+    )
+
 
     return loaded
 

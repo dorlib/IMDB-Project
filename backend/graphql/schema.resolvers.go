@@ -26,10 +26,11 @@ func (r *mutationResolver) CreateDirector(ctx context.Context, director Director
 		Save(ctx)
 }
 
-func (r *mutationResolver) CreateReview(ctx context.Context, review ReviewInput) (*ent.Review, error) {
+func (r *mutationResolver) CreateReview(ctx context.Context, review ReviewInput, id int) (*ent.Review, error) {
 	return r.client.Review.Create().
 		SetText(review.Text).
 		SetRank(review.Rank).
+		SetMovieID(id).
 		Save(ctx)
 }
 

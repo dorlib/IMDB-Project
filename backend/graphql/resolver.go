@@ -11,6 +11,11 @@ import (
 
 type Resolver struct{ client *ent.Client }
 
+func (r *Resolver) Review() ReviewResolver {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewSchema(client *ent.Client) graphql.ExecutableSchema {
 	return NewExecutableSchema(Config{
 		Resolvers: &Resolver{client},
