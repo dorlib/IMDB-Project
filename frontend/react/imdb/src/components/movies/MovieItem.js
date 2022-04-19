@@ -82,29 +82,57 @@ function MovieItem() {
 
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
-    let title
 
-    const data = useQuery(MOVIE_DATA,
+    const {loading, error, data} = useQuery(MOVIE_DATA,
         {
             variables: {
                 id: lastSegment || 0
-            },
-            onError: function (error) {
-                console.log("error:", error)
-            },
-            onCompleted: function (data) {
-                title = JSON.stringify(data["movieById"]["0"]["title"])
-        }}).data
+            }
 
-    return (
+        })
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :</p>;
+    let title = data["movieById"]["0"]["title"]
+    let rank = data["movieById"]["0"]["rank"]
+    let description = data["movieById"]["0"]["description"]
+
+
+    let loaded = (
         <Card>
-            <div className={classes.title}>
-                <label htmlFor="title">Movie Title</label>
-                <h1 style={{color: "yellow"}}>{title}</h1>
-            </div>
+        <div>
+            <p style={{color: "yellow"}}>
+                {title} : {rank}
+            </p>
+        </div>
+        <div>
+            <h4 style={{color: "yellow"}}>
+                Movie description :
+            </h4>
+            <p style={{color: "yellow"}}>
+                {description}
+            </p>
+        </div>
         </Card>
-    )
+)
 
+    return loaded
+
+    // return (
+    //     <Card>
+    //         <div className={classes.title}>
+    //             <label htmlFor="title">Movie Title</label>
+    //             <h1 style={{color: "yellow"}}>{title}</h1>
+    //         </div>
+    //         <div className={classes.rank}>
+    //             <label htmlFor="rank">Total Rank</label>
+    //             <h1 style={{color: "yellow"}}>{rank} / 100</h1>
+    //         </div>
+    //         <div className={classes.director}>
+    //             <label htmlFor="director">Directed By: </label>
+    //             <h1 style={{color: "yellow"}}>{director}</h1>
+    //         </div>
+    //     </Card>
+    // )
 
 
     // const favoritesCtx = useContext(FavoritesContext);
