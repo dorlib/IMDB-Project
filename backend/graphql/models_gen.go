@@ -12,6 +12,7 @@ type MovieInput struct {
 	Rank        int    `json:"rank"`
 	Genre       string `json:"genre"`
 	DirectorID  int    `json:"director_id"`
+	Image       string `json:"image"`
 }
 
 type ReviewInput struct {

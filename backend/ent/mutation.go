@@ -446,6 +446,7 @@ type MovieMutation struct {
 	rank            *int
 	addrank         *int
 	genre           *string
+	image           *string
 	clearedFields   map[string]struct{}
 	director        *int
 	cleareddirector bool
@@ -768,6 +769,55 @@ func (m *MovieMutation) ResetDirectorID() {
 	delete(m.clearedFields, movie.FieldDirectorID)
 }
 
+// SetImage sets the "image" field.
+func (m *MovieMutation) SetImage(s string) {
+	m.image = &s
+}
+
+// Image returns the value of the "image" field in the mutation.
+func (m *MovieMutation) Image() (r string, exists bool) {
+	v := m.image
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldImage returns the old "image" field's value of the Movie entity.
+// If the Movie object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MovieMutation) OldImage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldImage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldImage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldImage: %w", err)
+	}
+	return oldValue.Image, nil
+}
+
+// ClearImage clears the value of the "image" field.
+func (m *MovieMutation) ClearImage() {
+	m.image = nil
+	m.clearedFields[movie.FieldImage] = struct{}{}
+}
+
+// ImageCleared returns if the "image" field was cleared in this mutation.
+func (m *MovieMutation) ImageCleared() bool {
+	_, ok := m.clearedFields[movie.FieldImage]
+	return ok
+}
+
+// ResetImage resets all changes to the "image" field.
+func (m *MovieMutation) ResetImage() {
+	m.image = nil
+	delete(m.clearedFields, movie.FieldImage)
+}
+
 // ClearDirector clears the "director" edge to the Director entity.
 func (m *MovieMutation) ClearDirector() {
 	m.cleareddirector = true
@@ -867,7 +917,7 @@ func (m *MovieMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *MovieMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.title != nil {
 		fields = append(fields, movie.FieldTitle)
 	}
@@ -882,6 +932,9 @@ func (m *MovieMutation) Fields() []string {
 	}
 	if m.director != nil {
 		fields = append(fields, movie.FieldDirectorID)
+	}
+	if m.image != nil {
+		fields = append(fields, movie.FieldImage)
 	}
 	return fields
 }
@@ -901,6 +954,8 @@ func (m *MovieMutation) Field(name string) (ent.Value, bool) {
 		return m.Genre()
 	case movie.FieldDirectorID:
 		return m.DirectorID()
+	case movie.FieldImage:
+		return m.Image()
 	}
 	return nil, false
 }
@@ -920,6 +975,8 @@ func (m *MovieMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldGenre(ctx)
 	case movie.FieldDirectorID:
 		return m.OldDirectorID(ctx)
+	case movie.FieldImage:
+		return m.OldImage(ctx)
 	}
 	return nil, fmt.Errorf("unknown Movie field %s", name)
 }
@@ -963,6 +1020,13 @@ func (m *MovieMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDirectorID(v)
+		return nil
+	case movie.FieldImage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetImage(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Movie field %s", name)
@@ -1012,6 +1076,9 @@ func (m *MovieMutation) ClearedFields() []string {
 	if m.FieldCleared(movie.FieldDirectorID) {
 		fields = append(fields, movie.FieldDirectorID)
 	}
+	if m.FieldCleared(movie.FieldImage) {
+		fields = append(fields, movie.FieldImage)
+	}
 	return fields
 }
 
@@ -1028,6 +1095,9 @@ func (m *MovieMutation) ClearField(name string) error {
 	switch name {
 	case movie.FieldDirectorID:
 		m.ClearDirectorID()
+		return nil
+	case movie.FieldImage:
+		m.ClearImage()
 		return nil
 	}
 	return fmt.Errorf("unknown Movie nullable field %s", name)
@@ -1051,6 +1121,9 @@ func (m *MovieMutation) ResetField(name string) error {
 		return nil
 	case movie.FieldDirectorID:
 		m.ResetDirectorID()
+		return nil
+	case movie.FieldImage:
+		m.ResetImage()
 		return nil
 	}
 	return fmt.Errorf("unknown Movie field %s", name)

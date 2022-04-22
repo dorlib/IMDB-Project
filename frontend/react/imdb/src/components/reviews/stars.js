@@ -2,6 +2,8 @@ import * as React from 'react';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
+import classes from "./stars.module.css";
+
 
 const labels = {
     0.5: 'Useless',
@@ -31,7 +33,7 @@ export default function HoverRating() {
                 display: 'flex',
                 alignItems: 'center',
                 color: "yellow",
-            }}
+            }} className={classes.item}
         >
             <Rating
                 name="hover-feedback"

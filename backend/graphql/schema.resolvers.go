@@ -12,13 +12,11 @@ import (
 )
 
 func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error) {
-	return r.client.Movie.Create().
-		SetTitle(movie.Title).
-		SetGenre(movie.Genre).
-		SetDescription(movie.Description).
-		SetRank(movie.Rank).
-		SetDirectorID(movie.DirectorID).
-		Save(ctx)
+	mov, err := r.client.Movie.Create().SetTitle(movie.Title).SetGenre(movie.Genre).SetDescription(movie.Description).SetRank(movie.Rank).SetDirectorID(movie.DirectorID).Save(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return mov, err
 }
 func (r *mutationResolver) CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error) {
 	return r.client.Director.Create().
@@ -75,7 +73,7 @@ func (r *queryResolver) DirectorIDByName(ctx context.Context, name string) (*int
 	return &id, nil
 }
 
-func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string) (*ent.Movie, error) {
+func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string) (*ent.Movie, error) {
 	newDirector, err := r.client.Director.Create().
 		SetName(directorName).
 		Save(ctx)
@@ -91,6 +89,7 @@ func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title str
 		SetDescription(description).
 		SetRank(rank).
 		SetDirectorID(newDirector.ID).
+		SetImage(image).
 		Save(ctx)
 }
 

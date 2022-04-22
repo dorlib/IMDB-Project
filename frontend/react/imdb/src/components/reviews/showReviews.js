@@ -45,7 +45,7 @@ function ShowReviews() {
     let loaded
 
     loaded = data.reviewsOfMovie.map(({text, rank, topic, id}) => (
-        <div key={id} >
+        <div key={id}  className={classes.item}>
             <List sx={{width: '100%', }} className={classes.rev}>
                 <ListItem alignItems="flex-start" >
                     <ListItemAvatar>

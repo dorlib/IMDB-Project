@@ -97,3 +97,15 @@
 .form {
   padding: 1rem;
 }
+
+
+.image {
+  width: 700px;
+  position: relative;
+  display: flex;
+}
+
+.image{
+  max-height: 200%;
+  max-width: 200%;
+}

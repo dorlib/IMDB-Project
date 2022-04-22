@@ -42,6 +42,7 @@ function MovieItem() {
                 rank
                 description
                 genre
+                image
                 reviews{
                     rank
                 }
@@ -70,22 +71,24 @@ function MovieItem() {
     let title = data["movieById"]["0"]["title"]
     let rank = data["movieById"]["0"]["rank"]
     let description = data["movieById"]["0"]["description"]
+    let image = data["movieById"]["0"]["image"]
 
 
     let loaded =  (
         <Card>
         <div>
-            <p style={{color: "yellow"}}>
-                {title} : {rank}
+            <p style={{color: "yellow" ,fontSize: "xx-large"}}>
+                {title} : {rank} {"/100"}
             </p>
         </div>
+            <div className={classes.image}>
+                <img src={image} />
+                {image}
+            </div>
         <div>
             <h4 style={{color: "yellow"}}>
-                Movie description :
+                Movie description : {description}
             </h4>
-            <p style={{color: "yellow"}}>
-                {description}
-            </p>
         </div>
         </Card>
     )

@@ -80,6 +80,26 @@ func (mu *MovieUpdate) ClearDirectorID() *MovieUpdate {
 	return mu
 }
 
+// SetImage sets the "image" field.
+func (mu *MovieUpdate) SetImage(s string) *MovieUpdate {
+	mu.mutation.SetImage(s)
+	return mu
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (mu *MovieUpdate) SetNillableImage(s *string) *MovieUpdate {
+	if s != nil {
+		mu.SetImage(*s)
+	}
+	return mu
+}
+
+// ClearImage clears the value of the "image" field.
+func (mu *MovieUpdate) ClearImage() *MovieUpdate {
+	mu.mutation.ClearImage()
+	return mu
+}
+
 // SetDirector sets the "director" edge to the Director entity.
 func (mu *MovieUpdate) SetDirector(d *Director) *MovieUpdate {
 	return mu.SetDirectorID(d.ID)
@@ -239,6 +259,19 @@ func (mu *MovieUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: movie.FieldGenre,
 		})
 	}
+	if value, ok := mu.mutation.Image(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: movie.FieldImage,
+		})
+	}
+	if mu.mutation.ImageCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: movie.FieldImage,
+		})
+	}
 	if mu.mutation.DirectorCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -395,6 +428,26 @@ func (muo *MovieUpdateOne) SetNillableDirectorID(i *int) *MovieUpdateOne {
 // ClearDirectorID clears the value of the "director_id" field.
 func (muo *MovieUpdateOne) ClearDirectorID() *MovieUpdateOne {
 	muo.mutation.ClearDirectorID()
+	return muo
+}
+
+// SetImage sets the "image" field.
+func (muo *MovieUpdateOne) SetImage(s string) *MovieUpdateOne {
+	muo.mutation.SetImage(s)
+	return muo
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (muo *MovieUpdateOne) SetNillableImage(s *string) *MovieUpdateOne {
+	if s != nil {
+		muo.SetImage(*s)
+	}
+	return muo
+}
+
+// ClearImage clears the value of the "image" field.
+func (muo *MovieUpdateOne) ClearImage() *MovieUpdateOne {
+	muo.mutation.ClearImage()
 	return muo
 }
 
@@ -579,6 +632,19 @@ func (muo *MovieUpdateOne) sqlSave(ctx context.Context) (_node *Movie, err error
 			Type:   field.TypeString,
 			Value:  value,
 			Column: movie.FieldGenre,
+		})
+	}
+	if value, ok := muo.mutation.Image(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: movie.FieldImage,
+		})
+	}
+	if muo.mutation.ImageCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: movie.FieldImage,
 		})
 	}
 	if muo.mutation.DirectorCleared() {

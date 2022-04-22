@@ -46,7 +46,7 @@ function NewReviewForm() {
     let loaded =  (
         <Card>
             <form className={classes.form}>
-                <p htmlFor="review" style={{color: "yellow"}}>Add Your Review!</p>
+                <p htmlFor="review" style={{color: "yellow"}} className={classes.main}>Add Your Review!</p>
                 <div className={classes.control}>
                     <label htmlFor="topic" style={{color: "yellow"}}>Add Your Review's Title</label>
                     <textarea

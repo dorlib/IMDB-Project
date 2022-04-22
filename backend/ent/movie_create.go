@@ -59,6 +59,20 @@ func (mc *MovieCreate) SetNillableDirectorID(i *int) *MovieCreate {
 	return mc
 }
 
+// SetImage sets the "image" field.
+func (mc *MovieCreate) SetImage(s string) *MovieCreate {
+	mc.mutation.SetImage(s)
+	return mc
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (mc *MovieCreate) SetNillableImage(s *string) *MovieCreate {
+	if s != nil {
+		mc.SetImage(*s)
+	}
+	return mc
+}
+
 // SetDirector sets the "director" edge to the Director entity.
 func (mc *MovieCreate) SetDirector(d *Director) *MovieCreate {
 	return mc.SetDirectorID(d.ID)
@@ -219,6 +233,14 @@ func (mc *MovieCreate) createSpec() (*Movie, *sqlgraph.CreateSpec) {
 			Column: movie.FieldGenre,
 		})
 		_node.Genre = value
+	}
+	if value, ok := mc.mutation.Image(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: movie.FieldImage,
+		})
+		_node.Image = value
 	}
 	if nodes := mc.mutation.DirectorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

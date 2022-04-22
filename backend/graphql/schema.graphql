@@ -20,6 +20,7 @@ type Movie implements Node   {
     rank: Int!
     description: String!
     genre: String!
+    image: String!
     director: Director!
     reviews: [Review!]
 }
@@ -76,6 +77,7 @@ input MovieInput {
     rank: Int!
     genre: String!
     director_id: ID!
+    image: String!
 }
 
 input DirectorInput {
@@ -103,7 +105,7 @@ input UserInput {
 # https://graphql.org/learn/queries/#mutations
 type Mutation {
     createMovie(movie: MovieInput!): Movie!
-    createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String! directorName: String!): Movie!
+    createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String!, directorName: String!, image: String!): Movie!
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, topic: String!): Review!
     createUser(user: UserInput!): User!

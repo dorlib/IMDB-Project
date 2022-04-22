@@ -12,8 +12,8 @@ function NewMovieForm() {
     let NEW
 
     let NEW_MOVIE = gql`
-        mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID!) {
-            createMovie(movie: {title: $title , description: $description, genre: $genre , rank: $rank, director_id: $director_id}) {
+        mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID!, $image: String!) {
+            createMovie(movie: {title: $title , description: $description, genre: $genre , rank: $rank, director_id: $director_id, image: $image}) {
                 id
             }
         }
@@ -26,21 +26,30 @@ function NewMovieForm() {
     `;
 
     let NEW_MOVIE_AND_DIRECTOR = gql`
-        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!){
-            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name) {
+        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!, $image: String!){
+            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name, image: $image) {
+                id
+            }
+        }
+    `;
+
+    let NEW_REVIEW = gql `
+        mutation CreateReview ($topic: String!, $text: String!, $rank: Int!, $movieID: Int!) {
+            createReview(review: {topic: $topic, text: $text, rank: $rank, movieID: $movieID }) {
                 id
             }
         }
     `;
 
     const titleInputRef = useRef();
-    const imageInputRef = useRef();
     const directorInputRef = useRef();
     const descriptionInputRef = useRef();
     const reviewInputRef = useRef();
     const rankInputRef = useRef();
     const worthInputRef = useRef();
     const genreInputRef = useRef();
+    const imageInputRef = useRef();
+    const topicInputRef = useRef();
 
     const Input = styled("input")({
         display: "none",
@@ -88,6 +97,19 @@ function NewMovieForm() {
             }
         });
 
+    const [addReview] = useMutation(NEW_REVIEW,
+        {
+            variables: {
+                review: reviewInputRef.current?.value || 'Doesnt Have Any Reviews',
+                rank: rankInputRef.current?.value || 'No Rank Was Given',
+                topic: topicInputRef.current?.value || 'no topic given',
+                movieID: addMovie(id) || 'no id for review',
+            },
+            onError: function (error) {
+                console.log("error:",error)
+            },
+        });
+
     return (
         <Card>
             <form className={classes.form}>
@@ -98,7 +120,7 @@ function NewMovieForm() {
 
                 <div className={classes.im}>
                     <label htmlFor="image">Movie Image</label>
-                    <input type="url" id="image" ref={imageInputRef}/>
+                    <input datatype="string" type="url" id="image" ref={imageInputRef}/>
                 </div>
 
                 <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
@@ -159,7 +181,19 @@ function NewMovieForm() {
                 </div>
 
                 <div className={classes.control}>
-                    <label htmlFor="review">Review</label>
+                    <label htmlFor="topic">Review title</label>
+                    <textarea
+                        id="topic"
+                        type="text"
+                        datatype="String"
+                        required
+                        rows="1"
+                        ref={topicInputRef}
+                    ></textarea>
+                </div>
+
+                <div className={classes.control}>
+                    <label htmlFor="review">Review Text</label>
                     <textarea id="review" rows="5" datatype="String" ref={reviewInputRef}></textarea>
                 </div>
 
@@ -177,7 +211,7 @@ function NewMovieForm() {
                 </div>
 
                 <div className={classes.actions}>
-                    <button onClick={addMovie} type="button">Add Movie</button>
+                    <button onClick={addMovie, addReview} type="button">Add Movie</button>
                 </div>
             </form>
         </Card>

@@ -17,6 +17,8 @@ const (
 	FieldGenre = "genre"
 	// FieldDirectorID holds the string denoting the director_id field in the database.
 	FieldDirectorID = "director_id"
+	// FieldImage holds the string denoting the image field in the database.
+	FieldImage = "image"
 	// EdgeDirector holds the string denoting the director edge name in mutations.
 	EdgeDirector = "director"
 	// EdgeReviews holds the string denoting the reviews edge name in mutations.
@@ -47,6 +49,7 @@ var Columns = []string{
 	FieldRank,
 	FieldGenre,
 	FieldDirectorID,
+	FieldImage,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

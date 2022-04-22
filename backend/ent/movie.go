@@ -26,6 +26,8 @@ type Movie struct {
 	Genre string `json:"genre,omitempty"`
 	// DirectorID holds the value of the "director_id" field.
 	DirectorID int `json:"director_id,omitempty"`
+	// Image holds the value of the "image" field.
+	Image string `json:"image,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MovieQuery when eager-loading is set.
 	Edges MovieEdges `json:"edges"`
@@ -72,7 +74,7 @@ func (*Movie) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case movie.FieldID, movie.FieldRank, movie.FieldDirectorID:
 			values[i] = new(sql.NullInt64)
-		case movie.FieldTitle, movie.FieldDescription, movie.FieldGenre:
+		case movie.FieldTitle, movie.FieldDescription, movie.FieldGenre, movie.FieldImage:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Movie", columns[i])
@@ -125,6 +127,12 @@ func (m *Movie) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				m.DirectorID = int(value.Int64)
 			}
+		case movie.FieldImage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field image", values[i])
+			} else if value.Valid {
+				m.Image = value.String
+			}
 		}
 	}
 	return nil
@@ -173,6 +181,8 @@ func (m *Movie) String() string {
 	builder.WriteString(m.Genre)
 	builder.WriteString(", director_id=")
 	builder.WriteString(fmt.Sprintf("%v", m.DirectorID))
+	builder.WriteString(", image=")
+	builder.WriteString(m.Image)
 	builder.WriteByte(')')
 	return builder.String()
 }
