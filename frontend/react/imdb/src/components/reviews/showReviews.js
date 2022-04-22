@@ -1,7 +1,6 @@
 import {Link} from 'react-router-dom';
 
 import Card from "../ui/Card";
-import classes from "../movies/MovieItem.module.css";
 import FavoritesContext from "../../store/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
 import {isIterableObject} from "graphql/jsutils/isIterableObject";
@@ -14,6 +13,9 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
+
+import classes from "./showReviews.module.css";
+
 
 
 function ShowReviews() {
@@ -43,9 +45,9 @@ function ShowReviews() {
     let loaded
 
     loaded = data.reviewsOfMovie.map(({text, rank, topic, id}) => (
-        <div key={id}>
-            <List sx={{width: '100%', maxWidth: 360, bgcolor: 'background.paper'}}>
-                <ListItem alignItems="flex-start">
+        <div key={id} >
+            <List sx={{width: '100%', }} className={classes.rev}>
+                <ListItem alignItems="flex-start" >
                     <ListItemAvatar>
                         <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg"/>
                     </ListItemAvatar>

@@ -2,13 +2,14 @@ import React, {useContext, useRef} from "react";
 import {Link} from 'react-router-dom';
 
 import Card from "../ui/Card";
-import classes from "../movies/MovieItem.module.css";
 import FavoritesContext from "../../store/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
 import {Stack} from "@mui/material";
 import Button from "@mui/material/Button";
 import {isIterableObject} from "graphql/jsutils/isIterableObject";
 import MenuItem from "@mui/material/MenuItem";
+
+import classes from "./newReview.module.css";
 
 function NewReviewForm() {
     const ADD_REVIEW = gql`
@@ -47,7 +48,7 @@ function NewReviewForm() {
             <form className={classes.form}>
                 <p htmlFor="review" style={{color: "yellow"}}>Add Your Review!</p>
                 <div className={classes.control}>
-                    <label htmlFor="topic">Add Your Review's Title</label>
+                    <label htmlFor="topic" style={{color: "yellow"}}>Add Your Review's Title</label>
                     <textarea
                         id="topic"
                         type="text"
@@ -58,7 +59,7 @@ function NewReviewForm() {
                     ></textarea>
                 </div>
                 <div className={classes.control}>
-                    <label htmlFor="review">Add Your Text!</label>
+                    <label htmlFor="review" style={{color: "yellow"}}>Add Your Text!</label>
                     <textarea
                         id="review"
                         type="text"
@@ -69,7 +70,7 @@ function NewReviewForm() {
                     ></textarea>
                 </div>
                 <div className={classes.ctrl}>
-                    <label htmlFor="rank">Add Your Rank</label>
+                    <label htmlFor="rank" style={{color: "yellow"}}>Add Your Rank</label>
                     <input
                         type="number"
                         name="ranking"

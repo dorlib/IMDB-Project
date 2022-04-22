@@ -12,6 +12,7 @@ import AllMovies from "./pages/AllMovies";
 import MovieItem from "./components/movies/MovieItem";
 import NewReviewForm from "./components/reviews/newReview";
 import ShowReviews from "./components/reviews/showReviews";
+import HoverRating from "./components/reviews/stars";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/new-user" element={<NewUserPage />} />
         <Route path='/sign-in' element={<SignInPage />} />
-        <Route path="/moviePage/:id" element={<><MovieItem /><ShowReviews/><NewReviewForm/></>} />
+        <Route path="/moviePage/:id" element={<><MovieItem /><HoverRating/><ShowReviews/><NewReviewForm/></>} />
       </Routes>
     </Layout>
   );
