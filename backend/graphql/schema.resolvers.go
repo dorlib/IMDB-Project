@@ -26,11 +26,11 @@ func (r *mutationResolver) CreateDirector(ctx context.Context, director Director
 		Save(ctx)
 }
 
-func (r *mutationResolver) CreateReview(ctx context.Context, review ReviewInput, id int) (*ent.Review, error) {
+func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank int, movieID int) (*ent.Review, error) {
 	return r.client.Review.Create().
-		SetText(review.Text).
-		SetRank(review.Rank).
-		SetMovieID(id).
+		SetText(text).
+		SetRank(rank).
+		SetMovieID(movieID).
 		Save(ctx)
 }
 
@@ -105,6 +105,14 @@ type queryResolver struct{ *Resolver }
 
 func (r *queryResolver) MovieByID(ctx context.Context, id int) ([]*ent.Movie, error) {
 	data, err := r.client.Movie.Query().Where(movie.ID(id)).All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}
+
+func (r *queryResolver) ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error) {
+	data, err := r.client.Movie.Query().Where(movie.ID(movieID)).QueryReviews().All(ctx)
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}

@@ -65,7 +65,7 @@ type ComplexityRoot struct {
 		CreateDirector         func(childComplexity int, director DirectorInput) int
 		CreateMovie            func(childComplexity int, movie MovieInput) int
 		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string) int
-		CreateReview           func(childComplexity int, review ReviewInput, id int) int
+		CreateReview           func(childComplexity int, text string, rank int, movieID int) int
 		CreateUser             func(childComplexity int, user UserInput) int
 	}
 
@@ -76,6 +76,7 @@ type ComplexityRoot struct {
 		Movies           func(childComplexity int) int
 		Node             func(childComplexity int, id int) int
 		Nodes            func(childComplexity int, ids []int) int
+		ReviewsOfMovie   func(childComplexity int, movieID int) int
 		Users            func(childComplexity int) int
 	}
 
@@ -104,7 +105,7 @@ type MutationResolver interface {
 	CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error)
 	CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string) (*ent.Movie, error)
 	CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error)
-	CreateReview(ctx context.Context, review ReviewInput, id int) (*ent.Review, error)
+	CreateReview(ctx context.Context, text string, rank int, movieID int) (*ent.Review, error)
 	CreateUser(ctx context.Context, user UserInput) (*ent.User, error)
 }
 type QueryResolver interface {
@@ -112,6 +113,7 @@ type QueryResolver interface {
 	Directors(ctx context.Context) ([]*ent.Director, error)
 	DirectorIDByName(ctx context.Context, name string) (*int, error)
 	MovieByID(ctx context.Context, id int) ([]*ent.Movie, error)
+	ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error)
 	Users(ctx context.Context) ([]*ent.User, error)
 	Node(ctx context.Context, id int) (ent.Noder, error)
 	Nodes(ctx context.Context, ids []int) ([]ent.Noder, error)
@@ -251,7 +253,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateReview(childComplexity, args["review"].(ReviewInput), args["id"].(int)), true
+		return e.complexity.Mutation.CreateReview(childComplexity, args["text"].(string), args["rank"].(int), args["movieID"].(int)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -326,6 +328,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Nodes(childComplexity, args["ids"].([]int)), true
+
+	case "Query.reviewsOfMovie":
+		if e.complexity.Query.ReviewsOfMovie == nil {
+			break
+		}
+
+		args, err := ec.field_Query_reviewsOfMovie_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ReviewsOfMovie(childComplexity, args["movieID"].(int)), true
 
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
@@ -530,7 +544,7 @@ type Director {
 
 type Review {
     id: ID!
-    movieID: ID!
+    movieID: Int!
     text: String!
     rank: Int!
     movie: Movie!
@@ -565,10 +579,6 @@ enum UserOrderField {
     NICKNAME
 }
 
-enum ReviewOrderField {
-    MOVIE_ID
-}
-
 # Define an input type for the mutation below.
 # https://graphql.org/learn/schema/#input-types
 input MovieInput {
@@ -586,7 +596,7 @@ input DirectorInput {
 input ReviewInput {
     text: String!
     rank: Int!
-    movieID: ID!
+    movieID: Int!
 }
 
 input UserInput {
@@ -605,7 +615,7 @@ type Mutation {
     createMovie(movie: MovieInput!): Movie!
     createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String! directorName: String!): Movie!
     createDirector(director: DirectorInput!): Director!
-    createReview(review: ReviewInput!, id: ID!): Review!
+    createReview(text: String!, rank: Int!, movieID: Int!): Review!
     createUser(user: UserInput!): User!
 }
 
@@ -615,6 +625,7 @@ type Query {
     directors: [Director!]
     directorIdByName(name: String!): ID
     movieById(id: ID!) : [Movie!]
+    reviewsOfMovie(movieID: Int!) : [Review]
     users: [User!]
     node(id: ID!): Node
     nodes(ids: [ID!]!): [Node]!
@@ -710,24 +721,33 @@ func (ec *executionContext) field_Mutation_createMovie_args(ctx context.Context,
 func (ec *executionContext) field_Mutation_createReview_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 ReviewInput
-	if tmp, ok := rawArgs["review"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("review"))
-		arg0, err = ec.unmarshalNReviewInput2imdbv2ᚋgraphqlᚐReviewInput(ctx, tmp)
+	var arg0 string
+	if tmp, ok := rawArgs["text"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("text"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["review"] = arg0
+	args["text"] = arg0
 	var arg1 int
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg1, err = ec.unmarshalNID2int(ctx, tmp)
+	if tmp, ok := rawArgs["rank"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rank"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["id"] = arg1
+	args["rank"] = arg1
+	var arg2 int
+	if tmp, ok := rawArgs["movieID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movieID"))
+		arg2, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["movieID"] = arg2
 	return args, nil
 }
 
@@ -818,6 +838,21 @@ func (ec *executionContext) field_Query_nodes_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["ids"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_reviewsOfMovie_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["movieID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movieID"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["movieID"] = arg0
 	return args, nil
 }
 
@@ -1354,7 +1389,7 @@ func (ec *executionContext) _Mutation_createReview(ctx context.Context, field gr
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateReview(rctx, args["review"].(ReviewInput), args["id"].(int))
+		return ec.resolvers.Mutation().CreateReview(rctx, args["text"].(string), args["rank"].(int), args["movieID"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1553,6 +1588,45 @@ func (ec *executionContext) _Query_movieById(ctx context.Context, field graphql.
 	res := resTmp.([]*ent.Movie)
 	fc.Result = res
 	return ec.marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovieᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_reviewsOfMovie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_reviewsOfMovie_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ReviewsOfMovie(rctx, args["movieID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Review)
+	fc.Result = res
+	return ec.marshalOReview2ᚕᚖimdbv2ᚋentᚐReview(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_users(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1806,7 +1880,7 @@ func (ec *executionContext) _Review_movieID(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNID2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Review_text(ctx context.Context, field graphql.CollectedField, obj *ent.Review) (ret graphql.Marshaler) {
@@ -3519,7 +3593,7 @@ func (ec *executionContext) unmarshalInputReviewInput(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movieID"))
-			it.MovieID, err = ec.unmarshalNID2int(ctx, v)
+			it.MovieID, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3957,6 +4031,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_movieById(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "reviewsOfMovie":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_reviewsOfMovie(ctx, field)
 				return res
 			}
 
@@ -4854,11 +4948,6 @@ func (ec *executionContext) marshalNReview2ᚖimdbv2ᚋentᚐReview(ctx context.
 	return ec._Review(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNReviewInput2imdbv2ᚋgraphqlᚐReviewInput(ctx context.Context, v interface{}) (ReviewInput, error) {
-	res, err := ec.unmarshalInputReviewInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -5289,6 +5378,47 @@ func (ec *executionContext) marshalONode2imdbv2ᚋentᚐNoder(ctx context.Contex
 	return ec._Node(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOReview2ᚕᚖimdbv2ᚋentᚐReview(ctx context.Context, sel ast.SelectionSet, v []*ent.Review) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOReview2ᚖimdbv2ᚋentᚐReview(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
 func (ec *executionContext) marshalOReview2ᚕᚖimdbv2ᚋentᚐReviewᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Review) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -5334,6 +5464,13 @@ func (ec *executionContext) marshalOReview2ᚕᚖimdbv2ᚋentᚐReviewᚄ(ctx co
 	}
 
 	return ret
+}
+
+func (ec *executionContext) marshalOReview2ᚖimdbv2ᚋentᚐReview(ctx context.Context, sel ast.SelectionSet, v *ent.Review) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Review(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

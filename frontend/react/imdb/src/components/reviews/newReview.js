@@ -2,7 +2,7 @@ import React, {useContext, useRef} from "react";
 import {Link} from 'react-router-dom';
 
 import Card from "../ui/Card";
-import classes from "./MovieItem.module.css";
+import classes from "../movies/MovieItem.module.css";
 import FavoritesContext from "../../store/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
 import {Stack} from "@mui/material";
@@ -10,9 +10,9 @@ import Button from "@mui/material/Button";
 import {isIterableObject} from "graphql/jsutils/isIterableObject";
 import MenuItem from "@mui/material/MenuItem";
 
-function ReviewsOfMovie() {
+function NewReviewForm() {
     const ADD_REVIEW = gql`
-        mutation CreateReview ($text: String!, $rank: Int!, $movieID: ID!) {
+        mutation CreateReview ($text: String!, $rank: Int!, $movieID: Int!) {
             createReview(text: $text, rank: $rank, movieID: $movieID) {
                 text
                 rank
@@ -23,14 +23,14 @@ function ReviewsOfMovie() {
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
 
-    const reviewInputRef = useRef();
+    const textInputRef = useRef();
     const rankInputRef = useRef();
 
     const [addReview] = useMutation(ADD_REVIEW,
         {
             variables: {
-                movieID: lastSegment || 0,
-                text: reviewInputRef.current?.value || 'Doesnt Have Any Reviews',
+                movieID: lastSegment || 0 ,
+                text: textInputRef.current?.value || 'Doesnt Have Any Reviews',
                 rank: rankInputRef.current?.value || 'No Rank Was Given',
             },
             onError: function (error) {
@@ -48,7 +48,7 @@ function ReviewsOfMovie() {
                         type="text"
                         datatype="String"
                         required
-                        ref={reviewInputRef}
+                        ref={textInputRef}
                         rows="5"
                     ></textarea>
                 </div>
@@ -78,4 +78,4 @@ function ReviewsOfMovie() {
 
 }
 
-export default ReviewsOfMovie
+export default NewReviewForm

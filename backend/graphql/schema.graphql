@@ -32,7 +32,7 @@ type Director {
 
 type Review {
     id: ID!
-    movieID: ID!
+    movieID: Int!
     text: String!
     rank: Int!
     movie: Movie!
@@ -67,10 +67,6 @@ enum UserOrderField {
     NICKNAME
 }
 
-enum ReviewOrderField {
-    MOVIE_ID
-}
-
 # Define an input type for the mutation below.
 # https://graphql.org/learn/schema/#input-types
 input MovieInput {
@@ -88,7 +84,7 @@ input DirectorInput {
 input ReviewInput {
     text: String!
     rank: Int!
-    movieID: ID!
+    movieID: Int!
 }
 
 input UserInput {
@@ -107,7 +103,7 @@ type Mutation {
     createMovie(movie: MovieInput!): Movie!
     createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String! directorName: String!): Movie!
     createDirector(director: DirectorInput!): Director!
-    createReview(review: ReviewInput!, id: ID!): Review!
+    createReview(text: String!, rank: Int!, movieID: Int!): Review!
     createUser(user: UserInput!): User!
 }
 
@@ -117,6 +113,7 @@ type Query {
     directors: [Director!]
     directorIdByName(name: String!): ID
     movieById(id: ID!) : [Movie!]
+    reviewsOfMovie(movieID: Int!) : [Review]
     users: [User!]
     node(id: ID!): Node
     nodes(ids: [ID!]!): [Node]!
