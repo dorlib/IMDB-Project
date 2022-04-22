@@ -21,6 +21,12 @@ type ReviewCreate struct {
 	hooks    []Hook
 }
 
+// SetTopic sets the "topic" field.
+func (rc *ReviewCreate) SetTopic(s string) *ReviewCreate {
+	rc.mutation.SetTopic(s)
+	return rc
+}
+
 // SetText sets the "text" field.
 func (rc *ReviewCreate) SetText(s string) *ReviewCreate {
 	rc.mutation.SetText(s)
@@ -141,6 +147,9 @@ func (rc *ReviewCreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (rc *ReviewCreate) check() error {
+	if _, ok := rc.mutation.Topic(); !ok {
+		return &ValidationError{Name: "topic", err: errors.New(`ent: missing required field "Review.topic"`)}
+	}
 	if _, ok := rc.mutation.Text(); !ok {
 		return &ValidationError{Name: "text", err: errors.New(`ent: missing required field "Review.text"`)}
 	}
@@ -174,6 +183,14 @@ func (rc *ReviewCreate) createSpec() (*Review, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if value, ok := rc.mutation.Topic(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: review.FieldTopic,
+		})
+		_node.Topic = value
+	}
 	if value, ok := rc.mutation.Text(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,

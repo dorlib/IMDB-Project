@@ -7,6 +7,8 @@ const (
 	Label = "review"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldTopic holds the string denoting the topic field in the database.
+	FieldTopic = "topic"
 	// FieldText holds the string denoting the text field in the database.
 	FieldText = "text"
 	// FieldRank holds the string denoting the rank field in the database.
@@ -36,6 +38,7 @@ const (
 // Columns holds all SQL columns for review fields.
 var Columns = []string{
 	FieldID,
+	FieldTopic,
 	FieldText,
 	FieldRank,
 }

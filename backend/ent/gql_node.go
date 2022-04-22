@@ -153,14 +153,22 @@ func (r *Review) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     r.ID,
 		Type:   "Review",
-		Fields: make([]*Field, 2),
+		Fields: make([]*Field, 3),
 		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
-	if buf, err = json.Marshal(r.Text); err != nil {
+	if buf, err = json.Marshal(r.Topic); err != nil {
 		return nil, err
 	}
 	node.Fields[0] = &Field{
+		Type:  "string",
+		Name:  "topic",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(r.Text); err != nil {
+		return nil, err
+	}
+	node.Fields[1] = &Field{
 		Type:  "string",
 		Name:  "text",
 		Value: string(buf),
@@ -168,7 +176,7 @@ func (r *Review) Node(ctx context.Context) (node *Node, err error) {
 	if buf, err = json.Marshal(r.Rank); err != nil {
 		return nil, err
 	}
-	node.Fields[1] = &Field{
+	node.Fields[2] = &Field{
 		Type:  "int",
 		Name:  "rank",
 		Value: string(buf),

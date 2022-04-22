@@ -29,6 +29,12 @@ func (ru *ReviewUpdate) Where(ps ...predicate.Review) *ReviewUpdate {
 	return ru
 }
 
+// SetTopic sets the "topic" field.
+func (ru *ReviewUpdate) SetTopic(s string) *ReviewUpdate {
+	ru.mutation.SetTopic(s)
+	return ru
+}
+
 // SetText sets the "text" field.
 func (ru *ReviewUpdate) SetText(s string) *ReviewUpdate {
 	ru.mutation.SetText(s)
@@ -175,6 +181,13 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := ru.mutation.Topic(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: review.FieldTopic,
+		})
+	}
 	if value, ok := ru.mutation.Text(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -283,6 +296,12 @@ type ReviewUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *ReviewMutation
+}
+
+// SetTopic sets the "topic" field.
+func (ruo *ReviewUpdateOne) SetTopic(s string) *ReviewUpdateOne {
+	ruo.mutation.SetTopic(s)
+	return ruo
 }
 
 // SetText sets the "text" field.
@@ -454,6 +473,13 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ruo.mutation.Topic(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: review.FieldTopic,
+		})
 	}
 	if value, ok := ruo.mutation.Text(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{

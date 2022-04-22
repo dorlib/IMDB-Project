@@ -328,12 +328,12 @@ func (rq *ReviewQuery) WithUser(opts ...func(*UserQuery)) *ReviewQuery {
 // Example:
 //
 //	var v []struct {
-//		Text string `json:"text,omitempty"`
+//		Topic string `json:"topic,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Review.Query().
-//		GroupBy(review.FieldText).
+//		GroupBy(review.FieldTopic).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -355,11 +355,11 @@ func (rq *ReviewQuery) GroupBy(field string, fields ...string) *ReviewGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Text string `json:"text,omitempty"`
+//		Topic string `json:"topic,omitempty"`
 //	}
 //
 //	client.Review.Query().
-//		Select(review.FieldText).
+//		Select(review.FieldTopic).
 //		Scan(ctx, &v)
 //
 func (rq *ReviewQuery) Select(fields ...string) *ReviewSelect {

@@ -17,6 +17,8 @@ type Review struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
+	// Topic holds the value of the "topic" field.
+	Topic string `json:"topic,omitempty"`
 	// Text holds the value of the "text" field.
 	Text string `json:"text,omitempty"`
 	// Rank holds the value of the "rank" field.
@@ -74,7 +76,7 @@ func (*Review) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case review.FieldID, review.FieldRank:
 			values[i] = new(sql.NullInt64)
-		case review.FieldText:
+		case review.FieldTopic, review.FieldText:
 			values[i] = new(sql.NullString)
 		case review.ForeignKeys[0]: // review_movie
 			values[i] = new(sql.NullInt64)
@@ -101,6 +103,12 @@ func (r *Review) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			r.ID = int(value.Int64)
+		case review.FieldTopic:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field topic", values[i])
+			} else if value.Valid {
+				r.Topic = value.String
+			}
 		case review.FieldText:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field text", values[i])
@@ -165,6 +173,8 @@ func (r *Review) String() string {
 	var builder strings.Builder
 	builder.WriteString("Review(")
 	builder.WriteString(fmt.Sprintf("id=%v", r.ID))
+	builder.WriteString(", topic=")
+	builder.WriteString(r.Topic)
 	builder.WriteString(", text=")
 	builder.WriteString(r.Text)
 	builder.WriteString(", rank=")

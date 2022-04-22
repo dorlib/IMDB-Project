@@ -92,6 +92,13 @@ func IDLTE(id int) predicate.Review {
 	})
 }
 
+// Topic applies equality check predicate on the "topic" field. It's identical to TopicEQ.
+func Topic(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTopic), v))
+	})
+}
+
 // Text applies equality check predicate on the "text" field. It's identical to TextEQ.
 func Text(v string) predicate.Review {
 	return predicate.Review(func(s *sql.Selector) {
@@ -103,6 +110,117 @@ func Text(v string) predicate.Review {
 func Rank(v int) predicate.Review {
 	return predicate.Review(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldRank), v))
+	})
+}
+
+// TopicEQ applies the EQ predicate on the "topic" field.
+func TopicEQ(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTopic), v))
+	})
+}
+
+// TopicNEQ applies the NEQ predicate on the "topic" field.
+func TopicNEQ(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTopic), v))
+	})
+}
+
+// TopicIn applies the In predicate on the "topic" field.
+func TopicIn(vs ...string) predicate.Review {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Review(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldTopic), v...))
+	})
+}
+
+// TopicNotIn applies the NotIn predicate on the "topic" field.
+func TopicNotIn(vs ...string) predicate.Review {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Review(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldTopic), v...))
+	})
+}
+
+// TopicGT applies the GT predicate on the "topic" field.
+func TopicGT(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldTopic), v))
+	})
+}
+
+// TopicGTE applies the GTE predicate on the "topic" field.
+func TopicGTE(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldTopic), v))
+	})
+}
+
+// TopicLT applies the LT predicate on the "topic" field.
+func TopicLT(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldTopic), v))
+	})
+}
+
+// TopicLTE applies the LTE predicate on the "topic" field.
+func TopicLTE(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldTopic), v))
+	})
+}
+
+// TopicContains applies the Contains predicate on the "topic" field.
+func TopicContains(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldTopic), v))
+	})
+}
+
+// TopicHasPrefix applies the HasPrefix predicate on the "topic" field.
+func TopicHasPrefix(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldTopic), v))
+	})
+}
+
+// TopicHasSuffix applies the HasSuffix predicate on the "topic" field.
+func TopicHasSuffix(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldTopic), v))
+	})
+}
+
+// TopicEqualFold applies the EqualFold predicate on the "topic" field.
+func TopicEqualFold(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldTopic), v))
+	})
+}
+
+// TopicContainsFold applies the ContainsFold predicate on the "topic" field.
+func TopicContainsFold(v string) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldTopic), v))
 	})
 }
 

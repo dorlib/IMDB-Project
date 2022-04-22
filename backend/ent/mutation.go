@@ -1164,6 +1164,7 @@ type ReviewMutation struct {
 	op            Op
 	typ           string
 	id            *int
+	topic         *string
 	text          *string
 	rank          *int
 	addrank       *int
@@ -1273,6 +1274,42 @@ func (m *ReviewMutation) IDs(ctx context.Context) ([]int, error) {
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
+}
+
+// SetTopic sets the "topic" field.
+func (m *ReviewMutation) SetTopic(s string) {
+	m.topic = &s
+}
+
+// Topic returns the value of the "topic" field in the mutation.
+func (m *ReviewMutation) Topic() (r string, exists bool) {
+	v := m.topic
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTopic returns the old "topic" field's value of the Review entity.
+// If the Review object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ReviewMutation) OldTopic(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTopic is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTopic requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTopic: %w", err)
+	}
+	return oldValue.Topic, nil
+}
+
+// ResetTopic resets all changes to the "topic" field.
+func (m *ReviewMutation) ResetTopic() {
+	m.topic = nil
 }
 
 // SetText sets the "text" field.
@@ -1464,7 +1501,10 @@ func (m *ReviewMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ReviewMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 3)
+	if m.topic != nil {
+		fields = append(fields, review.FieldTopic)
+	}
 	if m.text != nil {
 		fields = append(fields, review.FieldText)
 	}
@@ -1479,6 +1519,8 @@ func (m *ReviewMutation) Fields() []string {
 // schema.
 func (m *ReviewMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case review.FieldTopic:
+		return m.Topic()
 	case review.FieldText:
 		return m.Text()
 	case review.FieldRank:
@@ -1492,6 +1534,8 @@ func (m *ReviewMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *ReviewMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case review.FieldTopic:
+		return m.OldTopic(ctx)
 	case review.FieldText:
 		return m.OldText(ctx)
 	case review.FieldRank:
@@ -1505,6 +1549,13 @@ func (m *ReviewMutation) OldField(ctx context.Context, name string) (ent.Value, 
 // type.
 func (m *ReviewMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case review.FieldTopic:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTopic(v)
+		return nil
 	case review.FieldText:
 		v, ok := value.(string)
 		if !ok {
@@ -1583,6 +1634,9 @@ func (m *ReviewMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *ReviewMutation) ResetField(name string) error {
 	switch name {
+	case review.FieldTopic:
+		m.ResetTopic()
+		return nil
 	case review.FieldText:
 		m.ResetText()
 		return nil

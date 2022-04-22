@@ -65,7 +65,7 @@ type ComplexityRoot struct {
 		CreateDirector         func(childComplexity int, director DirectorInput) int
 		CreateMovie            func(childComplexity int, movie MovieInput) int
 		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string) int
-		CreateReview           func(childComplexity int, text string, rank int, movieID int) int
+		CreateReview           func(childComplexity int, text string, rank int, movieID int, topic string) int
 		CreateUser             func(childComplexity int, user UserInput) int
 	}
 
@@ -86,6 +86,7 @@ type ComplexityRoot struct {
 		MovieID func(childComplexity int) int
 		Rank    func(childComplexity int) int
 		Text    func(childComplexity int) int
+		Topic   func(childComplexity int) int
 	}
 
 	User struct {
@@ -105,7 +106,7 @@ type MutationResolver interface {
 	CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error)
 	CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string) (*ent.Movie, error)
 	CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error)
-	CreateReview(ctx context.Context, text string, rank int, movieID int) (*ent.Review, error)
+	CreateReview(ctx context.Context, text string, rank int, movieID int, topic string) (*ent.Review, error)
 	CreateUser(ctx context.Context, user UserInput) (*ent.User, error)
 }
 type QueryResolver interface {
@@ -253,7 +254,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateReview(childComplexity, args["text"].(string), args["rank"].(int), args["movieID"].(int)), true
+		return e.complexity.Mutation.CreateReview(childComplexity, args["text"].(string), args["rank"].(int), args["movieID"].(int), args["topic"].(string)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -382,6 +383,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Review.Text(childComplexity), true
+
+	case "Review.topic":
+		if e.complexity.Review.Topic == nil {
+			break
+		}
+
+		return e.complexity.Review.Topic(childComplexity), true
 
 	case "User.birthday":
 		if e.complexity.User.BirthDay == nil {
@@ -545,6 +553,7 @@ type Director {
 type Review {
     id: ID!
     movieID: Int!
+    topic: String!
     text: String!
     rank: Int!
     movie: Movie!
@@ -594,6 +603,7 @@ input DirectorInput {
 }
 
 input ReviewInput {
+    topic: String!
     text: String!
     rank: Int!
     movieID: Int!
@@ -615,7 +625,7 @@ type Mutation {
     createMovie(movie: MovieInput!): Movie!
     createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String! directorName: String!): Movie!
     createDirector(director: DirectorInput!): Director!
-    createReview(text: String!, rank: Int!, movieID: Int!): Review!
+    createReview(text: String!, rank: Int!, movieID: Int!, topic: String!): Review!
     createUser(user: UserInput!): User!
 }
 
@@ -748,6 +758,15 @@ func (ec *executionContext) field_Mutation_createReview_args(ctx context.Context
 		}
 	}
 	args["movieID"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["topic"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("topic"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["topic"] = arg3
 	return args, nil
 }
 
@@ -1389,7 +1408,7 @@ func (ec *executionContext) _Mutation_createReview(ctx context.Context, field gr
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateReview(rctx, args["text"].(string), args["rank"].(int), args["movieID"].(int))
+		return ec.resolvers.Mutation().CreateReview(rctx, args["text"].(string), args["rank"].(int), args["movieID"].(int), args["topic"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1881,6 +1900,41 @@ func (ec *executionContext) _Review_movieID(ctx context.Context, field graphql.C
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Review_topic(ctx context.Context, field graphql.CollectedField, obj *ent.Review) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Review",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Topic, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Review_text(ctx context.Context, field graphql.CollectedField, obj *ent.Review) (ret graphql.Marshaler) {
@@ -3573,6 +3627,14 @@ func (ec *executionContext) unmarshalInputReviewInput(ctx context.Context, obj i
 
 	for k, v := range asMap {
 		switch k {
+		case "topic":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("topic"))
+			it.Topic, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "text":
 			var err error
 
@@ -4189,6 +4251,16 @@ func (ec *executionContext) _Review(ctx context.Context, sel ast.SelectionSet, o
 				return innerFunc(ctx)
 
 			})
+		case "topic":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Review_topic(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "text":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Review_text(ctx, field, obj)

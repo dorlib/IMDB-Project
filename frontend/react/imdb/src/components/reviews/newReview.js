@@ -12,10 +12,11 @@ import MenuItem from "@mui/material/MenuItem";
 
 function NewReviewForm() {
     const ADD_REVIEW = gql`
-        mutation CreateReview ($text: String!, $rank: Int!, $movieID: Int!) {
-            createReview(text: $text, rank: $rank, movieID: $movieID) {
+        mutation CreateReview ($text: String!, $rank: Int!, $movieID: Int!, $topic: String!) {
+            createReview(text: $text, rank: $rank, movieID: $movieID, topic: $topic) {
                 text
                 rank
+                topic
             }
         }
     `;
@@ -25,6 +26,8 @@ function NewReviewForm() {
 
     const textInputRef = useRef();
     const rankInputRef = useRef();
+    const topicInputRef = useRef();
+
 
     const [addReview] = useMutation(ADD_REVIEW,
         {
@@ -32,6 +35,7 @@ function NewReviewForm() {
                 movieID: lastSegment || 0 ,
                 text: textInputRef.current?.value || 'Doesnt Have Any Reviews',
                 rank: rankInputRef.current?.value || 'No Rank Was Given',
+                topic: topicInputRef.current?.value || 'No title given',
             },
             onError: function (error) {
                 console.log("error:",error)
@@ -41,8 +45,20 @@ function NewReviewForm() {
     let loaded =  (
         <Card>
             <form className={classes.form}>
+                <p htmlFor="review" style={{color: "yellow"}}>Add Your Review!</p>
                 <div className={classes.control}>
-                    <label htmlFor="review">Add Your Review!</label>
+                    <label htmlFor="topic">Add Your Review's Title</label>
+                    <textarea
+                        id="topic"
+                        type="text"
+                        datatype="String"
+                        required
+                        ref={topicInputRef}
+                        rows="1"
+                    ></textarea>
+                </div>
+                <div className={classes.control}>
+                    <label htmlFor="review">Add Your Text!</label>
                     <textarea
                         id="review"
                         type="text"
