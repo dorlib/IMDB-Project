@@ -1,6 +1,8 @@
 import React from "react";
 import {gql, useQuery} from "@apollo/client";
 import allDirectors from "./AllDirectors";
+import MenuItem from "@mui/material/MenuItem";
+import {Link} from "react-router-dom";
 
 
 function AllDirectorsPage() {
@@ -17,23 +19,25 @@ function AllDirectorsPage() {
         }
     `;
 
-    const { data, loading, error} = useQuery(GET_DIRECTORS)
+    const {data, loading, error} = useQuery(GET_DIRECTORS)
     if (loading) return <p style={{color: "yellow"}}>Loading...</p>;
     if (error) return <p style={{color: "yellow"}}>Error :</p>;
     let loaded
 
-    loaded = data.directors.map(({name, movies},id) => (
+    loaded = data.directors.map(({name, id, movies}) => (
         <div style={{color: "yellow"}} key={id}>
             <div>
-                {name}:
-                {movies.map(({title,id}) => (
+                <Link to={"/DirectorPage/" + id}  style={{color: "yellow" }}  > {name}: </Link>
+                {movies.map(({title, id}) => (
                     <li key={movies.id}>
-                        {title}
+                        <Link to={"/moviePage/" + id}  style={{color: "yellow" }}  > {title}: </Link>
                     </li>
                 ))}
             </div>
         </div>
-    ));
+
+))
+
 
     return loaded
 }

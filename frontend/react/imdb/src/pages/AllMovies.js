@@ -26,7 +26,7 @@ function AllMoviesPage(props) {
         loaded = data.movies.map(( {title, rank, id}) => (
             <div key={id}>
                 <p style={{color: "yellow"}}>
-                    <MenuItem><Link to={"/moviePage/" + id} style={{color: "yellow"}}>{title}</Link>:{rank}</MenuItem>
+                    <MenuItem style={{fontSize: "x-large"}}><Link to={"/moviePage/" + id} style={{color: "yellow"}} >{title}</Link>:{rank}</MenuItem>
                 </p>
             </div>
         ));
