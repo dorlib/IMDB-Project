@@ -1,8 +1,10 @@
 import { useRef } from "react";
 
 import Card from "../ui/Card";
+import {styled} from "@mui/material/styles";
 import classes from "./NewUserForm.module.css";
-import {Typography} from "@mui/material";
+import {Input, Stack, Typography} from "@mui/material";
+import Button from "@mui/material/Button";
 
 function NewUserForm(props) {
   const firstNameInputRef = useRef();
@@ -14,6 +16,7 @@ function NewUserForm(props) {
   const yearOfBirthInputRef = useRef();
   const passwordInputRef = useRef();
   const descriptionInputRef = useRef();
+  const imageInputRef = useRef();
 
   function submitHandler(event) {
     event.preventDefault();
@@ -27,6 +30,7 @@ function NewUserForm(props) {
     const enteredDayOfBirth = dayOfBirthInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
     const enteredDescription = descriptionInputRef.current.value;
+    const enteredImage = imageInputRef.current.value;
 
     const userData = {
       firstName: enteredFirstName,
@@ -38,6 +42,7 @@ function NewUserForm(props) {
       yearOfBirth: enteredYearOfBirth,
       password: enteredPassword,
       description: enteredDescription,
+      image: enteredImage
     };
 
     props.onAddUser(userData);
@@ -66,17 +71,37 @@ function NewUserForm(props) {
         </div>
 
         <div className={classes.control}>
-          <label htmlFor="email">Enter Your Mail</label>
+          <label htmlFor="email">Enter Your E-Mail</label>
           <input type="text" required id="email" ref={emailInputRef} />
         </div>
+
+        <div className={classes.im}>
+          <label htmlFor="image">Movie Image</label>
+          <input datatype="string" type="url" id="image" ref={imageInputRef}/>
+        </div>
+
+        <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
+          <label htmlFor="contained-button-file">
+
+            <Button variant="contained" component="span">
+              Upload
+              <Input
+                  accept="image/*"
+                  type="file"
+                  id="contained-button-file"
+                  ref={imageInputRef}
+              />
+            </Button>
+          </label>
+        </Stack>
         
         <div>
         <table className={classes.tr}>
             <tr>
             <label htmlFor="birthday">Enter Your Birthday</label>
-            <td><input type="number" id="year" min="1920" max="2022" placeholder="Year" required ref={yearOfBirthInputRef}/></td>
-            <td><input type="number" id="month" min="1" max="12" placeholder="Month" required ref={monthOfBirthInputRef}/></td>
-            <td><input type="number" id="day" min="1" max="31" placeholder="Day" required ref={dayOfBirthInputRef}/></td>
+            <td><input type="number" id="year" min="1920" max="2022" placeholder="Year" required ref={yearOfBirthInputRef} style={{width:"2cm"}}/></td>
+            <td><input type="number" id="month" min="1" max="12" placeholder="Month" required ref={monthOfBirthInputRef} style={{width:"2cm"}}/></td>
+            <td><input type="number" id="day" min="1" max="31" placeholder="Day" required ref={dayOfBirthInputRef} style={{width:"2cm"}}/></td>
             </tr>
         </table>
         </div>
