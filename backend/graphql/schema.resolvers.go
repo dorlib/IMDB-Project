@@ -111,6 +111,10 @@ func (r *queryResolver) MovieByID(ctx context.Context, id int) ([]*ent.Movie, er
 	return data, nil
 }
 
+func (r *queryResolver) DirectorByID(ctx context.Context, id int) ([]*ent.Director, error) {
+	return r.client.Director.Query().Where(director.ID(id)).All(ctx)
+}
+
 func (r *queryResolver) ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error) {
 	data, err := r.client.Movie.Query().Where(movie.ID(movieID)).QueryReviews().All(ctx)
 	if err != nil {
