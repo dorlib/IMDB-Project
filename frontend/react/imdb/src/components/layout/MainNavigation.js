@@ -80,9 +80,14 @@ function MainNavigation() {
                 control={<Radio />}
                 label="By Director"
               />
+              <FormControlLabel
+                  value="genre"
+                  control={<Radio />}
+                  label="By Genre"
+              />
             </RadioGroup>
           </FormControl>
-          <PopupState variant="popover" popupId="demo-popup-menu" >
+          <PopupState variant="popover" popupId="demo-popup-menu"  >
             {(popupState) => (
                 <React.Fragment >
                   <Button className={classes.menu} variant="contained" {...bindTrigger(popupState)} >

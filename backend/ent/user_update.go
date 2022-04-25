@@ -70,6 +70,12 @@ func (uu *UserUpdate) SetBirthDay(s string) *UserUpdate {
 	return uu
 }
 
+// SetProfile sets the "profile" field.
+func (uu *UserUpdate) SetProfile(s string) *UserUpdate {
+	uu.mutation.SetProfile(s)
+	return uu
+}
+
 // AddReviewIDs adds the "reviews" edge to the Review entity by IDs.
 func (uu *UserUpdate) AddReviewIDs(ids ...int) *UserUpdate {
 	uu.mutation.AddReviewIDs(ids...)
@@ -263,6 +269,13 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldBirthDay,
 		})
 	}
+	if value, ok := uu.mutation.Profile(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldProfile,
+		})
+	}
 	if uu.mutation.ReviewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -375,6 +388,12 @@ func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
 // SetBirthDay sets the "birthDay" field.
 func (uuo *UserUpdateOne) SetBirthDay(s string) *UserUpdateOne {
 	uuo.mutation.SetBirthDay(s)
+	return uuo
+}
+
+// SetProfile sets the "profile" field.
+func (uuo *UserUpdateOne) SetProfile(s string) *UserUpdateOne {
+	uuo.mutation.SetProfile(s)
 	return uuo
 }
 
@@ -593,6 +612,13 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Type:   field.TypeString,
 			Value:  value,
 			Column: user.FieldBirthDay,
+		})
+	}
+	if value, ok := uuo.mutation.Profile(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldProfile,
 		})
 	}
 	if uuo.mutation.ReviewsCleared() {

@@ -21,6 +21,8 @@ const (
 	FieldEmail = "email"
 	// FieldBirthDay holds the string denoting the birthday field in the database.
 	FieldBirthDay = "birth_day"
+	// FieldProfile holds the string denoting the profile field in the database.
+	FieldProfile = "profile"
 	// EdgeReviews holds the string denoting the reviews edge name in mutations.
 	EdgeReviews = "reviews"
 	// Table holds the table name of the user in the database.
@@ -44,6 +46,7 @@ var Columns = []string{
 	FieldPassword,
 	FieldEmail,
 	FieldBirthDay,
+	FieldProfile,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

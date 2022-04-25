@@ -28,6 +28,7 @@ type UserInput struct {
 	Nickname    string `json:"nickname"`
 	Description string `json:"description"`
 	Password    string `json:"password"`
+	Profile     string `json:"profile"`
 	Email       string `json:"email"`
 	Birthday    string `json:"birthday"`
 }

@@ -49,6 +49,7 @@ type User {
     password: String!
     email: String!
     birthday: String!
+    profile: String!
     reviews: [Review!]
 }
 
@@ -97,6 +98,7 @@ input UserInput {
     nickname: String!
     description: String!
     password: String!
+    profile: String!    
     email: String!
     birthday: String!
 }

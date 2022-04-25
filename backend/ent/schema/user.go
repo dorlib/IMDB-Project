@@ -22,6 +22,7 @@ func (User) Fields() []ent.Field {
 		field.String("password").MinLen(8).NotEmpty(),
 		field.String("email").Unique(),
 		field.String("birthDay"),
+		field.String("profile"),
 	}
 }
 

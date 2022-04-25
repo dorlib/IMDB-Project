@@ -62,6 +62,12 @@ func (uc *UserCreate) SetBirthDay(s string) *UserCreate {
 	return uc
 }
 
+// SetProfile sets the "profile" field.
+func (uc *UserCreate) SetProfile(s string) *UserCreate {
+	uc.mutation.SetProfile(s)
+	return uc
+}
+
 // AddReviewIDs adds the "reviews" edge to the Review entity by IDs.
 func (uc *UserCreate) AddReviewIDs(ids ...int) *UserCreate {
 	uc.mutation.AddReviewIDs(ids...)
@@ -188,6 +194,9 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.BirthDay(); !ok {
 		return &ValidationError{Name: "birthDay", err: errors.New(`ent: missing required field "User.birthDay"`)}
 	}
+	if _, ok := uc.mutation.Profile(); !ok {
+		return &ValidationError{Name: "profile", err: errors.New(`ent: missing required field "User.profile"`)}
+	}
 	return nil
 }
 
@@ -270,6 +279,14 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldBirthDay,
 		})
 		_node.BirthDay = value
+	}
+	if value, ok := uc.mutation.Profile(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldProfile,
+		})
+		_node.Profile = value
 	}
 	if nodes := uc.mutation.ReviewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

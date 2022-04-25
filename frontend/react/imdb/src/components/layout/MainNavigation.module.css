@@ -15,9 +15,9 @@
 }
 
 .menu {
-  position: absolute;
-  display: flex;
-  top: 4%;
+  position: relative;
+  display: block;
+  bottom: 60%;
   left: 47%;
   color: white;
   background-color: #cc2062;
@@ -127,7 +127,7 @@ body {
 
 .by{
   position: relative;
-  display: flex;
+  display: block;
   top: -2.5pc;
-  left: 186%;
+  left: 127.5%;
 }

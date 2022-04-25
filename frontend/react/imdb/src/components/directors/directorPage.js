@@ -57,7 +57,6 @@ function DirectorPage() {
             </p>
         </div>
 
-
     let loaded = data.directorById["0"]["movies"].map(({title, id, rank, image}) => (
         <div>
             <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm"}} key={id}>

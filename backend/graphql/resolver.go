@@ -16,6 +16,11 @@ func (r *Resolver) Review() ReviewResolver {
 	panic("implement me")
 }
 
+func (r *Resolver) User() UserResolver {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewSchema(client *ent.Client) graphql.ExecutableSchema {
 	return NewExecutableSchema(Config{
 		Resolvers: &Resolver{client},

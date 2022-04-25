@@ -42,6 +42,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, user UserInput) (*ent
 		SetPassword(user.Password).
 		SetDescription(user.Description).
 		SetBirthDay(user.Birthday).
+		SetProfile(user.Profile).
 		Save(ctx)
 }
 

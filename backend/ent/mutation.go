@@ -1827,6 +1827,7 @@ type UserMutation struct {
 	password       *string
 	email          *string
 	birthDay       *string
+	profile        *string
 	clearedFields  map[string]struct{}
 	reviews        map[int]struct{}
 	removedreviews map[int]struct{}
@@ -2186,6 +2187,42 @@ func (m *UserMutation) ResetBirthDay() {
 	m.birthDay = nil
 }
 
+// SetProfile sets the "profile" field.
+func (m *UserMutation) SetProfile(s string) {
+	m.profile = &s
+}
+
+// Profile returns the value of the "profile" field in the mutation.
+func (m *UserMutation) Profile() (r string, exists bool) {
+	v := m.profile
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldProfile returns the old "profile" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldProfile(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldProfile is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldProfile requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldProfile: %w", err)
+	}
+	return oldValue.Profile, nil
+}
+
+// ResetProfile resets all changes to the "profile" field.
+func (m *UserMutation) ResetProfile() {
+	m.profile = nil
+}
+
 // AddReviewIDs adds the "reviews" edge to the Review entity by ids.
 func (m *UserMutation) AddReviewIDs(ids ...int) {
 	if m.reviews == nil {
@@ -2259,7 +2296,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.firstname != nil {
 		fields = append(fields, user.FieldFirstname)
 	}
@@ -2280,6 +2317,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.birthDay != nil {
 		fields = append(fields, user.FieldBirthDay)
+	}
+	if m.profile != nil {
+		fields = append(fields, user.FieldProfile)
 	}
 	return fields
 }
@@ -2303,6 +2343,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Email()
 	case user.FieldBirthDay:
 		return m.BirthDay()
+	case user.FieldProfile:
+		return m.Profile()
 	}
 	return nil, false
 }
@@ -2326,6 +2368,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldEmail(ctx)
 	case user.FieldBirthDay:
 		return m.OldBirthDay(ctx)
+	case user.FieldProfile:
+		return m.OldProfile(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -2383,6 +2427,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetBirthDay(v)
+		return nil
+	case user.FieldProfile:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetProfile(v)
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
@@ -2453,6 +2504,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldBirthDay:
 		m.ResetBirthDay()
+		return nil
+	case user.FieldProfile:
+		m.ResetProfile()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
