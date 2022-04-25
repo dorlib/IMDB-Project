@@ -45,40 +45,43 @@ function DirectorPage() {
     console.log(data)
 
     let name = data["directorById"]["0"]["name"]
-    let title = data["directorById"]["0"]["movies"]["0"]["title"]
-    let rank = data["directorById"]["0"]["movies"]["0"]["rank"]
-    let id = data["directorById"]["0"]["movies"]["0"]["id"]
-    let img = data["directorById"]["0"]["movies"]["0"]["image"]
+    // let title = data["directorById"]["0"]["movies"]["0"]["titl e"]
+    // let rank = data["directorById"]["0"]["movies"]["0"]["rank"]
+    // let id = data["directorById"]["0"]["movies"]["0"]["id"]
+    // let img = data["directorById"]["0"]["movies"]["0"]["image"]
 
-    let loaded = (
-        <div>
+    let d =
         <div>
             <p className={classes.name} style={{color: "yellow", fontSize: "xx-large"}}>
                 {name}
             </p>
         </div>
-        <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062"}}>
-            <CardMedia
-                component="img"
-                alt="movie image"
-                height="300"
-                src={img}
-            />
-            <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.director}>
-                        {title} : {rank} / 100
-                    </p>
-                </Typography>
-            </CardContent>
-            <CardActions>
-                <Button size="large">Share</Button>
-                <Button size="large">Go To Movie's Page</Button>
-            </CardActions>
-        </Card>
+
+
+    let loaded = data.directorById["0"]["movies"].map(({title, id, rank, image}) => (
+        <div>
+            <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm"}} key={id}>
+                <CardMedia
+                    component="img"
+                    alt="movie image"
+                    height="300"
+                    src={image}
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                        <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.director}>
+                            {title} : {rank} / 100
+                        </p>
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button size="large">Share</Button>
+                    <Button size="large">Go To Movie's Page</Button>
+                </CardActions>
+            </Card>
         </div>
-    )
-    return loaded
+    ))
+    return <>{d},{loaded}</>
 }
 
 export default DirectorPage;
