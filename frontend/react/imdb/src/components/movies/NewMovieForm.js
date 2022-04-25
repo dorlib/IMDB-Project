@@ -78,7 +78,7 @@ function NewMovieForm() {
         {
             variables: {
                 title: titleInputRef.current?.value || 'Unknown',
-                image: imageInputRef.current?.value || 'No Picture',
+                image: imageInputRef.current?.value || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png',
                 description: descriptionInputRef.current?.value || 'No Description',
                 review: reviewInputRef.current?.value || 'Doesnt Have Any Reviews',
                 rank: rankInputRef.current?.value || 'No Rank Was Given',

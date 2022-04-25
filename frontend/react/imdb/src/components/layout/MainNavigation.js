@@ -85,7 +85,7 @@ function MainNavigation() {
           <PopupState variant="popover" popupId="demo-popup-menu" >
             {(popupState) => (
                 <React.Fragment >
-                  <Button variant="contained" {...bindTrigger(popupState)} className={classes.menu}>
+                  <Button className={classes.menu} variant="contained" {...bindTrigger(popupState)} >
                     Menu
                   </Button>
                   <Menu {...bindMenu(popupState)} >

@@ -1,0 +1,17 @@
+.director {
+    background-color: #cc2062;
+    color: white;
+    border-radius: 12px;
+    padding: 0 1rem;
+    margin-left: 0.5rem;
+    margin-bottom: 1.4rem;
+    display: flex;
+    width: 16.3cm;
+}
+
+.name {
+    display: flex;
+    position: relative;
+    margin-left: 4.2cm;
+    margin-top: 30px;
+}

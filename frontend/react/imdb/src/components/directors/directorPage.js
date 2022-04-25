@@ -1,8 +1,6 @@
 import React, {useContext, useRef} from "react";
 import {Link} from 'react-router-dom';
 
-import Card from "../ui/Card";
-import classes from "./MovieItem.module.css";
 import FavoritesContext from "../../store/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
 import {Stack} from "@mui/material";
@@ -11,32 +9,31 @@ import {isIterableObject} from "graphql/jsutils/isIterableObject";
 import MenuItem from "@mui/material/MenuItem";
 import classes from "./directorPage.module.css"
 
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+
 function DirectorPage() {
     const DIRECTOR_DATA = gql`
         query DirectorById($id : ID!) {
             directorById(id: $id) {
-                id
-                title
-                rank
-                description
-                genre
-                image
-                reviews{
-                    rank
-                }
-                director {
+                name
+                movies{
                     id
-                    name
+                    title
+                    rank
+                    image
                 }
             }
         }
     `;
 
-
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
 
-    const {loading, error, data} = useQuery(MOVIE_DATA,
+    const {loading, error, data} = useQuery(DIRECTOR_DATA,
         {
             variables: {
                 id: lastSegment || 0
@@ -45,51 +42,48 @@ function DirectorPage() {
         })
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
+    console.log(data)
 
-    let title = data["movieById"]["0"]["title"]
-    let rank = data["movieById"]["0"]["rank"]
-    let description = data["movieById"]["0"]["description"]
-    let image = data["movieById"]["0"]["image"]
+    let name = data["directorById"]["0"]["name"]
+    let title = data["directorById"]["0"]["movies"]["0"]["title"]
+    let rank = data["directorById"]["0"]["movies"]["0"]["rank"]
+    let id = data["directorById"]["0"]["movies"]["0"]["id"]
+    let img = data["directorById"]["0"]["movies"]["0"]["image"]
 
-
-    let loaded =  (
-        <Card>
-            <div>
-                <p style={{color: "yellow" ,fontSize: "xx-large"}}>
-                    {title} : {rank} {"/100"}
-                </p>
-            </div>
-            <div className={classes.image}>
-                <img src={image} />
-                {image}
-            </div>
-            <div>
-                <h4 style={{color: "yellow"}}>
-                    Movie description : {description}
-                </h4>
-            </div>
+    let loaded = (
+        <div>
+        <div>
+            <p className={classes.name} style={{color: "yellow", fontSize: "xx-large"}}>
+                {name}
+            </p>
+        </div>
+        <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062"}}>
+            <CardMedia
+                component="img"
+                alt="movie image"
+                height="300"
+                src={img}
+            />
+            <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.director}>
+                        {title} : {rank} / 100
+                    </p>
+                </Typography>
+            </CardContent>
+            <CardActions>
+                <Button size="large">Share</Button>
+                <Button size="large">Go To Movie's Page</Button>
+            </CardActions>
         </Card>
+        </div>
     )
-
     return loaded
-
-    // const favoritesCtx = useContext(FavoritesContext);
-    // const itemIsFavorite = favoritesCtx.itemIsFavorite(props.id);
-    //
-    // function toggleFavoriteStatusHandler() {
-    //     if (itemIsFavorite) {
-    //         favoritesCtx.removeFavorite(props.id);
-    //     } else {
-    //         favoritesCtx.addFavorite({
-    //             id: props.id,
-    //             title: props.title,
-    //             description: props.description,
-    //             image: props.image,
-    //             director: props.director,
-    //         });
-    //     }
-    // }
-
 }
 
 export default DirectorPage;
+
+
+
+
+

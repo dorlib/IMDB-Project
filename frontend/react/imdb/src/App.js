@@ -13,6 +13,7 @@ import MovieItem from "./components/movies/MovieItem";
 import NewReviewForm from "./components/reviews/newReview";
 import ShowReviews from "./components/reviews/showReviews";
 import HoverRating from "./components/reviews/stars";
+import DirectorPage from "./components/directors/directorPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/new-user" element={<NewUserPage />} />
         <Route path='/sign-in' element={<SignInPage />} />
+        <Route path='/directorPage/:id' element={<DirectorPage />} />
         <Route path="/moviePage/:id" element={<><MovieItem /><HoverRating/><ShowReviews/><NewReviewForm/></>} />
       </Routes>
     </Layout>
