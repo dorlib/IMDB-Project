@@ -75,7 +75,7 @@ function DirectorPage() {
                 </CardContent>
                 <CardActions>
                     <Button size="large">Share</Button>
-                    <Button size="large">Go To Movie's Page</Button>
+                    <Link to={"/moviePage/" + id}><Button size="large">Go To Movie's Page</Button>></Link>
                 </CardActions>
             </Card>
         </div>
