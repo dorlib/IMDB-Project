@@ -29,7 +29,6 @@ function NewReviewForm() {
     const rankInputRef = useRef();
     const topicInputRef = useRef();
 
-
     const [addReview] = useMutation(ADD_REVIEW,
         {
             variables: {

@@ -45,6 +45,7 @@ function ShowReviews() {
     let loaded
 
     loaded = data.reviewsOfMovie.map(({text, rank, topic, id}) => (
+        text !== "Doesnt Have Any Reviews" ? (
         <div key={id}  className={classes.item}>
             <List sx={{width: '100%', }} className={classes.rev}>
                 <ListItem alignItems="flex-start" >
@@ -70,7 +71,8 @@ function ShowReviews() {
                 <Divider variant="inset" component="li"/>
             </List>
         </div>
-    ));
+    ): null
+    ))
     return loaded
 }
 
