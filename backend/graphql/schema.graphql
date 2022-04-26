@@ -111,6 +111,7 @@ type Mutation {
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, topic: String!): Review!
     createUser(user: UserInput!): User!
+    updateRank(id: ID!, rank: Int!) : Movie!
 }
 
 # Define a query for getting all movies.

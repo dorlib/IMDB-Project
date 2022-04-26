@@ -8,6 +8,7 @@ import {Stack} from "@mui/material";
 import Button from "@mui/material/Button";
 import {isIterableObject} from "graphql/jsutils/isIterableObject";
 import MenuItem from "@mui/material/MenuItem";
+import UpdateRank from "./total-rank";
 
 import classes from "./newReview.module.css";
 
@@ -74,7 +75,7 @@ function NewReviewForm() {
                         type="number"
                         name="ranking"
                         id="ranking"
-                        min="0"
+                        min="1"
                         max="100"
                         ref={rankInputRef}
                         datatype="Int"
@@ -87,10 +88,7 @@ function NewReviewForm() {
         </Card>
     )
 
-
     return loaded
-
-
 
 }
 

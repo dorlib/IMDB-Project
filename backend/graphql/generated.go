@@ -39,7 +39,6 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
 	Review() ReviewResolver
-	User() UserResolver
 }
 
 type DirectiveRoot struct {
@@ -69,6 +68,7 @@ type ComplexityRoot struct {
 		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string, image string) int
 		CreateReview           func(childComplexity int, text string, rank int, movieID int, topic string) int
 		CreateUser             func(childComplexity int, user UserInput) int
+		UpdateRank             func(childComplexity int, id int, rank int) int
 	}
 
 	Query struct {
@@ -112,6 +112,7 @@ type MutationResolver interface {
 	CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error)
 	CreateReview(ctx context.Context, text string, rank int, movieID int, topic string) (*ent.Review, error)
 	CreateUser(ctx context.Context, user UserInput) (*ent.User, error)
+	UpdateRank(ctx context.Context, id int, rank int) (*ent.Movie, error)
 }
 type QueryResolver interface {
 	Movies(ctx context.Context) ([]*ent.Movie, error)
@@ -126,9 +127,6 @@ type QueryResolver interface {
 }
 type ReviewResolver interface {
 	MovieID(ctx context.Context, obj *ent.Review) (int, error)
-}
-type UserResolver interface {
-	Profile(ctx context.Context, obj *ent.User) (string, error)
 }
 
 type executableSchema struct {
@@ -282,6 +280,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateUser(childComplexity, args["user"].(UserInput)), true
+
+	case "Mutation.updateRank":
+		if e.complexity.Mutation.UpdateRank == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateRank_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateRank(childComplexity, args["id"].(int), args["rank"].(int)), true
 
 	case "Query.directorById":
 		if e.complexity.Query.DirectorByID == nil {
@@ -652,7 +662,7 @@ input UserInput {
     nickname: String!
     description: String!
     password: String!
-    profile: String!
+    profile: String!    
     email: String!
     birthday: String!
 }
@@ -665,6 +675,7 @@ type Mutation {
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, topic: String!): Review!
     createUser(user: UserInput!): User!
+    updateRank(id: ID!, rank: Int!) : Movie!
 }
 
 # Define a query for getting all movies.
@@ -830,6 +841,30 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 		}
 	}
 	args["user"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateRank_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["rank"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rank"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["rank"] = arg1
 	return args, nil
 }
 
@@ -1563,6 +1598,48 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	res := resTmp.(*ent.User)
 	fc.Result = res
 	return ec.marshalNUser2ᚖimdbv2ᚋentᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateRank(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateRank_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateRank(rctx, args["id"].(int), args["rank"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Movie)
+	fc.Result = res
+	return ec.marshalNMovie2ᚖimdbv2ᚋentᚐMovie(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_movies(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2470,14 +2547,14 @@ func (ec *executionContext) _User_profile(ctx context.Context, field graphql.Col
 		Object:     "User",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.User().Profile(rctx, obj)
+		return obj.Profile, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4191,6 +4268,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "updateRank":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateRank(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4621,25 +4708,15 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "profile":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._User_profile(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+				return ec._User_profile(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "reviews":
 			field := field
 

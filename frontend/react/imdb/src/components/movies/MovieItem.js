@@ -9,6 +9,8 @@ import {Stack} from "@mui/material";
 import Button from "@mui/material/Button";
 import {isIterableObject} from "graphql/jsutils/isIterableObject";
 import MenuItem from "@mui/material/MenuItem";
+import showReviews from "../reviews/showReviews";
+import ShowReviews from "../reviews/showReviews";
 
 // function MovieItem(props) {
 //   const favoritesCtx = useContext(FavoritesContext);
@@ -33,7 +35,7 @@ import MenuItem from "@mui/material/MenuItem";
 //
 
 
-function MovieItem() {
+function MovieItem(props) {
     const MOVIE_DATA = gql`
         query MovieById($id : ID!) {
             movieById(id: $id) {
@@ -69,10 +71,11 @@ function MovieItem() {
     if (error) return <p>Error :</p>;
 
     let title = data["movieById"]["0"]["title"]
-    let rank = data["movieById"]["0"]["rank"]
+    let originalRank = data["movieById"]["0"]["rank"]
     let description = data["movieById"]["0"]["description"]
     let image = data["movieById"]["0"]["image"]
 
+    let rank = Math.floor((originalRank + props.total) / (props.counter + 1))
 
     let loaded =  (
         <Card>

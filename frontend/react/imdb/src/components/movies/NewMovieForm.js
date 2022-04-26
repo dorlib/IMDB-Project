@@ -203,7 +203,7 @@ function NewMovieForm() {
                         type="number"
                         name="ranking"
                         id="ranking"
-                        min="0"
+                        min="1"
                         max="100"
                         ref={rankInputRef}
                         datatype="Int"

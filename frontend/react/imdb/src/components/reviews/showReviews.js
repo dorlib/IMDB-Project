@@ -13,9 +13,9 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
+import UpdateRank from "./total-rank";
 
 import classes from "./showReviews.module.css";
-
 
 
 function ShowReviews() {
@@ -30,8 +30,23 @@ function ShowReviews() {
         }
     `;
 
+    const ORIGINAL_RANK = gql`
+        query MovieById ($movieID: ID!) {
+            movieById (id: $movieID) {
+                rank
+            }
+        }
+    `;
+
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
+
+    const originalRank = useQuery(ORIGINAL_RANK,
+        {
+            variables: {
+                movieID: lastSegment || 0,
+            }
+        })
 
     const {data, loading, error} = useQuery(SHOW_REVIEWS,
         {
@@ -39,39 +54,42 @@ function ShowReviews() {
                 movieID: lastSegment || 0,
             }
         })
+
     if (error) return <div>Error!</div>
     if (loading) return <div>Loading...</div>
 
+
     let loaded
+    let load
 
     loaded = data.reviewsOfMovie.map(({text, rank, topic, id}) => (
         text !== "Doesnt Have Any Reviews" ? (
-        <div key={id}  className={classes.item}>
-            <List sx={{width: '100%', }} className={classes.rev}>
-                <ListItem alignItems="flex-start" >
-                    <ListItemAvatar>
-                        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg"/>
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={topic}
-                        secondary={
-                            <React.Fragment>
-                                <Typography
-                                    sx={{display: 'inline'}}
-                                    component="span"
-                                    variant="body2"
-                                    color="text.primary"
-                                >
-                                </Typography>
-                                {text}: {rank}
-                            </React.Fragment>
-                        }
-                    />
-                </ListItem>
-                <Divider variant="inset" component="li"/>
-            </List>
-        </div>
-    ): null
+            <div key={id} className={classes.item}>
+                <List sx={{width: '100%',}} className={classes.rev}>
+                    <ListItem alignItems="flex-start">
+                        <ListItemAvatar>
+                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg"/>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={topic}
+                            secondary={
+                                <React.Fragment>
+                                    <Typography
+                                        sx={{display: 'inline'}}
+                                        component="span"
+                                        variant="body2"
+                                        color="text.primary"
+                                    >
+                                    </Typography>
+                                    {text}: {rank}
+                                </React.Fragment>
+                            }
+                        />
+                    </ListItem>
+                    <Divider variant="inset" component="li"/>
+                </List>
+            </div>
+        ) : null
     ))
     return loaded
 }
