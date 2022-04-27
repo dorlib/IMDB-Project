@@ -5,8 +5,17 @@ import {styled} from "@mui/material/styles";
 import classes from "./NewUserForm.module.css";
 import {Input, Stack, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
+import {gql, useMutation, useQuery} from "@apollo/client";
 
-function NewUserForm(props) {
+function NewUserForm() {
+
+  let NEW_USER = gql`
+         mutation CreateUser ($firstname: String!, $lastname: String!, $nickname: String!, $description: String!, $password: String!, $profile: String!, $email: String!, $birthday: String! ) {
+           createUser(user: {firstname: $firstname , lastname: $lastname, nickname: $nickname , description: $description, password: $password, profile: $profile, email: $email, birthday: $birthday}) {
+             id
+           }
+         }
+  `
   const firstNameInputRef = useRef();
   const lastNameInputRef = useRef();
   const nickNameInputRef = useRef();
@@ -18,42 +27,38 @@ function NewUserForm(props) {
   const descriptionInputRef = useRef();
   const imageInputRef = useRef();
 
-  function submitHandler(event) {
-    event.preventDefault();
+  let birthday = JSON.stringify(dayOfBirthInputRef) + "." + JSON.stringify(monthOfBirthInputRef) + "." + JSON.stringify(yearOfBirthInputRef)
+  console.log(birthday)
 
-    const enteredFirstName = firstNameInputRef.current.value;
-    const enteredLastName = lastNameInputRef.current.value;
-    const enteredNickName = nickNameInputRef.current.value;
-    const enteredEmail = emailInputRef.current.value;
-    const enteredYearOfBirth = yearOfBirthInputRef.current.value;
-    const enteredMonthOfBirth = monthOfBirthInputRef.current.value;
-    const enteredDayOfBirth = dayOfBirthInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value;
-    const enteredDescription = descriptionInputRef.current.value;
-    const enteredImage = imageInputRef.current.value;
+    const [addUser] = useMutation(NEW_USER,
+      {
+        variables: {
+          firstname: firstNameInputRef.current?.value || 'Unknown',
+          lastname: lastNameInputRef.current?.value || 'Unknown',
+          nickname: nickNameInputRef.current?.value || 'No nickname',
+          email: emailInputRef.current?.value || 'Doesnt Have Email',
+          birthday: birthday.current?.value || 'No birthday given',
+          password: passwordInputRef.current?.value || 'No password',
+          description: descriptionInputRef.current?.value || 'No description given',
+          profile: imageInputRef.current?.value || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif',
+        },
+        onCompleted: function (data) {
+          console.log("data:", data)
+          const uniqe = data["createUser"]["id"]
+          return window.location.replace("/userPage/" + uniqe)
+        },
+        onError: function (error) {
+          console.log("error:",error)
+        }
+      });
 
-    const userData = {
-      firstName: enteredFirstName,
-      lastName: enteredLastName,
-      nickName: enteredNickName,
-      email: enteredEmail,
-      dayOfBirth: enteredDayOfBirth,
-      monthOfBirth: enteredMonthOfBirth,
-      yearOfBirth: enteredYearOfBirth,
-      password: enteredPassword,
-      description: enteredDescription,
-      image: enteredImage
-    };
-
-    props.onAddUser(userData);
-  }
 
   return (
     <Card>
       <Typography variant="h6" align="center" color="yellow">
         Hello Dear Future User! Thank You For Signing In To My WebSite!
       </Typography>
-      <form className={classes.form} onSubmit={submitHandler}>
+      <form className={classes.form} >
 
         <div className={classes.control}>
           <label htmlFor="firstName">Enter Your First Name</label>
@@ -72,7 +77,7 @@ function NewUserForm(props) {
 
         <div className={classes.control}>
           <label htmlFor="email">Enter Your E-Mail</label>
-          <input type="text" required id="email" ref={emailInputRef} />
+          <input type="text" required id="email" ref={emailInputRef} autoComplete="on"/>
         </div>
 
         <div className={classes.im}>
@@ -117,11 +122,11 @@ function NewUserForm(props) {
 
         <div className={classes.ctrl}>
           <label htmlFor="password">Choose Your password (8 characters minimum</label>
-          <input type="password" id="password" name="password" minlength="8" required ref={passwordInputRef} />
+          <input type="password" id="password" name="password" minLength="8" required ref={passwordInputRef} autoComplete= "current-password"/>
         </div>
 
         <div className={classes.actions}>
-          <button>Create A User!</button>
+          <button onClick={addUser}>Create A User!</button>
         </div>
 
       </form>
@@ -130,3 +135,5 @@ function NewUserForm(props) {
 }
 
 export default NewUserForm;
+
+
