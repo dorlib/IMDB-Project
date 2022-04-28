@@ -1,4 +1,4 @@
-import {useRef} from "react";
+import {useState} from "react";
 
 import Card from "../ui/Card";
 import classes from "./NewMovieForm.module.css";
@@ -33,23 +33,17 @@ function NewMovieForm() {
         }
     `;
 
-    let NEW_REVIEW = gql `
-        mutation CreateReview ($topic: String!, $text: String!, $rank: Int!, $movieID: Int!) {
-            createReview(review: {topic: $topic, text: $text, rank: $rank, movieID: $movieID }) {
-                id
-            }
-        }
-    `;
 
-    const titleInputRef = useRef();
-    const directorInputRef = useRef();
-    const descriptionInputRef = useRef();
-    const reviewInputRef = useRef();
-    const rankInputRef = useRef();
-    const worthInputRef = useRef();
-    const genreInputRef = useRef();
-    const imageInputRef = useRef();
-    const topicInputRef = useRef();
+    const [givenTitle, setTitle] = useState('')
+    const [givenDirector, setDirector] = useState('')
+    const [givenDescription, setDescription] = useState('')
+    const [givenReview, setReview] = useState('')
+    const [givenRank, setRank] = useState('')
+    const [givenWorth, setWorth] = useState('')
+    const [givenGenre, setGenre] = useState('')
+    const [givenImage, setImage] = useState('')
+    const [givenTopic, setTopic] = useState('')
+
 
     const Input = styled("input")({
         display: "none",
@@ -58,7 +52,7 @@ function NewMovieForm() {
     const id = useQuery(DIRECTOR_ID,
         {
             variables: {
-                director: directorInputRef.current?.value || 'no director',
+                director: givenDirector || 'no director',
             }
         }).data
 
@@ -67,29 +61,34 @@ function NewMovieForm() {
     let data = JSON.stringify(id)
 
     if (id && id["directorIdByName"]) {
+        console.log("exsist")
         index = data.indexOf(":")
         int = parseInt(data.slice(index + 2, data.length - 2), 10)
+        console.log(int)
         NEW = NEW_MOVIE
     } else {
         NEW = NEW_MOVIE_AND_DIRECTOR
     }
 
+    console.log(data)
+
     const [addMovie] = useMutation(NEW,
         {
             variables: {
-                title: titleInputRef.current?.value || 'Unknown',
-                image: imageInputRef.current?.value || '',
-                description: descriptionInputRef.current?.value || 'No Description',
-                review: reviewInputRef.current?.value || 'Doesnt Have Any Reviews',
-                rank: rankInputRef.current?.value || 'No Rank Was Given',
-                worth: worthInputRef.current?.value || 'No Worth Was Given',
-                genre: genreInputRef.current?.value || 'No Genre Given',
-                director_id: int || 0,
-                director_name: directorInputRef.current?.value || 'No Director Given',
+                title: givenTitle,
+                image: givenImage || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png',
+                description: givenDescription,
+                review: givenReview,
+                rank: givenRank,
+                worth: givenWorth,
+                genre: givenGenre,
+                director_id: int,
+                director_name: givenDirector,
             },
             onCompleted: function (data) {
                 console.log("data:", data)
-                const uniqe = data["createMovieAndDirector"]["id"]
+                const uniqe = data["createMovie"]["id"]
+                console.log("unique", uniqe)
                 return window.location.replace("/moviePage/" + uniqe)
             },
             onError: function (error) {
@@ -97,7 +96,8 @@ function NewMovieForm() {
             }
         });
 
-    const [addReview] = useMutation(NEW_REVIEW,
+
+/*    const [addReview] = useMutation(NEW_REVIEW,
         {
             variables: {
                 review: reviewInputRef.current?.value || 'Doesnt Have Any Reviews',
@@ -108,29 +108,29 @@ function NewMovieForm() {
             onError: function (error) {
                 console.log("error:",error)
             },
-        });
+        });*/
 
     return (
         <Card>
-            <form className={classes.form}>
+            <form className={classes.form} >
                 <div className={classes.control}>
                     <label htmlFor="title">Movie Title</label>
-                    <input type="text" datatype="String" required id="title" ref={titleInputRef}/>
+                    <input type="text" datatype="String" required id="title" value={givenTitle} onChange={event => setTitle(event.target.value)}/>
                 </div>
 
                 <div className={classes.im}>
                     <label htmlFor="image">Movie Image</label>
-                    <input datatype="string" type="url" id="image" ref={imageInputRef}/>
+                    <input datatype="string" type="url" id="image" value={givenImage} onChange={event => setImage(event.target.value)}/>
                 </div>
 
-                <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
+                <Stack direction="row" alignItems="center" spacing={2} className={classes.but} >
                     <label htmlFor="contained-button-file">
                         <Input
                             accept="image/*"
-                            multiple
                             type="file"
                             id="contained-button-file"
-                            ref={imageInputRef}
+                            value={givenImage}
+                            onChange={event => setImage(event.target.value)}
                         />
                         <Button variant="contained" component="span">
                             Upload
@@ -140,19 +140,19 @@ function NewMovieForm() {
 
                 <div className={classes.control}>
                     <label htmlFor="director">Director's Name</label>
-                    <input type="text" required id="director" ref={directorInputRef} datatype="String"/>
+                    <input type="text" required id="director"  datatype="String" value={givenDirector} onChange={event => setDirector(event.target.value)}/>
                 </div>
 
                 <div className={classes.control}>
                     <label htmlFor="worth">
                         How Much Do You Think This Movie Is worth Waching?
                     </label>
-                    <input type="range" datatype="Int" id="worth" min="1" max="5" ref={worthInputRef}/>
+                    <input type="range" datatype="Int" id="worth" min="1" max="5" value={givenWorth} onChange={event => setWorth(event.target.value)}/>
                 </div>
 
                 <div className={classes.control}>
                     <label htmlFor="genre">What is the genre of this movie?</label>
-                    <select name="genre" id="genre" ref={genreInputRef} required datatype="String">
+                    <select name="genre" id="genre" value={givenGenre} onChange={event => setGenre(event.target.value)} required datatype="String">
                         <option value="action">Action</option>
                         <option value="drama">Drama</option>
                         <option value="comedy">Comedy</option>
@@ -176,7 +176,7 @@ function NewMovieForm() {
                         datatype="String"
                         required
                         rows="5"
-                        ref={descriptionInputRef}
+                        value={givenDescription} onChange={event => setDescription(event.target.value)}
                     ></textarea>
                 </div>
 
@@ -188,13 +188,13 @@ function NewMovieForm() {
                         datatype="String"
                         required
                         rows="1"
-                        ref={topicInputRef}
+                        value={givenTopic} onChange={event => setTopic(event.target.value)}
                     ></textarea>
                 </div>
 
                 <div className={classes.control}>
                     <label htmlFor="review">Review Text</label>
-                    <textarea id="review" rows="5" datatype="String" ref={reviewInputRef}></textarea>
+                    <textarea id="review" rows="5" datatype="String" value={givenReview} onChange={event => setReview(event.target.value)}></textarea>
                 </div>
 
                 <div className={classes.ctrl}>
@@ -205,13 +205,13 @@ function NewMovieForm() {
                         id="ranking"
                         min="1"
                         max="100"
-                        ref={rankInputRef}
+                        value={givenRank} onChange={event => setRank(event.target.value)}
                         datatype="Int"
                     ></input>
                 </div>
 
                 <div className={classes.actions}>
-                    <button onClick={addMovie, addReview} type="button">Add Movie</button>
+                    <button type="button" onClick={addMovie}>Add Movie</button>
                 </div>
             </form>
         </Card>

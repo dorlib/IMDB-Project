@@ -110,7 +110,7 @@ type Mutation {
     createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String!, directorName: String!, image: String!): Movie!
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, topic: String!): Review!
-    createUser(user: UserInput!): User!
+    createUser(firstname: String!, lastname: String!, nickname: String!, description: String!, password: String!, profile: String!,birthday: String!, email: String!): User!
     updateRank(id: ID!, rank: Int!) : Movie!
 }
 

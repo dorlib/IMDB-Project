@@ -33,16 +33,16 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 		Save(ctx)
 }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, user UserInput) (*ent.User, error) {
+func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, email string, profile string, birthday string, password string) (*ent.User, error) {
 	return r.client.User.Create().
-		SetFirstname(user.Firstname).
-		SetLastname(user.Lastname).
-		SetNickname(user.Nickname).
-		SetEmail(user.Email).
-		SetPassword(user.Password).
-		SetDescription(user.Description).
-		SetBirthDay(user.Birthday).
-		SetProfile(user.Profile).
+		SetFirstname(firstname).
+		SetLastname(lastname).
+		SetNickname(nickname).
+		SetEmail(email).
+		SetPassword(password).
+		SetDescription(description).
+		SetBirthDay(birthday).
+		SetProfile(profile).
 		Save(ctx)
 }
 

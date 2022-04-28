@@ -14,6 +14,8 @@ import ShowReviews from "./components/reviews/showReviews";
 import HoverRating from "./components/reviews/stars";
 import DirectorPage from "./components/directors/directorPage";
 import UpdateRank from "./components/reviews/total-rank";
+import NewUserForm from "./components/users/NewUserForm";
+import CreateUser from "./components/users/create-user";
 
 function App() {
   return (
@@ -23,7 +25,7 @@ function App() {
         <Route path="/directors" element={<AllDirectorsPage />} />
         <Route path="/new-movie" element={<NewMovieForm />} />
         <Route path="/favorites" element={<FavoritesPage />} />
-        <Route path="/new-user" element={<NewUserPage />} />
+        <Route path="/new-user" element={<><NewUserForm /></>} />
         <Route path='/sign-in' element={<SignInPage />} />
         <Route path='/directorPage/:id' element={<DirectorPage />} />
         <Route path="/moviePage/:id" element={<><UpdateRank/><HoverRating/><ShowReviews/><NewReviewForm/></>} />

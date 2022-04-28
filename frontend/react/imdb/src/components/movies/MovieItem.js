@@ -74,6 +74,9 @@ function MovieItem(props) {
     let originalRank = data["movieById"]["0"]["rank"]
     let description = data["movieById"]["0"]["description"]
     let image = data["movieById"]["0"]["image"]
+    let director = data["movieById"]["0"]["director"]["name"]
+
+    console.log(data)
 
     let rank = Math.floor((originalRank + props.total) / (props.counter + 1))
 
@@ -91,6 +94,9 @@ function MovieItem(props) {
         <div>
             <h4 style={{color: "yellow"}}>
                 Movie description : {description}
+            </h4>
+            <h4 style={{color: "yellow"}}>
+                Directed by: {director}
             </h4>
         </div>
         </Card>
