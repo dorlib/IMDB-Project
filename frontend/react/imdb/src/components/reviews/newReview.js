@@ -1,4 +1,4 @@
-import React, {useContext, useRef} from "react";
+import React, {useContext, useRef, useState} from "react";
 import {Link} from 'react-router-dom';
 
 import Card from "../ui/Card";
@@ -30,13 +30,17 @@ function NewReviewForm() {
     const rankInputRef = useRef();
     const topicInputRef = useRef();
 
+    const [givenText, setText] = useState('')
+    const [givenRank, setRank] = useState('')
+    const [givenTopic, setTopic] = useState('')
+
     const [addReview] = useMutation(ADD_REVIEW,
         {
             variables: {
                 movieID: lastSegment || 0 ,
-                text: textInputRef.current?.value || 'Doesnt Have Any Reviews',
-                rank: rankInputRef.current?.value || 'No Rank Was Given',
-                topic: topicInputRef.current?.value || 'No title given',
+                text: givenText,
+                rank: givenRank,
+                topic: givenTopic,
             },
             onError: function (error) {
                 console.log("error:",error)
@@ -54,7 +58,7 @@ function NewReviewForm() {
                         type="text"
                         datatype="String"
                         required
-                        ref={topicInputRef}
+                        value={givenTopic} onChange={event => setTopic(event.target.value)}
                         rows="1"
                     ></textarea>
                 </div>
@@ -65,7 +69,7 @@ function NewReviewForm() {
                         type="text"
                         datatype="String"
                         required
-                        ref={textInputRef}
+                        value={givenText} onChange={event => setText(event.target.value)}
                         rows="5"
                     ></textarea>
                 </div>
@@ -77,7 +81,7 @@ function NewReviewForm() {
                         id="ranking"
                         min="1"
                         max="100"
-                        ref={rankInputRef}
+                        value={givenRank} onChange={event => setRank(event.target.value)}
                         datatype="Int"
                     ></input>
                 </div>
