@@ -34,6 +34,7 @@ function NewReviewForm() {
     const [givenRank, setRank] = useState('')
     const [givenTopic, setTopic] = useState('')
 
+
     const [addReview] = useMutation(ADD_REVIEW,
         {
             variables: {
@@ -44,7 +45,9 @@ function NewReviewForm() {
             },
             onError: function (error) {
                 console.log("error:",error)
-            },
+            },onCompleted: function (data) {
+                window.location.reload();
+            }
         });
 
     let loaded =  (
