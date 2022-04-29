@@ -12,8 +12,8 @@ function NewMovieForm() {
     let NEW
 
     let NEW_MOVIE = gql`
-        mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID!, $image: String!) {
-            createMovie(movie: {title: $title , description: $description, genre: $genre , rank: $rank, director_id: $director_id, image: $image}) {
+        mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID!, $image: String!, $topic: String!, $text: String!) {
+            createMovie(movie: {title: $title , description: $description, genre: $genre , rank: $rank, director_id: $director_id, image: $image, topic: $topic, text: $text}) {
                 id
             }
         }
@@ -26,8 +26,8 @@ function NewMovieForm() {
     `;
 
     let NEW_MOVIE_AND_DIRECTOR = gql`
-        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!, $image: String!){
-            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name, image: $image) {
+        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!, $image: String!, $topic: String!, $text: String!){
+            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name, image: $image, topic: $topic, text: $text) {
                 id
             }
         }
@@ -37,11 +37,11 @@ function NewMovieForm() {
     const [givenTitle, setTitle] = useState('')
     const [givenDirector, setDirector] = useState('')
     const [givenDescription, setDescription] = useState('')
-    const [givenReview, setReview] = useState('')
+    const [givenText, setText] = useState('')
     const [givenRank, setRank] = useState('')
     const [givenWorth, setWorth] = useState('')
     const [givenGenre, setGenre] = useState('')
-    const [givenImage, setImage] = useState('')
+    const [givenImage, setImage] = useState()
     const [givenTopic, setTopic] = useState('')
 
 
@@ -52,25 +52,27 @@ function NewMovieForm() {
     const id = useQuery(DIRECTOR_ID,
         {
             variables: {
-                director: givenDirector || 'no director',
+                director: givenDirector,
             }
         }).data
 
     let int = NaN
     let index = NaN
     let data = JSON.stringify(id)
+    let exist
+    let unique
 
     if (id && id["directorIdByName"]) {
-        console.log("exsist")
+        console.log("exist")
         index = data.indexOf(":")
         int = parseInt(data.slice(index + 2, data.length - 2), 10)
         console.log(int)
         NEW = NEW_MOVIE
+        exist = true
     } else {
         NEW = NEW_MOVIE_AND_DIRECTOR
+        exist = false
     }
-
-    console.log(data)
 
     const [addMovie] = useMutation(NEW,
         {
@@ -78,37 +80,31 @@ function NewMovieForm() {
                 title: givenTitle,
                 image: givenImage || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png',
                 description: givenDescription,
-                review: givenReview,
+                review: givenText,
                 rank: givenRank,
                 worth: givenWorth,
                 genre: givenGenre,
+                topic :givenTopic,
+                text: givenText,
                 director_id: int,
                 director_name: givenDirector,
             },
             onCompleted: function (data) {
                 console.log("data:", data)
-                const uniqe = data["createMovie"]["id"]
-                console.log("unique", uniqe)
-                return window.location.replace("/moviePage/" + uniqe)
+                if (exist === true) {
+                    unique = data["createMovie"]["id"]
+                } else {
+                    unique = data["createMovieAndDirector"]["id"]
+                }
+                console.log("unique", unique)
+                return window.location.replace("/moviePage/" + unique)
+
             },
             onError: function (error) {
                 console.log("error:",error)
             }
         });
 
-
-/*    const [addReview] = useMutation(NEW_REVIEW,
-        {
-            variables: {
-                review: reviewInputRef.current?.value || 'Doesnt Have Any Reviews',
-                rank: rankInputRef.current?.value || 'No Rank Was Given',
-                topic: topicInputRef.current?.value || 'no topic given',
-                movieID: addMovie(id) || 'no id for review',
-            },
-            onError: function (error) {
-                console.log("error:",error)
-            },
-        });*/
 
     return (
         <Card>
@@ -194,7 +190,7 @@ function NewMovieForm() {
 
                 <div className={classes.control}>
                     <label htmlFor="review">Review Text</label>
-                    <textarea id="review" rows="5" datatype="String" value={givenReview} onChange={event => setReview(event.target.value)}></textarea>
+                    <textarea id="review" rows="5" datatype="String" value={givenText} onChange={event => setText(event.target.value)}></textarea>
                 </div>
 
                 <div className={classes.ctrl}>

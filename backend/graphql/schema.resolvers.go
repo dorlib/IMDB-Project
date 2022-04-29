@@ -16,6 +16,13 @@ func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
+	review, error := r.client.Review.Create().SetTopic(movie.Topic).SetText(movie.Text).SetRank(movie.Rank).SetMovieID(mov.ID).Save(ctx)
+	fmt.Println("new review made", review)
+	if error != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+
 	return mov, err
 }
 func (r *mutationResolver) CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error) {
@@ -74,7 +81,7 @@ func (r *queryResolver) DirectorIDByName(ctx context.Context, name string) (*int
 	return &id, nil
 }
 
-func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string) (*ent.Movie, error) {
+func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string, topic string, text string) (*ent.Movie, error) {
 	newDirector, err := r.client.Director.Create().
 		SetName(directorName).
 		Save(ctx)
@@ -84,7 +91,7 @@ func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title str
 
 	fmt.Println("new director made", newDirector)
 
-	return r.client.Movie.Create().
+	movie, error := r.client.Movie.Create().
 		SetTitle(title).
 		SetGenre(genre).
 		SetDescription(description).
@@ -92,6 +99,18 @@ func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title str
 		SetDirectorID(newDirector.ID).
 		SetImage(image).
 		Save(ctx)
+	if error != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+
+	review, e := r.client.Review.Create().SetTopic(topic).SetText(text).SetRank(rank).SetMovieID(movie.ID).Save(ctx)
+	if e != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+
+	fmt.Println("new review made", review)
+
+	return movie, error
 }
 
 // Mutation returns imdbv2.MutationResolver implementation.

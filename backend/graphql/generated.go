@@ -65,9 +65,9 @@ type ComplexityRoot struct {
 	Mutation struct {
 		CreateDirector         func(childComplexity int, director DirectorInput) int
 		CreateMovie            func(childComplexity int, movie MovieInput) int
-		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string, image string) int
+		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string, image string, topic string, text string) int
 		CreateReview           func(childComplexity int, text string, rank int, movieID int, topic string) int
-		CreateUser             func(childComplexity int, firstname string, lastname string, nickname string, description string, password string, profile string, email string, birthday string) int
+		CreateUser             func(childComplexity int, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string) int
 		UpdateRank             func(childComplexity int, id int, rank int) int
 	}
 
@@ -108,10 +108,10 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error)
-	CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string) (*ent.Movie, error)
+	CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string, topic string, text string) (*ent.Movie, error)
 	CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error)
 	CreateReview(ctx context.Context, text string, rank int, movieID int, topic string) (*ent.Review, error)
-	CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, email string, birthday string) (*ent.User, error)
+	CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string) (*ent.User, error)
 	UpdateRank(ctx context.Context, id int, rank int) (*ent.Movie, error)
 }
 type QueryResolver interface {
@@ -255,7 +255,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateMovieAndDirector(childComplexity, args["title"].(string), args["description"].(string), args["rank"].(int), args["genre"].(string), args["directorName"].(string), args["image"].(string)), true
+		return e.complexity.Mutation.CreateMovieAndDirector(childComplexity, args["title"].(string), args["description"].(string), args["rank"].(int), args["genre"].(string), args["directorName"].(string), args["image"].(string), args["topic"].(string), args["text"].(string)), true
 
 	case "Mutation.createReview":
 		if e.complexity.Mutation.CreateReview == nil {
@@ -279,7 +279,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateUser(childComplexity, args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["password"].(string), args["profile"].(string), args["email"].(string), args["birthday"].(string)), true
+		return e.complexity.Mutation.CreateUser(childComplexity, args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["password"].(string), args["profile"].(string), args["birthday"].(string), args["email"].(string)), true
 
 	case "Mutation.updateRank":
 		if e.complexity.Mutation.UpdateRank == nil {
@@ -643,6 +643,8 @@ input MovieInput {
     genre: String!
     director_id: ID!
     image: String!
+    topic: String!
+    text: String!
 }
 
 input DirectorInput {
@@ -671,10 +673,10 @@ input UserInput {
 # https://graphql.org/learn/queries/#mutations
 type Mutation {
     createMovie(movie: MovieInput!): Movie!
-    createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String!, directorName: String!, image: String!): Movie!
+    createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String!, directorName: String!, image: String!, topic: String!, text: String!): Movie!
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, topic: String!): Review!
-    createUser(firstname: String!, lastname: String!, nickname: String!, description: String!, password: String!, profile: String!, email: String!, birthday: String!): User!
+    createUser(firstname: String!, lastname: String!, nickname: String!, description: String!, password: String!, profile: String!,birthday: String!, email: String!): User!
     updateRank(id: ID!, rank: Int!) : Movie!
 }
 
@@ -769,6 +771,24 @@ func (ec *executionContext) field_Mutation_createMovieAndDirector_args(ctx conte
 		}
 	}
 	args["image"] = arg5
+	var arg6 string
+	if tmp, ok := rawArgs["topic"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("topic"))
+		arg6, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["topic"] = arg6
+	var arg7 string
+	if tmp, ok := rawArgs["text"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("text"))
+		arg7, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["text"] = arg7
 	return args, nil
 }
 
@@ -887,23 +907,23 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	}
 	args["profile"] = arg5
 	var arg6 string
-	if tmp, ok := rawArgs["email"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+	if tmp, ok := rawArgs["birthday"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("birthday"))
 		arg6, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["email"] = arg6
+	args["birthday"] = arg6
 	var arg7 string
-	if tmp, ok := rawArgs["birthday"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("birthday"))
+	if tmp, ok := rawArgs["email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
 		arg7, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["birthday"] = arg7
+	args["email"] = arg7
 	return args, nil
 }
 
@@ -1520,7 +1540,7 @@ func (ec *executionContext) _Mutation_createMovieAndDirector(ctx context.Context
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateMovieAndDirector(rctx, args["title"].(string), args["description"].(string), args["rank"].(int), args["genre"].(string), args["directorName"].(string), args["image"].(string))
+		return ec.resolvers.Mutation().CreateMovieAndDirector(rctx, args["title"].(string), args["description"].(string), args["rank"].(int), args["genre"].(string), args["directorName"].(string), args["image"].(string), args["topic"].(string), args["text"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1646,7 +1666,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateUser(rctx, args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["password"].(string), args["profile"].(string), args["email"].(string), args["birthday"].(string))
+		return ec.resolvers.Mutation().CreateUser(rctx, args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["password"].(string), args["profile"].(string), args["birthday"].(string), args["email"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3929,6 +3949,22 @@ func (ec *executionContext) unmarshalInputMovieInput(ctx context.Context, obj in
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
 			it.Image, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "topic":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("topic"))
+			it.Topic, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "text":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("text"))
+			it.Text, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
