@@ -41,7 +41,8 @@ function NewMovieForm() {
     const [givenRank, setRank] = useState('')
     const [givenWorth, setWorth] = useState('')
     const [givenGenre, setGenre] = useState('')
-    const [givenImage, setImage] = useState()
+    const [givenImage1, setImage1] = useState('')
+    const [givenImage2, setImage2] = useState('')
     const [givenTopic, setTopic] = useState('')
 
 
@@ -63,7 +64,6 @@ function NewMovieForm() {
     let unique
 
     if (id && id["directorIdByName"]) {
-        console.log("exist")
         index = data.indexOf(":")
         int = parseInt(data.slice(index + 2, data.length - 2), 10)
         console.log(int)
@@ -78,7 +78,7 @@ function NewMovieForm() {
         {
             variables: {
                 title: givenTitle,
-                image: givenImage || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png',
+                image: givenImage1 || givenImage2 ||'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png',
                 description: givenDescription,
                 review: givenText,
                 rank: givenRank,
@@ -96,7 +96,6 @@ function NewMovieForm() {
                 } else {
                     unique = data["createMovieAndDirector"]["id"]
                 }
-                console.log("unique", unique)
                 return window.location.replace("/moviePage/" + unique)
 
             },
@@ -116,7 +115,7 @@ function NewMovieForm() {
 
                 <div className={classes.im}>
                     <label htmlFor="image">Movie Image</label>
-                    <input datatype="string" type="url" id="image" value={givenImage} onChange={event => setImage(event.target.value)}/>
+                    <input type="url" datatype="string" id="image" value={givenImage1} onChange={event => setImage1(event.target.value)}/>
                 </div>
 
                 <Stack direction="row" alignItems="center" spacing={2} className={classes.but} >
@@ -125,8 +124,8 @@ function NewMovieForm() {
                             accept="image/*"
                             type="file"
                             id="contained-button-file"
-                            value={givenImage}
-                            onChange={event => setImage(event.target.value)}
+                            value={givenImage2}
+                            onChange={event => setImage2(event.target.value)}
                         />
                         <Button variant="contained" component="span">
                             Upload
