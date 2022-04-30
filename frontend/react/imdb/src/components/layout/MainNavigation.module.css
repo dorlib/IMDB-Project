@@ -16,7 +16,7 @@
 
 .menu {
   position: relative;
-  display: block;
+  display: flex;
   bottom: 60%;
   left: 47%;
   color: white;

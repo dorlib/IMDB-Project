@@ -1,11 +1,8 @@
 import React from "react";
 import {gql, useQuery} from "@apollo/client";
-import MenuItem from "@mui/material/MenuItem";
 import {Link} from "react-router-dom";
 
-import {Stack} from "@mui/material";
 import Button from "@mui/material/Button";
-import {isIterableObject} from "graphql/jsutils/isIterableObject";
 import classes from "./top10.module.css"
 
 import Card from '@mui/material/Card';
@@ -45,7 +42,7 @@ function Top10Page() {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.director}>
+                        <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>
                             {title} : {rank} / 100
                         </p>
                     </Typography>
@@ -60,35 +57,4 @@ function Top10Page() {
     return <>{loaded}</>
 }
 
-
-// function Top10Page() {
-//
-//     const GET_TOP10_MOVIES = gql`
-//         query Top10Movies{
-//             top10Movies {
-//                 title
-//                 rank
-//                 id
-//             }
-//         }
-//     `;
-//
-//     const { loading, error, data } = useQuery(GET_TOP10_MOVIES)
-//     if (loading) return <p>Loading...</p>;
-//     if (error) return <p>Error :</p>;
-//     let loaded = 1
-//
-//     console.log(data)
-//
-//     loaded = data.top10Movies.map(( {title, rank, id}) => (
-//         <div key={id}>
-//             <p style={{color: "yellow"}}>
-//                 <MenuItem style={{fontSize: "x-large"}}><Link to={"/moviePage/" + id} style={{color: "yellow"}} >{title}</Link>:{rank}</MenuItem>
-//             </p>
-//         </div>
-//     ));
-//
-//     return loaded
-// }
-//
 export default Top10Page;

@@ -1,7 +1,5 @@
 import { useContext } from "react";
 import {Link, useNavigate} from "react-router-dom";
-
-import classes from "./MainNavigation.module.css";
 import FavoritesContext from "../../store/favorites-context";
 
 import * as React from "react";
@@ -15,6 +13,8 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+
+import classes from "./MainNavigation.module.css";
 
 
 const grid = {
@@ -90,7 +90,8 @@ function MainNavigation() {
           <PopupState variant="popover" popupId="demo-popup-menu"  >
             {(popupState) => (
                 <React.Fragment >
-                  <Button className={classes.menu} variant="contained" {...bindTrigger(popupState)} >
+                  <Button className={classes.menu} variant="contained" {...bindTrigger(popupState)} style={{position: "relative", display: "flex", bottom: "60%", left: "47%", color: "white",
+                  backgroundColor: "#cc2062", borderRadius: "12px", width: "3cm", height: "1.2cm"}} >
                     Menu
                   </Button>
                   <Menu {...bindMenu(popupState)} >
