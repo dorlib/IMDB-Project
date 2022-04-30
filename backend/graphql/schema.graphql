@@ -125,6 +125,7 @@ type Query {
     directorById(id: ID!): [Director!]
     reviewsOfMovie(movieID: Int!) : [Review]
     users: [User!]
+    top10Movies: [Movie!]
     node(id: ID!): Node
     nodes(ids: [ID!]!): [Node]!
 }

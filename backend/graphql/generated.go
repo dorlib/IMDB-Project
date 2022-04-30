@@ -80,6 +80,7 @@ type ComplexityRoot struct {
 		Node             func(childComplexity int, id int) int
 		Nodes            func(childComplexity int, ids []int) int
 		ReviewsOfMovie   func(childComplexity int, movieID int) int
+		Top10Movies      func(childComplexity int) int
 		Users            func(childComplexity int) int
 	}
 
@@ -122,6 +123,7 @@ type QueryResolver interface {
 	DirectorByID(ctx context.Context, id int) ([]*ent.Director, error)
 	ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error)
 	Users(ctx context.Context) ([]*ent.User, error)
+	Top10Movies(ctx context.Context) ([]*ent.Movie, error)
 	Node(ctx context.Context, id int) (ent.Noder, error)
 	Nodes(ctx context.Context, ids []int) ([]ent.Noder, error)
 }
@@ -378,6 +380,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.ReviewsOfMovie(childComplexity, args["movieID"].(int)), true
+
+	case "Query.top10Movies":
+		if e.complexity.Query.Top10Movies == nil {
+			break
+		}
+
+		return e.complexity.Query.Top10Movies(childComplexity), true
 
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
@@ -689,6 +698,7 @@ type Query {
     directorById(id: ID!): [Director!]
     reviewsOfMovie(movieID: Int!) : [Review]
     users: [User!]
+    top10Movies: [Movie!]
     node(id: ID!): Node
     nodes(ids: [ID!]!): [Node]!
 }`, BuiltIn: false},
@@ -1975,6 +1985,38 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 	res := resTmp.([]*ent.User)
 	fc.Result = res
 	return ec.marshalOUser2ᚕᚖimdbv2ᚋentᚐUserᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_top10Movies(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Top10Movies(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Movie)
+	fc.Result = res
+	return ec.marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovieᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_node(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4537,6 +4579,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_users(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "top10Movies":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_top10Movies(ctx, field)
 				return res
 			}
 

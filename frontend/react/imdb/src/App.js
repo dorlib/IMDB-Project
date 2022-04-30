@@ -16,6 +16,7 @@ import DirectorPage from "./components/directors/directorPage";
 import UpdateRank from "./components/reviews/total-rank";
 import NewUserForm from "./components/users/NewUserForm";
 import CreateUser from "./components/users/create-user";
+import Top10Page from "./pages/Top10";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/new-user" element={<><NewUserForm /></>} />
         <Route path='/sign-in' element={<SignInPage />} />
+        <Route path='/top10' element={<Top10Page />} />
         <Route path='/directorPage/:id' element={<DirectorPage />} />
         <Route path="/moviePage/:id" element={<><UpdateRank/><HoverRating/><ShowReviews/><NewReviewForm/></>} />
       </Routes>

@@ -143,6 +143,14 @@ func (r *queryResolver) ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent
 	return data, nil
 }
 
+func (r *queryResolver) Top10Movies(ctx context.Context) ([]*ent.Movie, error) {
+	data, err := r.client.Movie.Query().Order(ent.Desc(movie.FieldRank)).Limit(10).All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}
+
 func (r *mutationResolver) UpdateRank(ctx context.Context, id int, rank int) (*ent.Movie, error) {
 	data, err := r.client.Movie.UpdateOneID(id).SetRank(rank).Save(ctx)
 	if err != nil {
