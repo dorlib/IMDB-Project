@@ -59,7 +59,8 @@ function AllDirectorsPage() {
                 </CardContent>
                 <CardActions>
                     <Button size="large">Share</Button>
-                    <Link to={"/moviePage/" + id}><Button size="large">Go To Director's Page</Button></Link>
+                    <Link to={"/directorPage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Director's Page</Button></Link>
+                    <Button size="large">Edit Director's Details</Button>
                 </CardActions>
             </Card>
         </div>
