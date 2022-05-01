@@ -34,6 +34,12 @@ func (du *DirectorUpdate) SetName(s string) *DirectorUpdate {
 	return du
 }
 
+// SetProfileImage sets the "profileImage" field.
+func (du *DirectorUpdate) SetProfileImage(s string) *DirectorUpdate {
+	du.mutation.SetProfileImage(s)
+	return du
+}
+
 // AddMovieIDs adds the "movies" edge to the Movie entity by IDs.
 func (du *DirectorUpdate) AddMovieIDs(ids ...int) *DirectorUpdate {
 	du.mutation.AddMovieIDs(ids...)
@@ -154,6 +160,13 @@ func (du *DirectorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: director.FieldName,
 		})
 	}
+	if value, ok := du.mutation.ProfileImage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: director.FieldProfileImage,
+		})
+	}
 	if du.mutation.MoviesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -230,6 +243,12 @@ type DirectorUpdateOne struct {
 // SetName sets the "name" field.
 func (duo *DirectorUpdateOne) SetName(s string) *DirectorUpdateOne {
 	duo.mutation.SetName(s)
+	return duo
+}
+
+// SetProfileImage sets the "profileImage" field.
+func (duo *DirectorUpdateOne) SetProfileImage(s string) *DirectorUpdateOne {
+	duo.mutation.SetProfileImage(s)
 	return duo
 }
 
@@ -375,6 +394,13 @@ func (duo *DirectorUpdateOne) sqlSave(ctx context.Context) (_node *Director, err
 			Type:   field.TypeString,
 			Value:  value,
 			Column: director.FieldName,
+		})
+	}
+	if value, ok := duo.mutation.ProfileImage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: director.FieldProfileImage,
 		})
 	}
 	if duo.mutation.MoviesCleared() {

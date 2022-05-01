@@ -16,6 +16,7 @@ type Director struct {
 func (Director) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").Unique().Annotations(entgql.OrderField("DIRECTOR_NAME")),
+		field.String("profileImage"),
 	}
 }
 

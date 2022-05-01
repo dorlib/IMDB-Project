@@ -3,7 +3,8 @@
 package graphql
 
 type DirectorInput struct {
-	Name string `json:"name"`
+	Name         string `json:"name"`
+	ProfileImage string `json:"profileImage"`
 }
 
 type MovieInput struct {

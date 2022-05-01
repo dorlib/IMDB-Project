@@ -12,6 +12,7 @@ var (
 	DirectorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "profile_image", Type: field.TypeString},
 	}
 	// DirectorsTable holds the schema information for the "directors" table.
 	DirectorsTable = &schema.Table{

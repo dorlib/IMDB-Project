@@ -38,6 +38,7 @@ type DirectorMutation struct {
 	typ           string
 	id            *int
 	name          *string
+	profileImage  *string
 	clearedFields map[string]struct{}
 	movies        map[int]struct{}
 	removedmovies map[int]struct{}
@@ -181,6 +182,42 @@ func (m *DirectorMutation) ResetName() {
 	m.name = nil
 }
 
+// SetProfileImage sets the "profileImage" field.
+func (m *DirectorMutation) SetProfileImage(s string) {
+	m.profileImage = &s
+}
+
+// ProfileImage returns the value of the "profileImage" field in the mutation.
+func (m *DirectorMutation) ProfileImage() (r string, exists bool) {
+	v := m.profileImage
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldProfileImage returns the old "profileImage" field's value of the Director entity.
+// If the Director object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DirectorMutation) OldProfileImage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldProfileImage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldProfileImage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldProfileImage: %w", err)
+	}
+	return oldValue.ProfileImage, nil
+}
+
+// ResetProfileImage resets all changes to the "profileImage" field.
+func (m *DirectorMutation) ResetProfileImage() {
+	m.profileImage = nil
+}
+
 // AddMovieIDs adds the "movies" edge to the Movie entity by ids.
 func (m *DirectorMutation) AddMovieIDs(ids ...int) {
 	if m.movies == nil {
@@ -254,9 +291,12 @@ func (m *DirectorMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *DirectorMutation) Fields() []string {
-	fields := make([]string, 0, 1)
+	fields := make([]string, 0, 2)
 	if m.name != nil {
 		fields = append(fields, director.FieldName)
+	}
+	if m.profileImage != nil {
+		fields = append(fields, director.FieldProfileImage)
 	}
 	return fields
 }
@@ -268,6 +308,8 @@ func (m *DirectorMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case director.FieldName:
 		return m.Name()
+	case director.FieldProfileImage:
+		return m.ProfileImage()
 	}
 	return nil, false
 }
@@ -279,6 +321,8 @@ func (m *DirectorMutation) OldField(ctx context.Context, name string) (ent.Value
 	switch name {
 	case director.FieldName:
 		return m.OldName(ctx)
+	case director.FieldProfileImage:
+		return m.OldProfileImage(ctx)
 	}
 	return nil, fmt.Errorf("unknown Director field %s", name)
 }
@@ -294,6 +338,13 @@ func (m *DirectorMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
+		return nil
+	case director.FieldProfileImage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetProfileImage(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Director field %s", name)
@@ -346,6 +397,9 @@ func (m *DirectorMutation) ResetField(name string) error {
 	switch name {
 	case director.FieldName:
 		m.ResetName()
+		return nil
+	case director.FieldProfileImage:
+		m.ResetProfileImage()
 		return nil
 	}
 	return fmt.Errorf("unknown Director field %s", name)

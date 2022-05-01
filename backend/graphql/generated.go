@@ -46,9 +46,10 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Director struct {
-		ID     func(childComplexity int) int
-		Movies func(childComplexity int) int
-		Name   func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Movies       func(childComplexity int) int
+		Name         func(childComplexity int) int
+		ProfileImage func(childComplexity int) int
 	}
 
 	Movie struct {
@@ -166,6 +167,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Director.Name(childComplexity), true
+
+	case "Director.profileImage":
+		if e.complexity.Director.ProfileImage == nil {
+			break
+		}
+
+		return e.complexity.Director.ProfileImage(childComplexity), true
 
 	case "Movie.description":
 		if e.complexity.Movie.Description == nil {
@@ -601,6 +609,7 @@ type Movie implements Node   {
 type Director {
     id: ID!
     name: String!
+    profileImage: String!
     movies: [Movie!]
 }
 
@@ -658,6 +667,7 @@ input MovieInput {
 
 input DirectorInput {
     name: String!
+    profileImage: String!
 }
 
 input ReviewInput {
@@ -1158,6 +1168,41 @@ func (ec *executionContext) _Director_name(ctx context.Context, field graphql.Co
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Director_profileImage(ctx context.Context, field graphql.CollectedField, obj *ent.Director) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Director",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProfileImage, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3931,6 +3976,14 @@ func (ec *executionContext) unmarshalInputDirectorInput(ctx context.Context, obj
 			if err != nil {
 				return it, err
 			}
+		case "profileImage":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("profileImage"))
+			it.ProfileImage, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -4187,6 +4240,16 @@ func (ec *executionContext) _Director(ctx context.Context, sel ast.SelectionSet,
 		case "name":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Director_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "profileImage":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Director_profileImage(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

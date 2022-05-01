@@ -53,7 +53,7 @@ func (d *Director) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     d.ID,
 		Type:   "Director",
-		Fields: make([]*Field, 1),
+		Fields: make([]*Field, 2),
 		Edges:  make([]*Edge, 1),
 	}
 	var buf []byte
@@ -63,6 +63,14 @@ func (d *Director) Node(ctx context.Context) (node *Node, err error) {
 	node.Fields[0] = &Field{
 		Type:  "string",
 		Name:  "name",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(d.ProfileImage); err != nil {
+		return nil, err
+	}
+	node.Fields[1] = &Field{
+		Type:  "string",
+		Name:  "profileImage",
 		Value: string(buf),
 	}
 	node.Edges[0] = &Edge{

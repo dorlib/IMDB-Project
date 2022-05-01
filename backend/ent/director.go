@@ -17,6 +17,8 @@ type Director struct {
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
+	// ProfileImage holds the value of the "profileImage" field.
+	ProfileImage string `json:"profileImage,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DirectorQuery when eager-loading is set.
 	Edges DirectorEdges `json:"edges"`
@@ -47,7 +49,7 @@ func (*Director) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case director.FieldID:
 			values[i] = new(sql.NullInt64)
-		case director.FieldName:
+		case director.FieldName, director.FieldProfileImage:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Director", columns[i])
@@ -75,6 +77,12 @@ func (d *Director) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				d.Name = value.String
+			}
+		case director.FieldProfileImage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field profileImage", values[i])
+			} else if value.Valid {
+				d.ProfileImage = value.String
 			}
 		}
 	}
@@ -111,6 +119,8 @@ func (d *Director) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", d.ID))
 	builder.WriteString(", name=")
 	builder.WriteString(d.Name)
+	builder.WriteString(", profileImage=")
+	builder.WriteString(d.ProfileImage)
 	builder.WriteByte(')')
 	return builder.String()
 }
