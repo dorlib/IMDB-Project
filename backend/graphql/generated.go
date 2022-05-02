@@ -46,6 +46,8 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Director struct {
+		BornAt       func(childComplexity int) int
+		Description  func(childComplexity int) int
 		ID           func(childComplexity int) int
 		Movies       func(childComplexity int) int
 		Name         func(childComplexity int) int
@@ -146,6 +148,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Director.bornAt":
+		if e.complexity.Director.BornAt == nil {
+			break
+		}
+
+		return e.complexity.Director.BornAt(childComplexity), true
+
+	case "Director.description":
+		if e.complexity.Director.Description == nil {
+			break
+		}
+
+		return e.complexity.Director.Description(childComplexity), true
 
 	case "Director.id":
 		if e.complexity.Director.ID == nil {
@@ -610,6 +626,8 @@ type Director {
     id: ID!
     name: String!
     profileImage: String!
+    bornAt: String!
+    description: String!
     movies: [Movie!]
 }
 
@@ -668,6 +686,8 @@ input MovieInput {
 input DirectorInput {
     name: String!
     profileImage: String!
+    bornAt: String!
+    description: String!
 }
 
 input ReviewInput {
@@ -1203,6 +1223,76 @@ func (ec *executionContext) _Director_profileImage(ctx context.Context, field gr
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.ProfileImage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Director_bornAt(ctx context.Context, field graphql.CollectedField, obj *ent.Director) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Director",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BornAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Director_description(ctx context.Context, field graphql.CollectedField, obj *ent.Director) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Director",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3984,6 +4074,22 @@ func (ec *executionContext) unmarshalInputDirectorInput(ctx context.Context, obj
 			if err != nil {
 				return it, err
 			}
+		case "bornAt":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("bornAt"))
+			it.BornAt, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -4250,6 +4356,26 @@ func (ec *executionContext) _Director(ctx context.Context, sel ast.SelectionSet,
 		case "profileImage":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Director_profileImage(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "bornAt":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Director_bornAt(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "description":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Director_description(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

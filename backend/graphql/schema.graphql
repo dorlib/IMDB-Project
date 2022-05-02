@@ -29,6 +29,8 @@ type Director {
     id: ID!
     name: String!
     profileImage: String!
+    bornAt: String!
+    description: String!
     movies: [Movie!]
 }
 
@@ -87,6 +89,8 @@ input MovieInput {
 input DirectorInput {
     name: String!
     profileImage: String!
+    bornAt: String!
+    description: String!
 }
 
 input ReviewInput {

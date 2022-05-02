@@ -20,6 +20,9 @@ function DirectorPage() {
         query DirectorById($id : ID!) {
             directorById(id: $id) {
                 name
+                profileImage
+                description
+                bornAt
                 movies{
                     id
                     title
@@ -45,16 +48,42 @@ function DirectorPage() {
     console.log(data)
 
     let name = data["directorById"]["0"]["name"]
-    // let title = data["directorById"]["0"]["movies"]["0"]["titl e"]
-    // let rank = data["directorById"]["0"]["movies"]["0"]["rank"]
-    // let id = data["directorById"]["0"]["movies"]["0"]["id"]
-    // let img = data["directorById"]["0"]["movies"]["0"]["image"]
+    let profileImage = data["directorById"]["0"]["profileImage"] || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'
+    let description = data["directorById"]["0"]["description"]
+    let bornAt = data["directorById"]["0"]["bornAt"]
 
     let d =
         <div>
-            <p className={classes.name} style={{color: "yellow", fontSize: "xx-large"}}>
-                {name}
-            </p>
+            <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm"}} >
+                <CardMedia
+                    component="img"
+                    alt="movie image"
+                    height="300"
+                    src={profileImage}
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                        <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.director}>
+                            {name}
+                        </p>
+                        <p style={{color: "black", fontSize: "x-large"}} className={classes.director}>
+                            Date Of Birth : {bornAt}
+                        </p>
+                    </Typography>
+                    <Typography gutterBottom variant="h5" component="div">
+                        <p style={{color: "black", fontSize: "large"}} className={classes.director}>
+                            About {name} : {description}
+                        </p>
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button size="large">Share</Button>
+                </CardActions>
+            </Card>
+
+            <div className={classes.moviesTitle}>
+                Movies Of {name}
+            </div>
         </div>
 
     let loaded = data.directorById["0"]["movies"].map(({title, id, rank, image}) => (

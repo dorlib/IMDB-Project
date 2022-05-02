@@ -40,6 +40,18 @@ func (du *DirectorUpdate) SetProfileImage(s string) *DirectorUpdate {
 	return du
 }
 
+// SetBornAt sets the "bornAt" field.
+func (du *DirectorUpdate) SetBornAt(s string) *DirectorUpdate {
+	du.mutation.SetBornAt(s)
+	return du
+}
+
+// SetDescription sets the "description" field.
+func (du *DirectorUpdate) SetDescription(s string) *DirectorUpdate {
+	du.mutation.SetDescription(s)
+	return du
+}
+
 // AddMovieIDs adds the "movies" edge to the Movie entity by IDs.
 func (du *DirectorUpdate) AddMovieIDs(ids ...int) *DirectorUpdate {
 	du.mutation.AddMovieIDs(ids...)
@@ -167,6 +179,20 @@ func (du *DirectorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: director.FieldProfileImage,
 		})
 	}
+	if value, ok := du.mutation.BornAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: director.FieldBornAt,
+		})
+	}
+	if value, ok := du.mutation.Description(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: director.FieldDescription,
+		})
+	}
 	if du.mutation.MoviesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -249,6 +275,18 @@ func (duo *DirectorUpdateOne) SetName(s string) *DirectorUpdateOne {
 // SetProfileImage sets the "profileImage" field.
 func (duo *DirectorUpdateOne) SetProfileImage(s string) *DirectorUpdateOne {
 	duo.mutation.SetProfileImage(s)
+	return duo
+}
+
+// SetBornAt sets the "bornAt" field.
+func (duo *DirectorUpdateOne) SetBornAt(s string) *DirectorUpdateOne {
+	duo.mutation.SetBornAt(s)
+	return duo
+}
+
+// SetDescription sets the "description" field.
+func (duo *DirectorUpdateOne) SetDescription(s string) *DirectorUpdateOne {
+	duo.mutation.SetDescription(s)
 	return duo
 }
 
@@ -401,6 +439,20 @@ func (duo *DirectorUpdateOne) sqlSave(ctx context.Context) (_node *Director, err
 			Type:   field.TypeString,
 			Value:  value,
 			Column: director.FieldProfileImage,
+		})
+	}
+	if value, ok := duo.mutation.BornAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: director.FieldBornAt,
+		})
+	}
+	if value, ok := duo.mutation.Description(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: director.FieldDescription,
 		})
 	}
 	if duo.mutation.MoviesCleared() {

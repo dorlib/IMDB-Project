@@ -19,6 +19,10 @@ type Director struct {
 	Name string `json:"name,omitempty"`
 	// ProfileImage holds the value of the "profileImage" field.
 	ProfileImage string `json:"profileImage,omitempty"`
+	// BornAt holds the value of the "bornAt" field.
+	BornAt string `json:"bornAt,omitempty"`
+	// Description holds the value of the "description" field.
+	Description string `json:"description,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DirectorQuery when eager-loading is set.
 	Edges DirectorEdges `json:"edges"`
@@ -49,7 +53,7 @@ func (*Director) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case director.FieldID:
 			values[i] = new(sql.NullInt64)
-		case director.FieldName, director.FieldProfileImage:
+		case director.FieldName, director.FieldProfileImage, director.FieldBornAt, director.FieldDescription:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Director", columns[i])
@@ -83,6 +87,18 @@ func (d *Director) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field profileImage", values[i])
 			} else if value.Valid {
 				d.ProfileImage = value.String
+			}
+		case director.FieldBornAt:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field bornAt", values[i])
+			} else if value.Valid {
+				d.BornAt = value.String
+			}
+		case director.FieldDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field description", values[i])
+			} else if value.Valid {
+				d.Description = value.String
 			}
 		}
 	}
@@ -121,6 +137,10 @@ func (d *Director) String() string {
 	builder.WriteString(d.Name)
 	builder.WriteString(", profileImage=")
 	builder.WriteString(d.ProfileImage)
+	builder.WriteString(", bornAt=")
+	builder.WriteString(d.BornAt)
+	builder.WriteString(", description=")
+	builder.WriteString(d.Description)
 	builder.WriteByte(')')
 	return builder.String()
 }

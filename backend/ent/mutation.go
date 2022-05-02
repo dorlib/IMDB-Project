@@ -39,6 +39,8 @@ type DirectorMutation struct {
 	id            *int
 	name          *string
 	profileImage  *string
+	bornAt        *string
+	description   *string
 	clearedFields map[string]struct{}
 	movies        map[int]struct{}
 	removedmovies map[int]struct{}
@@ -218,6 +220,78 @@ func (m *DirectorMutation) ResetProfileImage() {
 	m.profileImage = nil
 }
 
+// SetBornAt sets the "bornAt" field.
+func (m *DirectorMutation) SetBornAt(s string) {
+	m.bornAt = &s
+}
+
+// BornAt returns the value of the "bornAt" field in the mutation.
+func (m *DirectorMutation) BornAt() (r string, exists bool) {
+	v := m.bornAt
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBornAt returns the old "bornAt" field's value of the Director entity.
+// If the Director object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DirectorMutation) OldBornAt(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBornAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBornAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBornAt: %w", err)
+	}
+	return oldValue.BornAt, nil
+}
+
+// ResetBornAt resets all changes to the "bornAt" field.
+func (m *DirectorMutation) ResetBornAt() {
+	m.bornAt = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *DirectorMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *DirectorMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the Director entity.
+// If the Director object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DirectorMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *DirectorMutation) ResetDescription() {
+	m.description = nil
+}
+
 // AddMovieIDs adds the "movies" edge to the Movie entity by ids.
 func (m *DirectorMutation) AddMovieIDs(ids ...int) {
 	if m.movies == nil {
@@ -291,12 +365,18 @@ func (m *DirectorMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *DirectorMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 4)
 	if m.name != nil {
 		fields = append(fields, director.FieldName)
 	}
 	if m.profileImage != nil {
 		fields = append(fields, director.FieldProfileImage)
+	}
+	if m.bornAt != nil {
+		fields = append(fields, director.FieldBornAt)
+	}
+	if m.description != nil {
+		fields = append(fields, director.FieldDescription)
 	}
 	return fields
 }
@@ -310,6 +390,10 @@ func (m *DirectorMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case director.FieldProfileImage:
 		return m.ProfileImage()
+	case director.FieldBornAt:
+		return m.BornAt()
+	case director.FieldDescription:
+		return m.Description()
 	}
 	return nil, false
 }
@@ -323,6 +407,10 @@ func (m *DirectorMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldName(ctx)
 	case director.FieldProfileImage:
 		return m.OldProfileImage(ctx)
+	case director.FieldBornAt:
+		return m.OldBornAt(ctx)
+	case director.FieldDescription:
+		return m.OldDescription(ctx)
 	}
 	return nil, fmt.Errorf("unknown Director field %s", name)
 }
@@ -345,6 +433,20 @@ func (m *DirectorMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetProfileImage(v)
+		return nil
+	case director.FieldBornAt:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBornAt(v)
+		return nil
+	case director.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Director field %s", name)
@@ -400,6 +502,12 @@ func (m *DirectorMutation) ResetField(name string) error {
 		return nil
 	case director.FieldProfileImage:
 		m.ResetProfileImage()
+		return nil
+	case director.FieldBornAt:
+		m.ResetBornAt()
+		return nil
+	case director.FieldDescription:
+		m.ResetDescription()
 		return nil
 	}
 	return fmt.Errorf("unknown Director field %s", name)

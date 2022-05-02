@@ -32,6 +32,18 @@ func (dc *DirectorCreate) SetProfileImage(s string) *DirectorCreate {
 	return dc
 }
 
+// SetBornAt sets the "bornAt" field.
+func (dc *DirectorCreate) SetBornAt(s string) *DirectorCreate {
+	dc.mutation.SetBornAt(s)
+	return dc
+}
+
+// SetDescription sets the "description" field.
+func (dc *DirectorCreate) SetDescription(s string) *DirectorCreate {
+	dc.mutation.SetDescription(s)
+	return dc
+}
+
 // AddMovieIDs adds the "movies" edge to the Movie entity by IDs.
 func (dc *DirectorCreate) AddMovieIDs(ids ...int) *DirectorCreate {
 	dc.mutation.AddMovieIDs(ids...)
@@ -123,6 +135,12 @@ func (dc *DirectorCreate) check() error {
 	if _, ok := dc.mutation.ProfileImage(); !ok {
 		return &ValidationError{Name: "profileImage", err: errors.New(`ent: missing required field "Director.profileImage"`)}
 	}
+	if _, ok := dc.mutation.BornAt(); !ok {
+		return &ValidationError{Name: "bornAt", err: errors.New(`ent: missing required field "Director.bornAt"`)}
+	}
+	if _, ok := dc.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Director.description"`)}
+	}
 	return nil
 }
 
@@ -165,6 +183,22 @@ func (dc *DirectorCreate) createSpec() (*Director, *sqlgraph.CreateSpec) {
 			Column: director.FieldProfileImage,
 		})
 		_node.ProfileImage = value
+	}
+	if value, ok := dc.mutation.BornAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: director.FieldBornAt,
+		})
+		_node.BornAt = value
+	}
+	if value, ok := dc.mutation.Description(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: director.FieldDescription,
+		})
+		_node.Description = value
 	}
 	if nodes := dc.mutation.MoviesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -106,6 +106,20 @@ func ProfileImage(v string) predicate.Director {
 	})
 }
 
+// BornAt applies equality check predicate on the "bornAt" field. It's identical to BornAtEQ.
+func BornAt(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldBornAt), v))
+	})
+}
+
+// Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
+func Description(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDescription), v))
+	})
+}
+
 // NameEQ applies the EQ predicate on the "name" field.
 func NameEQ(v string) predicate.Director {
 	return predicate.Director(func(s *sql.Selector) {
@@ -325,6 +339,228 @@ func ProfileImageEqualFold(v string) predicate.Director {
 func ProfileImageContainsFold(v string) predicate.Director {
 	return predicate.Director(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldProfileImage), v))
+	})
+}
+
+// BornAtEQ applies the EQ predicate on the "bornAt" field.
+func BornAtEQ(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldBornAt), v))
+	})
+}
+
+// BornAtNEQ applies the NEQ predicate on the "bornAt" field.
+func BornAtNEQ(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldBornAt), v))
+	})
+}
+
+// BornAtIn applies the In predicate on the "bornAt" field.
+func BornAtIn(vs ...string) predicate.Director {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Director(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldBornAt), v...))
+	})
+}
+
+// BornAtNotIn applies the NotIn predicate on the "bornAt" field.
+func BornAtNotIn(vs ...string) predicate.Director {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Director(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldBornAt), v...))
+	})
+}
+
+// BornAtGT applies the GT predicate on the "bornAt" field.
+func BornAtGT(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldBornAt), v))
+	})
+}
+
+// BornAtGTE applies the GTE predicate on the "bornAt" field.
+func BornAtGTE(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldBornAt), v))
+	})
+}
+
+// BornAtLT applies the LT predicate on the "bornAt" field.
+func BornAtLT(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldBornAt), v))
+	})
+}
+
+// BornAtLTE applies the LTE predicate on the "bornAt" field.
+func BornAtLTE(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldBornAt), v))
+	})
+}
+
+// BornAtContains applies the Contains predicate on the "bornAt" field.
+func BornAtContains(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldBornAt), v))
+	})
+}
+
+// BornAtHasPrefix applies the HasPrefix predicate on the "bornAt" field.
+func BornAtHasPrefix(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldBornAt), v))
+	})
+}
+
+// BornAtHasSuffix applies the HasSuffix predicate on the "bornAt" field.
+func BornAtHasSuffix(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldBornAt), v))
+	})
+}
+
+// BornAtEqualFold applies the EqualFold predicate on the "bornAt" field.
+func BornAtEqualFold(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldBornAt), v))
+	})
+}
+
+// BornAtContainsFold applies the ContainsFold predicate on the "bornAt" field.
+func BornAtContainsFold(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldBornAt), v))
+	})
+}
+
+// DescriptionEQ applies the EQ predicate on the "description" field.
+func DescriptionEQ(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionNEQ applies the NEQ predicate on the "description" field.
+func DescriptionNEQ(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionIn applies the In predicate on the "description" field.
+func DescriptionIn(vs ...string) predicate.Director {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Director(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDescription), v...))
+	})
+}
+
+// DescriptionNotIn applies the NotIn predicate on the "description" field.
+func DescriptionNotIn(vs ...string) predicate.Director {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Director(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDescription), v...))
+	})
+}
+
+// DescriptionGT applies the GT predicate on the "description" field.
+func DescriptionGT(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionGTE applies the GTE predicate on the "description" field.
+func DescriptionGTE(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionLT applies the LT predicate on the "description" field.
+func DescriptionLT(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionLTE applies the LTE predicate on the "description" field.
+func DescriptionLTE(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionContains applies the Contains predicate on the "description" field.
+func DescriptionContains(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionHasPrefix applies the HasPrefix predicate on the "description" field.
+func DescriptionHasPrefix(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
+func DescriptionHasSuffix(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionEqualFold applies the EqualFold predicate on the "description" field.
+func DescriptionEqualFold(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
+func DescriptionContainsFold(v string) predicate.Director {
+	return predicate.Director(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDescription), v))
 	})
 }
 

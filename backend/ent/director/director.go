@@ -11,6 +11,10 @@ const (
 	FieldName = "name"
 	// FieldProfileImage holds the string denoting the profileimage field in the database.
 	FieldProfileImage = "profile_image"
+	// FieldBornAt holds the string denoting the bornat field in the database.
+	FieldBornAt = "born_at"
+	// FieldDescription holds the string denoting the description field in the database.
+	FieldDescription = "description"
 	// EdgeMovies holds the string denoting the movies edge name in mutations.
 	EdgeMovies = "movies"
 	// Table holds the table name of the director in the database.
@@ -29,6 +33,8 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldProfileImage,
+	FieldBornAt,
+	FieldDescription,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

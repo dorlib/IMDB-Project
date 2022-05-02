@@ -5,6 +5,8 @@ package graphql
 type DirectorInput struct {
 	Name         string `json:"name"`
 	ProfileImage string `json:"profileImage"`
+	BornAt       string `json:"bornAt"`
+	Description  string `json:"description"`
 }
 
 type MovieInput struct {
