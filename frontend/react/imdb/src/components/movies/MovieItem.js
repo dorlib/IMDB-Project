@@ -75,6 +75,7 @@ function MovieItem(props) {
     let description = data["movieById"]["0"]["description"]
     let image = data["movieById"]["0"]["image"]
     let director = data["movieById"]["0"]["director"]["name"]
+    let directorId = data["movieById"]["0"]["director"]["id"]
 
     console.log(data)
 
@@ -96,7 +97,7 @@ function MovieItem(props) {
                 Movie description : {description}
             </h4>
             <h4 style={{color: "yellow"}}>
-                Directed by: {director}
+                Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
             </h4>
         </div>
         </Card>

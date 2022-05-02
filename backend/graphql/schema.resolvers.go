@@ -158,3 +158,11 @@ func (r *mutationResolver) UpdateRank(ctx context.Context, id int, rank int) (*e
 	}
 	return data, nil
 }
+
+func (r *mutationResolver) UpdateDirectorDetails(ctx context.Context, id int, bornAt string, profileImage string, description string) (*ent.Director, error) {
+	data, err := r.client.Director.UpdateOneID(id).SetBornAt(bornAt).SetProfileImage(profileImage).SetDescription(description).Save(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}
