@@ -19,10 +19,24 @@
 .moviesTitle {
     display: flex;
     position: relative;
-    left: 3cm;
-    display: block;
-    font-size: x-large;
+    left: 4.3cm;
+    font-size: xx-large;
     font-weight: bolder;
     color: yellow;
     margin-bottom: 0.5rem;
 }
+
+.card {
+    right: 20cm;
+}
+
+.image {
+    position: absolute;
+    width: 12cm;
+    display: flex;
+    z-index: 10;
+    right: 51%;
+    bottom: 27%;
+    border-radius: 50%;
+}
+
