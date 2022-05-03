@@ -18,8 +18,8 @@
 
 .moviesTitle {
     display: flex;
-    position: relative;
-    left: 4.3cm;
+    position: center;
+    left: 3cm;
     font-size: xx-large;
     font-weight: bolder;
     color: yellow;
@@ -39,4 +39,5 @@
     bottom: 27%;
     border-radius: 50%;
 }
+
 

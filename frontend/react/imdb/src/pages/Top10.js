@@ -49,7 +49,7 @@ function Top10Page() {
                 </CardContent>
                 <CardActions>
                     <Button size="large">Share</Button>
-                    <Link to={"/moviePage/" + id}><Button size="large">Go To Movie's Page</Button></Link>
+                    <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
                 </CardActions>
             </Card>
         </div>
