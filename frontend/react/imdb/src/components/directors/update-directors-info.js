@@ -12,16 +12,20 @@ function UpdateDirectorInfo(props) {
     `;
 
     let givenId = JSON.stringify(props["id"])
-    let givenDescription = JSON.stringify(props["desc"])
-    let givenProfile = 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'
-    let givenBornAt = JSON.stringify(props["birthday"])
+    let givenDescription = props["desc"]
+    let givenProfile = props["prof"]
+    let givenBornAt = props["birthday"]
+
+    let currentDescription = props["currentDesc"]
+    let currentBornAt = props["currentBornAt"]
+    let currentProfilePicture = props["currentProfile"]
 
     const [mutate, {loading, error}] = useMutation(UPDATE_DIRECTOR, {
         variables: {
             id: givenId || 0,
-            description: givenDescription || 'not given yet',
-            profileImage: givenProfile || "https://hope.be/wp-content/uploads/2015/05/no-user-image.gif",
-            bornAt: givenBornAt || '00.00.0000',
+            description: givenDescription || currentDescription,
+            profileImage: givenProfile || currentProfilePicture ,
+            bornAt: givenBornAt || currentBornAt,
         },
     });
     if (loading) return <p>Loading...</p>;
@@ -29,7 +33,7 @@ function UpdateDirectorInfo(props) {
 
     return (
         <div>
-            {mutate()},{window.location.reload()}
+            {mutate()},{window.location.reload()},{console.log("done")}
         </div>
     )
 

@@ -52,6 +52,14 @@ func (du *DirectorUpdate) SetDescription(s string) *DirectorUpdate {
 	return du
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (du *DirectorUpdate) SetNillableDescription(s *string) *DirectorUpdate {
+	if s != nil {
+		du.SetDescription(*s)
+	}
+	return du
+}
+
 // AddMovieIDs adds the "movies" edge to the Movie entity by IDs.
 func (du *DirectorUpdate) AddMovieIDs(ids ...int) *DirectorUpdate {
 	du.mutation.AddMovieIDs(ids...)
@@ -287,6 +295,14 @@ func (duo *DirectorUpdateOne) SetBornAt(s string) *DirectorUpdateOne {
 // SetDescription sets the "description" field.
 func (duo *DirectorUpdateOne) SetDescription(s string) *DirectorUpdateOne {
 	duo.mutation.SetDescription(s)
+	return duo
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (duo *DirectorUpdateOne) SetNillableDescription(s *string) *DirectorUpdateOne {
+	if s != nil {
+		duo.SetDescription(*s)
+	}
 	return duo
 }
 

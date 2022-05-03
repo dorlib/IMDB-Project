@@ -27,16 +27,15 @@ function DirectorPage() {
     const [descriptionGiven, setDescription] = useState()
     const [profileImageGiven, setProfileImage] = useState()
     const [profileImageGiven2, setProfileImage2] = useState()
-    const [dayOfBirthGiven, setDay] = useState('00.')
-    const [monthOfBirthGiven, setMonth] = useState('00.')
-    const [yearOfBirthGiven, setYear] = useState('0000')
+    const [dayOfBirthGiven, setDay] = useState()
+    const [monthOfBirthGiven, setMonth] = useState()
+    const [yearOfBirthGiven, setYear] = useState()
 
     const [visible, setVisible] = useState(false)
 
     let desc = descriptionGiven
-    let prof = profileImageGiven || profileImageGiven2 || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png'
-    prof = JSON.stringify(prof)
-    let birthday = dayOfBirthGiven + monthOfBirthGiven + yearOfBirthGiven
+    let prof = profileImageGiven || profileImageGiven2
+    let birthday = dayOfBirthGiven + "." + monthOfBirthGiven + "." + yearOfBirthGiven
 
     const [expanded, setExpanded] = useState(false);
     const [accordionHeight, setAccordionHeight] = useState(0);
@@ -190,15 +189,15 @@ function DirectorPage() {
                         <table className={classes.tr}>
                             <tbody>
                             <tr>
-                                <td><input type="number" id="year" min="1920" max="2022" placeholder="Year" required
+                                <td><input type="number" id="year" min="1920" max="2022" placeholder="Year"
                                            value={yearOfBirthGiven}
                                            onChange={event => setYear(event.target.value)}
                                            style={{width: "2cm"}}/></td>
-                                <td><input type="number" id="month" min="1" max="12" placeholder="Month" required
+                                <td><input type="number" id="month" min="1" max="12" placeholder="Month"
                                            value={monthOfBirthGiven}
                                            onChange={event => setMonth(event.target.value)}
                                            style={{width: "2cm"}}/></td>
-                                <td><input type="number" id="day" min="1" max="31" placeholder="Day" required
+                                <td><input type="number" id="day" min="1" max="31" placeholder="Day"
                                            value={dayOfBirthGiven} onChange={event => setDay(event.target.value)}
                                            style={{width: "2cm"}}/></td>
                             </tr>
@@ -207,7 +206,7 @@ function DirectorPage() {
                     </div>
                     <div className={classes.actions}>
                         <button onClick={() => setVisible(true)}>SUBMIT</button>
-                        {visible? <UpdateDirectorInfo prof={prof} desc={desc} birthday={birthday} id={lastSegment} /> : console.log("none")}
+                        {visible? <UpdateDirectorInfo prof={prof} desc={desc} birthday={birthday} id={lastSegment} currentDesc={description} currentBornAt={bornAt} currentProfile={profileImage}/> : console.log("none")}
                     </div>
                 </div>
             </Footer>

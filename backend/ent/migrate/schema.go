@@ -14,7 +14,7 @@ var (
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "profile_image", Type: field.TypeString},
 		{Name: "born_at", Type: field.TypeString},
-		{Name: "description", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString, Default: "not given"},
 	}
 	// DirectorsTable holds the schema information for the "directors" table.
 	DirectorsTable = &schema.Table{

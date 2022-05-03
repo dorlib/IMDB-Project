@@ -26,8 +26,8 @@ function NewMovieForm() {
     `;
 
     let NEW_MOVIE_AND_DIRECTOR = gql`
-        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!, $image: String!, $topic: String!, $text: String!){
-            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name, image: $image, topic: $topic, text: $text) {
+        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!, $image: String!, $topic: String!, $text: String! $profileImage: String!, $bornAt: String!){
+            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name, image: $image, topic: $topic, text: $text, profileImage: $profileImage, bornAt: $bornAt) {
                 id
             }
         }
@@ -79,6 +79,8 @@ function NewMovieForm() {
             variables: {
                 title: givenTitle,
                 image: givenImage1 || givenImage2 ||'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png',
+                profileImage: "https://hope.be/wp-content/uploads/2015/05/no-user-image.gif",
+                bornAt: "1.1.1111",
                 description: givenDescription,
                 review: givenText,
                 rank: givenRank,

@@ -18,7 +18,7 @@ func (Director) Fields() []ent.Field {
 		field.String("name").Unique().Annotations(entgql.OrderField("DIRECTOR_NAME")),
 		field.String("profileImage"),
 		field.String("bornAt"),
-		field.String("description"),
+		field.String("description").Default("not given"),
 	}
 }
 

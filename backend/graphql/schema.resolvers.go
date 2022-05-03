@@ -28,6 +28,8 @@ func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*
 func (r *mutationResolver) CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error) {
 	return r.client.Director.Create().
 		SetName(director.Name).
+		SetProfileImage("https://hope.be/wp-content/uploads/2015/05/no-user-image.gif").
+		SetBornAt("1.1.1111").
 		Save(ctx)
 }
 
@@ -81,9 +83,11 @@ func (r *queryResolver) DirectorIDByName(ctx context.Context, name string) (*int
 	return &id, nil
 }
 
-func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string, topic string, text string) (*ent.Movie, error) {
+func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string, topic string, text string, profileImage string, bornAt string) (*ent.Movie, error) {
 	newDirector, err := r.client.Director.Create().
 		SetName(directorName).
+		SetProfileImage(profileImage).
+		SetBornAt(bornAt).
 		Save(ctx)
 	if err != nil {
 		return nil, ent.MaskNotFound(err)

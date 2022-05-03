@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"imdbv2/ent/director"
 	"imdbv2/ent/schema"
 	"imdbv2/ent/user"
 )
@@ -11,6 +12,12 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	directorFields := schema.Director{}.Fields()
+	_ = directorFields
+	// directorDescDescription is the schema descriptor for description field.
+	directorDescDescription := directorFields[3].Descriptor()
+	// director.DefaultDescription holds the default value on creation for the description field.
+	director.DefaultDescription = directorDescDescription.Default.(string)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescFirstname is the schema descriptor for firstname field.

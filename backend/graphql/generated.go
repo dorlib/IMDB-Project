@@ -68,7 +68,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		CreateDirector         func(childComplexity int, director DirectorInput) int
 		CreateMovie            func(childComplexity int, movie MovieInput) int
-		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string, image string, topic string, text string) int
+		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string, image string, topic string, text string, profileImage string, bornAt string) int
 		CreateReview           func(childComplexity int, text string, rank int, movieID int, topic string) int
 		CreateUser             func(childComplexity int, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string) int
 		UpdateDirectorDetails  func(childComplexity int, id int, bornAt string, profileImage string, description string) int
@@ -113,7 +113,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error)
-	CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string, topic string, text string) (*ent.Movie, error)
+	CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string, topic string, text string, profileImage string, bornAt string) (*ent.Movie, error)
 	CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error)
 	CreateReview(ctx context.Context, text string, rank int, movieID int, topic string) (*ent.Review, error)
 	CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string) (*ent.User, error)
@@ -283,7 +283,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateMovieAndDirector(childComplexity, args["title"].(string), args["description"].(string), args["rank"].(int), args["genre"].(string), args["directorName"].(string), args["image"].(string), args["topic"].(string), args["text"].(string)), true
+		return e.complexity.Mutation.CreateMovieAndDirector(childComplexity, args["title"].(string), args["description"].(string), args["rank"].(int), args["genre"].(string), args["directorName"].(string), args["image"].(string), args["topic"].(string), args["text"].(string), args["profileImage"].(string), args["bornAt"].(string)), true
 
 	case "Mutation.createReview":
 		if e.complexity.Mutation.CreateReview == nil {
@@ -726,7 +726,7 @@ input UserInput {
 # https://graphql.org/learn/queries/#mutations
 type Mutation {
     createMovie(movie: MovieInput!): Movie!
-    createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String!, directorName: String!, image: String!, topic: String!, text: String!): Movie!
+    createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String!, directorName: String!, image: String!, topic: String!, text: String!, profileImage: String!, bornAt: String!): Movie!
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, topic: String!): Review!
     createUser(firstname: String!, lastname: String!, nickname: String!, description: String!, password: String!, profile: String!,birthday: String!, email: String!): User!
@@ -844,6 +844,24 @@ func (ec *executionContext) field_Mutation_createMovieAndDirector_args(ctx conte
 		}
 	}
 	args["text"] = arg7
+	var arg8 string
+	if tmp, ok := rawArgs["profileImage"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("profileImage"))
+		arg8, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["profileImage"] = arg8
+	var arg9 string
+	if tmp, ok := rawArgs["bornAt"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("bornAt"))
+		arg9, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["bornAt"] = arg9
 	return args, nil
 }
 
@@ -1742,7 +1760,7 @@ func (ec *executionContext) _Mutation_createMovieAndDirector(ctx context.Context
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateMovieAndDirector(rctx, args["title"].(string), args["description"].(string), args["rank"].(int), args["genre"].(string), args["directorName"].(string), args["image"].(string), args["topic"].(string), args["text"].(string))
+		return ec.resolvers.Mutation().CreateMovieAndDirector(rctx, args["title"].(string), args["description"].(string), args["rank"].(int), args["genre"].(string), args["directorName"].(string), args["image"].(string), args["topic"].(string), args["text"].(string), args["profileImage"].(string), args["bornAt"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

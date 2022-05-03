@@ -44,6 +44,14 @@ func (dc *DirectorCreate) SetDescription(s string) *DirectorCreate {
 	return dc
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (dc *DirectorCreate) SetNillableDescription(s *string) *DirectorCreate {
+	if s != nil {
+		dc.SetDescription(*s)
+	}
+	return dc
+}
+
 // AddMovieIDs adds the "movies" edge to the Movie entity by IDs.
 func (dc *DirectorCreate) AddMovieIDs(ids ...int) *DirectorCreate {
 	dc.mutation.AddMovieIDs(ids...)
@@ -70,6 +78,7 @@ func (dc *DirectorCreate) Save(ctx context.Context) (*Director, error) {
 		err  error
 		node *Director
 	)
+	dc.defaults()
 	if len(dc.hooks) == 0 {
 		if err = dc.check(); err != nil {
 			return nil, err
@@ -124,6 +133,14 @@ func (dc *DirectorCreate) Exec(ctx context.Context) error {
 func (dc *DirectorCreate) ExecX(ctx context.Context) {
 	if err := dc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (dc *DirectorCreate) defaults() {
+	if _, ok := dc.mutation.Description(); !ok {
+		v := director.DefaultDescription
+		dc.mutation.SetDescription(v)
 	}
 }
 
@@ -236,6 +253,7 @@ func (dcb *DirectorCreateBulk) Save(ctx context.Context) ([]*Director, error) {
 	for i := range dcb.builders {
 		func(i int, root context.Context) {
 			builder := dcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*DirectorMutation)
 				if !ok {
