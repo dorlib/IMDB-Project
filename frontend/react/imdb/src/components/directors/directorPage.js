@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 
 import FavoritesContext from "../../store/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
-import {Stack} from "@mui/material";
+import {Input, Stack} from "@mui/material";
 import Button from "@mui/material/Button";
 import {isIterableObject} from "graphql/jsutils/isIterableObject";
 import MenuItem from "@mui/material/MenuItem";
@@ -14,9 +14,23 @@ import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
-import {Footer, Header} from "./styles";
+import {Footer} from "./styles";
 
 function DirectorPage() {
+
+    const [descriptionGiven, setDescription] = useState('')
+    const [profileImageGiven, setProfileImage] = useState('')
+    const [profileImageGiven2, setProfileImage2] = useState('')
+    const [givenDayOfBirth, setDayOfBirth] = useState('')
+    const [givenMonthOfBirth, setMonthOfBirth] = useState('')
+    const [givenYearOfBirth, setYearOfBirth] = useState('')
+
+    let details = (
+        descriptionGiven,
+        profileImageGiven || profileImageGiven2 || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png'
+    )
+    let birthday = givenDayOfBirth + givenMonthOfBirth + givenYearOfBirth
+
     const [expanded, setExpanded] = useState(false);
     const [accordionHeight, setAccordionHeight] = useState(0);
     const ref = useRef("");
@@ -120,35 +134,70 @@ function DirectorPage() {
                     <span size="large" onClick={open}><Button>Edit Director's Details!</Button></span>
                 </CardActions>
                 <div className="accordion" ref={ref} style={{marginTop: "0.5cm"}}>
-                    {/*<div className={classes.control}>*/}
-                    {/*    <label htmlFor="description">Description</label>*/}
-                    {/*    <textarea*/}
-                    {/*        id="description"*/}
-                    {/*        type="text"*/}
-                    {/*        datatype="String"*/}
-                    {/*        required*/}
-                    {/*        rows="5"*/}
-                    {/*        value={givenDescription} onChange={event => setDescription(event.target.value)}*/}
-                    {/*    ></textarea>*/}
-                    {/*</div>*/}
+                    <div className={classes.control} style={{color: "yellow", fontWeight: "bold", marginRight: "16cm"}}>
+                        <label htmlFor="description">Description</label>
+                        <textarea
+                            id="description"
+                            type="text"
+                            datatype="String"
+                            required
+                            rows="5"
+                            value={descriptionGiven} onChange={event => setDescription(event.target.value)}
+                        ></textarea>
+                    </div>
 
-                    {/*<div className={classes.control}>*/}
-                    {/*    <label htmlFor="topic">Review title</label>*/}
-                    {/*    <textarea*/}
-                    {/*        id="topic"*/}
-                    {/*        type="text"*/}
-                    {/*        datatype="String"*/}
-                    {/*        required*/}
-                    {/*        rows="1"*/}
-                    {/*        value={givenTopic} onChange={event => setTopic(event.target.value)}*/}
-                    {/*    ></textarea>*/}
-                    {/*</div>*/}
-
-                    {/*<div className={classes.control}>*/}
-                    {/*    <label htmlFor="review">Review Text</label>*/}
-                    {/*    <textarea id="review" rows="5" datatype="String" value={givenText}*/}
-                    {/*              onChange={event => setText(event.target.value)}></textarea>*/}
-                    {/*</div>*/}
+                    <div className={classes.control} style={{color: "yellow", fontWeight: "bold"}}>
+                        <label htmlFor="profileImage">Profile Image</label>
+                        <textarea
+                            id="topic"
+                            type="text"
+                            datatype="String"
+                            required
+                            rows="1"
+                            style={{width: "11.8cm", height: "0.7cm"}}
+                            value={profileImageGiven} onChange={event => setProfileImage(event.target.value)}
+                        ></textarea>
+                    </div>
+                    <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
+                        <label htmlFor="contained-button-file">
+                            <Input
+                                accept="image/*"
+                                type="file"
+                                id="contained-button-file"
+                                style={{display: "none"}}
+                                value={profileImageGiven2}
+                                onChange={event => setProfileImage2(event.target.value)}
+                            />
+                            <Button variant="contained" component="span"
+                                    style={{position: "relative", display: "flex", bottom: "0.1cm", right: "7.3cm"}}>
+                                Upload
+                            </Button>
+                        </label>
+                    </Stack>
+                    <div>
+                        <label htmlFor="birthday" style={{color: "yellow", fontWeight: "bold", position:"relative", display:"flex", bottom: "1cm"}}>Enter Your
+                            Birthday</label>
+                        <table className={classes.tr}>
+                            <tbody>
+                            <tr>
+                                <td><input type="number" id="year" min="1920" max="2022" placeholder="Year" required
+                                           value={givenYearOfBirth}
+                                           onChange={event => setYearOfBirth(event.target.value)}
+                                           style={{width: "2cm"}}/></td>
+                                <td><input type="number" id="month" min="1" max="12" placeholder="Month" required
+                                           value={givenMonthOfBirth}
+                                           onChange={event => setMonthOfBirth(event.target.value)}
+                                           style={{width: "2cm"}}/></td>
+                                <td><input type="number" id="day" min="1" max="31" placeholder="Day" required
+                                           value={givenDayOfBirth} onChange={event => setDayOfBirth(event.target.value)}
+                                           style={{width: "2cm"}}/></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className={classes.actions}>
+                        <button type="button">SUBMIT</button>
+                    </div>
                 </div>
             </Footer>
         </Card>

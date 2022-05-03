@@ -39,7 +39,8 @@ const Footer = styled.div`
   }
 
   .accordion {
-    padding: 10px 15px 15px; /* changed */
+    padding: 10px 15px 80px; /* changed */
+    
   }
 
   &.show {
