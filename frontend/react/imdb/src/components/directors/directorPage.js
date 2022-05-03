@@ -16,26 +16,31 @@ import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import {Footer} from "./styles";
 
+import UpdateDirectorInfo from "./update-directors-info";
+import MovieItem from "../movies/MovieItem";
+
 function DirectorPage() {
+
+    let url = JSON.stringify(window.location.href);
+    let lastSegment = parseInt(url.split("/").pop(), 10);
 
     const [descriptionGiven, setDescription] = useState('')
     const [profileImageGiven, setProfileImage] = useState('')
     const [profileImageGiven2, setProfileImage2] = useState('')
-    const [givenDayOfBirth, setDayOfBirth] = useState('')
-    const [givenMonthOfBirth, setMonthOfBirth] = useState('')
-    const [givenYearOfBirth, setYearOfBirth] = useState('')
+    const [dayOfBirthGiven, setDay] = useState('')
+    const [monthOfBirthGiven, setMonth] = useState('')
+    const [yearOfBirthGiven, setYear] = useState('')
 
-    let details = (
-        descriptionGiven,
-        profileImageGiven || profileImageGiven2 || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png'
-    )
-    let birthday = givenDayOfBirth + givenMonthOfBirth + givenYearOfBirth
+    const [visible, setVisible] = useState(false)
+
+    let desc = descriptionGiven
+    let prof = profileImageGiven || profileImageGiven2 || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png'
+    let birthday = dayOfBirthGiven + monthOfBirthGiven + yearOfBirthGiven
 
     const [expanded, setExpanded] = useState(false);
     const [accordionHeight, setAccordionHeight] = useState(0);
     const ref = useRef("");
     let getHeight = ref.current?.scrollHeight || null;
-
     const open = () => setExpanded(!expanded);
 
     useEffect(() => {
@@ -60,8 +65,6 @@ function DirectorPage() {
         }
     `;
 
-    let url = JSON.stringify(window.location.href);
-    let lastSegment = parseInt(url.split("/").pop(), 10);
     const {loading, error, data} = useQuery(DIRECTOR_DATA,
         {
             variables: {
@@ -175,28 +178,35 @@ function DirectorPage() {
                         </label>
                     </Stack>
                     <div>
-                        <label htmlFor="birthday" style={{color: "yellow", fontWeight: "bold", position:"relative", display:"flex", bottom: "1cm"}}>Enter Your
+                        <label htmlFor="birthday" style={{
+                            color: "yellow",
+                            fontWeight: "bold",
+                            position: "relative",
+                            display: "flex",
+                            bottom: "1cm"
+                        }}>Enter Your
                             Birthday</label>
                         <table className={classes.tr}>
                             <tbody>
                             <tr>
                                 <td><input type="number" id="year" min="1920" max="2022" placeholder="Year" required
-                                           value={givenYearOfBirth}
-                                           onChange={event => setYearOfBirth(event.target.value)}
+                                           value={yearOfBirthGiven}
+                                           onChange={event => setYear(event.target.value)}
                                            style={{width: "2cm"}}/></td>
                                 <td><input type="number" id="month" min="1" max="12" placeholder="Month" required
-                                           value={givenMonthOfBirth}
-                                           onChange={event => setMonthOfBirth(event.target.value)}
+                                           value={monthOfBirthGiven}
+                                           onChange={event => setMonth(event.target.value)}
                                            style={{width: "2cm"}}/></td>
                                 <td><input type="number" id="day" min="1" max="31" placeholder="Day" required
-                                           value={givenDayOfBirth} onChange={event => setDayOfBirth(event.target.value)}
+                                           value={dayOfBirthGiven} onChange={event => setDay(event.target.value)}
                                            style={{width: "2cm"}}/></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                     <div className={classes.actions}>
-                        <button type="button">SUBMIT</button>
+                        <button onClick={() => setVisible(true)}>SUBMIT</button>
+                        {visible? <UpdateDirectorInfo prof={prof} desc={desc} birthday={birthday} id={lastSegment} /> : console.log("none")}
                     </div>
                 </div>
             </Footer>
@@ -210,7 +220,7 @@ function DirectorPage() {
     )
 
     let loaded = data.directorById["0"]["movies"].map(({title, id, rank, image}) => (
-        <div>
+        <div key={id}>
             <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm"}} key={id}>
                 <CardMedia
                     component="img"
