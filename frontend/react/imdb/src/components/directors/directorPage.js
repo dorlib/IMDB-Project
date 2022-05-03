@@ -24,17 +24,18 @@ function DirectorPage() {
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
 
-    const [descriptionGiven, setDescription] = useState('')
-    const [profileImageGiven, setProfileImage] = useState('')
-    const [profileImageGiven2, setProfileImage2] = useState('')
-    const [dayOfBirthGiven, setDay] = useState('')
-    const [monthOfBirthGiven, setMonth] = useState('')
-    const [yearOfBirthGiven, setYear] = useState('')
+    const [descriptionGiven, setDescription] = useState()
+    const [profileImageGiven, setProfileImage] = useState()
+    const [profileImageGiven2, setProfileImage2] = useState()
+    const [dayOfBirthGiven, setDay] = useState('00.')
+    const [monthOfBirthGiven, setMonth] = useState('00.')
+    const [yearOfBirthGiven, setYear] = useState('0000')
 
     const [visible, setVisible] = useState(false)
 
     let desc = descriptionGiven
     let prof = profileImageGiven || profileImageGiven2 || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png'
+    prof = JSON.stringify(prof)
     let birthday = dayOfBirthGiven + monthOfBirthGiven + yearOfBirthGiven
 
     const [expanded, setExpanded] = useState(false);

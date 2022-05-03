@@ -11,24 +11,27 @@ function UpdateDirectorInfo(props) {
         }
     `;
 
-    let [Mut] = useMutation(UPDATE_DIRECTOR,
-        {
-            variables: {
-                id: props["id"],
-                description: props["desc"],
-                profile: props["prof"] || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif',
-                bornAt: props["birthday"],
-            },
-            onCompleted: function (data) {
-                return window.location.reload();
-            },
-            onError: function (error) {
-                console.log("error:", error)
-            },
-        });
+    let givenId = JSON.stringify(props["id"])
+    let givenDescription = JSON.stringify(props["desc"])
+    let givenProfile = 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'
+    let givenBornAt = JSON.stringify(props["birthday"])
 
-    return Mut
+    const [mutate, {loading, error}] = useMutation(UPDATE_DIRECTOR, {
+        variables: {
+            id: givenId || 0,
+            description: givenDescription || 'not given yet',
+            profileImage: givenProfile || "https://hope.be/wp-content/uploads/2015/05/no-user-image.gif",
+            bornAt: givenBornAt || '00.00.0000',
+        },
+    });
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :</p>;
 
+    return (
+        <div>
+            {mutate()},{window.location.reload()}
+        </div>
+    )
 
 }
 
