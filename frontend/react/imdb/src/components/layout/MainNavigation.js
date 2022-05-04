@@ -95,7 +95,7 @@ function MainNavigation() {
                     Menu
                   </Button>
                   <Menu {...bindMenu(popupState)} >
-                    <MenuItem><Link to={"/"}>All Movies</Link></MenuItem>
+                    <MenuItem><Link to={"/movies"}>All Movies</Link></MenuItem>
                     <MenuItem><Link to={"/directors"}>All Directors</Link></MenuItem>
                     <MenuItem><Link to={"/top10"}>Top 10</Link></MenuItem>
                   </Menu>
