@@ -17,12 +17,14 @@ import UpdateRank from "./components/reviews/total-rank";
 import NewUserForm from "./components/users/NewUserForm";
 import CreateUser from "./components/users/create-user";
 import Top10Page from "./pages/Top10";
+import Welcome from "./pages/Welcome";
 
 function App() {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<AllMoviesPage />} />
+        <Route path="/" element={<Welcome />} />
+        <Route path="/movies" element={<AllMoviesPage />} />
         <Route path="/directors" element={<AllDirectorsPage />} />
         <Route path="/new-movie" element={<NewMovieForm />} />
         <Route path="/favorites" element={<FavoritesPage />} />

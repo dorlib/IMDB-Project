@@ -1,14 +1,12 @@
-import WelcomePage from "../components/welcome/WelcomePage";
+import React from "react";
 
-function WelcomePage() {
+function Welcome() {
 
-  function WelcomeHandler() {
-
-  return (
-    <section>
-      <WelcomePage />
-    </section>
-  );
+    return (
+        <div style={{color: "yellow"}}>
+            This is home page
+        </div>
+    )
 }
 
-export default WelcomePage;
+export default Welcome;
