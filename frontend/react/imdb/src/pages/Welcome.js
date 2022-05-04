@@ -1,10 +1,12 @@
 import React from "react";
+import classes from "./welcome.module.css"
 
 function Welcome() {
 
     return (
-        <div style={{color: "yellow"}}>
-            This is home page
+        <div className={classes.welcome}>
+            <div style={{color: "yellow"}} className={classes.home}>
+            </div>
         </div>
     )
 }

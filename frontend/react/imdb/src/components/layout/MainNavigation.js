@@ -35,7 +35,7 @@ function MainNavigation() {
       <Grid container spacing={12}>
         <Grid item {...grid}>
           <header className={classes.header}>
-            <div className={classes.logo}>IMDB - Movies</div>
+            <Link to={"/"}><div className={classes.logo}>IMDB - Movies</div></Link>
             <nav>
               <ul>
                 <li>

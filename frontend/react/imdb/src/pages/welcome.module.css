@@ -1,0 +1,22 @@
+.welcome {
+    background-image: url("https://xbox-store-checker.com/assets/upload/game/2019/02/optimize/9wzdncrfj3tj-background.jpg");
+    height: 100vh;
+    margin-top: -135px;
+    margin-left: -650px;
+    margin-right: -650px;
+    font-size: 50px;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+}
+
+.img-responsive { background-size: 100%; }
+
+html, body {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    height:100%;
+    width:100%;
+    overflow: hidden;
+}
