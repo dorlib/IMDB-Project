@@ -46,6 +46,14 @@ func (du *DirectorUpdate) SetBornAt(s string) *DirectorUpdate {
 	return du
 }
 
+// SetNillableBornAt sets the "bornAt" field if the given value is not nil.
+func (du *DirectorUpdate) SetNillableBornAt(s *string) *DirectorUpdate {
+	if s != nil {
+		du.SetBornAt(*s)
+	}
+	return du
+}
+
 // SetDescription sets the "description" field.
 func (du *DirectorUpdate) SetDescription(s string) *DirectorUpdate {
 	du.mutation.SetDescription(s)
@@ -289,6 +297,14 @@ func (duo *DirectorUpdateOne) SetProfileImage(s string) *DirectorUpdateOne {
 // SetBornAt sets the "bornAt" field.
 func (duo *DirectorUpdateOne) SetBornAt(s string) *DirectorUpdateOne {
 	duo.mutation.SetBornAt(s)
+	return duo
+}
+
+// SetNillableBornAt sets the "bornAt" field if the given value is not nil.
+func (duo *DirectorUpdateOne) SetNillableBornAt(s *string) *DirectorUpdateOne {
+	if s != nil {
+		duo.SetBornAt(*s)
+	}
 	return duo
 }
 

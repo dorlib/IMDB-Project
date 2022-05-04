@@ -48,6 +48,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultBornAt holds the default value on creation for the "bornAt" field.
+	DefaultBornAt string
 	// DefaultDescription holds the default value on creation for the "description" field.
 	DefaultDescription string
 )

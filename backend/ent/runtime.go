@@ -14,6 +14,10 @@ import (
 func init() {
 	directorFields := schema.Director{}.Fields()
 	_ = directorFields
+	// directorDescBornAt is the schema descriptor for bornAt field.
+	directorDescBornAt := directorFields[2].Descriptor()
+	// director.DefaultBornAt holds the default value on creation for the bornAt field.
+	director.DefaultBornAt = directorDescBornAt.Default.(string)
 	// directorDescDescription is the schema descriptor for description field.
 	directorDescDescription := directorFields[3].Descriptor()
 	// director.DefaultDescription holds the default value on creation for the description field.

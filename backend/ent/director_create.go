@@ -38,6 +38,14 @@ func (dc *DirectorCreate) SetBornAt(s string) *DirectorCreate {
 	return dc
 }
 
+// SetNillableBornAt sets the "bornAt" field if the given value is not nil.
+func (dc *DirectorCreate) SetNillableBornAt(s *string) *DirectorCreate {
+	if s != nil {
+		dc.SetBornAt(*s)
+	}
+	return dc
+}
+
 // SetDescription sets the "description" field.
 func (dc *DirectorCreate) SetDescription(s string) *DirectorCreate {
 	dc.mutation.SetDescription(s)
@@ -138,6 +146,10 @@ func (dc *DirectorCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (dc *DirectorCreate) defaults() {
+	if _, ok := dc.mutation.BornAt(); !ok {
+		v := director.DefaultBornAt
+		dc.mutation.SetBornAt(v)
+	}
 	if _, ok := dc.mutation.Description(); !ok {
 		v := director.DefaultDescription
 		dc.mutation.SetDescription(v)

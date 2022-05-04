@@ -20,20 +20,26 @@ function UpdateDirectorInfo(props) {
     let currentBornAt = props["currentBornAt"]
     let currentProfilePicture = props["currentProfile"]
 
+    if (givenBornAt[0] == "u") {
+        givenBornAt = currentBornAt
+    }
+
     const [mutate, {loading, error}] = useMutation(UPDATE_DIRECTOR, {
         variables: {
             id: givenId || 0,
             description: givenDescription || currentDescription,
-            profileImage: givenProfile || currentProfilePicture ,
-            bornAt: givenBornAt || currentBornAt,
-        },
+            profileImage: givenProfile || currentProfilePicture,
+            bornAt: givenBornAt,
+        }, onCompleted: function (data) {
+             window.location.reload()
+        }
     });
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
 
     return (
         <div>
-            {mutate()},{window.location.reload()},{console.log("done")}
+            {mutate()},{console.log("done")}
         </div>
     )
 

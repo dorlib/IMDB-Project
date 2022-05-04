@@ -13,7 +13,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "profile_image", Type: field.TypeString},
-		{Name: "born_at", Type: field.TypeString},
+		{Name: "born_at", Type: field.TypeString, Default: "00.00.0000"},
 		{Name: "description", Type: field.TypeString, Default: "not given"},
 	}
 	// DirectorsTable holds the schema information for the "directors" table.
