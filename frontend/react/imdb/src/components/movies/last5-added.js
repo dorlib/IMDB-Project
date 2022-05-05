@@ -10,15 +10,32 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 
+let bool = true
+const numbers = [0, 1, 2, 3, 4];
+let currentNumber
+let setCurrentNumber
+
 function Last5Added() {
+    function ChangeHandler() {
+        [currentNumber, setCurrentNumber] = useState("0");
+        let temp = JSON.stringify(numbers[0])
+        if (numbers.indexOf(parseInt(currentNumber)) == 4) {
+            temp = JSON.stringify(numbers[0])
+        } else {
+            temp = JSON.stringify(numbers[(numbers.indexOf(parseInt(currentNumber)) + 1)])
+        }
+        console.log(temp)
+        setInterval(() => {
+            setCurrentNumber(temp);
+        }, 3000)
+    }
 
-    const numbers = [0, 1, 2, 3, 4];
-    const [currentNumber, setCurrentNumber] = useState("0");
+    if (bool = true) {
+        ChangeHandler()
+    }
 
-    setInterval(() => {
-        setCurrentNumber(JSON.stringify(numbers[(numbers.indexOf(parseInt(currentNumber)) + 1) % 5]));
-    }, 5000)
-
+    bool = false
+    
     const LAST_5_ADDED = gql`
         query Last5Added{
             last5Added {
