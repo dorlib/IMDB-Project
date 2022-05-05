@@ -79,6 +79,7 @@ type ComplexityRoot struct {
 		DirectorByID     func(childComplexity int, id int) int
 		DirectorIDByName func(childComplexity int, name string) int
 		Directors        func(childComplexity int) int
+		Last5Added       func(childComplexity int) int
 		MovieByID        func(childComplexity int, id int) int
 		Movies           func(childComplexity int) int
 		Node             func(childComplexity int, id int) int
@@ -125,6 +126,7 @@ type QueryResolver interface {
 	Directors(ctx context.Context) ([]*ent.Director, error)
 	DirectorIDByName(ctx context.Context, name string) (*int, error)
 	MovieByID(ctx context.Context, id int) ([]*ent.Movie, error)
+	Last5Added(ctx context.Context) ([]*ent.Movie, error)
 	DirectorByID(ctx context.Context, id int) ([]*ent.Director, error)
 	ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error)
 	Users(ctx context.Context) ([]*ent.User, error)
@@ -363,6 +365,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Directors(childComplexity), true
+
+	case "Query.last5Added":
+		if e.complexity.Query.Last5Added == nil {
+			break
+		}
+
+		return e.complexity.Query.Last5Added(childComplexity), true
 
 	case "Query.movieById":
 		if e.complexity.Query.MovieByID == nil {
@@ -740,6 +749,7 @@ type Query {
     directors: [Director!]
     directorIdByName(name: String!): ID
     movieById(id: ID!) : [Movie!]
+    last5Added: [Movie!]
     directorById(id: ID!): [Director!]
     reviewsOfMovie(movieID: Int!) : [Review]
     users: [User!]
@@ -2116,6 +2126,38 @@ func (ec *executionContext) _Query_movieById(ctx context.Context, field graphql.
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Query().MovieByID(rctx, args["id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Movie)
+	fc.Result = res
+	return ec.marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovieᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_last5Added(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Last5Added(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4835,6 +4877,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_movieById(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "last5Added":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_last5Added(ctx, field)
 				return res
 			}
 

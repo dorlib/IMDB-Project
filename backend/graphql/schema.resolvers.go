@@ -170,3 +170,11 @@ func (r *mutationResolver) UpdateDirectorDetails(ctx context.Context, id int, bo
 	}
 	return data, nil
 }
+
+func (r *queryResolver) Last5Added(ctx context.Context) ([]*ent.Movie, error) {
+	data, err := r.client.Movie.Query().Order(ent.Desc(movie.FieldID)).Limit(5).All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}
