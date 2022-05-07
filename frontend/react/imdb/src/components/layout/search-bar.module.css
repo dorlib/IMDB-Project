@@ -41,3 +41,47 @@ input:focus {
 .searchIcon svg {
     font-size: 35px;
 }
+
+.dataResult {
+    position: relative;
+    border: 3px solid #000000;
+    left: 11.5cm;
+    bottom: 5.3cm;
+    margin-top: 5px;
+    width: 432px;
+    height: 200px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.dataResult::-webkit-scrollbar {
+    display: none;
+    position: relative;
+}
+
+.dataResult .dataItem {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    color: black;
+}
+
+.dataItem p {
+    margin-left: 10px;
+    display: flex;
+    position: relative;
+}
+Link {
+    text-decoration: none;
+}
+Link:hover {
+    background-color: lightgrey;
+}
+
+#clearBtn {
+    cursor: pointer;
+}

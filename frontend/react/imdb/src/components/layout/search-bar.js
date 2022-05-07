@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useState} from 'react'
 import classes from './search-bar.module.css'
 import {gql, useQuery} from "@apollo/client";
+import {Link, useNavigate} from "react-router-dom";
 
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -34,21 +35,37 @@ function SearchBar({placeholder}) {
         }
     `;
 
-    const { loading, error, data } = useQuery(GET_MOVIES)
+    const [filteredData, setFilteredData] = useState([]);
+
+    const {loading, error, data} = useQuery(GET_MOVIES)
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
-    let loaded
 
+    let loaded = filteredData.map(({title, id}) => (
+        <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}> {title} </Link>
+    ))
 
+    const handleFilter = (event) => {
+        const searchWord = event.target.value
+        const newFilter = loaded.filter((value) => {
+            return value.title.includes(searchWord);
+        })
+        console.log(filteredData)
+        setFilteredData(newFilter);
+    }
 
 
     return (
         <div className={classes.search}>
             <div className={classes.searchInputs}>
-                <input type={"text"} placeholder={placeholder}/>
+                <input type={"text"} placeholder={placeholder} onChange={handleFilter}/>
                 <div className={classes.searchIcon}><SearchIcon/></div>
             </div>
-            <div className={classes.dataResult}></div>
+            { filteredData.length != 0 && (
+                <div className={classes.dataResult}>
+                    {loaded}
+                </div>
+            )}
         </div>
     )
 }
