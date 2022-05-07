@@ -4,6 +4,7 @@ import {gql, useQuery} from "@apollo/client";
 import {Link, useNavigate} from "react-router-dom";
 
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 
 function SearchBar({placeholder}) {
     const GET_DIRECTORS = gql`
@@ -36,34 +37,50 @@ function SearchBar({placeholder}) {
     `;
 
     const [filteredData, setFilteredData] = useState([]);
+    const [wordEntered, setWordEnterd] = useState("");
 
     const {loading, error, data} = useQuery(GET_MOVIES)
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
 
-    let loaded = filteredData.map(({title, id}) => (
-        <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}> {title} </Link>
+    let loaded = data.movies.map(({title, id}) => (
+        <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"} style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
     ))
 
     const handleFilter = (event) => {
         const searchWord = event.target.value
+        setWordEnterd(searchWord);
         const newFilter = loaded.filter((value) => {
-            return value.title.includes(searchWord);
-        })
-        console.log(filteredData)
-        setFilteredData(newFilter);
+            let res = value["props"]["children"][1].toLowerCase().includes(searchWord.toLowerCase());
+            return res
+        });
+        if (searchWord === "") {
+            setFilteredData([])
+        } else {
+            setFilteredData(newFilter);
+        }
     }
 
+    const clearInput = () => {
+        setFilteredData([]);
+        setWordEnterd("")
+    }
 
     return (
         <div className={classes.search}>
             <div className={classes.searchInputs}>
-                <input type={"text"} placeholder={placeholder} onChange={handleFilter}/>
-                <div className={classes.searchIcon}><SearchIcon/></div>
+                <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
+                <div className={classes.searchIcon}>
+                    {wordEntered.length === 0 ? (
+                        <SearchIcon/>
+                    ) :  (
+                        <CloseIcon id={"ClearBtn"} onClick={clearInput}/>
+                    )}
+                </div>
             </div>
-            { filteredData.length != 0 && (
+            {filteredData.length !== 0 && (
                 <div className={classes.dataResult}>
-                    {loaded}
+                    {filteredData}
                 </div>
             )}
         </div>
