@@ -58,16 +58,6 @@ function MainNavigation() {
               </ul>
             </nav>
           </header>
-            <div className={classes.wrap}>
-              <div className={classes.search}>
-                <input
-                  type="text"
-                  className={classes.searchTerm}
-                  placeholder="What are you looking for?"
-                />
-                <button type="submit" className={classes.searchButton}></button>
-              </div>
-            </div>
           <FormControl>
             <RadioGroup className={classes.by} row>
               <FormControlLabel

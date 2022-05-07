@@ -18,6 +18,7 @@ function Last5Added() {
                 rank
                 id
                 image
+                genre
             }
         }
     `;
@@ -65,6 +66,7 @@ function Last5Added() {
                         <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>
                             {data.last5Added["0"]["title"]} : {data.last5Added["0"]["rank"]} / 100
                         </p>
+                        <Typography className={classes.genre}>Genre : {data.last5Added["0"]["genre"]}</Typography>
                     </Typography>
                 </CardContent>
                 <CardActions className={classes.buttons}>
@@ -92,6 +94,7 @@ function Last5Added() {
                         <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>
                             {data.last5Added["1"]["title"]} : {data.last5Added["1"]["rank"]} / 100
                         </p>
+                        <Typography className={classes.genre}>Genre : {data.last5Added["1"]["genre"]}</Typography>
                     </Typography>
                 </CardContent>
                 <CardActions className={classes.buttons}>
@@ -119,6 +122,7 @@ function Last5Added() {
                         <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>
                             {data.last5Added["2"]["title"]} : {data.last5Added["2"]["rank"]} / 100
                         </p>
+                        <Typography className={classes.genre}>Genre : {data.last5Added["2"]["genre"]}</Typography>
                     </Typography>
                 </CardContent>
                 <CardActions className={classes.buttons}>
@@ -146,6 +150,7 @@ function Last5Added() {
                         <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>
                             {data.last5Added["3"]["title"]} : {data.last5Added["3"]["rank"]} / 100
                         </p>
+                        <Typography className={classes.genre}>Genre : {data.last5Added["3"]["genre"]}</Typography>
                     </Typography>
                 </CardContent>
                 <CardActions className={classes.buttons}>
@@ -173,6 +178,7 @@ function Last5Added() {
                         <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>
                             {data.last5Added["4"]["title"]} : {data.last5Added["4"]["rank"]} / 100
                         </p>
+                        <Typography className={classes.genre}>Genre : {data.last5Added["4"]["genre"]}</Typography>
                     </Typography>
                 </CardContent>
                 <CardActions className={classes.buttons}>

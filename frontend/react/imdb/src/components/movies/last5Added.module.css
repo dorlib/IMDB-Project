@@ -16,6 +16,14 @@
     margin-top: 30px;
 }
 
+.genre {
+    display: flex;
+    position: relative;
+    font-size: x-large;
+    color: yellow;
+    margin-left: 5cm;
+    margin-top: 30px;
+}
 
 .buttons {
     margin-right: -4.5cm;
