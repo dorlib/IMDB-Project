@@ -5,4 +5,9 @@
     max-width: 40rem;
   }
 
-  
+.by{
+    position: relative;
+    display: flex;
+    bottom: 31.7cm;
+    left: 127.5%;
+}

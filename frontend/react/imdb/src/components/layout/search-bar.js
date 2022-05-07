@@ -2,21 +2,15 @@ import React, {useState} from 'react'
 import classes from './search-bar.module.css'
 import {gql, useQuery} from "@apollo/client";
 import {Link, useNavigate} from "react-router-dom";
-
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 
-function SearchBar({placeholder}) {
+function SearchBar({placeholder, searchBy}) {
     const GET_DIRECTORS = gql`
         query Directors {
             directors {
                 name
-                profileImage
                 id
-                movies {
-                    title
-                    id
-                }
             }
         }
     `;
@@ -24,32 +18,45 @@ function SearchBar({placeholder}) {
     const GET_MOVIES = gql`
         query Movies{
             movies {
-                rank
                 id
                 title
-                image
-                description
-                director {
-                    name
-                }
+
             }
         }
     `;
 
-    const [filteredData, setFilteredData] = useState([]);
-    const [wordEntered, setWordEnterd] = useState("");
+    const GET_GENRE = gql`
+        query MoviesByGenre{
+            moviesByGenre {
+                title
+            }
+        }
+    `;
 
-    const {loading, error, data} = useQuery(GET_MOVIES)
+    let QUERY
+    if (searchBy === "GET_MOVIES") {
+        QUERY = GET_MOVIES
+    } else if (searchBy === "GET_DIRECTORS") {
+        QUERY = GET_DIRECTORS
+    } else {
+        QUERY = GET_GENRE
+    }
+
+    const [filteredData, setFilteredData] = useState([]);
+    const [wordEntered, setWordEntered] = useState("");
+
+    const {loading, error, data} = useQuery(QUERY)
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
 
     let loaded = data.movies.map(({title, id}) => (
-        <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"} style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
+        <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}
+              style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
     ))
 
     const handleFilter = (event) => {
         const searchWord = event.target.value
-        setWordEnterd(searchWord);
+        setWordEntered(searchWord);
         const newFilter = loaded.filter((value) => {
             let res = value["props"]["children"][1].toLowerCase().includes(searchWord.toLowerCase());
             return res
@@ -63,26 +70,28 @@ function SearchBar({placeholder}) {
 
     const clearInput = () => {
         setFilteredData([]);
-        setWordEnterd("")
+        setWordEntered("")
     }
 
     return (
-        <div className={classes.search}>
-            <div className={classes.searchInputs}>
-                <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
-                <div className={classes.searchIcon}>
-                    {wordEntered.length === 0 ? (
-                        <SearchIcon/>
-                    ) :  (
-                        <CloseIcon id={"ClearBtn"} onClick={clearInput}/>
-                    )}
+        <div>
+            <div className={classes.search}>
+                <div className={classes.searchInputs}>
+                    <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
+                    <div className={classes.searchIcon}>
+                        {wordEntered.length === 0 ? (
+                            <SearchIcon/>
+                        ) : (
+                            <CloseIcon id={"ClearBtn"} onClick={clearInput}/>
+                        )}
+                    </div>
                 </div>
+                {filteredData.length !== 0 && (
+                    <div className={classes.dataResult}>
+                        {filteredData}
+                    </div>
+                )}
             </div>
-            {filteredData.length !== 0 && (
-                <div className={classes.dataResult}>
-                    {filteredData}
-                </div>
-            )}
         </div>
     )
 }

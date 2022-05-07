@@ -178,3 +178,11 @@ func (r *queryResolver) Last5Added(ctx context.Context) ([]*ent.Movie, error) {
 	}
 	return data, nil
 }
+
+func (r *queryResolver) MoviesByGenre(ctx context.Context, genre string) ([]*ent.Movie, error) {
+	data, err := r.client.Movie.Query().Order(ent.Desc(movie.FieldRank)).Where(movie.Genre(genre)).All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}

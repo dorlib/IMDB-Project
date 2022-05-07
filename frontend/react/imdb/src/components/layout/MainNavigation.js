@@ -3,10 +3,6 @@ import {Link, useNavigate} from "react-router-dom";
 import FavoritesContext from "../../store/favorites-context";
 
 import * as React from "react";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 
 import Button from '@mui/material/Button';
@@ -58,29 +54,10 @@ function MainNavigation() {
               </ul>
             </nav>
           </header>
-          <FormControl>
-            <RadioGroup className={classes.by} row>
-              <FormControlLabel
-                value="movie"
-                control={<Radio />}
-                label="By Movie"
-              />
-              <FormControlLabel
-                value="director"
-                control={<Radio />}
-                label="By Director"
-              />
-              <FormControlLabel
-                  value="genre"
-                  control={<Radio />}
-                  label="By Genre"
-              />
-            </RadioGroup>
-          </FormControl>
           <PopupState variant="popover" popupId="demo-popup-menu"  >
             {(popupState) => (
                 <React.Fragment >
-                  <Button className={classes.menu} variant="contained" {...bindTrigger(popupState)} style={{position: "relative", display: "flex", bottom: "60%", left: "47%", color: "white",
+                  <Button className={classes.menu} variant="contained" {...bindTrigger(popupState)} style={{position: "relative", display: "flex", bottom: "50%", left: "47%", color: "white",
                   backgroundColor: "#cc2062", borderRadius: "12px", width: "3cm", height: "1.2cm"}} >
                     Menu
                   </Button>

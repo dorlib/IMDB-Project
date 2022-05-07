@@ -82,6 +82,7 @@ type ComplexityRoot struct {
 		Last5Added       func(childComplexity int) int
 		MovieByID        func(childComplexity int, id int) int
 		Movies           func(childComplexity int) int
+		MoviesByGenre    func(childComplexity int, genre string) int
 		Node             func(childComplexity int, id int) int
 		Nodes            func(childComplexity int, ids []int) int
 		ReviewsOfMovie   func(childComplexity int, movieID int) int
@@ -126,6 +127,7 @@ type QueryResolver interface {
 	Directors(ctx context.Context) ([]*ent.Director, error)
 	DirectorIDByName(ctx context.Context, name string) (*int, error)
 	MovieByID(ctx context.Context, id int) ([]*ent.Movie, error)
+	MoviesByGenre(ctx context.Context, genre string) ([]*ent.Movie, error)
 	Last5Added(ctx context.Context) ([]*ent.Movie, error)
 	DirectorByID(ctx context.Context, id int) ([]*ent.Director, error)
 	ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error)
@@ -391,6 +393,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Movies(childComplexity), true
+
+	case "Query.moviesByGenre":
+		if e.complexity.Query.MoviesByGenre == nil {
+			break
+		}
+
+		args, err := ec.field_Query_moviesByGenre_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.MoviesByGenre(childComplexity, args["genre"].(string)), true
 
 	case "Query.node":
 		if e.complexity.Query.Node == nil {
@@ -749,6 +763,7 @@ type Query {
     directors: [Director!]
     directorIdByName(name: String!): ID
     movieById(id: ID!) : [Movie!]
+    moviesByGenre(genre: String!) : [Movie]
     last5Added: [Movie!]
     directorById(id: ID!): [Director!]
     reviewsOfMovie(movieID: Int!) : [Review]
@@ -1133,6 +1148,21 @@ func (ec *executionContext) field_Query_movieById_args(ctx context.Context, rawA
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_moviesByGenre_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["genre"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("genre"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["genre"] = arg0
 	return args, nil
 }
 
@@ -2137,6 +2167,45 @@ func (ec *executionContext) _Query_movieById(ctx context.Context, field graphql.
 	res := resTmp.([]*ent.Movie)
 	fc.Result = res
 	return ec.marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovieᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_moviesByGenre(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_moviesByGenre_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().MoviesByGenre(rctx, args["genre"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Movie)
+	fc.Result = res
+	return ec.marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovie(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_last5Added(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4887,6 +4956,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "moviesByGenre":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_moviesByGenre(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "last5Added":
 			field := field
 
@@ -6245,6 +6334,47 @@ func (ec *executionContext) marshalOID2ᚖint(ctx context.Context, sel ast.Selec
 	return res
 }
 
+func (ec *executionContext) marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovie(ctx context.Context, sel ast.SelectionSet, v []*ent.Movie) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOMovie2ᚖimdbv2ᚋentᚐMovie(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
 func (ec *executionContext) marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovieᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Movie) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -6290,6 +6420,13 @@ func (ec *executionContext) marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovieᚄ(ctx cont
 	}
 
 	return ret
+}
+
+func (ec *executionContext) marshalOMovie2ᚖimdbv2ᚋentᚐMovie(ctx context.Context, sel ast.SelectionSet, v *ent.Movie) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Movie(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalONode2imdbv2ᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v ent.Noder) graphql.Marshaler {
