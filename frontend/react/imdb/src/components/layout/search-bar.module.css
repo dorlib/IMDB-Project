@@ -86,3 +86,11 @@ Link:hover {
     cursor: pointer;
 }
 
+
+.by{
+    position: relative;
+    display: flex;
+    bottom: 2.9cm;
+    left: 127.5%;
+}
+

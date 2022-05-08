@@ -69,33 +69,7 @@ function MainNavigation() {
             </nav>
           </header>
           <div>
-            <SearchBar placeholder={"Enter Movie Name"} searchBy={searchBy}/>
-            <FormControl>
-              <RadioGroup className={classes.by} row>
-                <FormControlLabel
-                    value="GET_MOVIES"
-                    checked
-                    control={<Radio />}
-                    label="By Movie"
-                    checked={searchBy === 'GET_MOVIES'}
-                    onClick={HandleChange}
-                />
-                <FormControlLabel
-                    value="GET_DIRECTORS"
-                    control={<Radio />}
-                    label="By Director"
-                    checked={searchBy === 'GET_DIRECTORS'}
-                    onClick={HandleChange}
-                />
-                <FormControlLabel
-                    value="GET_GENRE"
-                    control={<Radio />}
-                    label="By Genre"
-                    checked={searchBy === 'GET_GENRE'}
-                    onClick={HandleChange}
-                />
-              </RadioGroup>
-            </FormControl>
+            <SearchBar />
           </div>
           <PopupState variant="popover" popupId="demo-popup-menu"  >
             {(popupState) => (

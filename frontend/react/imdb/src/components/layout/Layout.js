@@ -1,6 +1,7 @@
 import classes from "./Layout.module.css";
 import MainNavigation from "./MainNavigation";
 import React, {useState} from "react";
+import SearchBar from "./search-bar";
 
 function Layout(props) {
 

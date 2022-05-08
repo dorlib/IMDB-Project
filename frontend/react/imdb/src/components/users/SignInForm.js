@@ -33,7 +33,7 @@ function SignInForm(props) {
 
         <div className={classes.ctrl}>
           <label htmlFor="password">Enter Your password (8 characters minimum</label>
-          <input type="password" id="password" name="password" minlength="8" required ref={passwordInputRef} />
+          <input type="password" id="password" name="password" minLength="8" required ref={passwordInputRef} />
         </div>
 
         <div className={classes.actions}>
