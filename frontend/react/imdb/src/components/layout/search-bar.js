@@ -6,40 +6,16 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 
 function SearchBar({placeholder, searchBy}) {
-    const GET_DIRECTORS = gql`
-        query Directors {
-            directors {
-                name
-                id
-            }
-        }
-    `;
-
-    const GET_MOVIES = gql`
-        query Movies{
-            movies {
-                id
-                title
-
-            }
-        }
-    `;
-
-    const GET_GENRE = gql`
-        query MoviesByGenre{
-            moviesByGenre {
-                title
-            }
-        }
-    `;
+    let GET_DIRECTORS = gql`query Directors {directors {name id}}`;
+    let GET_MOVIES = gql`query Movies{movies {id title}}`;
+    const genres = ["action", "drama", "comedy", "crime", "animation", "fantasy", "romance", "thriller", "horror", "science fiction", "historical", "western"]
 
     let QUERY
-    if (searchBy === "GET_MOVIES") {
-        QUERY = GET_MOVIES
-    } else if (searchBy === "GET_DIRECTORS") {
+    if (searchBy === "GET_DIRECTORS") {
         QUERY = GET_DIRECTORS
-    } else {
-        QUERY = GET_GENRE
+    }
+    if (searchBy === "GET_MOVIES"){
+        QUERY = GET_MOVIES
     }
 
     const [filteredData, setFilteredData] = useState([]);
@@ -49,10 +25,26 @@ function SearchBar({placeholder, searchBy}) {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
 
-    let loaded = data.movies.map(({title, id}) => (
-        <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}
-              style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
-    ))
+    let loaded
+
+    if (QUERY === GET_MOVIES) {
+        loaded = data.movies.map(({title, id}) => (
+            <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}
+                  style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
+        ))
+    }
+    if (QUERY === GET_DIRECTORS) {
+        loaded = data.directors.map(({name, id}) => (
+            <Link to={"/directorPage/" + id} className={classes.dataItem} target={"_blank"}
+                  style={{textDecoration: "none", fontSize: "large"}}> {name} </Link>
+        ))
+    }
+    if (searchBy === "GET_GENRE") {
+        loaded = genres.map( (value) => (
+            <Link className={classes.dataItem} target={"_blank"}
+                  style={{textDecoration: "none", fontSize: "large"}}> {value} </Link>
+        ))
+    }
 
     const handleFilter = (event) => {
         const searchWord = event.target.value

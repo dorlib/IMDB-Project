@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import {useContext, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import FavoritesContext from "../../store/favorites-context";
 
@@ -11,6 +11,11 @@ import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 
 import classes from "./MainNavigation.module.css";
+import FormControl from "@mui/material/FormControl";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import SearchBar from "./search-bar";
 
 
 const grid = {
@@ -25,6 +30,15 @@ classes.sign = undefined;
 
 function MainNavigation() {
   const favoritesCtx = useContext(FavoritesContext);
+
+  const [searchBy, setSearchBy] = useState("GET_MOVIES");
+
+  const HandleChange = (event) => {
+    let input
+    input = event.target.value
+    console.log(input)
+    setSearchBy(input);
+  }
 
   return (
     <div>
@@ -54,6 +68,35 @@ function MainNavigation() {
               </ul>
             </nav>
           </header>
+          <div>
+            <SearchBar placeholder={"Enter Movie Name"} searchBy={searchBy}/>
+            <FormControl>
+              <RadioGroup className={classes.by} row>
+                <FormControlLabel
+                    value="GET_MOVIES"
+                    checked
+                    control={<Radio />}
+                    label="By Movie"
+                    checked={searchBy === 'GET_MOVIES'}
+                    onClick={HandleChange}
+                />
+                <FormControlLabel
+                    value="GET_DIRECTORS"
+                    control={<Radio />}
+                    label="By Director"
+                    checked={searchBy === 'GET_DIRECTORS'}
+                    onClick={HandleChange}
+                />
+                <FormControlLabel
+                    value="GET_GENRE"
+                    control={<Radio />}
+                    label="By Genre"
+                    checked={searchBy === 'GET_GENRE'}
+                    onClick={HandleChange}
+                />
+              </RadioGroup>
+            </FormControl>
+          </div>
           <PopupState variant="popover" popupId="demo-popup-menu"  >
             {(popupState) => (
                 <React.Fragment >
