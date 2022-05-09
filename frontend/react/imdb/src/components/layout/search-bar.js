@@ -10,7 +10,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 
 function SearchBar() {
-
     let GET_DIRECTORS = gql`
         query Directors{
             directors {
@@ -28,10 +27,8 @@ function SearchBar() {
             }
         }
     `;
-
     const genres = ["action", "drama", "comedy", "crime", "animation", "fantasy", "romance", "thriller", "horror", "science fiction", "historical", "western"]
-    const [searchBy, setSearchBy] = useState("GET_MOVIES");
-    const [placeholder, setPlace]
+    const [placeholder, setPlaceholder] = useState("Enter Movie Name")
     const [filteredData, setFilteredData] = useState([]);
     const [wordEntered, setWordEntered] = useState("");
 
@@ -40,8 +37,8 @@ function SearchBar() {
     if (loading1 || loading2) return <p>Loading...</p>;
     if (error1 || error2) return <p>Error :</p>;
 
-    let placeholder = "Enter Movie Name"
-    let loaded = data1.movies.map(({title, id}) => (
+    let loaded
+    loaded = data1.movies.map(({title, id}) => (
         <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}
               style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
     ))
@@ -59,20 +56,26 @@ function SearchBar() {
         input = event.target.value
         console.log(input)
         if (input === "GET_MOVIES"){
-            placeholder = "Enter Movie Name"
+            setPlaceholder("Enter Movie Name")
             loaded = data1.movies.map(({title, id}) => (
                 <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}
                       style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
             ))
         }
         if (input === "GET_DIRECTORS") {
-            placeholder = "Enter Director Name"
+            setPlaceholder("Enter Director Name")
             loaded = data2.directors.map(({name, id}) => (
                 <Link to={"/directorPage/" + id} className={classes.dataItem} target={"_blank"}
                       style={{textDecoration: "none", fontSize: "large"}}> {name} </Link>
             ))
         }
-        setSearchBy(input);
+        if (input === "GET_GENRE") {
+            setPlaceholder("Enter Genre Name")
+            loaded = data2.directors.map(({name, id}) => (
+                <Link to={"/moviesByGenre/" + id} className={classes.dataItem} target={"_blank"}
+                      style={{textDecoration: "none", fontSize: "large"}}> {name} </Link>
+            ))
+        }
     }
 
     const handleFilter = (event) => {
