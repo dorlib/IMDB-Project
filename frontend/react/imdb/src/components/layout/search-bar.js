@@ -28,20 +28,21 @@ function SearchBar() {
         }
     `;
     const genres = ["action", "drama", "comedy", "crime", "animation", "fantasy", "romance", "thriller", "horror", "science fiction", "historical", "western"]
-    const [placeholder, setPlaceholder] = useState("Enter Movie Name")
-    const [filteredData, setFilteredData] = useState([]);
-    const [wordEntered, setWordEntered] = useState("");
-
     const {loading: loading1, error: error1, data: data1} = useQuery(GET_MOVIES)
     const {loading :loading2, error: error2, data: data2} = useQuery(GET_DIRECTORS)
-    if (loading1 || loading2) return <p>Loading...</p>;
-    if (error1 || error2) return <p>Error :</p>;
-
-    let loaded
-    loaded = data1.movies.map(({title, id}) => (
+    const [placeholder, setPlaceholder] = useState("Enter Movie Name")
+    let initLoaded = data1.movies.map(({title, id}) => (
         <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}
               style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
     ))
+
+    const [loaded, setLoaded] = useState(initLoaded)
+    const [filteredData, setFilteredData] = useState([]);
+    const [wordEntered, setWordEntered] = useState("");
+
+
+    if (loading1 || loading2) return <p>Loading...</p>;
+    if (error1 || error2) return <p>Error :</p>;
 
     console.log(data1)
     console.log(data2)
@@ -57,17 +58,17 @@ function SearchBar() {
         console.log(input)
         if (input === "GET_MOVIES"){
             setPlaceholder("Enter Movie Name")
-            loaded = data1.movies.map(({title, id}) => (
+            setLoaded(data1.movies.map(({title, id}) => (
                 <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}
                       style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
-            ))
+            )))
         }
         if (input === "GET_DIRECTORS") {
             setPlaceholder("Enter Director Name")
-            loaded = data2.directors.map(({name, id}) => (
+            setLoaded(data2.directors.map(({name, id}) => (
                 <Link to={"/directorPage/" + id} className={classes.dataItem} target={"_blank"}
                       style={{textDecoration: "none", fontSize: "large"}}> {name} </Link>
-            ))
+            )))
         }
         if (input === "GET_GENRE") {
             setPlaceholder("Enter Genre Name")
