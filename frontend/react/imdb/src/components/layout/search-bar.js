@@ -8,6 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
+import {render} from "react-dom";
 
 function SearchBar() {
     let GET_DIRECTORS = gql`
@@ -27,25 +28,47 @@ function SearchBar() {
             }
         }
     `;
+
     const genres = ["action", "drama", "comedy", "crime", "animation", "fantasy", "romance", "thriller", "horror", "science fiction", "historical", "western"]
-    const {loading: loading1, error: error1, data: data1} = useQuery(GET_MOVIES)
-    const {loading :loading2, error: error2, data: data2} = useQuery(GET_DIRECTORS)
-    const [placeholder, setPlaceholder] = useState("Enter Movie Name")
-    let initLoaded = data1.movies.map(({title, id}) => (
-        <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}
-              style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
-    ))
-
-    const [loaded, setLoaded] = useState(initLoaded)
-    const [filteredData, setFilteredData] = useState([]);
+    const [placeholder, setPlaceholder] = useState("Enter Movie Name");
+    const [searchBy, setSearchBy] = useState("movies");
     const [wordEntered, setWordEntered] = useState("");
-
-
+    const [filteredData, setFilteredData] = useState([]);
+    const {loading: loading1, error: error1, data: data1} = useQuery(GET_MOVIES)
+    const {loading: loading2, error: error2, data: data2} = useQuery(GET_DIRECTORS)
     if (loading1 || loading2) return <p>Loading...</p>;
     if (error1 || error2) return <p>Error :</p>;
 
     console.log(data1)
     console.log(data2)
+
+    let loaded
+
+    if (searchBy === "movies") {
+        loaded = (
+            data1.movies.map(({title, id}) => (
+                <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}
+                      style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
+            ))
+        )
+    }
+    if (searchBy === "directors") {
+        loaded = (
+            loaded = (
+                data2.directors.map(({name, id}) => (
+                    <Link to={"/directorPage/" + id} className={classes.dataItem} target={"_blank"}
+                          style={{textDecoration: "none", fontSize: "large"}}> {name} </Link>
+                )))
+        )
+    }
+    if (searchBy === "genres") {
+        loaded = (
+            genres.map((value) => (
+                <Link to={"/moviesByGenre/" + value} className={classes.dataItem} target={"_blank"}
+                      style={{textDecoration: "none", fontSize: "large"}}> {value} </Link>
+            ))
+        )
+    }
 
     const clearInput = () => {
         setFilteredData([]);
@@ -56,26 +79,17 @@ function SearchBar() {
         let input
         input = event.target.value
         console.log(input)
-        if (input === "GET_MOVIES"){
+        if (input === "GET_MOVIES") {
+            setSearchBy("movies")
             setPlaceholder("Enter Movie Name")
-            setLoaded(data1.movies.map(({title, id}) => (
-                <Link to={"/moviePage/" + id} className={classes.dataItem} target={"_blank"}
-                      style={{textDecoration: "none", fontSize: "large"}}> {title} </Link>
-            )))
         }
         if (input === "GET_DIRECTORS") {
             setPlaceholder("Enter Director Name")
-            setLoaded(data2.directors.map(({name, id}) => (
-                <Link to={"/directorPage/" + id} className={classes.dataItem} target={"_blank"}
-                      style={{textDecoration: "none", fontSize: "large"}}> {name} </Link>
-            )))
+            setSearchBy("directors")
         }
         if (input === "GET_GENRE") {
+            setSearchBy("genres")
             setPlaceholder("Enter Genre Name")
-            setLoaded(genres.map((value) => (
-                <Link to={"/moviesByGenre/" + value} className={classes.dataItem} target={"_blank"}
-                      style={{textDecoration: "none", fontSize: "large"}}> {value} </Link>
-            )))
         }
     }
 
@@ -96,7 +110,7 @@ function SearchBar() {
     return (
         <div>
             <div className={classes.search}>
-                <div className={classes.searchInputs}>
+                <div className={classes.searchInput}>
                     <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
                     <div className={classes.searchIcon}>
                         {wordEntered.length === 0 ? (
@@ -116,19 +130,19 @@ function SearchBar() {
                 <RadioGroup className={classes.by} row>
                     <FormControlLabel
                         value="GET_MOVIES"
-                        control={<Radio />}
+                        control={<Radio/>}
                         label="By Movie"
                         onClick={HandleChange}
                     />
                     <FormControlLabel
                         value="GET_DIRECTORS"
-                        control={<Radio />}
+                        control={<Radio/>}
                         label="By Director"
-                        onClick = {HandleChange}
+                        onClick={HandleChange}
                     />
                     <FormControlLabel
                         value="GET_GENRE"
-                        control={<Radio />}
+                        control={<Radio/>}
                         label="By Genre"
                         onClick={HandleChange}
                     />

@@ -8,12 +8,11 @@
     display: flex;
     position: relative;
     background-color: white;
-    border: 0;
     border-radius: 2px 0px 0px 2px;
     font-size: 18px;
     padding: 15px;
     height: 30px;
-    bottom: 1.9cm;
+    bottom: 4.7cm;
     left: 11.5cm;
     width: 400px;
     border: 3px solid #000000;
@@ -25,10 +24,9 @@
     position: relative;
     height: 36px;
     width: 36px;
-    left: 22cm;
-    bottom: 2.86cm;
+    left: 11.51cm;
+    bottom: 4.71cm;
     background-color: white;
-    display: grid;
     place-items: center;
     border: 3px solid #000000;
 
@@ -54,6 +52,7 @@ input:focus {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     overflow: hidden;
     overflow-y: auto;
+    z-index: 1;
 }
 
 .dataResult::-webkit-scrollbar {
@@ -86,11 +85,10 @@ Link:hover {
     cursor: pointer;
 }
 
-
 .by{
     position: relative;
     display: flex;
-    bottom: 2.9cm;
+    bottom: 4.7cm;
     left: 127.5%;
 }
 
