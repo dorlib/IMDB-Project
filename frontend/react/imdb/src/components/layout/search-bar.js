@@ -72,10 +72,10 @@ function SearchBar() {
         }
         if (input === "GET_GENRE") {
             setPlaceholder("Enter Genre Name")
-            loaded = data2.directors.map(({name, id}) => (
-                <Link to={"/moviesByGenre/" + id} className={classes.dataItem} target={"_blank"}
-                      style={{textDecoration: "none", fontSize: "large"}}> {name} </Link>
-            ))
+            setLoaded(genres.map((value) => (
+                <Link to={"/moviesByGenre/" + value} className={classes.dataItem} target={"_blank"}
+                      style={{textDecoration: "none", fontSize: "large"}}> {value} </Link>
+            )))
         }
     }
 
