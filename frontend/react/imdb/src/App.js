@@ -17,6 +17,7 @@ import NewUserForm from "./components/users/NewUserForm";
 import Top10Page from "./pages/Top10";
 import Welcome from "./pages/Welcome";
 import Last5Added from "./components/movies/last5-added";
+import MoviesByGenre from "./components/movies/movies-by-genre";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path='/top10' element={<Top10Page />} />
         <Route path='/directorPage/:id' element={<DirectorPage />} />
         <Route path="/moviePage/:id" element={<><UpdateRank/><HoverRating/><ShowReviews/><NewReviewForm/></>} />
+        <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
       </Routes>
     </Layout>
   );

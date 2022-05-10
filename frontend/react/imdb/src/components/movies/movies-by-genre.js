@@ -15,7 +15,7 @@ function MoviesByGenre() {
 
     const MOVIES_BY_GENRE = gql`
         query MoviesByGenre($genre: String!) {
-            moviesByGenre(genre: $genre) {
+            moviesBYGenre(genre: $genre) {
                 id
                 title
                 rank
@@ -29,7 +29,6 @@ function MoviesByGenre() {
             }
         }
     `
-
     const {loading, error, data} = useQuery(MOVIES_BY_GENRE,
         {
             variables: {

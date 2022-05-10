@@ -56,7 +56,7 @@ function AllMoviesPage(props) {
                             </p>
                         </Typography>
                         <Typography variant="body2" color="text.secondary" style={{fontSize: "large", fontWeight: "bolder"}}>
-                            Description : {description}
+                            Description: {description}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" style={{fontSize: "large", fontWeight: "bolder"}}>
                             Directed By: {director.name}
