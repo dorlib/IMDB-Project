@@ -1,12 +1,9 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Link} from 'react-router-dom';
 
-import FavoritesContext from "../../store/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
 import {Input, Stack} from "@mui/material";
 import Button from "@mui/material/Button";
-import {isIterableObject} from "graphql/jsutils/isIterableObject";
-import MenuItem from "@mui/material/MenuItem";
 import classes from "./directorPage.module.css"
 
 import Card from '@mui/material/Card';
@@ -17,7 +14,6 @@ import Typography from '@mui/material/Typography';
 import {Footer} from "./styles";
 
 import UpdateDirectorInfo from "./update-directors-info";
-import MovieItem from "../movies/MovieItem";
 
 function DirectorPage() {
 
@@ -81,6 +77,8 @@ function DirectorPage() {
     let bornAt = data["directorById"]["0"]["bornAt"]
     let id = data["directorById"]["0"]["id"]
 
+    const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
+
     let d = (
         <div>
             <div>
@@ -88,7 +86,7 @@ function DirectorPage() {
                     component="img"
                     alt="movie image"
                     height="400"
-                    style={{width: "12cm"}}
+                    style={{width: "12cm", bottom: "5.3cm"}}
                     src={profileImage}
                     className={classes.image}
                 />
@@ -105,6 +103,9 @@ function DirectorPage() {
                         <p style={{color: "black", fontSize: "x-large", marginLeft: "13.5cm"}}
                            className={classes.director}>
                             Date Of Birth : {bornAt}
+                        </p>
+                        <p style={{color: "black", fontSize: "x-large", marginLeft: "13.9cm"}}>
+                            Age: {getAge(bornAt)}
                         </p>
                     </Typography>
                     <Typography gutterBottom variant="h5" component="div">
