@@ -1,7 +1,7 @@
 .searchInput {
     display: flex;
     position: relative;
-    margin-top: 105px;
+    top: 2.8cm;
 }
 
 .search input {
@@ -25,7 +25,7 @@
     height: 36px;
     width: 36px;
     left: 11.51cm;
-    bottom: 4.71cm;
+    bottom: 4.70cm;
     background-color: white;
     place-items: center;
     border: 3px solid #000000;
@@ -46,7 +46,7 @@ input:focus {
     left: 11.5cm;
     bottom: 16.58cm;
     margin-top: 5px;
-    width: 432px;
+    width: 436px;
     height: 200px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -88,7 +88,7 @@ Link:hover {
 .by{
     position: relative;
     display: flex;
-    bottom: 4.7cm;
+    bottom: 1.96cm;
     left: 127.5%;
 }
 
