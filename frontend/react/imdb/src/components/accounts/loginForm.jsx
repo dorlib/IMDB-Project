@@ -55,10 +55,6 @@ export function LoginForm(props) {
                       <input type="password" id="password" name="password" minLength="8" required ref={passwordInputRef} />
                   </div>
 
-                  <div className={classes.actions}>
-                      <button>Sign In!</button>
-                  </div>
-
               </form>
           </Card>
       </FormContainer>

@@ -143,10 +143,6 @@ export function SignUpForm(props) {
                         <input type="password" id="pass" name="pass" minLength="8" value={givenPassword} onChange={event => setPassword(event.target.value)}
                                autoComplete="new-password"/>
                     </div>
-
-                    <div className={classes.actions}>
-                        <button type="button" onClick={addUser} >Create A User!</button>
-                    </div>
                 </form>
             </Card>
             <Marginer direction="vertical" margin={10}/>

@@ -43,7 +43,7 @@ const BackDrop = styled(motion.div)`
     58deg,
     #cc2062
     #cc2062
-  );
+  );s
 `;
 
 const HeaderContainer = styled.div`

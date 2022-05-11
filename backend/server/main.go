@@ -27,7 +27,7 @@ func main() {
 		Debug:            true,
 	}).Handler)
 
-	// Create an ent.Client with in-memory SQLite database.
+	// Create an ent.Client with in-memory MySQL database.
 	client, err := ent.Open("mysql", "root:pass@tcp(127.0.0.1:3306)/test")
 	if err != nil {
 		log.Fatalf("failed opening connection to sqlite: %v", err)
