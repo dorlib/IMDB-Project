@@ -1,12 +1,12 @@
 .searchInput {
     display: flex;
-    position: relative;
-    top: -1.9cm;
+    position: absolute;
+    top: 1.1cm;
 }
 
 .search input {
     display: flex;
-    position: relative;
+    position: absolute;
     background-color: white;
     border-radius: 2px 0px 0px 2px;
     font-size: 18px;
@@ -20,10 +20,10 @@
 
 .searchIcon {
     display: flex;
-    position: relative;
+    position: absolute;
     height: 36px;
     width: 36px;
-    left: 11.51cm;
+    left: 22.1cm;
     background-color: white;
     place-items: center;
     border: 3px solid #000000;
@@ -86,7 +86,7 @@ Link:hover {
 .by{
     position: relative;
     display: flex;
-    bottom: 1.96cm;
+    bottom: 1.03cm;
     left: 127.5%;
 }
 
