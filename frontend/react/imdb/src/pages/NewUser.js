@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import NewUserForm from "../components/users/NewUserForm";
+import {SignUpForm} from "../components/accounts/signupForm";
 
 function NewUserPage() {
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ function NewUserPage() {
   return (
     <section>
       <h1 style={{color: "yellow"}}>Create New User</h1>
-      <NewUserForm onAddUser={AddUserHandler} />
+      <SignUpForm onAddUser={AddUserHandler} />
     </section>
   );
 }

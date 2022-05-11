@@ -59,11 +59,8 @@ function MainNavigation() {
                     </span>
                   </Link>
                 </li>
-                <li className={classes.sign}>
-                  <Link to="/new-user">Register</Link>
-                </li>
-                <li className={classes.sign}>
-                  <Link to="/sign-in">Sign In</Link>
+                <li >
+                  <Link to="/register-sign-in">Sign In \ Log In</Link>
                 </li>
               </ul>
             </nav>

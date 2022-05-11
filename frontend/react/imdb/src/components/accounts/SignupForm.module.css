@@ -11,7 +11,7 @@
   .tr label,
   .control label {
     display: block;
-    color:yellow;
+    color: #1c0907;
     font-weight: bold;
     margin-bottom: 0.5rem;
   }
@@ -64,4 +64,38 @@
   .actions button:active {
     background-color: #a50e48;
     border-color: #a50e48;
-  } 
+  }
+
+
+.im,
+.control {
+  margin-bottom: 0.5rem;
+}
+
+.but {
+  position: relative;
+  display: flex;
+  top: -1.2cm;
+  left: 85%;
+  width: 0.25cm;
+
+}
+
+.im input {
+  position: relative;
+  display: flex;
+  font: inherit;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 0.25rem;
+  width: 80%;
+}
+
+.im label,
+.ctrl label,
+.control label {
+  display: block;
+  color: #1c0907;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
