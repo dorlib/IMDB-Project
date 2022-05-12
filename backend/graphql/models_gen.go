@@ -18,6 +18,7 @@ type MovieInput struct {
 	Image       string `json:"image"`
 	Topic       string `json:"topic"`
 	Text        string `json:"text"`
+	Year        int    `json:"year"`
 }
 
 type ReviewInput struct {

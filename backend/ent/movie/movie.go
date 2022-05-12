@@ -15,6 +15,8 @@ const (
 	FieldRank = "rank"
 	// FieldGenre holds the string denoting the genre field in the database.
 	FieldGenre = "genre"
+	// FieldYear holds the string denoting the year field in the database.
+	FieldYear = "year"
 	// FieldDirectorID holds the string denoting the director_id field in the database.
 	FieldDirectorID = "director_id"
 	// FieldImage holds the string denoting the image field in the database.
@@ -48,6 +50,7 @@ var Columns = []string{
 	FieldDescription,
 	FieldRank,
 	FieldGenre,
+	FieldYear,
 	FieldDirectorID,
 	FieldImage,
 }

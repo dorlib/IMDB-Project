@@ -60,6 +60,19 @@ func (mu *MovieUpdate) SetGenre(s string) *MovieUpdate {
 	return mu
 }
 
+// SetYear sets the "year" field.
+func (mu *MovieUpdate) SetYear(i int) *MovieUpdate {
+	mu.mutation.ResetYear()
+	mu.mutation.SetYear(i)
+	return mu
+}
+
+// AddYear adds i to the "year" field.
+func (mu *MovieUpdate) AddYear(i int) *MovieUpdate {
+	mu.mutation.AddYear(i)
+	return mu
+}
+
 // SetDirectorID sets the "director_id" field.
 func (mu *MovieUpdate) SetDirectorID(i int) *MovieUpdate {
 	mu.mutation.SetDirectorID(i)
@@ -259,6 +272,20 @@ func (mu *MovieUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: movie.FieldGenre,
 		})
 	}
+	if value, ok := mu.mutation.Year(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: movie.FieldYear,
+		})
+	}
+	if value, ok := mu.mutation.AddedYear(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: movie.FieldYear,
+		})
+	}
 	if value, ok := mu.mutation.Image(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -408,6 +435,19 @@ func (muo *MovieUpdateOne) AddRank(i int) *MovieUpdateOne {
 // SetGenre sets the "genre" field.
 func (muo *MovieUpdateOne) SetGenre(s string) *MovieUpdateOne {
 	muo.mutation.SetGenre(s)
+	return muo
+}
+
+// SetYear sets the "year" field.
+func (muo *MovieUpdateOne) SetYear(i int) *MovieUpdateOne {
+	muo.mutation.ResetYear()
+	muo.mutation.SetYear(i)
+	return muo
+}
+
+// AddYear adds i to the "year" field.
+func (muo *MovieUpdateOne) AddYear(i int) *MovieUpdateOne {
+	muo.mutation.AddYear(i)
 	return muo
 }
 
@@ -632,6 +672,20 @@ func (muo *MovieUpdateOne) sqlSave(ctx context.Context) (_node *Movie, err error
 			Type:   field.TypeString,
 			Value:  value,
 			Column: movie.FieldGenre,
+		})
+	}
+	if value, ok := muo.mutation.Year(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: movie.FieldYear,
+		})
+	}
+	if value, ok := muo.mutation.AddedYear(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: movie.FieldYear,
 		})
 	}
 	if value, ok := muo.mutation.Image(); ok {

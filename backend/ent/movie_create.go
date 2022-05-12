@@ -45,6 +45,12 @@ func (mc *MovieCreate) SetGenre(s string) *MovieCreate {
 	return mc
 }
 
+// SetYear sets the "year" field.
+func (mc *MovieCreate) SetYear(i int) *MovieCreate {
+	mc.mutation.SetYear(i)
+	return mc
+}
+
 // SetDirectorID sets the "director_id" field.
 func (mc *MovieCreate) SetDirectorID(i int) *MovieCreate {
 	mc.mutation.SetDirectorID(i)
@@ -175,6 +181,9 @@ func (mc *MovieCreate) check() error {
 	if _, ok := mc.mutation.Genre(); !ok {
 		return &ValidationError{Name: "genre", err: errors.New(`ent: missing required field "Movie.genre"`)}
 	}
+	if _, ok := mc.mutation.Year(); !ok {
+		return &ValidationError{Name: "year", err: errors.New(`ent: missing required field "Movie.year"`)}
+	}
 	return nil
 }
 
@@ -233,6 +242,14 @@ func (mc *MovieCreate) createSpec() (*Movie, *sqlgraph.CreateSpec) {
 			Column: movie.FieldGenre,
 		})
 		_node.Genre = value
+	}
+	if value, ok := mc.mutation.Year(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: movie.FieldYear,
+		})
+		_node.Year = value
 	}
 	if value, ok := mc.mutation.Image(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

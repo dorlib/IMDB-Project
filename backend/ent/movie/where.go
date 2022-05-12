@@ -120,6 +120,13 @@ func Genre(v string) predicate.Movie {
 	})
 }
 
+// Year applies equality check predicate on the "year" field. It's identical to YearEQ.
+func Year(v int) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldYear), v))
+	})
+}
+
 // DirectorID applies equality check predicate on the "director_id" field. It's identical to DirectorIDEQ.
 func DirectorID(v int) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
@@ -540,6 +547,82 @@ func GenreEqualFold(v string) predicate.Movie {
 func GenreContainsFold(v string) predicate.Movie {
 	return predicate.Movie(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldGenre), v))
+	})
+}
+
+// YearEQ applies the EQ predicate on the "year" field.
+func YearEQ(v int) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldYear), v))
+	})
+}
+
+// YearNEQ applies the NEQ predicate on the "year" field.
+func YearNEQ(v int) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldYear), v))
+	})
+}
+
+// YearIn applies the In predicate on the "year" field.
+func YearIn(vs ...int) predicate.Movie {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Movie(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldYear), v...))
+	})
+}
+
+// YearNotIn applies the NotIn predicate on the "year" field.
+func YearNotIn(vs ...int) predicate.Movie {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Movie(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldYear), v...))
+	})
+}
+
+// YearGT applies the GT predicate on the "year" field.
+func YearGT(v int) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldYear), v))
+	})
+}
+
+// YearGTE applies the GTE predicate on the "year" field.
+func YearGTE(v int) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldYear), v))
+	})
+}
+
+// YearLT applies the LT predicate on the "year" field.
+func YearLT(v int) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldYear), v))
+	})
+}
+
+// YearLTE applies the LTE predicate on the "year" field.
+func YearLTE(v int) predicate.Movie {
+	return predicate.Movie(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldYear), v))
 	})
 }
 

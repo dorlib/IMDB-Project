@@ -29,6 +29,7 @@ var (
 		{Name: "description", Type: field.TypeString},
 		{Name: "rank", Type: field.TypeInt},
 		{Name: "genre", Type: field.TypeString},
+		{Name: "year", Type: field.TypeInt},
 		{Name: "image", Type: field.TypeString, Nullable: true},
 		{Name: "director_id", Type: field.TypeInt, Nullable: true},
 	}
@@ -40,7 +41,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "movies_directors_movies",
-				Columns:    []*schema.Column{MoviesColumns[6]},
+				Columns:    []*schema.Column{MoviesColumns[7]},
 				RefColumns: []*schema.Column{DirectorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
