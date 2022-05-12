@@ -45,6 +45,7 @@ function MovieItem(props) {
                 description
                 genre
                 image
+                year
                 reviews{
                     rank
                 }
@@ -73,6 +74,7 @@ function MovieItem(props) {
     let title = data["movieById"]["0"]["title"]
     let originalRank = data["movieById"]["0"]["rank"]
     let description = data["movieById"]["0"]["description"]
+    let year = data["movieById"]["0"]["year"]
     let image = data["movieById"]["0"]["image"]
     let director = data["movieById"]["0"]["director"]["name"]
     let directorId = data["movieById"]["0"]["director"]["id"]
@@ -81,25 +83,30 @@ function MovieItem(props) {
 
     let rank = Math.floor((originalRank + props.total) / (props.counter + 1))
 
-    let loaded =  (
+    let loaded = (
         <Card>
-        <div>
-            <p style={{color: "yellow" ,fontSize: "xx-large"}}>
-                {title} : {rank} {"/100"}
-            </p>
-        </div>
+            <div>
+                <p style={{color: "yellow", fontSize: "xx-large"}}>
+                    {title} : {rank} {"/100"}
+                </p>
+            </div>
+            <div>
+                <p style={{color: "yellow", fontSize: "x-large"}}>
+                    Year Of Release : {year}
+                </p>
+            </div>
             <div className={classes.image}>
-                <img src={image} />
+                <img src={image}/>
                 {image}
             </div>
-        <div>
-            <h4 style={{color: "yellow"}}>
-                Movie description : {description}
-            </h4>
-            <h4 style={{color: "yellow"}}>
-                Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
-            </h4>
-        </div>
+            <div>
+                <h4 style={{color: "yellow"}}>
+                    Movie description : {description}
+                </h4>
+                <h4 style={{color: "yellow"}}>
+                    Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
+                </h4>
+            </div>
         </Card>
     )
 

@@ -125,6 +125,7 @@ function NewMovieForm() {
                         max="2022"
                         value={givenYear} onChange={event => setYear(event.target.value)}
                         datatype="Int"
+                        required
                     ></input>
                 </div>
 
