@@ -35,6 +35,7 @@ function NewMovieForm() {
 
 
     const [givenTitle, setTitle] = useState('')
+    const [givenYear, setYear] = useState('')
     const [givenDirector, setDirector] = useState('')
     const [givenDescription, setDescription] = useState('')
     const [givenText, setText] = useState('')
@@ -113,6 +114,18 @@ function NewMovieForm() {
                 <div className={classes.control}>
                     <label htmlFor="title">Movie Title</label>
                     <input type="text" datatype="String" required id="title" value={givenTitle} onChange={event => setTitle(event.target.value)}/>
+                </div>
+                <div className={classes.ctrl}>
+                    <label htmlFor="year">Year Of Release</label>
+                    <input
+                        type="number"
+                        name="year"
+                        id="year"
+                        min="1890"
+                        max="2022"
+                        value={givenYear} onChange={event => setYear(event.target.value)}
+                        datatype="Int"
+                    ></input>
                 </div>
 
                 <div className={classes.im}>

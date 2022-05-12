@@ -706,6 +706,7 @@ enum MovieOrderField {
     MOVIE_DESCRIPTION
     MOVIE_RANK
     GENRE
+    YEAR
 }
 
 enum DirectorOrderField {
