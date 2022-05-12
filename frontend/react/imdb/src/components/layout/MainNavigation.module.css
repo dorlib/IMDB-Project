@@ -1,3 +1,4 @@
+
 .header {
   width: 100%;
   height: 7rem;
@@ -5,19 +6,23 @@
   align-items: center;
   justify-content: space-between;
   background-color: #77002e;
-  padding: 0 10%;
+  padding: 0 5%;
 }
 
 .logo {
-  font-size: 2rem;
+  display: flex;
+  position: absolute;
+  font-size: 2.5rem;
   color: white;
+  margin-right: 6cm;
   font-weight: bold;
+  top: 0.6cm;
 }
 
 .menu {
   position: absolute;
   display: flex;
-  top: -3.1cm;
+  top: -3.3cm;
   left: 47%;
   color: white;
   background-color: #cc2062;
@@ -123,5 +128,9 @@ body {
   top: 15%;
   left: 55%;
   transform: translate(-50%, -50%);
+}
+
+.dropdown {
+  background-color: #77002e;
 }
 

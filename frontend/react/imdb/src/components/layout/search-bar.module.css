@@ -1,7 +1,7 @@
 .searchInput {
     display: flex;
     position: absolute;
-    top: 1.1cm;
+    top: 0.9cm;
 }
 
 .search input {
@@ -42,9 +42,9 @@ input:focus {
     position: absolute;
     border: 3px solid #000000;
     left: 11.5cm;
-    bottom: 16.58cm;
+    bottom: 18.33cm;
     margin-top: 5px;
-    width: 436px;
+    width: 438px;
     height: 200px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
