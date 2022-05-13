@@ -30,8 +30,7 @@ function Last5Added() {
             const intervalId = setInterval(() => {
                 if (currentIndex === 4) {
                     setCurrentIndex(0);
-                }
-                else {
+                } else {
                     setCurrentIndex(currentIndex + 1);
                 }
             }, 5000)
@@ -68,6 +67,13 @@ function Last5Added() {
                         </p>
                         <Typography className={classes.genre}>Genre : {data.last5Added["0"]["genre"]}</Typography>
                     </Typography>
+                    <div  style={{textAlign: "center", marginTop: "0.2cm"}} >
+                        <label>&nbsp;<span className={classes.fullDot}></span></label>
+                        <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                        <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                        <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                        <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    </div>
                 </CardContent>
                 <CardActions className={classes.buttons}>
                     <Button size="large">Share</Button>
@@ -96,6 +102,13 @@ function Last5Added() {
                         </p>
                         <Typography className={classes.genre}>Genre : {data.last5Added["1"]["genre"]}</Typography>
                     </Typography>
+                    <div  style={{textAlign: "center" , marginTop: "0.2cm"}} >
+                    <span className={classes.emptyDot}></span>
+                    <span className={classes.fullDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    </div>
                 </CardContent>
                 <CardActions className={classes.buttons}>
                     <Button size="large">Share</Button>
@@ -124,6 +137,13 @@ function Last5Added() {
                         </p>
                         <Typography className={classes.genre}>Genre : {data.last5Added["2"]["genre"]}</Typography>
                     </Typography>
+                    <div  style={{textAlign: "center" , marginTop: "0.2cm"}} >
+                    <span className={classes.emptyDot}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.fullDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    </div>
                 </CardContent>
                 <CardActions className={classes.buttons}>
                     <Button size="large">Share</Button>
@@ -152,6 +172,13 @@ function Last5Added() {
                         </p>
                         <Typography className={classes.genre}>Genre : {data.last5Added["3"]["genre"]}</Typography>
                     </Typography>
+                    <div  style={{textAlign: "center" , marginTop: "0.2cm"}} >
+                    <span className={classes.emptyDot}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.fullDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    </div>
                 </CardContent>
                 <CardActions className={classes.buttons}>
                     <Button size="large">Share</Button>
@@ -180,6 +207,13 @@ function Last5Added() {
                         </p>
                         <Typography className={classes.genre}>Genre : {data.last5Added["4"]["genre"]}</Typography>
                     </Typography>
+                    <div  style={{textAlign: "center" , marginTop: "0.2cm" }} >
+                    <span className={classes.emptyDot} ></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.emptyDot} style={{marginLeft: "0.1cm"}}></span>
+                    <span className={classes.fullDot} style={{marginLeft: "0.1cm"}}></span>
+                    </div>
                 </CardContent>
                 <CardActions className={classes.buttons}>
                     <Button size="large">Share</Button>
@@ -191,7 +225,7 @@ function Last5Added() {
     )
 
     let cards = [card1, card2, card3, card4, card5]
-    return <Swapper />
+    return <Swapper/>
 
 }
 

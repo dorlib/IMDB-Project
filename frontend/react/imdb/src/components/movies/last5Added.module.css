@@ -28,4 +28,22 @@
 .buttons {
     margin-right: -4.5cm;
     margin-left: 4.5cm;
+    margin-top: -0.4cm;
+}
+
+.emptyDot {
+    height: 25px;
+    width: 25px;
+    border: 3px solid #000000;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.fullDot {
+    height: 25px;
+    width: 25px;
+    background-color: #2c292b;
+    border: 3px solid #000000;
+    border-radius: 50%;
+    display: inline-block;
 }
