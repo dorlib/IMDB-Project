@@ -13,18 +13,9 @@ function UserPage () {
                 lastname
                 nickname
                 description
-                password
                 email
                 birthday
                 profile
-                reviews {
-                    movie{
-                        title
-                    }
-                    topic
-                    text
-                    rank
-                }
             }
         }
     `;
@@ -43,45 +34,41 @@ function UserPage () {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
 
-    let firstName = data["users"]["0"]["firstname"]
-    let lastName = data["users"]["0"]["lastname"]
-    let nickName = data["users"]["0"]["nickname"]
-    let Description = data["users"]["0"]["description"]
-    let Password = data["users"]["0"]["password"]
-    let Email = data["users"]["0"]["email"]
-    let Birthday = data["users"]["0"]["birthday"]
-    let Profile = data["users"]["0"]["profile"]
-    let moviesReviews = data["users"]["0"]["reviews"]["0"]["movie"]["0"]["name"]
-    let reviewTopic = data["users"]["0"]["reviews"]["0"]["topic"]
-    let reviewText = data["users"]["0"]["reviews"]["0"]["text"]
-    let reviewRank = data["users"]["0"]["reviews"]["0"]["rank"]
-
     console.log(data)
+
+    let firstName = data["userById"]["0"]["firstname"]
+    let lastName = data["userById"]["0"]["lastname"]
+    let nickName = data["userById"]["0"]["nickname"]
+    let Description = data["userById"]["0"]["description"]
+    let Email = data["userById"]["0"]["email"]
+    let Birthday = data["userById"]["0"]["birthday"]
+    let Profile = data["userById"]["0"]["profile"] || "https://hope.be/wp-content/uploads/2015/05/no-user-image.gif"
+
 
     let loaded = (
         <Card>
             <div>
                 <p style={{color: "yellow", fontSize: "xx-large"}}>
-                    {firstName} {lastName} {"/100"}
+                    {firstName} {lastName}
                 </p>
             </div>
-            {/*<div>*/}
-            {/*    <p style={{color: "yellow", fontSize: "x-large"}}>*/}
-            {/*        Year Of Release : {year}*/}
-            {/*    </p>*/}
-            {/*</div>*/}
-            {/*<div className={classes.image}>*/}
-            {/*    <img src={image}/>*/}
-            {/*    {image}*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    <h4 style={{color: "yellow"}}>*/}
-            {/*        Movie description : {description}*/}
-            {/*    </h4>*/}
-            {/*    <h4 style={{color: "yellow"}}>*/}
-            {/*        Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>*/}
-            {/*    </h4>*/}
-            {/*</div>*/}
+            <div>
+                <p style={{color: "yellow", fontSize: "x-large"}}>
+                    Born At : {Birthday}
+                </p>
+            </div>
+            <div className={classes.image}>
+                <img src={Profile}/>
+                {Profile}
+            </div>
+            <div>
+                <h4 style={{color: "yellow"}}>
+                    Movie description : {Description}
+                </h4>
+                <h4 style={{color: "yellow"}}>
+                    Wants To Contact {firstName} ? {Email}
+                </h4>
+            </div>
         </Card>
     )
     return loaded
