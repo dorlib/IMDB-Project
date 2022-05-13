@@ -4,11 +4,11 @@ import classes from "./welcome.module.css"
 function Welcome() {
 
     function handleSignClick() {
-        window.location.replace("/sign-in")
+        window.location.replace("/register-sign-in")
     }
 
     function handleRegClick() {
-        window.location.replace("/new-user")
+        window.location.replace("/register-sign-in")
     }
 
 

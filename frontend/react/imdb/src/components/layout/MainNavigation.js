@@ -77,7 +77,7 @@ function MainNavigation() {
                                     <Link to="/register-sign-in">Sign In \ Log In</Link>
                                 </li>
                                 <li>
-                                    <Container maxWidth="xl">
+                                    <Container maxWidth="xl" >
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
                                                 <Avatar alt="Remy Sharp"
@@ -87,7 +87,7 @@ function MainNavigation() {
                                             </IconButton>
                                         </Tooltip>
                                         <Menu
-                                            sx={{mt: "45px"}}
+                                            sx={{mt: "45px", top:"0.4cm"}}
                                             id="menu-appbar"
                                             anchorEl={anchorElUser}
                                             anchorOrigin={{
@@ -103,8 +103,8 @@ function MainNavigation() {
                                             onClose={handleCloseUserMenu}
                                         >
                                             {settings.map((setting) => (
-                                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center">{setting}</Typography>
+                                                <MenuItem key={setting} onClick={handleCloseUserMenu} >
+                                                    <Typography textAlign="center" >{setting}</Typography>
                                                 </MenuItem>
                                             ))}
                                         </Menu>
