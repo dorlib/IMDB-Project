@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { AccountBox } from "./components/accounts";
 
 import AllMoviesPage from './pages/AllMovies';
-import NewUserPage from './pages/NewUser';
 import FavoritesPage from './pages/Favorites';
 import Layout from './components/layout/Layout';
 import React from "react";
@@ -20,6 +19,7 @@ import Top10Page from "./pages/Top10";
 import Welcome from "./pages/Welcome";
 import Last5Added from "./components/movies/last5-added";
 import MoviesByGenre from "./components/movies/movies-by-genre";
+import UserPage from "./pages/userPage";
 
 const AppContainer = styled.div`
   width: 100%;
@@ -44,6 +44,7 @@ function App() {
         <Route path="/moviePage/:id" element={<><UpdateRank/><HoverRating/><ShowReviews/><NewReviewForm/></>} />
         <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
         <Route path='/register-sign-in' element={<AccountBox />} />
+        <Route path='/userPage/:id' element={<UserPage />} />
       </Routes>
     </Layout>
   );

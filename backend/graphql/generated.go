@@ -88,6 +88,7 @@ type ComplexityRoot struct {
 		Nodes            func(childComplexity int, ids []int) int
 		ReviewsOfMovie   func(childComplexity int, movieID int) int
 		Top10Movies      func(childComplexity int) int
+		UserByID         func(childComplexity int, id int) int
 		Users            func(childComplexity int) int
 	}
 
@@ -127,6 +128,7 @@ type QueryResolver interface {
 	Movies(ctx context.Context) ([]*ent.Movie, error)
 	Directors(ctx context.Context) ([]*ent.Director, error)
 	DirectorIDByName(ctx context.Context, name string) (*int, error)
+	UserByID(ctx context.Context, id int) ([]*ent.User, error)
 	MovieByID(ctx context.Context, id int) ([]*ent.Movie, error)
 	MoviesByGenre(ctx context.Context, genre string) ([]*ent.Movie, error)
 	Last5Added(ctx context.Context) ([]*ent.Movie, error)
@@ -457,6 +459,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Top10Movies(childComplexity), true
 
+	case "Query.userById":
+		if e.complexity.Query.UserByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_userById_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.UserByID(childComplexity, args["id"].(int)), true
+
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
 			break
@@ -699,7 +713,6 @@ type User {
     reviews: [Review!]
 }
 
-
 # These enums are matched the entgql annotations in the ent/schema.
 enum MovieOrderField {
     MOVIE_TITLE
@@ -773,6 +786,7 @@ type Query {
     movies: [Movie!]
     directors: [Director!]
     directorIdByName(name: String!): ID
+    userById(id: ID!) : [User!]
     movieById(id: ID!) : [Movie!]
     moviesByGenre(genre: String!) : [Movie]
     last5Added: [Movie!]
@@ -1228,6 +1242,21 @@ func (ec *executionContext) field_Query_reviewsOfMovie_args(ctx context.Context,
 		}
 	}
 	args["movieID"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_userById_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -2183,6 +2212,45 @@ func (ec *executionContext) _Query_directorIdByName(ctx context.Context, field g
 	res := resTmp.(*int)
 	fc.Result = res
 	return ec.marshalOID2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_userById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_userById_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().UserByID(rctx, args["id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚕᚖimdbv2ᚋentᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_movieById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4999,6 +5067,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_directorIdByName(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "userById":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_userById(ctx, field)
 				return res
 			}
 

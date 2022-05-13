@@ -57,7 +57,6 @@ type User {
     reviews: [Review!]
 }
 
-
 # These enums are matched the entgql annotations in the ent/schema.
 enum MovieOrderField {
     MOVIE_TITLE
@@ -131,6 +130,7 @@ type Query {
     movies: [Movie!]
     directors: [Director!]
     directorIdByName(name: String!): ID
+    userById(id: ID!) : [User!]
     movieById(id: ID!) : [Movie!]
     moviesByGenre(genre: String!) : [Movie]
     last5Added: [Movie!]

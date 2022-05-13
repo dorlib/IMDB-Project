@@ -9,6 +9,7 @@ import (
 	"imdbv2/ent"
 	"imdbv2/ent/director"
 	"imdbv2/ent/movie"
+	"imdbv2/ent/user"
 )
 
 func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error) {
@@ -138,6 +139,10 @@ func (r *queryResolver) MovieByID(ctx context.Context, id int) ([]*ent.Movie, er
 
 func (r *queryResolver) DirectorByID(ctx context.Context, id int) ([]*ent.Director, error) {
 	return r.client.Director.Query().Where(director.ID(id)).All(ctx)
+}
+
+func (r *queryResolver) UserByID(ctx context.Context, id int) ([]*ent.User, error) {
+	return r.client.User.Query().Where(user.ID(id)).All(ctx)
 }
 
 func (r *queryResolver) ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error) {
