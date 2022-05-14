@@ -47,3 +47,21 @@
     border-radius: 50%;
     display: inline-block;
 }
+
+.forward {
+    color: yellow;
+    font-size: xxx-large;
+    position: absolute;
+    display: flex;
+    right: 6cm;
+    bottom: 6cm;
+}
+
+.backward {
+    color: yellow;
+    font-size: xxx-large;
+    position: absolute;
+    display: flex;
+    bottom: 6cm;
+    right: 18cm;
+}
