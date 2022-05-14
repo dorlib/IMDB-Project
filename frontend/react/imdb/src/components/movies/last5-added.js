@@ -9,6 +9,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 function Last5Added() {
     const LAST_5_ADDED = gql`
@@ -42,6 +44,7 @@ function Last5Added() {
             </div>
         )
     }
+
 
 
     const {loading, error, data} = useQuery(LAST_5_ADDED)
@@ -225,8 +228,13 @@ function Last5Added() {
     )
 
     let cards = [card1, card2, card3, card4, card5]
-    return <Swapper/>
-
+    return (
+        <div>
+        <ArrowForwardIosIcon className={classes.forward} />
+        <ArrowBackIosNewIcon className={classes.backward}/>
+        <Swapper/>
+        </div>
+        )
 }
 
 export default Last5Added;
