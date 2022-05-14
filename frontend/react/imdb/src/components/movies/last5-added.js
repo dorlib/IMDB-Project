@@ -228,10 +228,27 @@ function Last5Added() {
     )
 
     let cards = [card1, card2, card3, card4, card5]
+
+    const forwardInput = () => {
+        if (currentIndex === 4) {
+            setCurrentIndex(0)
+        } else {
+            setCurrentIndex(currentIndex + 1)
+        }
+    }
+
+    const backwardInput = () => {
+        if (currentIndex === 0) {
+            setCurrentIndex(4)
+        } else {
+            setCurrentIndex(currentIndex - 1)
+        }
+    }
+
     return (
         <div>
-        <ArrowForwardIosIcon className={classes.forward} />
-        <ArrowBackIosNewIcon className={classes.backward}/>
+        <ArrowForwardIosIcon className={classes.forward} style={{fontSize:"xxx-large"}} id={"Forward"} onClick={forwardInput}/>
+        <ArrowBackIosNewIcon className={classes.backward} style={{fontSize:"xxx-large"}} id={"Backward"} onClick={backwardInput}/>
         <Swapper/>
         </div>
         )
