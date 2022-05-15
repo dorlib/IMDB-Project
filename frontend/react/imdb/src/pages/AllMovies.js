@@ -70,8 +70,8 @@ function AllMoviesPage(props) {
                             Directed By: {director.name}
                         </Typography>
                         {Icons.map(list=>(
-                            <div >
-                                <list.icon   />
+                            <div className={classes.fav} style={{fontSize: "xxx-large"}}>
+                                <list.icon />
                             </div>
                         ))}
                     </CardContent>
