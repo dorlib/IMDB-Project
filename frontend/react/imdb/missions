@@ -10,5 +10,8 @@ user authorization (only users can add reviews and ranks and new movies)
 
 tab indexses
 
+favorite icon - add to all other cards, add functionlity (turning red on click and add to favorites, add favorites to user database)
+                write in jsx the css,
+
 
 
