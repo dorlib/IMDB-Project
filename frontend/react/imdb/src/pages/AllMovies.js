@@ -11,8 +11,8 @@ import Typography from "@mui/material/Typography";
 import classes from "./top10.module.css";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import styled from "styled-components";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 function AllMoviesPage(props) {
     const [loadedMovies, setLoadedMovies] = useState([]);
@@ -93,7 +93,7 @@ function AllMoviesPage(props) {
                         {Icons.map(list=>(
                             <div style={{fontSize: "xxx-large"}}>
                                 <Fav><list.icon fontSize={'large'} onClick={handleClick} onMouseOver={handleOver}/></Fav>
-                                <Typography className={classes.textBox} style={{textShadow: "white"}}>Click To Add To Favorites!</Typography>
+                                <Typography className={classes.textBox} >Click To Add To Favorites!</Typography>
                             </div>
                         ))}
                     </CardContent>
