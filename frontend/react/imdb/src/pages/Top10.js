@@ -44,8 +44,25 @@ function Top10Page() {
         position: absolute;
         display: flex;
         right: 27.3cm;
-        margin-top: -1.28cm;
+        margin-top: -1.25cm;
     `;
+
+    let TextBox = styled.text` 
+        position: absolute;
+        display: none;
+        margin-top: 1cm;
+        right: 21.9cm;
+        background: #fff;
+        font-size: small;
+        ${Fav}:hover & {
+            display: flex;
+            left: 1cm;
+            top: -0.5cm;
+            width: 4.5cm;
+            color: black;
+        }    
+    `;
+
 
     const handleClick = (e) => {
         if (e.target.style.color == 'white') {
@@ -77,7 +94,11 @@ function Top10Page() {
                 </CardActions>
                 {Icons.map(list=>(
                     <div style={{fontSize: "xxx-large"}}>
-                        <Fav><list.icon fontSize={'large'} onClick={handleClick}/></Fav>
+                        <Fav>
+                            <list.icon fontSize={'large'} onClick={handleClick} />
+                            <TextBox><text >Click To Add To Favorites!</text></TextBox>
+                        </Fav>
+
                     </div>
                 ))}
             </Card>

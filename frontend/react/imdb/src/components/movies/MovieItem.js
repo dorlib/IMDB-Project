@@ -89,8 +89,24 @@ function MovieItem(props) {
         color: white;
         position: absolute;
         display: flex;
-        right: 27.6cm;
-        margin-top: -1.1cm;
+        right: 27.3cm;
+        margin-top: 0.65cm;
+    `;
+
+    let TextBox = styled.text` 
+        position: absolute;
+        display: none;
+        margin-top: 1cm;
+        right: 21.9cm;
+        background: #fff;
+        font-size: small;
+        ${Fav}:hover & {
+            display: flex;
+            left: 1cm;
+            top: -0.5cm;
+            width: 4.5cm;
+            color: black;
+        }    
     `;
 
     const handleClick = (e) => {
@@ -124,11 +140,12 @@ function MovieItem(props) {
                 <h4 style={{color: "yellow"}}>
                     Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
                 </h4>
-                <div>
-                    <Fav>
-                        <FavoriteIcon fontSize={'large'} onClick={handleClick}/>
-                    </Fav>
-                </div>
+                    <div style={{fontSize: "xxx-large"}}>
+                        <Fav>
+                            <FavoriteIcon fontSize={'large'} onClick={handleClick} />
+                            <TextBox><text >Click To Add To Favorites!</text></TextBox>
+                        </Fav>
+                    </div>
             </div>
         </Card>
     )

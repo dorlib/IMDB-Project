@@ -21,18 +21,5 @@
     position: absolute;
     display: flex;
     right: 27.6cm;
-    margin-top: 0.85cm;
 }
 
-.textBox {
-    position: absolute;
-    display: flex;
-    margin-top: 1cm;
-    right: 21.8cm;
-    width: 10%;
-    height: 3%;
-    background: #fff;
-    border-radius: 4px;
-    border: 2.2px solid black;
-    font-size: small;
-}
