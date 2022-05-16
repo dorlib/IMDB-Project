@@ -12,6 +12,7 @@ import classes from "./top10.module.css";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import styled from "styled-components";
 
 function AllMoviesPage(props) {
     const [loadedMovies, setLoadedMovies] = useState([]);
@@ -37,12 +38,27 @@ function AllMoviesPage(props) {
             icon: FavoriteIcon,
         }]
 
+    const Fav = styled.div`
+        color: white;
+        position: absolute;
+        display: flex;
+        right: 27.6cm;
+        margin-top: 0.85cm;
+    `;
+
     const { loading, error, data } = useQuery(GET_MOVIES)
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :</p>;
         let loaded
         //let movieId = data["movies"]["id"]
 
+    const handleClick = (e) => {
+        if (e.target.style.color == 'white') {
+        e.target.style.color = '#8B0000'
+        } else {
+            e.target.style.color = 'white'
+        }
+    }
     loaded = data.movies.map(( {title, rank, id, image, description, director}) => (
             // <div key={id}>
             //     <p style={{color: "yellow"}}>
@@ -70,8 +86,8 @@ function AllMoviesPage(props) {
                             Directed By: {director.name}
                         </Typography>
                         {Icons.map(list=>(
-                            <div className={classes.fav} style={{fontSize: "xxx-large"}}>
-                                <list.icon />
+                            <div style={{fontSize: "xxx-large"}}>
+                                <Fav><list.icon onClick={handleClick}/></Fav>
                             </div>
                         ))}
                     </CardContent>
