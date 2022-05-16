@@ -11,6 +11,8 @@ import {isIterableObject} from "graphql/jsutils/isIterableObject";
 import MenuItem from "@mui/material/MenuItem";
 import showReviews from "../reviews/showReviews";
 import ShowReviews from "../reviews/showReviews";
+import styled from "styled-components";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 // function MovieItem(props) {
 //   const favoritesCtx = useContext(FavoritesContext);
@@ -83,6 +85,22 @@ function MovieItem(props) {
 
     let rank = Math.floor((originalRank + props.total) / (props.counter + 1))
 
+    const Fav = styled.div`
+        color: white;
+        position: absolute;
+        display: flex;
+        right: 27.6cm;
+        margin-top: -1.1cm;
+    `;
+
+    const handleClick = (e) => {
+        if (e.target.style.color == 'white') {
+            e.target.style.color = '#8B0000'
+        } else {
+            e.target.style.color = 'white'
+        }
+    }
+
     let loaded = (
         <Card>
             <div>
@@ -106,6 +124,11 @@ function MovieItem(props) {
                 <h4 style={{color: "yellow"}}>
                     Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
                 </h4>
+                <div>
+                    <Fav>
+                        <FavoriteIcon fontSize={'large'} onClick={handleClick}/>
+                    </Fav>
+                </div>
             </div>
         </Card>
     )

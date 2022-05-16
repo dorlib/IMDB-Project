@@ -10,6 +10,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import styled from "styled-components";
 
 function Top10Page() {
 
@@ -29,7 +31,29 @@ function Top10Page() {
     if (error) return <p>Error :</p>;
     let loaded
 
-    console.log(data)
+    const Icons = [
+        {
+            id: 1,
+            name: "favorite",
+            description:"icon",
+            icon: FavoriteIcon,
+        }]
+
+    const Fav = styled.div`
+        color: white;
+        position: absolute;
+        display: flex;
+        right: 27.3cm;
+        margin-top: -1.28cm;
+    `;
+
+    const handleClick = (e) => {
+        if (e.target.style.color == 'white') {
+            e.target.style.color = '#8B0000'
+        } else {
+            e.target.style.color = 'white'
+        }
+    }
 
     loaded = data.top10Movies.map(({title, rank, id, image}) => (
         <div>
@@ -51,6 +75,11 @@ function Top10Page() {
                     <Button size="large">Share</Button>
                     <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
                 </CardActions>
+                {Icons.map(list=>(
+                    <div style={{fontSize: "xxx-large"}}>
+                        <Fav><list.icon fontSize={'large'} onClick={handleClick}/></Fav>
+                    </div>
+                ))}
             </Card>
         </div>
     ))

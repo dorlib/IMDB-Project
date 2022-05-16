@@ -42,8 +42,8 @@ function AllMoviesPage(props) {
         color: white;
         position: absolute;
         display: flex;
-        right: 27.6cm;
-        margin-top: 0.85cm;
+        right: 27.3cm;
+        margin-top: 0.65cm;
     `;
 
     const { loading, error, data } = useQuery(GET_MOVIES)
@@ -59,6 +59,11 @@ function AllMoviesPage(props) {
             e.target.style.color = 'white'
         }
     }
+
+    const handleOver = () => {
+        console.log("yay")
+    }
+
     loaded = data.movies.map(( {title, rank, id, image, description, director}) => (
             // <div key={id}>
             //     <p style={{color: "yellow"}}>
@@ -87,7 +92,8 @@ function AllMoviesPage(props) {
                         </Typography>
                         {Icons.map(list=>(
                             <div style={{fontSize: "xxx-large"}}>
-                                <Fav><list.icon onClick={handleClick}/></Fav>
+                                <Fav><list.icon fontSize={'large'} onClick={handleClick} onMouseOver={handleOver}/></Fav>
+                                <Typography className={classes.textBox} style={{textShadow: "white"}}>Click To Add To Favorites!</Typography>
                             </div>
                         ))}
                     </CardContent>
