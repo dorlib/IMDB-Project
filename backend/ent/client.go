@@ -10,6 +10,7 @@ import (
 	"imdbv2/ent/migrate"
 
 	"imdbv2/ent/director"
+	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -26,6 +27,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Director is the client for interacting with the Director builders.
 	Director *DirectorClient
+	// Favorite is the client for interacting with the Favorite builders.
+	Favorite *FavoriteClient
 	// Movie is the client for interacting with the Movie builders.
 	Movie *MovieClient
 	// Review is the client for interacting with the Review builders.
@@ -48,6 +51,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Director = NewDirectorClient(c.config)
+	c.Favorite = NewFavoriteClient(c.config)
 	c.Movie = NewMovieClient(c.config)
 	c.Review = NewReviewClient(c.config)
 	c.User = NewUserClient(c.config)
@@ -85,6 +89,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:      ctx,
 		config:   cfg,
 		Director: NewDirectorClient(cfg),
+		Favorite: NewFavoriteClient(cfg),
 		Movie:    NewMovieClient(cfg),
 		Review:   NewReviewClient(cfg),
 		User:     NewUserClient(cfg),
@@ -108,6 +113,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:      ctx,
 		config:   cfg,
 		Director: NewDirectorClient(cfg),
+		Favorite: NewFavoriteClient(cfg),
 		Movie:    NewMovieClient(cfg),
 		Review:   NewReviewClient(cfg),
 		User:     NewUserClient(cfg),
@@ -141,6 +147,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Director.Use(hooks...)
+	c.Favorite.Use(hooks...)
 	c.Movie.Use(hooks...)
 	c.Review.Use(hooks...)
 	c.User.Use(hooks...)
@@ -250,6 +257,96 @@ func (c *DirectorClient) QueryMovies(d *Director) *MovieQuery {
 // Hooks returns the client hooks.
 func (c *DirectorClient) Hooks() []Hook {
 	return c.hooks.Director
+}
+
+// FavoriteClient is a client for the Favorite schema.
+type FavoriteClient struct {
+	config
+}
+
+// NewFavoriteClient returns a client for the Favorite from the given config.
+func NewFavoriteClient(c config) *FavoriteClient {
+	return &FavoriteClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `favorite.Hooks(f(g(h())))`.
+func (c *FavoriteClient) Use(hooks ...Hook) {
+	c.hooks.Favorite = append(c.hooks.Favorite, hooks...)
+}
+
+// Create returns a create builder for Favorite.
+func (c *FavoriteClient) Create() *FavoriteCreate {
+	mutation := newFavoriteMutation(c.config, OpCreate)
+	return &FavoriteCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Favorite entities.
+func (c *FavoriteClient) CreateBulk(builders ...*FavoriteCreate) *FavoriteCreateBulk {
+	return &FavoriteCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Favorite.
+func (c *FavoriteClient) Update() *FavoriteUpdate {
+	mutation := newFavoriteMutation(c.config, OpUpdate)
+	return &FavoriteUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *FavoriteClient) UpdateOne(f *Favorite) *FavoriteUpdateOne {
+	mutation := newFavoriteMutation(c.config, OpUpdateOne, withFavorite(f))
+	return &FavoriteUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *FavoriteClient) UpdateOneID(id int) *FavoriteUpdateOne {
+	mutation := newFavoriteMutation(c.config, OpUpdateOne, withFavoriteID(id))
+	return &FavoriteUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Favorite.
+func (c *FavoriteClient) Delete() *FavoriteDelete {
+	mutation := newFavoriteMutation(c.config, OpDelete)
+	return &FavoriteDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *FavoriteClient) DeleteOne(f *Favorite) *FavoriteDeleteOne {
+	return c.DeleteOneID(f.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *FavoriteClient) DeleteOneID(id int) *FavoriteDeleteOne {
+	builder := c.Delete().Where(favorite.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &FavoriteDeleteOne{builder}
+}
+
+// Query returns a query builder for Favorite.
+func (c *FavoriteClient) Query() *FavoriteQuery {
+	return &FavoriteQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Favorite entity by its id.
+func (c *FavoriteClient) Get(ctx context.Context, id int) (*Favorite, error) {
+	return c.Query().Where(favorite.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *FavoriteClient) GetX(ctx context.Context, id int) *Favorite {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *FavoriteClient) Hooks() []Hook {
+	return c.hooks.Favorite
 }
 
 // MovieClient is a client for the Movie schema.

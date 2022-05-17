@@ -22,6 +22,19 @@ var (
 		Columns:    DirectorsColumns,
 		PrimaryKey: []*schema.Column{DirectorsColumns[0]},
 	}
+	// FavoritesColumns holds the columns for the "favorites" table.
+	FavoritesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "movie_title", Type: field.TypeString},
+		{Name: "movie_id", Type: field.TypeInt},
+		{Name: "user_id", Type: field.TypeInt},
+	}
+	// FavoritesTable holds the schema information for the "favorites" table.
+	FavoritesTable = &schema.Table{
+		Name:       "favorites",
+		Columns:    FavoritesColumns,
+		PrimaryKey: []*schema.Column{FavoritesColumns[0]},
+	}
 	// MoviesColumns holds the columns for the "movies" table.
 	MoviesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -97,6 +110,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		DirectorsTable,
+		FavoritesTable,
 		MoviesTable,
 		ReviewsTable,
 		UsersTable,

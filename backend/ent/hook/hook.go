@@ -21,6 +21,19 @@ func (f DirectorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return f(ctx, mv)
 }
 
+// The FavoriteFunc type is an adapter to allow the use of ordinary
+// function as Favorite mutator.
+type FavoriteFunc func(context.Context, *ent.FavoriteMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f FavoriteFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.FavoriteMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FavoriteMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The MovieFunc type is an adapter to allow the use of ordinary
 // function as Movie mutator.
 type MovieFunc func(context.Context, *ent.MovieMutation) (ent.Value, error)
