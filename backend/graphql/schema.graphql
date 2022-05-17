@@ -44,6 +44,13 @@ type Review {
     movie: Movie!
 }
 
+type Favorite {
+    id: ID!
+    movieID: Int!
+    userID: Int!
+    movieTitle: String!
+}
+
 type User {
     id: ID!
     firstname: String!
@@ -113,6 +120,12 @@ input UserInput {
     birthday: String!
 }
 
+input FavoriteInput {
+    movieID: Int!
+    userID: Int!
+    movieTitle: String!
+}
+
 # Define a mutation for creating movies.
 # https://graphql.org/learn/queries/#mutations
 type Mutation {
@@ -123,6 +136,7 @@ type Mutation {
     createUser(firstname: String!, lastname: String!, nickname: String!, description: String!, password: String!, profile: String!,birthday: String!, email: String!): User!
     updateRank(id: ID!, rank: Int!) : Movie!
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
+    addToFavorites(favorite: FavoriteInput!): Favorite!
 }
 
 # Define a query for getting all movies.
@@ -136,6 +150,7 @@ type Query {
     last5Added: [Movie!]
     directorById(id: ID!): [Director!]
     reviewsOfMovie(movieID: Int!) : [Review]
+    favoritesOfUser(userID: Int!): [Favorite]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node

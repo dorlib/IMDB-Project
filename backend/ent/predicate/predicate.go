@@ -9,6 +9,9 @@ import (
 // Director is the predicate function for director builders.
 type Director func(*sql.Selector)
 
+// Favorite is the predicate function for favorite builders.
+type Favorite func(*sql.Selector)
+
 // Movie is the predicate function for movie builders.
 type Movie func(*sql.Selector)
 

@@ -9,6 +9,12 @@ type DirectorInput struct {
 	Description  string `json:"description"`
 }
 
+type FavoriteInput struct {
+	MovieID    int    `json:"movieID"`
+	UserID     int    `json:"userID"`
+	MovieTitle string `json:"movieTitle"`
+}
+
 type MovieInput struct {
 	Description string `json:"description"`
 	Title       string `json:"title"`

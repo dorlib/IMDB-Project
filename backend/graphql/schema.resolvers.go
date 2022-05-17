@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"imdbv2/ent"
 	"imdbv2/ent/director"
+	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/user"
 )
@@ -191,4 +192,19 @@ func (r *queryResolver) MoviesByGenre(ctx context.Context, genre string) ([]*ent
 		return nil, ent.MaskNotFound(err)
 	}
 	return data, nil
+}
+
+func (r *queryResolver) FavoritesOfUser(ctx context.Context, userID int) ([]*ent.Favorite, error) {
+	data, err := r.client.Favorite.Query().Where(favorite.UserID(userID)).All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}
+
+func (r *mutationResolver) AddToFavorites(ctx context.Context, favorite FavoriteInput) (*ent.Favorite, error) {
+	return r.client.Favorite.Create().
+		SetMovieID(favorite.MovieID).
+		SetMovieTitle(favorite.MovieTitle).
+		SetUserID(favorite.UserID).Save(ctx)
 }
