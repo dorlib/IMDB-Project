@@ -89,8 +89,8 @@ function MovieItem(props) {
         color: white;
         position: absolute;
         display: flex;
-        right: 27.3cm;
-        margin-top: 0.65cm;
+        right: 28.4cm;
+        margin-top: -0.15cm;
     `;
 
     let TextBox = styled.text` 

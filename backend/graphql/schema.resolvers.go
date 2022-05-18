@@ -6,6 +6,7 @@ package graphql
 import (
 	"context"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"imdbv2/ent"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
@@ -45,12 +46,14 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, email string, profile string, birthday string, password string) (*ent.User, error) {
+	bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
+
 	return r.client.User.Create().
 		SetFirstname(firstname).
 		SetLastname(lastname).
 		SetNickname(nickname).
 		SetEmail(email).
-		SetPassword(password).
+		SetPassword(string(bcrypedPassword)).
 		SetDescription(description).
 		SetBirthDay(birthday).
 		SetProfile(profile).
@@ -207,4 +210,27 @@ func (r *mutationResolver) AddToFavorites(ctx context.Context, favorite Favorite
 		SetMovieID(favorite.MovieID).
 		SetMovieTitle(favorite.MovieTitle).
 		SetUserID(favorite.UserID).Save(ctx)
+}
+
+func (r *queryResolver) SignInUser(ctx context.Context, nickname string, password string) ([]*ent.User, error) {
+	enteredPassword := password
+
+	userID, err2 := r.client.User.Query().Where(user.Nickname(nickname)).OnlyID(ctx)
+	if err2 != nil {
+		return nil, ent.MaskNotFound(err2)
+	}
+
+	data, err := r.client.User.Get(ctx, userID)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+
+	currentPassword := data.Password
+
+	e := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(enteredPassword))
+	if e != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+
+	return r.client.User.Query().Where(user.ID(userID)).All(ctx)
 }
