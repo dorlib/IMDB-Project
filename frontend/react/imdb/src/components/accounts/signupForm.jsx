@@ -57,7 +57,7 @@ export function SignUpForm(props) {
                 profile: givenProfile || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif',
             },
             onCompleted: function (data) {
-                return window.location.replace("/userPage/" + data["id"])
+                return window.location.replace("/userPage/" + data["createUser"]["id"])
             },
             onError: function (error) {
                 console.log("error:", error)
