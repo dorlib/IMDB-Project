@@ -61,7 +61,7 @@ type User {
     email: String!
     birthday: String!
     profile: String!
-2    reviews: [Review!]
+    reviews: [Review!]
 }
 
 # These enums are matched the entgql annotations in the ent/schema.

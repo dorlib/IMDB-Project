@@ -212,7 +212,7 @@ func (r *mutationResolver) AddToFavorites(ctx context.Context, favorite Favorite
 		SetUserID(favorite.UserID).Save(ctx)
 }
 
-func (r *queryResolver) SignInUser(ctx context.Context, nickname string, password string) ([]*ent.User, error) {
+func (r *queryResolver) SignInUser(ctx context.Context, nickname string, email string, password string) ([]*ent.User, error) {
 	enteredPassword := password
 
 	userID, err2 := r.client.User.Query().Where(user.Nickname(nickname)).OnlyID(ctx)
