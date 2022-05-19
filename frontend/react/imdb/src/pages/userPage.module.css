@@ -1,0 +1,29 @@
+.image {
+    position: absolute;
+    display: flex;
+    height: 25rem;
+    overflow: hidden;
+    border-radius: 200px;
+    max-height: 200%;
+    max-width: 200%;
+    top: 4.5cm;
+    left: 7.3cm;
+}
+
+.name {
+    position: absolute;
+    display: flex;
+    bottom:7cm;
+    left: 9cm;
+    color: yellow;
+    font-size: xxx-large;
+}
+
+.nick {
+    position: absolute;
+    display: flex;
+    font-size: x-large;
+    color: yellow;
+    bottom: 6.2cm;
+    left: 9.2cm;
+}

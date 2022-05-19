@@ -1,7 +1,7 @@
 import React from 'react'
 import {gql, useQuery} from "@apollo/client";
 import Card from "../components/ui/Card";
-import classes from "../components/movies/MovieItem.module.css";
+import classes from "./userPage.module.css"
 import {Link} from "react-router-dom";
 
 function UserPage () {
@@ -48,24 +48,26 @@ function UserPage () {
     let loaded = (
         <Card>
             <div>
-                <p style={{color: "yellow", fontSize: "xx-large"}}>
+                <p className={classes.name}>
                     {firstName} {lastName}
+                </p>
+                <p className={classes.nick}>
+                    {nickName}
                 </p>
             </div>
             <div>
-                <p style={{color: "yellow", fontSize: "x-large"}}>
+                <p style={{color: "yellow", fontSize: "x-large"}} className={classes.birth}>
                     Born At : {Birthday}
                 </p>
             </div>
             <div className={classes.image}>
                 <img src={Profile}/>
-                {Profile}
             </div>
             <div>
-                <h4 style={{color: "yellow"}}>
+                <h4 className={classes.desc} style={{color: "yellow"}}>
                     Movie description : {Description}
                 </h4>
-                <h4 style={{color: "yellow"}}>
+                <h4 style={{color: "yellow"}} className={classes.connect}>
                     Wants To Contact {firstName} ? {Email}
                 </h4>
             </div>

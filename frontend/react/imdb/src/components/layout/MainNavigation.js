@@ -83,7 +83,7 @@ function MainNavigation() {
                                                 <Avatar alt="Remy Sharp"
                                                         src="https://hope.be/wp-content/uploads/2015/05/no-user-image.gif"
                                                         style={{width: "1.5cm", height: "1.5cm"}}/>
-                                                <div style={{fontSize: "large"}}>&nbsp;&nbsp;Hi, Guest!</div>
+                                                <div style={{fontSize: "large", color: "#fcb8d2"}}>&nbsp;&nbsp;Hi, Guest!</div>
                                             </IconButton>
                                         </Tooltip>
                                         <Menu
