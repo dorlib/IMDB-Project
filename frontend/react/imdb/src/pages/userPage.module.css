@@ -27,3 +27,60 @@
     bottom: 6.2cm;
     left: 9.2cm;
 }
+
+.edit {
+    background-color: #2c292b;
+    display: flex;
+    position: absolute;
+    bottom: 5.5cm;
+    left: 9.2cm;
+    color: white;
+}
+
+.editBut {
+    display: flex;
+    width: 7cm;
+}
+
+.followIcon {
+    display: flex;
+    position: absolute;
+    font-size: x-large;
+    color: yellow;
+    bottom: 4.4cm;
+    left: 9.3cm;
+}
+
+.dot {
+    display: flex;
+    position: absolute;
+    color: yellow;
+    left: 12.72cm;
+    bottom: 4.4cm;
+}
+
+.followers {
+    display: flex;
+    position: absolute;
+    font-size: large;
+    color: yellow;
+    left: 10.5cm;
+    bottom: 4.4cm;
+}
+
+.follows {
+    display: flex;
+    position: absolute;
+    font-size: large;
+    color: yellow;
+    left: 13.5cm;
+    bottom: 4.4cm;
+}
+
+.location {
+    display: flex;
+    position: absolute;
+    color: yellow;
+    bottom: 3.1cm;
+    left: 9.25cm;
+}

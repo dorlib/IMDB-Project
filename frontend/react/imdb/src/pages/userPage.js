@@ -1,10 +1,20 @@
 import React from 'react'
 import {gql, useQuery} from "@apollo/client";
 import Card from "../components/ui/Card";
-import classes from "./userPage.module.css"
 import {Link} from "react-router-dom";
 
-function UserPage () {
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import {colors} from "@mui/material";
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import Typography from "@mui/material/Typography";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+
+import classes from "./userPage.module.css"
+
+
+function UserPage() {
     const USER_DATA = gql`
         query UserByID($id : ID!) {
             userById(id: $id) {
@@ -33,8 +43,6 @@ function UserPage () {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
-
-    console.log(data)
 
     let firstName = data["userById"]["0"]["firstname"]
     let lastName = data["userById"]["0"]["lastname"]
@@ -71,6 +79,19 @@ function UserPage () {
                     Wants To Contact {firstName} ? {Email}
                 </h4>
             </div>
+
+            <div>
+                <PeopleAltIcon className={classes.followIcon}/>
+                <Typography className={classes.follows}>Followers</Typography>
+                <FiberManualRecordIcon className={classes.dot}/>
+                <Typography className={classes.followers}>Followers</Typography>
+            </div>
+            <div>
+                <LocationOnIcon className={classes.location} />
+            </div>
+            <Stack direction="row" spacing={2} className={classes.edit} >
+                <Button variant="edit" className={classes.editBut} >Edit Profile</Button>
+            </Stack>
         </Card>
     )
     return loaded
