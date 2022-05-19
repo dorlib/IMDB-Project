@@ -45,7 +45,7 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 		Save(ctx)
 }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, email string, profile string, birthday string, password string) (*ent.User, error) {
+func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, email string, profile string, birthday string, password string, country string) (*ent.User, error) {
 	bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 
 	return r.client.User.Create().
@@ -57,6 +57,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, las
 		SetDescription(description).
 		SetBirthDay(birthday).
 		SetProfile(profile).
+		SetCountry(country).
 		Save(ctx)
 }
 

@@ -23,6 +23,7 @@ func (User) Fields() []ent.Field {
 		field.String("email").Unique(),
 		field.String("birthDay"),
 		field.String("profile"),
+		field.String("country"),
 	}
 }
 

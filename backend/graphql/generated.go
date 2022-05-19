@@ -79,7 +79,7 @@ type ComplexityRoot struct {
 		CreateMovie            func(childComplexity int, movie MovieInput) int
 		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string, image string, topic string, text string, profileImage string, bornAt string, year int) int
 		CreateReview           func(childComplexity int, text string, rank int, movieID int, topic string) int
-		CreateUser             func(childComplexity int, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string) int
+		CreateUser             func(childComplexity int, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string, country string) int
 		UpdateDirectorDetails  func(childComplexity int, id int, bornAt string, profileImage string, description string) int
 		UpdateRank             func(childComplexity int, id int, rank int) int
 	}
@@ -113,6 +113,7 @@ type ComplexityRoot struct {
 
 	User struct {
 		BirthDay    func(childComplexity int) int
+		Country     func(childComplexity int) int
 		Description func(childComplexity int) int
 		Email       func(childComplexity int) int
 		Firstname   func(childComplexity int) int
@@ -130,7 +131,7 @@ type MutationResolver interface {
 	CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string, topic string, text string, profileImage string, bornAt string, year int) (*ent.Movie, error)
 	CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error)
 	CreateReview(ctx context.Context, text string, rank int, movieID int, topic string) (*ent.Review, error)
-	CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string) (*ent.User, error)
+	CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string, country string) (*ent.User, error)
 	UpdateRank(ctx context.Context, id int, rank int) (*ent.Movie, error)
 	UpdateDirectorDetails(ctx context.Context, id int, bornAt string, profileImage string, description string) (*ent.Director, error)
 	AddToFavorites(ctx context.Context, favorite FavoriteInput) (*ent.Favorite, error)
@@ -374,7 +375,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateUser(childComplexity, args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["password"].(string), args["profile"].(string), args["birthday"].(string), args["email"].(string)), true
+		return e.complexity.Mutation.CreateUser(childComplexity, args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["password"].(string), args["profile"].(string), args["birthday"].(string), args["email"].(string), args["country"].(string)), true
 
 	case "Mutation.updateDirectorDetails":
 		if e.complexity.Mutation.UpdateDirectorDetails == nil {
@@ -604,6 +605,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.BirthDay(childComplexity), true
 
+	case "User.country":
+		if e.complexity.User.Country == nil {
+			break
+		}
+
+		return e.complexity.User.Country(childComplexity), true
+
 	case "User.description":
 		if e.complexity.User.Description == nil {
 			break
@@ -794,6 +802,7 @@ type User {
     email: String!
     birthday: String!
     profile: String!
+    country: String!
     reviews: [Review!]
 }
 
@@ -851,6 +860,7 @@ input UserInput {
     profile: String!    
     email: String!
     birthday: String!
+    country: String!
 }
 
 input FavoriteInput {
@@ -866,7 +876,7 @@ type Mutation {
     createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String!, directorName: String!, image: String!, topic: String!, text: String!, profileImage: String!, bornAt: String!, year: Int!): Movie!
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, topic: String!): Review!
-    createUser(firstname: String!, lastname: String!, nickname: String!, description: String!, password: String!, profile: String!,birthday: String!, email: String!): User!
+    createUser(firstname: String!, lastname: String!, nickname: String!, description: String!, password: String!, profile: String!,birthday: String!, email: String!, country: String!): User!
     updateRank(id: ID!, rank: Int!) : Movie!
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
     addToFavorites(favorite: FavoriteInput!): Favorite!
@@ -1164,6 +1174,15 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 		}
 	}
 	args["email"] = arg7
+	var arg8 string
+	if tmp, ok := rawArgs["country"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("country"))
+		arg8, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["country"] = arg8
 	return args, nil
 }
 
@@ -2306,7 +2325,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateUser(rctx, args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["password"].(string), args["profile"].(string), args["birthday"].(string), args["email"].(string))
+		return ec.resolvers.Mutation().CreateUser(rctx, args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["password"].(string), args["profile"].(string), args["birthday"].(string), args["email"].(string), args["country"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3582,6 +3601,41 @@ func (ec *executionContext) _User_profile(ctx context.Context, field graphql.Col
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Profile, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_country(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Country, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5109,6 +5163,14 @@ func (ec *executionContext) unmarshalInputUserInput(ctx context.Context, obj int
 			if err != nil {
 				return it, err
 			}
+		case "country":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("country"))
+			it.Country, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -6065,6 +6127,16 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 		case "profile":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._User_profile(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "country":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._User_country(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

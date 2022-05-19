@@ -148,6 +148,13 @@ func Profile(v string) predicate.User {
 	})
 }
 
+// Country applies equality check predicate on the "country" field. It's identical to CountryEQ.
+func Country(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCountry), v))
+	})
+}
+
 // FirstnameEQ applies the EQ predicate on the "firstname" field.
 func FirstnameEQ(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
@@ -1033,6 +1040,117 @@ func ProfileEqualFold(v string) predicate.User {
 func ProfileContainsFold(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldProfile), v))
+	})
+}
+
+// CountryEQ applies the EQ predicate on the "country" field.
+func CountryEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCountry), v))
+	})
+}
+
+// CountryNEQ applies the NEQ predicate on the "country" field.
+func CountryNEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCountry), v))
+	})
+}
+
+// CountryIn applies the In predicate on the "country" field.
+func CountryIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCountry), v...))
+	})
+}
+
+// CountryNotIn applies the NotIn predicate on the "country" field.
+func CountryNotIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCountry), v...))
+	})
+}
+
+// CountryGT applies the GT predicate on the "country" field.
+func CountryGT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCountry), v))
+	})
+}
+
+// CountryGTE applies the GTE predicate on the "country" field.
+func CountryGTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCountry), v))
+	})
+}
+
+// CountryLT applies the LT predicate on the "country" field.
+func CountryLT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCountry), v))
+	})
+}
+
+// CountryLTE applies the LTE predicate on the "country" field.
+func CountryLTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCountry), v))
+	})
+}
+
+// CountryContains applies the Contains predicate on the "country" field.
+func CountryContains(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCountry), v))
+	})
+}
+
+// CountryHasPrefix applies the HasPrefix predicate on the "country" field.
+func CountryHasPrefix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCountry), v))
+	})
+}
+
+// CountryHasSuffix applies the HasSuffix predicate on the "country" field.
+func CountryHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCountry), v))
+	})
+}
+
+// CountryEqualFold applies the EqualFold predicate on the "country" field.
+func CountryEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCountry), v))
+	})
+}
+
+// CountryContainsFold applies the ContainsFold predicate on the "country" field.
+func CountryContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCountry), v))
 	})
 }
 

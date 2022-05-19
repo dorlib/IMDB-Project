@@ -43,4 +43,5 @@ type UserInput struct {
 	Profile     string `json:"profile"`
 	Email       string `json:"email"`
 	Birthday    string `json:"birthday"`
+	Country     string `json:"country"`
 }

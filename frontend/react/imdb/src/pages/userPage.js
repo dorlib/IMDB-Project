@@ -26,6 +26,7 @@ function UserPage() {
                 email
                 birthday
                 profile
+                country
             }
         }
     `;
@@ -50,6 +51,7 @@ function UserPage() {
     let Description = data["userById"]["0"]["description"]
     let Email = data["userById"]["0"]["email"]
     let Birthday = data["userById"]["0"]["birthday"]
+    let Country = data["userById"]["0"]["country"]
     let Profile = data["userById"]["0"]["profile"] || "https://hope.be/wp-content/uploads/2015/05/no-user-image.gif"
 
 
@@ -88,6 +90,8 @@ function UserPage() {
             </div>
             <div>
                 <LocationOnIcon className={classes.location} />
+                <Typography className={classes.country}>{Country}</Typography>
+
             </div>
             <Stack direction="row" spacing={2} className={classes.edit} >
                 <Button variant="edit" className={classes.editBut} >Edit Profile</Button>

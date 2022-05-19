@@ -84,3 +84,12 @@
     bottom: 3.1cm;
     left: 9.25cm;
 }
+
+.country {
+    display: flex;
+    position: absolute;
+    color: yellow;
+    bottom: 3.1cm;
+    font-size: large;
+    left: 10.6cm;
+}
