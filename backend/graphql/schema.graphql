@@ -146,7 +146,7 @@ type Query {
     movies: [Movie!]
     directors: [Director!]
     directorIdByName(name: String!): ID
-    signInUser(nickname: String!, password: String!, email: String!): [User]
+    loginUser(nickname: String!, password: String!, email: String!): [User]
     userById(id: ID!) : [User!]
     movieById(id: ID!) : [Movie!]
     moviesByGenre(genre: String!) : [Movie]

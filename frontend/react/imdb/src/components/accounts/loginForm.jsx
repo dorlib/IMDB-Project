@@ -1,15 +1,9 @@
 import React, { useContext } from "react";
-import {
-  BoldLink,
-  BoxContainer,
-  FormContainer,
-  MutedLink,
-  SubmitButton,
-} from "./common";
+import {BoldLink, BoxContainer, FormContainer, MutedLink, SubmitButton,} from "./common";
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 
-import {useRef, useState} from "react";
+import {useState} from "react";
 
 import Card from "../ui/Card";
 import {styled} from "@mui/material/styles";
@@ -21,40 +15,56 @@ import {gql, useMutation} from "@apollo/client";
 export function LoginForm(props) {
     const { switchToSignup } = useContext(AccountContext);
 
-    const nickNameInputRef = useRef();
-    const passwordInputRef = useRef();
+    const SIGN_IN_USER = gql`
+        mutation LoginUser ($nickname: String!, $password: String!, $email: String!) {
+            loginUser(nickname: $nickname, password: $password, email: $email) {
+                id
+            }
+        }
+    `;
 
-    function submitHandler(event) {
-        event.preventDefault();
+    const [givenPassword, setPassword] = useState('')
+    const [givenNickname, setNickname] = useState('')
 
-        const enteredNickName = nickNameInputRef.current.valueOf()
-        const enteredPassword = passwordInputRef.current.valueOf();
+    const Input = styled("input")({
+        display: "none",
+    });
 
-        const signInData = {
-            nickName: enteredNickName,
-            password: enteredPassword,
-        };
+    const [loginUser] = useMutation(SIGN_IN_USER,
+        {
+            variables: {
+                nickname: givenNickname,
+                password: givenPassword,
 
-        props.onSignIn(signInData);
-    }
+            },
+            onCompleted: function (data) {
+                if (data === null) {
+                    return <div>Login Failed.. Please Try Again</div>
+                } else {
+                    return window.location.replace("/userPage/" + data["createUser"]["id"])
+                }
+            },
+            onError: function (error) {
+                console.log("error:", error)
+            },
+        });
 
 
   return (
     <BoxContainer>
       <FormContainer>
           <Card>
-              <form className={classes.form} onSubmit={submitHandler}>
+              <form className={classes.form} onSubmit={loginUser}>
 
                   <div className={classes.control}>
                       <label htmlFor="nickName">Enter Your Nickname</label>
-                      <input type="text" required id="nickName" ref={nickNameInputRef} />
+                      <input type="text" required id="nickName" onChange={event => setNickname(event.target.value)}/>
                   </div>
 
                   <div className={classes.ctrl}>
                       <label htmlFor="password">Enter Your password (8 characters minimum</label>
-                      <input type="password" id="password" name="password" minLength="8" required ref={passwordInputRef} />
+                      <input type="password" id="password" name="password" minLength="8" required onChange={event => setPassword(event.target.value)}/>
                   </div>
-
               </form>
           </Card>
       </FormContainer>
@@ -72,3 +82,5 @@ export function LoginForm(props) {
     </BoxContainer>
   );
 }
+
+export default LoginForm

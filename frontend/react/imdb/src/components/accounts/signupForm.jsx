@@ -22,8 +22,8 @@ export function SignUpForm(props) {
 
 
     let NEW_USER = gql`
-        mutation CreateUser ($firstname: String!, $lastname: String!, $nickname: String!, $description: String!, $password: String!, $profile: String!, $email: String!, $birthday: String! ) {
-            createUser(firstname: $firstname , lastname: $lastname, nickname: $nickname , description: $description, password: $password, profile: $profile, email: $email, birthday: $birthday) {
+        mutation CreateUser ($firstname: String!, $lastname: String!, $nickname: String!, $description: String!, $password: String!, $profile: String!, $email: String!, $birthday: String!, $country: String! ) {
+            createUser(firstname: $firstname , lastname: $lastname, nickname: $nickname , description: $description, password: $password, profile: $profile, email: $email, birthday: $birthday, country: $country) {
                 id
             }
         }
@@ -36,6 +36,7 @@ export function SignUpForm(props) {
     const [givenPassword, setPassword] = useState('')
     const [givenProfile, setProfile] = useState('')
     const [givenEmail, setEmail] = useState('')
+    const [givenCountry, setCountry] = useState('')
     const [givenDayOfBirth, setDayOfBirth] = useState('')
     const [givenMonthOfBirth, setMonthOfBirth] = useState('')
     const [givenYearOfBirth, setYearOfBirth] = useState('')
@@ -52,6 +53,7 @@ export function SignUpForm(props) {
                 nickname: givenNickName,
                 email: givenDayOfBirth + givenMonthOfBirth + givenYearOfBirth,
                 birthday:givenPassword,
+                country: givenCountry,
                 password: givenEmail,
                 description:givenDesc,
                 profile: givenProfile || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif',
@@ -111,6 +113,11 @@ export function SignUpForm(props) {
                             </Button>
                         </label>
                     </Stack>
+
+                    <div className={classes.ctrl2}>
+                        <label htmlFor="country">Enter Your Country</label>
+                        <input type="text" required id="country" value={givenCountry} onChange={event => setCountry(event.target.value)} autoComplete="on"/>
+                    </div>
 
                     <div>
                         <label htmlFor="birthday" style={{color: "#1c0907", fontWeight: "bold"}}>Enter Your Birthday</label>

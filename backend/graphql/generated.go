@@ -90,13 +90,13 @@ type ComplexityRoot struct {
 		Directors        func(childComplexity int) int
 		FavoritesOfUser  func(childComplexity int, userID int) int
 		Last5Added       func(childComplexity int) int
+		LoginUser        func(childComplexity int, nickname string, password string, email string) int
 		MovieByID        func(childComplexity int, id int) int
 		Movies           func(childComplexity int) int
 		MoviesByGenre    func(childComplexity int, genre string) int
 		Node             func(childComplexity int, id int) int
 		Nodes            func(childComplexity int, ids []int) int
 		ReviewsOfMovie   func(childComplexity int, movieID int) int
-		SignInUser       func(childComplexity int, nickname string, password string, email string) int
 		Top10Movies      func(childComplexity int) int
 		UserByID         func(childComplexity int, id int) int
 		Users            func(childComplexity int) int
@@ -140,7 +140,7 @@ type QueryResolver interface {
 	Movies(ctx context.Context) ([]*ent.Movie, error)
 	Directors(ctx context.Context) ([]*ent.Director, error)
 	DirectorIDByName(ctx context.Context, name string) (*int, error)
-	SignInUser(ctx context.Context, nickname string, password string, email string) ([]*ent.User, error)
+	LoginUser(ctx context.Context, nickname string, password string, email string) ([]*ent.User, error)
 	UserByID(ctx context.Context, id int) ([]*ent.User, error)
 	MovieByID(ctx context.Context, id int) ([]*ent.Movie, error)
 	MoviesByGenre(ctx context.Context, genre string) ([]*ent.Movie, error)
@@ -451,6 +451,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Last5Added(childComplexity), true
 
+	case "Query.loginUser":
+		if e.complexity.Query.LoginUser == nil {
+			break
+		}
+
+		args, err := ec.field_Query_loginUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.LoginUser(childComplexity, args["nickname"].(string), args["password"].(string), args["email"].(string)), true
+
 	case "Query.movieById":
 		if e.complexity.Query.MovieByID == nil {
 			break
@@ -517,18 +529,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.ReviewsOfMovie(childComplexity, args["movieID"].(int)), true
-
-	case "Query.signInUser":
-		if e.complexity.Query.SignInUser == nil {
-			break
-		}
-
-		args, err := ec.field_Query_signInUser_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.SignInUser(childComplexity, args["nickname"].(string), args["password"].(string), args["email"].(string)), true
 
 	case "Query.top10Movies":
 		if e.complexity.Query.Top10Movies == nil {
@@ -887,7 +887,7 @@ type Query {
     movies: [Movie!]
     directors: [Director!]
     directorIdByName(name: String!): ID
-    signInUser(nickname: String!, password: String!, email: String!): [User]
+    loginUser(nickname: String!, password: String!, email: String!): [User]
     userById(id: ID!) : [User!]
     movieById(id: ID!) : [Movie!]
     moviesByGenre(genre: String!) : [Movie]
@@ -1312,6 +1312,39 @@ func (ec *executionContext) field_Query_favoritesOfUser_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_loginUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["nickname"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nickname"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["nickname"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["password"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["password"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["email"] = arg2
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_movieById_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1384,39 +1417,6 @@ func (ec *executionContext) field_Query_reviewsOfMovie_args(ctx context.Context,
 		}
 	}
 	args["movieID"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_signInUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["nickname"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nickname"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["nickname"] = arg0
-	var arg1 string
-	if tmp, ok := rawArgs["password"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
-		arg1, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["password"] = arg1
-	var arg2 string
-	if tmp, ok := rawArgs["email"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
-		arg2, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["email"] = arg2
 	return args, nil
 }
 
@@ -2571,7 +2571,7 @@ func (ec *executionContext) _Query_directorIdByName(ctx context.Context, field g
 	return ec.marshalOID2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_signInUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_loginUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2588,7 +2588,7 @@ func (ec *executionContext) _Query_signInUser(ctx context.Context, field graphql
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_signInUser_args(ctx, rawArgs)
+	args, err := ec.field_Query_loginUser_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -2596,7 +2596,7 @@ func (ec *executionContext) _Query_signInUser(ctx context.Context, field graphql
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().SignInUser(rctx, args["nickname"].(string), args["password"].(string), args["email"].(string))
+		return ec.resolvers.Query().LoginUser(rctx, args["nickname"].(string), args["password"].(string), args["email"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5665,7 +5665,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "signInUser":
+		case "loginUser":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -5674,7 +5674,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_signInUser(ctx, field)
+				res = ec._Query_loginUser(ctx, field)
 				return res
 			}
 
