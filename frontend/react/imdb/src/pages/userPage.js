@@ -179,7 +179,7 @@ function UserPage() {
             <React.Fragment>
                 <CardContent style={{backgroundColor: "darkslategray"}} className={classes.contrib}>
                     <Typography variant="h5" component="div">
-                        Contibutes Of {firstName}
+                        Contributes Of {firstName}
                     </Typography>
                 </CardContent>
                 <CardActions>
