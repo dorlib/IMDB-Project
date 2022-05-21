@@ -213,12 +213,10 @@ func (r *mutationResolver) AddToFavorites(ctx context.Context, favorite Favorite
 		SetUserID(favorite.UserID).Save(ctx)
 }
 
-func (r *queryResolver) LoginUser(ctx context.Context, nickname string, email string, password string) ([]*ent.User, error) {
-	enteredPassword := password
-
-	userID, err2 := r.client.User.Query().Where(user.Nickname(nickname)).OnlyID(ctx)
-	if err2 != nil {
-		return nil, ent.MaskNotFound(err2)
+func (r *queryResolver) LoginUser(ctx context.Context, nickname string, password string, email string) ([]*ent.User, error) {
+	userID, error := r.client.User.Query().Where(user.Nickname(nickname)).OnlyID(ctx)
+	if error != nil {
+		return nil, ent.MaskNotFound(error)
 	}
 
 	data, err := r.client.User.Get(ctx, userID)
@@ -228,7 +226,7 @@ func (r *queryResolver) LoginUser(ctx context.Context, nickname string, email st
 
 	currentPassword := data.Password
 
-	e := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(enteredPassword))
+	e := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(password))
 	if e != nil {
 		return nil, ent.MaskNotFound(err)
 	} else {

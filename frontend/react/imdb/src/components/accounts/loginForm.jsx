@@ -37,16 +37,16 @@ export function LoginForm() {
                 email: givenEmail,
             }, onCompleted: function (data) {
                 if (data && data["loginUser"]) {
-                return (
-                console.log(data),
-                <p>Welcome Back {data["loginUser"]["0"]["firstname"]}</p>,
-                window.location.replace("/userPage/" + data["loginUser"]["0"]["id"])
-                )
+                    return (
+                        console.log(data),
+                            <p>Welcome Back {data["loginUser"]["0"]["firstname"]}</p>,
+                            window.location.replace("/userPage/" + data["loginUser"]["0"]["id"])
+                    )
                 } else {
                     return (
-                        <p>Login Failed! please Try Again..</p>,
                         console.log(data),
-                        console.log("login failed")
+                            console.log("login failed"),
+                            window.location.reload()
                     )
                 }
             },
@@ -61,13 +61,13 @@ export function LoginForm() {
                 <Card>
                     <div className={classes.control}>
                         <label htmlFor="nickName">Enter Your Nickname</label>
-                        <input type="text"  id="nickName" id="nickname" name="nickname" required
-                               onChange={event => setNickname(event.target.value)}  autoComplete="username"/>
+                        <input type="text" id="nickName" id="nickname" name="nickname" required
+                               onChange={event => setNickname(event.target.value)} autoComplete="username"/>
                     </div>
                     <div className={classes.ctrl}>
                         <label htmlFor="password">Enter Your password (8 characters minimum</label>
                         <input type="password" id="password" name="password" minLength="8" required
-                               onChange={event => setPassword(event.target.value)}  autoComplete="new-password"/>
+                               onChange={event => setPassword(event.target.value)} autoComplete="new-password"/>
                     </div>
                 </Card>
             </FormContainer>
