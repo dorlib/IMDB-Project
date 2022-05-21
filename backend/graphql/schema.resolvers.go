@@ -45,18 +45,18 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 		Save(ctx)
 }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, email string, profile string, birthday string, password string, country string) (*ent.User, error) {
+func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string, country string) (*ent.User, error) {
 	bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 
 	return r.client.User.Create().
 		SetFirstname(firstname).
 		SetLastname(lastname).
 		SetNickname(nickname).
-		SetEmail(email).
-		SetPassword(string(bcrypedPassword)).
 		SetDescription(description).
-		SetBirthDay(birthday).
+		SetPassword(string(bcrypedPassword)).
 		SetProfile(profile).
+		SetBirthDay(birthday).
+		SetEmail(email).
 		SetCountry(country).
 		Save(ctx)
 }
@@ -231,7 +231,7 @@ func (r *queryResolver) LoginUser(ctx context.Context, nickname string, email st
 	e := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(enteredPassword))
 	if e != nil {
 		return nil, ent.MaskNotFound(err)
+	} else {
+		return r.client.User.Query().Where(user.ID(userID)).All(ctx)
 	}
-
-	return r.client.User.Query().Where(user.ID(userID)).All(ctx)
 }

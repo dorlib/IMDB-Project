@@ -799,9 +799,9 @@ type User {
     nickname: String!
     description: String!
     password: String!
-    email: String!
-    birthday: String!
     profile: String!
+    birthday: String!
+    email: String!
     country: String!
     reviews: [Review!]
 }
@@ -3512,7 +3512,7 @@ func (ec *executionContext) _User_password(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_profile(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3530,7 +3530,7 @@ func (ec *executionContext) _User_email(ctx context.Context, field graphql.Colle
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Email, nil
+		return obj.Profile, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3582,7 +3582,7 @@ func (ec *executionContext) _User_birthday(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_profile(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3600,7 +3600,7 @@ func (ec *executionContext) _User_profile(ctx context.Context, field graphql.Col
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Profile, nil
+		return obj.Email, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6104,9 +6104,9 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "email":
+		case "profile":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._User_email(ctx, field, obj)
+				return ec._User_profile(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -6124,9 +6124,9 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "profile":
+		case "email":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._User_profile(ctx, field, obj)
+				return ec._User_email(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

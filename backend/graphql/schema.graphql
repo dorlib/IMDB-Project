@@ -58,9 +58,9 @@ type User {
     nickname: String!
     description: String!
     password: String!
-    email: String!
-    birthday: String!
     profile: String!
+    birthday: String!
+    email: String!
     country: String!
     reviews: [Review!]
 }

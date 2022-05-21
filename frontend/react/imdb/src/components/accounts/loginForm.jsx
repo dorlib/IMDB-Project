@@ -1,86 +1,87 @@
-import React, { useContext } from "react";
+import React, {useContext} from "react";
 import {BoldLink, BoxContainer, FormContainer, MutedLink, SubmitButton,} from "./common";
-import { Marginer } from "../marginer";
-import { AccountContext } from "./accountContext";
-
+import {Marginer} from "../marginer";
+import {AccountContext} from "./accountContext";
 import {useState} from "react";
-
 import Card from "../ui/Card";
 import {styled} from "@mui/material/styles";
+import {gql, useLazyQuery, useMutation, useQuery} from "@apollo/client";
+
 import classes from "./LoginForm.module.css";
-import {Input, Stack, Typography} from "@mui/material";
-import Button from "@mui/material/Button";
-import {gql, useMutation} from "@apollo/client";
 
-export function LoginForm(props) {
-    const { switchToSignup } = useContext(AccountContext);
+export function LoginForm() {
+    const {switchToSignup} = useContext(AccountContext);
 
-    const SIGN_IN_USER = gql`
-        mutation LoginUser ($nickname: String!, $password: String!, $email: String!) {
+    const LOGIN_USER = gql`
+        query LoginUser ($nickname: String!, $password: String!, $email: String!) {
             loginUser(nickname: $nickname, password: $password, email: $email) {
                 id
+                firstname
             }
         }
     `;
 
     const [givenPassword, setPassword] = useState('')
     const [givenNickname, setNickname] = useState('')
+    const [givenEmail, setEmail] = useState('')
 
     const Input = styled("input")({
         display: "none",
     });
 
-    const [loginUser] = useMutation(SIGN_IN_USER,
+    const [loginUser, {loading, error}] = useLazyQuery(LOGIN_USER,
         {
             variables: {
                 nickname: givenNickname,
                 password: givenPassword,
-
-            },
-            onCompleted: function (data) {
-                if (data === null) {
-                    return <div>Login Failed.. Please Try Again</div>
+                email: givenEmail,
+            }, onCompleted: function (data) {
+                if (data && data["loginUser"]) {
+                return (
+                console.log(data),
+                <p>Welcome Back {data["loginUser"]["0"]["firstname"]}</p>,
+                window.location.replace("/userPage/" + data["loginUser"]["0"]["id"])
+                )
                 } else {
-                    return window.location.replace("/userPage/" + data["createUser"]["id"])
+                    return (
+                        <p>Login Failed! please Try Again..</p>,
+                        console.log(data),
+                        console.log("login failed")
+                    )
                 }
-            },
-            onError: function (error) {
-                console.log("error:", error)
             },
         });
 
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Login Failed.. Please Try Again</p>;
 
-  return (
-    <BoxContainer>
-      <FormContainer>
-          <Card>
-              <form className={classes.form} onSubmit={loginUser}>
-
-                  <div className={classes.control}>
-                      <label htmlFor="nickName">Enter Your Nickname</label>
-                      <input type="text" required id="nickName" onChange={event => setNickname(event.target.value)}/>
-                  </div>
-
-                  <div className={classes.ctrl}>
-                      <label htmlFor="password">Enter Your password (8 characters minimum</label>
-                      <input type="password" id="password" name="password" minLength="8" required onChange={event => setPassword(event.target.value)}/>
-                  </div>
-              </form>
-          </Card>
-      </FormContainer>
-      <Marginer direction="vertical" margin={10} />
-      <MutedLink href="#">Forget your password?</MutedLink>
-      <Marginer direction="vertical" margin="1.6em" />
-      <SubmitButton type="submit" >Log In!</SubmitButton>
-      <Marginer direction="vertical" margin="1em" />
-      <MutedLink href="#">
-        Don't have an account?{" "}
-        <BoldLink href="#" onClick={switchToSignup}>
-          Sign Up
-        </BoldLink>
-      </MutedLink>
-    </BoxContainer>
-  );
+    return (
+        <BoxContainer>
+            <FormContainer className={classes.form}>
+                <Card>
+                    <div className={classes.control}>
+                        <label htmlFor="nickName">Enter Your Nickname</label>
+                        <input type="text"  id="nickName" id="nickname" name="nickname" required
+                               onChange={event => setNickname(event.target.value)}  autoComplete="username"/>
+                    </div>
+                    <div className={classes.ctrl}>
+                        <label htmlFor="password">Enter Your password (8 characters minimum</label>
+                        <input type="password" id="password" name="password" minLength="8" required
+                               onChange={event => setPassword(event.target.value)}  autoComplete="new-password"/>
+                    </div>
+                </Card>
+            </FormContainer>
+            <Marginer direction="vertical" margin={10}/>
+            <MutedLink href="#">Forget your password?</MutedLink>
+            <Marginer direction="vertical" margin="1.6em"/>
+            <SubmitButton type="submit" onClick={loginUser}>Log In!</SubmitButton>
+            <Marginer direction="vertical" margin="1em"/>
+            <MutedLink href="#">
+                Don't have an account?{" "}
+                <BoldLink href="#" onClick={switchToSignup}>
+                    Sign Up
+                </BoldLink>
+            </MutedLink>
+        </BoxContainer>
+    );
 }
-
-export default LoginForm

@@ -22,8 +22,8 @@ export function SignUpForm(props) {
 
 
     let NEW_USER = gql`
-        mutation CreateUser ($firstname: String!, $lastname: String!, $nickname: String!, $description: String!, $password: String!, $profile: String!, $email: String!, $birthday: String!, $country: String! ) {
-            createUser(firstname: $firstname , lastname: $lastname, nickname: $nickname , description: $description, password: $password, profile: $profile, email: $email, birthday: $birthday, country: $country) {
+        mutation CreateUser ($firstname: String!, $lastname: String!, $nickname: String!, $description: String!, $password: String!, $profile: String!, $birthday: String!, $email: String! $country: String! ) {
+            createUser(firstname: $firstname , lastname: $lastname, nickname: $nickname , description: $description, password: $password, profile: $profile, birthday: $birthday, email: $email, country: $country) {
                 id
             }
         }
@@ -51,11 +51,11 @@ export function SignUpForm(props) {
                 firstname: givenFirstName,
                 lastname: givenLastName,
                 nickname: givenNickName,
-                email: givenDayOfBirth + givenMonthOfBirth + givenYearOfBirth,
-                birthday:givenPassword,
+                email: givenEmail,
+                birthday: givenDayOfBirth + givenMonthOfBirth + givenYearOfBirth,
                 country: givenCountry,
-                password: givenEmail,
-                description:givenDesc,
+                password: givenPassword,
+                description: givenDesc,
                 profile: givenProfile || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif',
             },
             onCompleted: function (data) {
@@ -96,17 +96,15 @@ export function SignUpForm(props) {
 
                     <div className={classes.im}>
                         <label htmlFor="image">Profile Image</label>
-                        <input datatype="string" type="url" id="image" value={givenProfile} onChange={event => setProfile(event.target.value)}/>
+                        <input datatype="string" value={givenProfile} onChange={event => setProfile(event.target.value)}/>
                     </div>
 
                     <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
                         <label htmlFor="contained-button-file">
-
                             <Button variant="contained" component="span">
                                 Upload
                                 <Input
                                     accept="image/*"
-                                    type="file"
                                     id="contained-button-file"
                                     value={givenProfile} onChange={event => setProfile(event.target.value)}
                                 />
