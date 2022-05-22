@@ -85,7 +85,7 @@ function AllMoviesPage(props) {
             //     </p>
             // </div>
             <div>
-                <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm"}} key={id}>
+                <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px"}} key={id}>
                     <CardMedia
                         component="img"
                         alt="movie image"
