@@ -103,24 +103,16 @@ function MainNavigation() {
                                             onClose={handleCloseUserMenu}
                                         >
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                <Link>
                                                     <Typography textAlign="center">Profile</Typography>
-                                                </Link>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                <Link>
                                                     <Typography textAlign="center">Account</Typography>
-                                                </Link>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                <Link>
                                                     <Typography textAlign="center">Dashboard</Typography>
-                                                </Link>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                <Link>
                                                     <Typography textAlign="center">Logout</Typography>
-                                                </Link>
                                             </MenuItem>
                                         </Menu>
                                     </Container>
