@@ -86,13 +86,19 @@ function DirectorPage() {
                     component="img"
                     alt="movie image"
                     height="400"
-                    style={{width: "12cm", bottom: "5.3cm"}}
+                    style={{width: "12cm", bottom: "7.7cm"}}
                     src={profileImage}
                     className={classes.image}
                 />
             </div>
             <Card sx={{width: 1000, height: 670, right: 100}}
-                  style={{backgroundColor: "#cc2062", position: "relative", right: "4.8cm", marginBottom: "-1.5cm"}}
+                  style={{
+                      backgroundColor: "#cc2062",
+                      position: "relative",
+                      right: "4.8cm",
+                      marginBottom: "-1.5cm",
+                      borderRadius: "15px"
+                  }}
                   className={classes.card}>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
@@ -126,7 +132,8 @@ function DirectorPage() {
             display: "flex",
             right: "4.8cm",
             top: "0.3cm",
-            width: "26.45cm"
+            width: "26.45cm",
+            borderRadius: "15px"
         }}>
             <Footer
                 className={expanded ? "show" : ""}
@@ -207,7 +214,9 @@ function DirectorPage() {
                     </div>
                     <div className={classes.actions}>
                         <button onClick={() => setVisible(true)}>SUBMIT</button>
-                        {visible? <UpdateDirectorInfo prof={prof} desc={desc} birthday={birthday} id={lastSegment} currentDesc={description} currentBornAt={bornAt} currentProfile={profileImage}/> : console.log("none")}
+                        {visible ? <UpdateDirectorInfo prof={prof} desc={desc} birthday={birthday} id={lastSegment}
+                                                       currentDesc={description} currentBornAt={bornAt}
+                                                       currentProfile={profileImage}/> : console.log("none")}
                     </div>
                 </div>
             </Footer>
@@ -215,14 +224,15 @@ function DirectorPage() {
     )
 
     let l = (
-        <div className={classes.moviesTitle}>
+        <div className={classes.moviesTitle} style={{marginBottom: "1cm"}}>
             Movies Directed By {name}
         </div>
     )
 
     let loaded = data.directorById["0"]["movies"].map(({title, id, rank, image}) => (
         <div key={id}>
-            <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm"}} key={id}>
+            <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px"}}
+                  key={id}>
                 <CardMedia
                     component="img"
                     alt="movie image"

@@ -131,7 +131,7 @@ function MainNavigation() {
                                             position: "relative",
                                             display: "flex",
                                             bottom: "50%",
-                                            left: "44%",
+                                            left: "44.8%",
                                             color: "white",
                                             backgroundColor: "#cc2062",
                                             borderRadius: "12px",
