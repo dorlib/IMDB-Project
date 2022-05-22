@@ -30,8 +30,6 @@ const grid = {
 classes.sign = undefined;
 
 function MainNavigation() {
-    const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const handleOpenUserMenu = (event) => {
@@ -77,17 +75,19 @@ function MainNavigation() {
                                     <Link to="/register-sign-in">Sign In \ Log In</Link>
                                 </li>
                                 <li>
-                                    <Container maxWidth="xl" >
+                                    <Container maxWidth="xl">
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
                                                 <Avatar alt="Remy Sharp"
                                                         src="https://hope.be/wp-content/uploads/2015/05/no-user-image.gif"
                                                         style={{width: "1.5cm", height: "1.5cm"}}/>
-                                                <div style={{fontSize: "large", color: "#fcb8d2"}}>&nbsp;&nbsp;Hi, Guest!</div>
+                                                <div style={{fontSize: "large", color: "#fcb8d2"}}>&nbsp;&nbsp;Hi,
+                                                    Guest!
+                                                </div>
                                             </IconButton>
                                         </Tooltip>
                                         <Menu
-                                            sx={{mt: "45px", top:"0.4cm"}}
+                                            sx={{mt: "45px", top: "0.4cm"}}
                                             id="menu-appbar"
                                             anchorEl={anchorElUser}
                                             anchorOrigin={{
@@ -102,11 +102,26 @@ function MainNavigation() {
                                             open={Boolean(anchorElUser)}
                                             onClose={handleCloseUserMenu}
                                         >
-                                            {settings.map((setting) => (
-                                                <MenuItem key={setting} onClick={handleCloseUserMenu} >
-                                                    <Typography textAlign="center" >{setting}</Typography>
-                                                </MenuItem>
-                                            ))}
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                <Link>
+                                                    <Typography textAlign="center">Profile</Typography>
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                <Link>
+                                                    <Typography textAlign="center">Account</Typography>
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                <Link>
+                                                    <Typography textAlign="center">Dashboard</Typography>
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                <Link>
+                                                    <Typography textAlign="center">Logout</Typography>
+                                                </Link>
+                                            </MenuItem>
                                         </Menu>
                                     </Container>
                                 </li>

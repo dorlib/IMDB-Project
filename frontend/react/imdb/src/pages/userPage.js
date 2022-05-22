@@ -122,7 +122,7 @@ function UserPage() {
 
             <div>
                 <PeopleAltIcon className={classes.followIcon}/>
-                <Typography className={classes.follows}>Followers</Typography>
+                <Typography className={classes.follows}>Following</Typography>
                 <FiberManualRecordIcon className={classes.dot}/>
                 <Typography className={classes.followers}>Followers</Typography>
             </div>
