@@ -130,4 +130,14 @@
     border-color: #a50e48;
 }
 
+.Arrow {
+    position: absolute;
+    display: flex;
+    color: #1976D2;
+    font-size: xxx-large;
+    right: 20cm;
+    bottom: 11cm;
+    rotate: ;
+}
+
 

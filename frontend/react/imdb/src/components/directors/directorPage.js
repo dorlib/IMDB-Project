@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import {gql, useMutation, useQuery} from "@apollo/client";
 import {Input, Stack} from "@mui/material";
 import Button from "@mui/material/Button";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import classes from "./directorPage.module.css"
 
 import Card from '@mui/material/Card';
@@ -14,8 +15,18 @@ import Typography from '@mui/material/Typography';
 import {Footer} from "./styles";
 
 import UpdateDirectorInfo from "./update-directors-info";
+import IconButton from "@mui/material/IconButton";
+import styled from "styled-components";
+import {motion} from "framer-motion";
 
 function DirectorPage() {
+    const Arrow = styled(motion.div)`
+        position: absolute;
+        display: flex;
+        right: -0.8cm;
+        transform: rotate(180deg);
+`;
+
 
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
@@ -37,7 +48,9 @@ function DirectorPage() {
     const [accordionHeight, setAccordionHeight] = useState(0);
     const ref = useRef("");
     let getHeight = ref.current?.scrollHeight || null;
-    const open = () => setExpanded(!expanded);
+    const open = () => {
+        setExpanded(!expanded)
+    }
 
     useEffect(() => {
         setAccordionHeight(getHeight);
@@ -142,7 +155,14 @@ function DirectorPage() {
             >
                 <CardActions>
                     <Button size="large">Share</Button>
-                    <span size="large" onClick={open}><Button>Edit Director's Details!</Button></span>
+                    <span size="large" onClick={open}>
+                        <Button>
+                            Edit Director's Details!
+                            <Arrow>
+                                <KeyboardArrowUpIcon />
+                            </Arrow>
+                        </Button>
+                    </span>
                 </CardActions>
                 <div className="accordion" ref={ref} style={{marginTop: "0.5cm"}}>
                     <div className={classes.control} style={{color: "yellow", fontWeight: "bold", marginRight: "16cm"}}>
