@@ -5,6 +5,7 @@ import {gql, useMutation, useQuery} from "@apollo/client";
 import {Input, Stack} from "@mui/material";
 import Button from "@mui/material/Button";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import classes from "./directorPage.module.css"
 
 import Card from '@mui/material/Card';
@@ -17,7 +18,7 @@ import {Footer} from "./styles";
 import UpdateDirectorInfo from "./update-directors-info";
 import IconButton from "@mui/material/IconButton";
 import styled from "styled-components";
-import {motion} from "framer-motion";
+import {motion, transform} from "framer-motion";
 
 function DirectorPage() {
     const Arrow = styled(motion.div)`
@@ -26,7 +27,6 @@ function DirectorPage() {
         right: -0.8cm;
         transform: rotate(180deg);
 `;
-
 
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
@@ -48,6 +48,7 @@ function DirectorPage() {
     const [accordionHeight, setAccordionHeight] = useState(0);
     const ref = useRef("");
     let getHeight = ref.current?.scrollHeight || null;
+
     const open = () => {
         setExpanded(!expanded)
     }
@@ -55,6 +56,11 @@ function DirectorPage() {
     useEffect(() => {
         setAccordionHeight(getHeight);
     }, [expanded]);
+
+    const style = {
+        transform: expanded ? 'rotate(180deg)' : '',
+        transition: 'transform 150ms ease', // smooth transition
+    }
 
     const DIRECTOR_DATA = gql`
         query DirectorById($id : ID!) {
@@ -159,7 +165,7 @@ function DirectorPage() {
                         <Button>
                             Edit Director's Details!
                             <Arrow>
-                                <KeyboardArrowUpIcon />
+                                <KeyboardArrowUpIcon style={style}/>
                             </Arrow>
                         </Button>
                     </span>
