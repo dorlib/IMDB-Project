@@ -42,6 +42,7 @@ input:focus {
 .dataResult {
     position: absolute;
     border: 3px solid #000000;
+    border-radius: 15px;
     left: 11.5cm;
     bottom: 18.33cm;
     margin-top: 5px;
