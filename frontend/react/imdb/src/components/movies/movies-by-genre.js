@@ -11,11 +11,12 @@ import {Link} from "react-router-dom";
 
 function MoviesByGenre() {
     let url = JSON.stringify(window.location.href);
-    let lastSegment = parseInt(url.split("/").pop(), 10);
+    let lastSegment = (url.split("/").pop());
+    lastSegment = lastSegment.slice(0,lastSegment.length-1)
 
     const MOVIES_BY_GENRE = gql`
         query MoviesByGenre($genre: String!) {
-            moviesBYGenre(genre: $genre) {
+            moviesByGenre(genre: $genre) {
                 id
                 title
                 rank
