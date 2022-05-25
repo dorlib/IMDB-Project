@@ -61,7 +61,7 @@ export function LoginForm() {
                 <Card>
                     <div className={classes.control}>
                         <label htmlFor="nickName">Enter Your Nickname</label>
-                        <input type="text" id="nickName" id="nickname" name="nickname" required
+                        <input type="text" id="nickname" name="nickname" required
                                onChange={event => setNickname(event.target.value)} autoComplete="username"/>
                     </div>
                     <div className={classes.ctrl}>

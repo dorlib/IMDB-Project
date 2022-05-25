@@ -96,7 +96,7 @@ export function SignUpForm(props) {
 
                     <div className={classes.im}>
                         <label htmlFor="image">Profile Image</label>
-                        <input datatype="string" value={givenProfile} onChange={event => setProfile(event.target.value)}/>
+                        <input datatype="string" name="textProfile" id="textProfile" value={givenProfile} onChange={event => setProfile(event.target.value)}/>
                     </div>
 
                     <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
@@ -105,7 +105,8 @@ export function SignUpForm(props) {
                                 Upload
                                 <Input
                                     accept="image/*"
-                                    id="contained-button-file"
+                                    id="fileProfile"
+                                    name="fileProfile"
                                     value={givenProfile} onChange={event => setProfile(event.target.value)}
                                 />
                             </Button>
