@@ -1,12 +1,5 @@
 import React, {useContext, useState} from "react";
-import {
-    BoldLink,
-    BoxContainer,
-    FormContainer,
-    Input,
-    MutedLink,
-    SubmitButton,
-} from "./common";
+import {BoldLink, BoxContainer, FormContainer, Input, MutedLink, SubmitButton,} from "./common";
 import {Marginer} from "../marginer";
 import {AccountContext} from "./accountContext";
 
@@ -20,14 +13,13 @@ import {styled} from "@mui/material/styles";
 export function SignUpForm(props) {
     const { switchToSignin } = useContext(AccountContext);
 
-
-    let NEW_USER = gql`
-        mutation CreateUser ($firstname: String!, $lastname: String!, $nickname: String!, $description: String!, $password: String!, $profile: String!, $birthday: String!, $email: String! $country: String! ) {
-            createUser(firstname: $firstname , lastname: $lastname, nickname: $nickname , description: $description, password: $password, profile: $profile, birthday: $birthday, email: $email, country: $country) {
-                id
-            }
-        }
-    `;
+    // let NEW_USER = gql`
+    //     mutation CreateUser ($firstname: String!, $lastname: String!, $nickname: String!, $description: String!, $password: String!, $profile: String!, $birthday: String!, $email: String! $country: String! ) {
+    //         createUser(firstname: $firstname , lastname: $lastname, nickname: $nickname , description: $description, password: $password, profile: $profile, birthday: $birthday, email: $email, country: $country) {
+    //             id
+    //         }
+    //     }
+    // `;
 
     const [givenFirstName, setFirstName] = useState('')
     const [givenLastName, setLastName] = useState('')
@@ -45,26 +37,26 @@ export function SignUpForm(props) {
         display: "none",
     });
 
-    const [addUser] = useMutation(NEW_USER,
-        {
-            variables: {
-                firstname: givenFirstName,
-                lastname: givenLastName,
-                nickname: givenNickName,
-                email: givenEmail,
-                birthday: givenDayOfBirth + givenMonthOfBirth + givenYearOfBirth,
-                country: givenCountry,
-                password: givenPassword,
-                description: givenDesc,
-                profile: givenProfile || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif',
-            },
-            onCompleted: function (data) {
-                return window.location.replace("/userPage/" + data["createUser"]["id"])
-            },
-            onError: function (error) {
-                console.log("error:", error)
-            },
-        });
+    // const [addUser] = useMutation(NEW_USER,
+    //     {
+    //         variables: {
+    //             firstname: givenFirstName,
+    //             lastname: givenLastName,
+    //             nickname: givenNickName,
+    //             email: givenEmail,
+    //             birthday: givenDayOfBirth + givenMonthOfBirth + givenYearOfBirth,
+    //             country: givenCountry,
+    //             password: givenPassword,
+    //             description: givenDesc,
+    //             profile: givenProfile || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif',
+    //         },
+    //         onCompleted: function (data) {
+    //             return window.location.replace("/userPage/" + data["createUser"]["id"])
+    //         },
+    //         onError: function (error) {
+    //             console.log("error:", error)
+    //         },
+    //     });
 
     return (
         <BoxContainer>
@@ -72,7 +64,7 @@ export function SignUpForm(props) {
                 <Typography variant="h6" align="center" color="#1c0907">
                     Hello Dear Future User! Thank You For Signing In To My WebSite!
                 </Typography>
-                <form className={classes.form}>
+                <form className={classes.form} action="signupForm.jsx" method="POST">
 
                     <div className={classes.control}>
                         <label htmlFor="firstName">Enter Your First Name</label>
@@ -154,7 +146,7 @@ export function SignUpForm(props) {
             <Marginer direction="vertical" margin={10}/>
             <MutedLink href="#">Forget your password?</MutedLink>
             <Marginer direction="vertical" margin="1.6em"/>
-            <SubmitButton type="submit" onClick={addUser}>Sign In!</SubmitButton>
+            <SubmitButton type="submit" /*onClick={addUser}*/>Sign In!</SubmitButton>
             <Marginer direction="vertical" margin="1em"/>
             <MutedLink href="#">
                 Don't have an account?{" "}

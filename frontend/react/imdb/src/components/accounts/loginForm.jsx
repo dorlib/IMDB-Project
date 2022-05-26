@@ -11,7 +11,6 @@ import classes from "./LoginForm.module.css";
 
 export function LoginForm() {
     const {switchToSignup} = useContext(AccountContext);
-
     const LOGIN_USER = gql`
         query LoginUser ($nickname: String!, $password: String!, $email: String!) {
             loginUser(nickname: $nickname, password: $password, email: $email) {
@@ -24,7 +23,6 @@ export function LoginForm() {
     const [givenPassword, setPassword] = useState('')
     const [givenNickname, setNickname] = useState('')
     const [givenEmail, setEmail] = useState('')
-
     const Input = styled("input")({
         display: "none",
     });
@@ -57,7 +55,7 @@ export function LoginForm() {
 
     return (
         <BoxContainer>
-            <FormContainer className={classes.form}>
+            <form className={classes.form} action="loginForm.jsx" method="POST">
                 <Card>
                     <div className={classes.control}>
                         <label htmlFor="nickName">Enter Your Nickname</label>
@@ -70,7 +68,7 @@ export function LoginForm() {
                                onChange={event => setPassword(event.target.value)} autoComplete="new-password"/>
                     </div>
                 </Card>
-            </FormContainer>
+            </form>
             <Marginer direction="vertical" margin={10}/>
             <MutedLink href="#">Forget your password?</MutedLink>
             <Marginer direction="vertical" margin="1.6em"/>

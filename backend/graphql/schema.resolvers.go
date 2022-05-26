@@ -6,7 +6,6 @@ package graphql
 import (
 	"context"
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
 	"imdbv2/ent"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
@@ -46,19 +45,19 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string, country string) (*ent.User, error) {
-	bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
-
-	return r.client.User.Create().
-		SetFirstname(firstname).
-		SetLastname(lastname).
-		SetNickname(nickname).
-		SetDescription(description).
-		SetPassword(string(bcrypedPassword)).
-		SetProfile(profile).
-		SetBirthDay(birthday).
-		SetEmail(email).
-		SetCountry(country).
-		Save(ctx)
+	//bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
+	//
+	//return r.client.User.Create().
+	//	SetFirstname(firstname).
+	//	SetLastname(lastname).
+	//	SetNickname(nickname).
+	//	SetDescription(description).
+	//	SetPassword(string(bcrypedPassword)).
+	//	SetProfile(profile).
+	//	SetBirthDay(birthday).
+	//	SetEmail(email).
+	//	SetCountry(country).
+	//	Save(ctx)
 }
 
 func (r *queryResolver) Movies(ctx context.Context) ([]*ent.Movie, error) {
@@ -214,22 +213,22 @@ func (r *mutationResolver) AddToFavorites(ctx context.Context, favorite Favorite
 }
 
 func (r *queryResolver) LoginUser(ctx context.Context, nickname string, password string, email string) ([]*ent.User, error) {
-	userID, error := r.client.User.Query().Where(user.Nickname(nickname)).OnlyID(ctx)
-	if error != nil {
-		return nil, ent.MaskNotFound(error)
-	}
-
-	data, err := r.client.User.Get(ctx, userID)
-	if err != nil {
-		return nil, ent.MaskNotFound(err)
-	}
-
-	currentPassword := data.Password
-
-	e := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(password))
-	if e != nil {
-		return nil, ent.MaskNotFound(err)
-	} else {
-		return r.client.User.Query().Where(user.ID(userID)).All(ctx)
-	}
+	//userID, error := r.client.User.Query().Where(user.Nickname(nickname)).OnlyID(ctx)
+	//if error != nil {
+	//	return nil, ent.MaskNotFound(error)
+	//}
+	//
+	//data, err := r.client.User.Get(ctx, userID)
+	//if err != nil {
+	//	return nil, ent.MaskNotFound(err)
+	//}
+	//
+	//currentPassword := data.Password
+	//
+	//e := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(password))
+	//if e != nil {
+	//	return nil, ent.MaskNotFound(err)
+	//} else {
+	//	return r.client.User.Query().Where(user.ID(userID)).All(ctx)
+	//}
 }
