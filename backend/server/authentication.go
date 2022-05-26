@@ -89,13 +89,18 @@ func logInHandler(t *template.Template, c *ent.Client) http.Handler {
 
 		currentPassword := data.Password
 
-		error := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(password))
-		if error != nil {
-			return error
+		err2 := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(password))
+		if err2 != nil {
+			http.Error(w, fmt.Sprintf("error executing template (%s)", err2), http.StatusInternalServerError)
 		} else {
-			return c.User.Query().Where(user.ID(userID)).AllX(ctx)
+			userData, err3 := c.User.Query().Where(user.ID(userID)).All(ctx)
+			if err3 != nil {
+				panic(err3)
+			}
+			if err := t.Execute(w, userData); err != nil {
+				http.Error(w, fmt.Sprintf("error executing template (%s)", err), http.StatusInternalServerError)
+			}
 		}
-
 	})
 }
 
