@@ -16,7 +16,7 @@ func signHandler(t *template.Template, c *ent.Client) http.Handler {
 			http.Error(w, fmt.Sprintf("error excuting template (%s)", err), http.StatusInternalServerError)
 		}
 		if r.Method != "POST" {
-			http.Redirect(w, r, "/site", http.StatusSeeOther)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
 
@@ -71,7 +71,7 @@ func logInHandler(t *template.Template, c *ent.Client) http.Handler {
 		}
 
 		if r.Method != "POST" {
-			http.Redirect(w, r, "/site", http.StatusSeeOther)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
 
@@ -93,7 +93,7 @@ func logInHandler(t *template.Template, c *ent.Client) http.Handler {
 		if err2 != nil {
 			http.Error(w, fmt.Sprintf("error executing template (%s)", err2), http.StatusInternalServerError)
 		} else {
-			userData, err3 := c.User.Query().Where(user.ID(userID)).All(ctx)
+			userData, err3 := c.User.Query().Where(user.ID(userID)).All(r.Context())
 			if err3 != nil {
 				panic(err3)
 			}
@@ -104,11 +104,10 @@ func logInHandler(t *template.Template, c *ent.Client) http.Handler {
 	})
 }
 
-func main() {
-	signPageTpl := template.Must(template.ParseFiles("imdbv2/frontend/react/imdb/src/components/accounts/signupForm.jsx"))
-	loginPageTpl := template.Must(template.ParseFiles("imdbv2/frontend/react/imdb/src/components/accounts/loginForm.jsx"))
+func authentication(client *ent.Client) {
+	signPageTpl := template.Must(template.ParseFiles("../frontend/react/imdb/src/components/accounts/signupForm.jsx"))
+	loginPageTpl := template.Must(template.ParseFiles("../frontend/react/imdb/src/components/accounts/loginForm.jsx"))
 
-	http.Handle("/sign-submission", signHandler(signPageTpl, client))
-	http.Handle("/login-submission", logInHandler(loginPageTpl, client))
-
+	http.Handle("/loginForm.jsx", signHandler(signPageTpl, client))
+	http.Handle("/signupForm.jsx", logInHandler(loginPageTpl, client))
 }

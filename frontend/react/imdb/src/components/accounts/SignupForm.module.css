@@ -110,3 +110,20 @@
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
+
+.birthday {
+  color: #1c0907;
+  font-weight: bold;
+}
+
+.year {
+  width: 2cm;
+}
+
+.month {
+  width: 2cm;
+}
+
+.day {
+  width: 2cm;
+}

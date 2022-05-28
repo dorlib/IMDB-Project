@@ -58,6 +58,8 @@ func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, las
 	//	SetEmail(email).
 	//	SetCountry(country).
 	//	Save(ctx)
+
+	panic("panic")
 }
 
 func (r *queryResolver) Movies(ctx context.Context) ([]*ent.Movie, error) {
@@ -231,4 +233,5 @@ func (r *queryResolver) LoginUser(ctx context.Context, nickname string, password
 	//} else {
 	//	return r.client.User.Query().Where(user.ID(userID)).All(ctx)
 	//}
+	panic("panic")
 }

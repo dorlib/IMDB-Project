@@ -27,3 +27,8 @@ playing with atlas, try find error and bugs
 
 read atlas code - mysql merging
 
+
+
+bugs found in atlas:
+
+apply coomand in git bash terminal doesnt work on windows (worked on jetbrains's terminal)

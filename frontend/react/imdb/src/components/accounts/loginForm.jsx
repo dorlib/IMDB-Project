@@ -7,7 +7,7 @@ import Card from "../ui/Card";
 import {styled} from "@mui/material/styles";
 import {gql, useLazyQuery, useMutation, useQuery} from "@apollo/client";
 
-import classes from "./LoginForm.module.css";
+import classes from "./loginForm.module.css";
 
 export function LoginForm() {
     const {switchToSignup} = useContext(AccountContext);

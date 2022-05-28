@@ -111,17 +111,17 @@ export function SignUpForm(props) {
                     </div>
 
                     <div>
-                        <label htmlFor="birthday" style={{color: "#1c0907", fontWeight: "bold"}}>Enter Your Birthday</label>
+                        <label htmlFor="birthday" className={classes.birthday} >Enter Your Birthday</label>
 
                         <table className={classes.tr}>
                             <tbody>
                             <tr>
                                 <td><input type="number" id="year" min="1920" max="2022" placeholder="Year" required
-                                           value={givenYearOfBirth} onChange={event => setYearOfBirth(event.target.value)} style={{width: "2cm"}}/></td>
+                                           value={givenYearOfBirth} onChange={event => setYearOfBirth(event.target.value)} className={classes.year}/></td>
                                 <td><input type="number" id="month" min="1" max="12" placeholder="Month" required
-                                           value={givenMonthOfBirth} onChange={event => setMonthOfBirth(event.target.value)} style={{width: "2cm"}}/></td>
+                                           value={givenMonthOfBirth} onChange={event => setMonthOfBirth(event.target.value)} className={classes.month}/></td>
                                 <td><input type="number" id="day" min="1" max="31" placeholder="Day" required
-                                           value={givenDayOfBirth} onChange={event => setDayOfBirth(event.target.value)} style={{width: "2cm"}}/></td>
+                                           value={givenDayOfBirth} onChange={event => setDayOfBirth(event.target.value)} className={classes.day}/></td>
                             </tr>
                             </tbody>
                         </table>
