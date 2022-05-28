@@ -60,6 +60,8 @@
   }
   
   .actions button {
+    display: flex;
+    position: absolute;
     font: inherit;
     cursor: pointer;
     background-color: #77002e;

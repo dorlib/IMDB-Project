@@ -69,10 +69,10 @@ export function LoginForm() {
                     </div>
                 </Card>
             </form>
+            <SubmitButton type="submit" /*onClick={loginUser}*/>Log In!</SubmitButton>
             <Marginer direction="vertical" margin={10}/>
             <MutedLink href="#">Forget your password?</MutedLink>
-            <Marginer direction="vertical" margin="1.6em"/>
-            <SubmitButton type="submit" onClick={loginUser}>Log In!</SubmitButton>
+            <Marginer direction="vertical" margin="0.3em"/>
             <Marginer direction="vertical" margin="1em"/>
             <MutedLink href="#">
                 Don't have an account?{" "}

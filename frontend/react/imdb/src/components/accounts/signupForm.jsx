@@ -141,12 +141,12 @@ export function SignUpForm(props) {
                         <input type="password" id="pass" name="pass" minLength="8" value={givenPassword} onChange={event => setPassword(event.target.value)}
                                autoComplete="new-password"/>
                     </div>
+            <Marginer direction="vertical" margin={10}/>
+            <SubmitButton type="submit" /*onClick={addUser}*/>Sign In!</SubmitButton>
                 </form>
             </Card>
-            <Marginer direction="vertical" margin={10}/>
             <MutedLink href="#">Forget your password?</MutedLink>
-            <Marginer direction="vertical" margin="1.6em"/>
-            <SubmitButton type="submit" /*onClick={addUser}*/>Sign In!</SubmitButton>
+            <Marginer direction="vertical" margin="0.3em"/>
             <Marginer direction="vertical" margin="1em"/>
             <MutedLink href="#">
                 Don't have an account?{" "}
