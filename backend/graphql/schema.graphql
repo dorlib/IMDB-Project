@@ -163,6 +163,7 @@ type Query {
     moviesByGenre(genre: String!) : [Movie]
     last5Added: [Movie!]
     directorById(id: ID!): [Director!]
+    actorsOfMovie(id: ID!): [Actor]
     reviewsOfMovie(movieID: Int!) : [Review]
     favoritesOfUser(userID: Int!): [Favorite]
     users: [User!]
