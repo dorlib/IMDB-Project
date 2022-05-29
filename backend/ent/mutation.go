@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
@@ -26,12 +27,471 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
+	TypeActor    = "Actor"
 	TypeDirector = "Director"
 	TypeFavorite = "Favorite"
 	TypeMovie    = "Movie"
 	TypeReview   = "Review"
 	TypeUser     = "User"
 )
+
+// ActorMutation represents an operation that mutates the Actor nodes in the graph.
+type ActorMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	name          *string
+	description   *string
+	clearedFields map[string]struct{}
+	actors        map[int]struct{}
+	removedactors map[int]struct{}
+	clearedactors bool
+	done          bool
+	oldValue      func(context.Context) (*Actor, error)
+	predicates    []predicate.Actor
+}
+
+var _ ent.Mutation = (*ActorMutation)(nil)
+
+// actorOption allows management of the mutation configuration using functional options.
+type actorOption func(*ActorMutation)
+
+// newActorMutation creates new mutation for the Actor entity.
+func newActorMutation(c config, op Op, opts ...actorOption) *ActorMutation {
+	m := &ActorMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeActor,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withActorID sets the ID field of the mutation.
+func withActorID(id int) actorOption {
+	return func(m *ActorMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Actor
+		)
+		m.oldValue = func(ctx context.Context) (*Actor, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Actor.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withActor sets the old Actor of the mutation.
+func withActor(node *Actor) actorOption {
+	return func(m *ActorMutation) {
+		m.oldValue = func(context.Context) (*Actor, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ActorMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ActorMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ActorMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ActorMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Actor.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetName sets the "name" field.
+func (m *ActorMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *ActorMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the Actor entity.
+// If the Actor object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ActorMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *ActorMutation) ResetName() {
+	m.name = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *ActorMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *ActorMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the Actor entity.
+// If the Actor object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ActorMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *ActorMutation) ResetDescription() {
+	m.description = nil
+}
+
+// AddActorIDs adds the "actors" edge to the Movie entity by ids.
+func (m *ActorMutation) AddActorIDs(ids ...int) {
+	if m.actors == nil {
+		m.actors = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.actors[ids[i]] = struct{}{}
+	}
+}
+
+// ClearActors clears the "actors" edge to the Movie entity.
+func (m *ActorMutation) ClearActors() {
+	m.clearedactors = true
+}
+
+// ActorsCleared reports if the "actors" edge to the Movie entity was cleared.
+func (m *ActorMutation) ActorsCleared() bool {
+	return m.clearedactors
+}
+
+// RemoveActorIDs removes the "actors" edge to the Movie entity by IDs.
+func (m *ActorMutation) RemoveActorIDs(ids ...int) {
+	if m.removedactors == nil {
+		m.removedactors = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.actors, ids[i])
+		m.removedactors[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedActors returns the removed IDs of the "actors" edge to the Movie entity.
+func (m *ActorMutation) RemovedActorsIDs() (ids []int) {
+	for id := range m.removedactors {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ActorsIDs returns the "actors" edge IDs in the mutation.
+func (m *ActorMutation) ActorsIDs() (ids []int) {
+	for id := range m.actors {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetActors resets all changes to the "actors" edge.
+func (m *ActorMutation) ResetActors() {
+	m.actors = nil
+	m.clearedactors = false
+	m.removedactors = nil
+}
+
+// Where appends a list predicates to the ActorMutation builder.
+func (m *ActorMutation) Where(ps ...predicate.Actor) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *ActorMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Actor).
+func (m *ActorMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ActorMutation) Fields() []string {
+	fields := make([]string, 0, 2)
+	if m.name != nil {
+		fields = append(fields, actor.FieldName)
+	}
+	if m.description != nil {
+		fields = append(fields, actor.FieldDescription)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ActorMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case actor.FieldName:
+		return m.Name()
+	case actor.FieldDescription:
+		return m.Description()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ActorMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case actor.FieldName:
+		return m.OldName(ctx)
+	case actor.FieldDescription:
+		return m.OldDescription(ctx)
+	}
+	return nil, fmt.Errorf("unknown Actor field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ActorMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case actor.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case actor.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Actor field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ActorMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ActorMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ActorMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Actor numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ActorMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ActorMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ActorMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Actor nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ActorMutation) ResetField(name string) error {
+	switch name {
+	case actor.FieldName:
+		m.ResetName()
+		return nil
+	case actor.FieldDescription:
+		m.ResetDescription()
+		return nil
+	}
+	return fmt.Errorf("unknown Actor field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ActorMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.actors != nil {
+		edges = append(edges, actor.EdgeActors)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ActorMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case actor.EdgeActors:
+		ids := make([]ent.Value, 0, len(m.actors))
+		for id := range m.actors {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ActorMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedactors != nil {
+		edges = append(edges, actor.EdgeActors)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ActorMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case actor.EdgeActors:
+		ids := make([]ent.Value, 0, len(m.removedactors))
+		for id := range m.removedactors {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ActorMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedactors {
+		edges = append(edges, actor.EdgeActors)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ActorMutation) EdgeCleared(name string) bool {
+	switch name {
+	case actor.EdgeActors:
+		return m.clearedactors
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ActorMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Actor unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ActorMutation) ResetEdge(name string) error {
+	switch name {
+	case actor.EdgeActors:
+		m.ResetActors()
+		return nil
+	}
+	return fmt.Errorf("unknown Actor edge %s", name)
+}
 
 // DirectorMutation represents an operation that mutates the Director nodes in the graph.
 type DirectorMutation struct {
@@ -1107,6 +1567,9 @@ type MovieMutation struct {
 	reviews         map[int]struct{}
 	removedreviews  map[int]struct{}
 	clearedreviews  bool
+	actor           map[int]struct{}
+	removedactor    map[int]struct{}
+	clearedactor    bool
 	done            bool
 	oldValue        func(context.Context) (*Movie, error)
 	predicates      []predicate.Movie
@@ -1608,6 +2071,60 @@ func (m *MovieMutation) ResetReviews() {
 	m.removedreviews = nil
 }
 
+// AddActorIDs adds the "actor" edge to the Actor entity by ids.
+func (m *MovieMutation) AddActorIDs(ids ...int) {
+	if m.actor == nil {
+		m.actor = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.actor[ids[i]] = struct{}{}
+	}
+}
+
+// ClearActor clears the "actor" edge to the Actor entity.
+func (m *MovieMutation) ClearActor() {
+	m.clearedactor = true
+}
+
+// ActorCleared reports if the "actor" edge to the Actor entity was cleared.
+func (m *MovieMutation) ActorCleared() bool {
+	return m.clearedactor
+}
+
+// RemoveActorIDs removes the "actor" edge to the Actor entity by IDs.
+func (m *MovieMutation) RemoveActorIDs(ids ...int) {
+	if m.removedactor == nil {
+		m.removedactor = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.actor, ids[i])
+		m.removedactor[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedActor returns the removed IDs of the "actor" edge to the Actor entity.
+func (m *MovieMutation) RemovedActorIDs() (ids []int) {
+	for id := range m.removedactor {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ActorIDs returns the "actor" edge IDs in the mutation.
+func (m *MovieMutation) ActorIDs() (ids []int) {
+	for id := range m.actor {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetActor resets all changes to the "actor" edge.
+func (m *MovieMutation) ResetActor() {
+	m.actor = nil
+	m.clearedactor = false
+	m.removedactor = nil
+}
+
 // Where appends a list predicates to the MovieMutation builder.
 func (m *MovieMutation) Where(ps ...predicate.Movie) {
 	m.predicates = append(m.predicates, ps...)
@@ -1870,12 +2387,15 @@ func (m *MovieMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *MovieMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.director != nil {
 		edges = append(edges, movie.EdgeDirector)
 	}
 	if m.reviews != nil {
 		edges = append(edges, movie.EdgeReviews)
+	}
+	if m.actor != nil {
+		edges = append(edges, movie.EdgeActor)
 	}
 	return edges
 }
@@ -1894,15 +2414,24 @@ func (m *MovieMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case movie.EdgeActor:
+		ids := make([]ent.Value, 0, len(m.actor))
+		for id := range m.actor {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *MovieMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.removedreviews != nil {
 		edges = append(edges, movie.EdgeReviews)
+	}
+	if m.removedactor != nil {
+		edges = append(edges, movie.EdgeActor)
 	}
 	return edges
 }
@@ -1917,18 +2446,27 @@ func (m *MovieMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case movie.EdgeActor:
+		ids := make([]ent.Value, 0, len(m.removedactor))
+		for id := range m.removedactor {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *MovieMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.cleareddirector {
 		edges = append(edges, movie.EdgeDirector)
 	}
 	if m.clearedreviews {
 		edges = append(edges, movie.EdgeReviews)
+	}
+	if m.clearedactor {
+		edges = append(edges, movie.EdgeActor)
 	}
 	return edges
 }
@@ -1941,6 +2479,8 @@ func (m *MovieMutation) EdgeCleared(name string) bool {
 		return m.cleareddirector
 	case movie.EdgeReviews:
 		return m.clearedreviews
+	case movie.EdgeActor:
+		return m.clearedactor
 	}
 	return false
 }
@@ -1965,6 +2505,9 @@ func (m *MovieMutation) ResetEdge(name string) error {
 		return nil
 	case movie.EdgeReviews:
 		m.ResetReviews()
+		return nil
+	case movie.EdgeActor:
+		m.ResetActor()
 		return nil
 	}
 	return fmt.Errorf("unknown Movie edge %s", name)

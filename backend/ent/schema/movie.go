@@ -33,5 +33,6 @@ func (Movie) Edges() []ent.Edge {
 			Field("director_id").
 			Unique(),
 		edge.From("reviews", Review.Type).Ref("movie"),
+		edge.From("actor", Actor.Type).Ref("actors"),
 	}
 }

@@ -8,6 +8,18 @@ import (
 )
 
 var (
+	// ActorsColumns holds the columns for the "actors" table.
+	ActorsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString},
+	}
+	// ActorsTable holds the schema information for the "actors" table.
+	ActorsTable = &schema.Table{
+		Name:       "actors",
+		Columns:    ActorsColumns,
+		PrimaryKey: []*schema.Column{ActorsColumns[0]},
+	}
 	// DirectorsColumns holds the columns for the "directors" table.
 	DirectorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -108,13 +120,40 @@ var (
 		Columns:    UsersColumns,
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
 	}
+	// ActorActorsColumns holds the columns for the "actor_actors" table.
+	ActorActorsColumns = []*schema.Column{
+		{Name: "actor_id", Type: field.TypeInt},
+		{Name: "movie_id", Type: field.TypeInt},
+	}
+	// ActorActorsTable holds the schema information for the "actor_actors" table.
+	ActorActorsTable = &schema.Table{
+		Name:       "actor_actors",
+		Columns:    ActorActorsColumns,
+		PrimaryKey: []*schema.Column{ActorActorsColumns[0], ActorActorsColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "actor_actors_actor_id",
+				Columns:    []*schema.Column{ActorActorsColumns[0]},
+				RefColumns: []*schema.Column{ActorsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "actor_actors_movie_id",
+				Columns:    []*schema.Column{ActorActorsColumns[1]},
+				RefColumns: []*schema.Column{MoviesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		ActorsTable,
 		DirectorsTable,
 		FavoritesTable,
 		MoviesTable,
 		ReviewsTable,
 		UsersTable,
+		ActorActorsTable,
 	}
 )
 
@@ -122,4 +161,6 @@ func init() {
 	MoviesTable.ForeignKeys[0].RefTable = DirectorsTable
 	ReviewsTable.ForeignKeys[0].RefTable = MoviesTable
 	ReviewsTable.ForeignKeys[1].RefTable = UsersTable
+	ActorActorsTable.ForeignKeys[0].RefTable = ActorsTable
+	ActorActorsTable.ForeignKeys[1].RefTable = MoviesTable
 }

@@ -4,6 +4,14 @@ package ent
 
 import "context"
 
+func (a *Actor) Actors(ctx context.Context) ([]*Movie, error) {
+	result, err := a.Edges.ActorsOrErr()
+	if IsNotLoaded(err) {
+		result, err = a.QueryActors().All(ctx)
+	}
+	return result, err
+}
+
 func (d *Director) Movies(ctx context.Context) ([]*Movie, error) {
 	result, err := d.Edges.MoviesOrErr()
 	if IsNotLoaded(err) {
@@ -24,6 +32,14 @@ func (m *Movie) Reviews(ctx context.Context) ([]*Review, error) {
 	result, err := m.Edges.ReviewsOrErr()
 	if IsNotLoaded(err) {
 		result, err = m.QueryReviews().All(ctx)
+	}
+	return result, err
+}
+
+func (m *Movie) Actor(ctx context.Context) ([]*Actor, error) {
+	result, err := m.Edges.ActorOrErr()
+	if IsNotLoaded(err) {
+		result, err = m.QueryActor().All(ctx)
 	}
 	return result, err
 }

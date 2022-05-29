@@ -9,6 +9,7 @@ import (
 
 	"imdbv2/ent/migrate"
 
+	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
@@ -25,6 +26,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// Actor is the client for interacting with the Actor builders.
+	Actor *ActorClient
 	// Director is the client for interacting with the Director builders.
 	Director *DirectorClient
 	// Favorite is the client for interacting with the Favorite builders.
@@ -50,6 +53,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.Actor = NewActorClient(c.config)
 	c.Director = NewDirectorClient(c.config)
 	c.Favorite = NewFavoriteClient(c.config)
 	c.Movie = NewMovieClient(c.config)
@@ -88,6 +92,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:      ctx,
 		config:   cfg,
+		Actor:    NewActorClient(cfg),
 		Director: NewDirectorClient(cfg),
 		Favorite: NewFavoriteClient(cfg),
 		Movie:    NewMovieClient(cfg),
@@ -112,6 +117,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:      ctx,
 		config:   cfg,
+		Actor:    NewActorClient(cfg),
 		Director: NewDirectorClient(cfg),
 		Favorite: NewFavoriteClient(cfg),
 		Movie:    NewMovieClient(cfg),
@@ -123,7 +129,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Director.
+//		Actor.
 //		Query().
 //		Count(ctx)
 //
@@ -146,11 +152,118 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.Actor.Use(hooks...)
 	c.Director.Use(hooks...)
 	c.Favorite.Use(hooks...)
 	c.Movie.Use(hooks...)
 	c.Review.Use(hooks...)
 	c.User.Use(hooks...)
+}
+
+// ActorClient is a client for the Actor schema.
+type ActorClient struct {
+	config
+}
+
+// NewActorClient returns a client for the Actor from the given config.
+func NewActorClient(c config) *ActorClient {
+	return &ActorClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `actor.Hooks(f(g(h())))`.
+func (c *ActorClient) Use(hooks ...Hook) {
+	c.hooks.Actor = append(c.hooks.Actor, hooks...)
+}
+
+// Create returns a create builder for Actor.
+func (c *ActorClient) Create() *ActorCreate {
+	mutation := newActorMutation(c.config, OpCreate)
+	return &ActorCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Actor entities.
+func (c *ActorClient) CreateBulk(builders ...*ActorCreate) *ActorCreateBulk {
+	return &ActorCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Actor.
+func (c *ActorClient) Update() *ActorUpdate {
+	mutation := newActorMutation(c.config, OpUpdate)
+	return &ActorUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ActorClient) UpdateOne(a *Actor) *ActorUpdateOne {
+	mutation := newActorMutation(c.config, OpUpdateOne, withActor(a))
+	return &ActorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ActorClient) UpdateOneID(id int) *ActorUpdateOne {
+	mutation := newActorMutation(c.config, OpUpdateOne, withActorID(id))
+	return &ActorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Actor.
+func (c *ActorClient) Delete() *ActorDelete {
+	mutation := newActorMutation(c.config, OpDelete)
+	return &ActorDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *ActorClient) DeleteOne(a *Actor) *ActorDeleteOne {
+	return c.DeleteOneID(a.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *ActorClient) DeleteOneID(id int) *ActorDeleteOne {
+	builder := c.Delete().Where(actor.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ActorDeleteOne{builder}
+}
+
+// Query returns a query builder for Actor.
+func (c *ActorClient) Query() *ActorQuery {
+	return &ActorQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Actor entity by its id.
+func (c *ActorClient) Get(ctx context.Context, id int) (*Actor, error) {
+	return c.Query().Where(actor.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ActorClient) GetX(ctx context.Context, id int) *Actor {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryActors queries the actors edge of a Actor.
+func (c *ActorClient) QueryActors(a *Actor) *MovieQuery {
+	query := &MovieQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := a.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(actor.Table, actor.FieldID, id),
+			sqlgraph.To(movie.Table, movie.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, actor.ActorsTable, actor.ActorsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *ActorClient) Hooks() []Hook {
+	return c.hooks.Actor
 }
 
 // DirectorClient is a client for the Director schema.
@@ -459,6 +572,22 @@ func (c *MovieClient) QueryReviews(m *Movie) *ReviewQuery {
 			sqlgraph.From(movie.Table, movie.FieldID, id),
 			sqlgraph.To(review.Table, review.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, movie.ReviewsTable, movie.ReviewsColumn),
+		)
+		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryActor queries the actor edge of a Movie.
+func (c *MovieClient) QueryActor(m *Movie) *ActorQuery {
+	query := &ActorQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(movie.Table, movie.FieldID, id),
+			sqlgraph.To(actor.Table, actor.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, movie.ActorTable, movie.ActorPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
 		return fromV, nil
