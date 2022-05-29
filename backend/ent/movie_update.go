@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/predicate"
@@ -133,6 +134,21 @@ func (mu *MovieUpdate) AddReviews(r ...*Review) *MovieUpdate {
 	return mu.AddReviewIDs(ids...)
 }
 
+// AddActorIDs adds the "actor" edge to the Actor entity by IDs.
+func (mu *MovieUpdate) AddActorIDs(ids ...int) *MovieUpdate {
+	mu.mutation.AddActorIDs(ids...)
+	return mu
+}
+
+// AddActor adds the "actor" edges to the Actor entity.
+func (mu *MovieUpdate) AddActor(a ...*Actor) *MovieUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return mu.AddActorIDs(ids...)
+}
+
 // Mutation returns the MovieMutation object of the builder.
 func (mu *MovieUpdate) Mutation() *MovieMutation {
 	return mu.mutation
@@ -163,6 +179,27 @@ func (mu *MovieUpdate) RemoveReviews(r ...*Review) *MovieUpdate {
 		ids[i] = r[i].ID
 	}
 	return mu.RemoveReviewIDs(ids...)
+}
+
+// ClearActor clears all "actor" edges to the Actor entity.
+func (mu *MovieUpdate) ClearActor() *MovieUpdate {
+	mu.mutation.ClearActor()
+	return mu
+}
+
+// RemoveActorIDs removes the "actor" edge to Actor entities by IDs.
+func (mu *MovieUpdate) RemoveActorIDs(ids ...int) *MovieUpdate {
+	mu.mutation.RemoveActorIDs(ids...)
+	return mu
+}
+
+// RemoveActor removes "actor" edges to Actor entities.
+func (mu *MovieUpdate) RemoveActor(a ...*Actor) *MovieUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return mu.RemoveActorIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -388,6 +425,60 @@ func (mu *MovieUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if mu.mutation.ActorCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   movie.ActorTable,
+			Columns: movie.ActorPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: actor.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := mu.mutation.RemovedActorIDs(); len(nodes) > 0 && !mu.mutation.ActorCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   movie.ActorTable,
+			Columns: movie.ActorPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: actor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := mu.mutation.ActorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   movie.ActorTable,
+			Columns: movie.ActorPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: actor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, mu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{movie.Label}
@@ -511,6 +602,21 @@ func (muo *MovieUpdateOne) AddReviews(r ...*Review) *MovieUpdateOne {
 	return muo.AddReviewIDs(ids...)
 }
 
+// AddActorIDs adds the "actor" edge to the Actor entity by IDs.
+func (muo *MovieUpdateOne) AddActorIDs(ids ...int) *MovieUpdateOne {
+	muo.mutation.AddActorIDs(ids...)
+	return muo
+}
+
+// AddActor adds the "actor" edges to the Actor entity.
+func (muo *MovieUpdateOne) AddActor(a ...*Actor) *MovieUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return muo.AddActorIDs(ids...)
+}
+
 // Mutation returns the MovieMutation object of the builder.
 func (muo *MovieUpdateOne) Mutation() *MovieMutation {
 	return muo.mutation
@@ -541,6 +647,27 @@ func (muo *MovieUpdateOne) RemoveReviews(r ...*Review) *MovieUpdateOne {
 		ids[i] = r[i].ID
 	}
 	return muo.RemoveReviewIDs(ids...)
+}
+
+// ClearActor clears all "actor" edges to the Actor entity.
+func (muo *MovieUpdateOne) ClearActor() *MovieUpdateOne {
+	muo.mutation.ClearActor()
+	return muo
+}
+
+// RemoveActorIDs removes the "actor" edge to Actor entities by IDs.
+func (muo *MovieUpdateOne) RemoveActorIDs(ids ...int) *MovieUpdateOne {
+	muo.mutation.RemoveActorIDs(ids...)
+	return muo
+}
+
+// RemoveActor removes "actor" edges to Actor entities.
+func (muo *MovieUpdateOne) RemoveActor(a ...*Actor) *MovieUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return muo.RemoveActorIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -782,6 +909,60 @@ func (muo *MovieUpdateOne) sqlSave(ctx context.Context) (_node *Movie, err error
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: review.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if muo.mutation.ActorCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   movie.ActorTable,
+			Columns: movie.ActorPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: actor.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := muo.mutation.RemovedActorIDs(); len(nodes) > 0 && !muo.mutation.ActorCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   movie.ActorTable,
+			Columns: movie.ActorPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: actor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := muo.mutation.ActorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   movie.ActorTable,
+			Columns: movie.ActorPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: actor.FieldID,
 				},
 			},
 		}

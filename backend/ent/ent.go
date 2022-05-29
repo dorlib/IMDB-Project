@@ -5,6 +5,7 @@ package ent
 import (
 	"errors"
 	"fmt"
+	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
@@ -33,6 +34,7 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
+		actor.Table:    actor.ValidColumn,
 		director.Table: director.ValidColumn,
 		favorite.Table: favorite.ValidColumn,
 		movie.Table:    movie.ValidColumn,

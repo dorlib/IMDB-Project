@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
@@ -97,6 +98,21 @@ func (mc *MovieCreate) AddReviews(r ...*Review) *MovieCreate {
 		ids[i] = r[i].ID
 	}
 	return mc.AddReviewIDs(ids...)
+}
+
+// AddActorIDs adds the "actor" edge to the Actor entity by IDs.
+func (mc *MovieCreate) AddActorIDs(ids ...int) *MovieCreate {
+	mc.mutation.AddActorIDs(ids...)
+	return mc
+}
+
+// AddActor adds the "actor" edges to the Actor entity.
+func (mc *MovieCreate) AddActor(a ...*Actor) *MovieCreate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return mc.AddActorIDs(ids...)
 }
 
 // Mutation returns the MovieMutation object of the builder.
@@ -290,6 +306,25 @@ func (mc *MovieCreate) createSpec() (*Movie, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: review.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := mc.mutation.ActorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   movie.ActorTable,
+			Columns: movie.ActorPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: actor.FieldID,
 				},
 			},
 		}

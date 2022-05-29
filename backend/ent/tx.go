@@ -12,6 +12,8 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// Actor is the client for interacting with the Actor builders.
+	Actor *ActorClient
 	// Director is the client for interacting with the Director builders.
 	Director *DirectorClient
 	// Favorite is the client for interacting with the Favorite builders.
@@ -157,6 +159,7 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.Actor = NewActorClient(tx.config)
 	tx.Director = NewDirectorClient(tx.config)
 	tx.Favorite = NewFavoriteClient(tx.config)
 	tx.Movie = NewMovieClient(tx.config)
@@ -171,7 +174,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Director.QueryXXX(), the query will be executed
+// applies a query, for example: Actor.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

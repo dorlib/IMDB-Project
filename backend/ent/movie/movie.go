@@ -25,6 +25,8 @@ const (
 	EdgeDirector = "director"
 	// EdgeReviews holds the string denoting the reviews edge name in mutations.
 	EdgeReviews = "reviews"
+	// EdgeActor holds the string denoting the actor edge name in mutations.
+	EdgeActor = "actor"
 	// Table holds the table name of the movie in the database.
 	Table = "movies"
 	// DirectorTable is the table that holds the director relation/edge.
@@ -41,6 +43,11 @@ const (
 	ReviewsInverseTable = "reviews"
 	// ReviewsColumn is the table column denoting the reviews relation/edge.
 	ReviewsColumn = "review_movie"
+	// ActorTable is the table that holds the actor relation/edge. The primary key declared below.
+	ActorTable = "actor_actors"
+	// ActorInverseTable is the table name for the Actor entity.
+	// It exists in this package in order to avoid circular dependency with the "actor" package.
+	ActorInverseTable = "actors"
 )
 
 // Columns holds all SQL columns for movie fields.
@@ -54,6 +61,12 @@ var Columns = []string{
 	FieldDirectorID,
 	FieldImage,
 }
+
+var (
+	// ActorPrimaryKey and ActorColumn2 are the table columns denoting the
+	// primary key for the actor relation (M2M).
+	ActorPrimaryKey = []string{"actor_id", "movie_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {

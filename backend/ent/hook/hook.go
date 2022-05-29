@@ -8,6 +8,19 @@ import (
 	"imdbv2/ent"
 )
 
+// The ActorFunc type is an adapter to allow the use of ordinary
+// function as Actor mutator.
+type ActorFunc func(context.Context, *ent.ActorMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ActorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.ActorMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ActorMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The DirectorFunc type is an adapter to allow the use of ordinary
 // function as Director mutator.
 type DirectorFunc func(context.Context, *ent.DirectorMutation) (ent.Value, error)

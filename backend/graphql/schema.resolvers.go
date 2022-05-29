@@ -214,6 +214,14 @@ func (r *mutationResolver) AddToFavorites(ctx context.Context, favorite Favorite
 		SetUserID(favorite.UserID).Save(ctx)
 }
 
+func (r *queryResolver) ActorsOfMovie(ctx context.Context, movieID int) ([]*ent.Actor, error) {
+	data, err := r.client.Movie.Query().Where(movie.ID(movieID)).QueryActor().All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}
+
 func (r *queryResolver) LoginUser(ctx context.Context, nickname string, password string, email string) ([]*ent.User, error) {
 	//userID, error := r.client.User.Query().Where(user.Nickname(nickname)).OnlyID(ctx)
 	//if error != nil {

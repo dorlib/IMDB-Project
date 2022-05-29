@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
@@ -235,6 +236,233 @@ const (
 	pageInfoField   = "pageInfo"
 	totalCountField = "totalCount"
 )
+
+// ActorEdge is the edge representation of Actor.
+type ActorEdge struct {
+	Node   *Actor `json:"node"`
+	Cursor Cursor `json:"cursor"`
+}
+
+// ActorConnection is the connection containing edges to Actor.
+type ActorConnection struct {
+	Edges      []*ActorEdge `json:"edges"`
+	PageInfo   PageInfo     `json:"pageInfo"`
+	TotalCount int          `json:"totalCount"`
+}
+
+// ActorPaginateOption enables pagination customization.
+type ActorPaginateOption func(*actorPager) error
+
+// WithActorOrder configures pagination ordering.
+func WithActorOrder(order *ActorOrder) ActorPaginateOption {
+	if order == nil {
+		order = DefaultActorOrder
+	}
+	o := *order
+	return func(pager *actorPager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultActorOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithActorFilter configures pagination filter.
+func WithActorFilter(filter func(*ActorQuery) (*ActorQuery, error)) ActorPaginateOption {
+	return func(pager *actorPager) error {
+		if filter == nil {
+			return errors.New("ActorQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type actorPager struct {
+	order  *ActorOrder
+	filter func(*ActorQuery) (*ActorQuery, error)
+}
+
+func newActorPager(opts []ActorPaginateOption) (*actorPager, error) {
+	pager := &actorPager{}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultActorOrder
+	}
+	return pager, nil
+}
+
+func (p *actorPager) applyFilter(query *ActorQuery) (*ActorQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *actorPager) toCursor(a *Actor) Cursor {
+	return p.order.Field.toCursor(a)
+}
+
+func (p *actorPager) applyCursors(query *ActorQuery, after, before *Cursor) *ActorQuery {
+	for _, predicate := range cursorsToPredicates(
+		p.order.Direction, after, before,
+		p.order.Field.field, DefaultActorOrder.Field.field,
+	) {
+		query = query.Where(predicate)
+	}
+	return query
+}
+
+func (p *actorPager) applyOrder(query *ActorQuery, reverse bool) *ActorQuery {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	query = query.Order(direction.orderFunc(p.order.Field.field))
+	if p.order.Field != DefaultActorOrder.Field {
+		query = query.Order(direction.orderFunc(DefaultActorOrder.Field.field))
+	}
+	return query
+}
+
+// Paginate executes the query and returns a relay based cursor connection to Actor.
+func (a *ActorQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...ActorPaginateOption,
+) (*ActorConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newActorPager(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	if a, err = pager.applyFilter(a); err != nil {
+		return nil, err
+	}
+
+	conn := &ActorConnection{Edges: []*ActorEdge{}}
+	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
+		if hasCollectedField(ctx, totalCountField) ||
+			hasCollectedField(ctx, pageInfoField) {
+			count, err := a.Count(ctx)
+			if err != nil {
+				return nil, err
+			}
+			conn.TotalCount = count
+			conn.PageInfo.HasNextPage = first != nil && count > 0
+			conn.PageInfo.HasPreviousPage = last != nil && count > 0
+		}
+		return conn, nil
+	}
+
+	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
+		count, err := a.Clone().Count(ctx)
+		if err != nil {
+			return nil, err
+		}
+		conn.TotalCount = count
+	}
+
+	a = pager.applyCursors(a, after, before)
+	a = pager.applyOrder(a, last != nil)
+	var limit int
+	if first != nil {
+		limit = *first + 1
+	} else if last != nil {
+		limit = *last + 1
+	}
+	if limit > 0 {
+		a = a.Limit(limit)
+	}
+
+	if field := getCollectedField(ctx, edgesField, nodeField); field != nil {
+		a = a.collectField(graphql.GetOperationContext(ctx), *field)
+	}
+
+	nodes, err := a.All(ctx)
+	if err != nil || len(nodes) == 0 {
+		return conn, err
+	}
+
+	if len(nodes) == limit {
+		conn.PageInfo.HasNextPage = first != nil
+		conn.PageInfo.HasPreviousPage = last != nil
+		nodes = nodes[:len(nodes)-1]
+	}
+
+	var nodeAt func(int) *Actor
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *Actor {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *Actor {
+			return nodes[i]
+		}
+	}
+
+	conn.Edges = make([]*ActorEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		conn.Edges[i] = &ActorEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+
+	conn.PageInfo.StartCursor = &conn.Edges[0].Cursor
+	conn.PageInfo.EndCursor = &conn.Edges[len(conn.Edges)-1].Cursor
+	if conn.TotalCount == 0 {
+		conn.TotalCount = len(nodes)
+	}
+
+	return conn, nil
+}
+
+// ActorOrderField defines the ordering field of Actor.
+type ActorOrderField struct {
+	field    string
+	toCursor func(*Actor) Cursor
+}
+
+// ActorOrder defines the ordering of Actor.
+type ActorOrder struct {
+	Direction OrderDirection   `json:"direction"`
+	Field     *ActorOrderField `json:"field"`
+}
+
+// DefaultActorOrder is the default ordering of Actor.
+var DefaultActorOrder = &ActorOrder{
+	Direction: OrderDirectionAsc,
+	Field: &ActorOrderField{
+		field: actor.FieldID,
+		toCursor: func(a *Actor) Cursor {
+			return Cursor{ID: a.ID}
+		},
+	},
+}
+
+// ToEdge converts Actor into ActorEdge.
+func (a *Actor) ToEdge(order *ActorOrder) *ActorEdge {
+	if order == nil {
+		order = DefaultActorOrder
+	}
+	return &ActorEdge{
+		Node:   a,
+		Cursor: order.Field.toCursor(a),
+	}
+}
 
 // DirectorEdge is the edge representation of Director.
 type DirectorEdge struct {

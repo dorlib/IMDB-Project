@@ -41,9 +41,11 @@ type MovieEdges struct {
 	Director *Director `json:"director,omitempty"`
 	// Reviews holds the value of the reviews edge.
 	Reviews []*Review `json:"reviews,omitempty"`
+	// Actor holds the value of the actor edge.
+	Actor []*Actor `json:"actor,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // DirectorOrErr returns the Director value or an error if the edge
@@ -67,6 +69,15 @@ func (e MovieEdges) ReviewsOrErr() ([]*Review, error) {
 		return e.Reviews, nil
 	}
 	return nil, &NotLoadedError{edge: "reviews"}
+}
+
+// ActorOrErr returns the Actor value or an error if the edge
+// was not loaded in eager-loading.
+func (e MovieEdges) ActorOrErr() ([]*Actor, error) {
+	if e.loadedTypes[2] {
+		return e.Actor, nil
+	}
+	return nil, &NotLoadedError{edge: "actor"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -154,6 +165,11 @@ func (m *Movie) QueryDirector() *DirectorQuery {
 // QueryReviews queries the "reviews" edge of the Movie entity.
 func (m *Movie) QueryReviews() *ReviewQuery {
 	return (&MovieClient{config: m.config}).QueryReviews(m)
+}
+
+// QueryActor queries the "actor" edge of the Movie entity.
+func (m *Movie) QueryActor() *ActorQuery {
+	return (&MovieClient{config: m.config}).QueryActor(m)
 }
 
 // Update returns a builder for updating this Movie.
