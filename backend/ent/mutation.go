@@ -43,6 +43,7 @@ type ActorMutation struct {
 	id            *int
 	name          *string
 	description   *string
+	image         *string
 	clearedFields map[string]struct{}
 	actors        map[int]struct{}
 	removedactors map[int]struct{}
@@ -222,6 +223,42 @@ func (m *ActorMutation) ResetDescription() {
 	m.description = nil
 }
 
+// SetImage sets the "image" field.
+func (m *ActorMutation) SetImage(s string) {
+	m.image = &s
+}
+
+// Image returns the value of the "image" field in the mutation.
+func (m *ActorMutation) Image() (r string, exists bool) {
+	v := m.image
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldImage returns the old "image" field's value of the Actor entity.
+// If the Actor object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ActorMutation) OldImage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldImage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldImage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldImage: %w", err)
+	}
+	return oldValue.Image, nil
+}
+
+// ResetImage resets all changes to the "image" field.
+func (m *ActorMutation) ResetImage() {
+	m.image = nil
+}
+
 // AddActorIDs adds the "actors" edge to the Movie entity by ids.
 func (m *ActorMutation) AddActorIDs(ids ...int) {
 	if m.actors == nil {
@@ -295,12 +332,15 @@ func (m *ActorMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ActorMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 3)
 	if m.name != nil {
 		fields = append(fields, actor.FieldName)
 	}
 	if m.description != nil {
 		fields = append(fields, actor.FieldDescription)
+	}
+	if m.image != nil {
+		fields = append(fields, actor.FieldImage)
 	}
 	return fields
 }
@@ -314,6 +354,8 @@ func (m *ActorMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case actor.FieldDescription:
 		return m.Description()
+	case actor.FieldImage:
+		return m.Image()
 	}
 	return nil, false
 }
@@ -327,6 +369,8 @@ func (m *ActorMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldName(ctx)
 	case actor.FieldDescription:
 		return m.OldDescription(ctx)
+	case actor.FieldImage:
+		return m.OldImage(ctx)
 	}
 	return nil, fmt.Errorf("unknown Actor field %s", name)
 }
@@ -349,6 +393,13 @@ func (m *ActorMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDescription(v)
+		return nil
+	case actor.FieldImage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetImage(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Actor field %s", name)
@@ -404,6 +455,9 @@ func (m *ActorMutation) ResetField(name string) error {
 		return nil
 	case actor.FieldDescription:
 		m.ResetDescription()
+		return nil
+	case actor.FieldImage:
+		m.ResetImage()
 		return nil
 	}
 	return fmt.Errorf("unknown Actor field %s", name)

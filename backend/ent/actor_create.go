@@ -32,6 +32,12 @@ func (ac *ActorCreate) SetDescription(s string) *ActorCreate {
 	return ac
 }
 
+// SetImage sets the "image" field.
+func (ac *ActorCreate) SetImage(s string) *ActorCreate {
+	ac.mutation.SetImage(s)
+	return ac
+}
+
 // AddActorIDs adds the "actors" edge to the Movie entity by IDs.
 func (ac *ActorCreate) AddActorIDs(ids ...int) *ActorCreate {
 	ac.mutation.AddActorIDs(ids...)
@@ -123,6 +129,9 @@ func (ac *ActorCreate) check() error {
 	if _, ok := ac.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Actor.description"`)}
 	}
+	if _, ok := ac.mutation.Image(); !ok {
+		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Actor.image"`)}
+	}
 	return nil
 }
 
@@ -165,6 +174,14 @@ func (ac *ActorCreate) createSpec() (*Actor, *sqlgraph.CreateSpec) {
 			Column: actor.FieldDescription,
 		})
 		_node.Description = value
+	}
+	if value, ok := ac.mutation.Image(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: actor.FieldImage,
+		})
+		_node.Image = value
 	}
 	if nodes := ac.mutation.ActorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

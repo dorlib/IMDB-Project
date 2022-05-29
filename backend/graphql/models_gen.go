@@ -2,6 +2,11 @@
 
 package graphql
 
+type ActorInput struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
 type DirectorInput struct {
 	Name         string `json:"name"`
 	ProfileImage string `json:"profileImage"`

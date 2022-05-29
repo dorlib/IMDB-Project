@@ -40,6 +40,12 @@ func (au *ActorUpdate) SetDescription(s string) *ActorUpdate {
 	return au
 }
 
+// SetImage sets the "image" field.
+func (au *ActorUpdate) SetImage(s string) *ActorUpdate {
+	au.mutation.SetImage(s)
+	return au
+}
+
 // AddActorIDs adds the "actors" edge to the Movie entity by IDs.
 func (au *ActorUpdate) AddActorIDs(ids ...int) *ActorUpdate {
 	au.mutation.AddActorIDs(ids...)
@@ -167,6 +173,13 @@ func (au *ActorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: actor.FieldDescription,
 		})
 	}
+	if value, ok := au.mutation.Image(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: actor.FieldImage,
+		})
+	}
 	if au.mutation.ActorsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -249,6 +262,12 @@ func (auo *ActorUpdateOne) SetName(s string) *ActorUpdateOne {
 // SetDescription sets the "description" field.
 func (auo *ActorUpdateOne) SetDescription(s string) *ActorUpdateOne {
 	auo.mutation.SetDescription(s)
+	return auo
+}
+
+// SetImage sets the "image" field.
+func (auo *ActorUpdateOne) SetImage(s string) *ActorUpdateOne {
+	auo.mutation.SetImage(s)
 	return auo
 }
 
@@ -401,6 +420,13 @@ func (auo *ActorUpdateOne) sqlSave(ctx context.Context) (_node *Actor, err error
 			Type:   field.TypeString,
 			Value:  value,
 			Column: actor.FieldDescription,
+		})
+	}
+	if value, ok := auo.mutation.Image(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: actor.FieldImage,
 		})
 	}
 	if auo.mutation.ActorsCleared() {

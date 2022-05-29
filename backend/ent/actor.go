@@ -19,6 +19,8 @@ type Actor struct {
 	Name string `json:"name,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
+	// Image holds the value of the "image" field.
+	Image string `json:"image,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ActorQuery when eager-loading is set.
 	Edges ActorEdges `json:"edges"`
@@ -49,7 +51,7 @@ func (*Actor) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case actor.FieldID:
 			values[i] = new(sql.NullInt64)
-		case actor.FieldName, actor.FieldDescription:
+		case actor.FieldName, actor.FieldDescription, actor.FieldImage:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Actor", columns[i])
@@ -83,6 +85,12 @@ func (a *Actor) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
 				a.Description = value.String
+			}
+		case actor.FieldImage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field image", values[i])
+			} else if value.Valid {
+				a.Image = value.String
 			}
 		}
 	}
@@ -121,6 +129,8 @@ func (a *Actor) String() string {
 	builder.WriteString(a.Name)
 	builder.WriteString(", description=")
 	builder.WriteString(a.Description)
+	builder.WriteString(", image=")
+	builder.WriteString(a.Image)
 	builder.WriteByte(')')
 	return builder.String()
 }
