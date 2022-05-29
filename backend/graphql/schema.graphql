@@ -164,6 +164,7 @@ type Query {
     last5Added: [Movie!]
     directorById(id: ID!): [Director!]
     actorsOfMovie(id: ID!): [Actor]
+    actorById(id: ID!): [Actor!]
     reviewsOfMovie(movieID: Int!) : [Review]
     favoritesOfUser(userID: Int!): [Favorite]
     users: [User!]

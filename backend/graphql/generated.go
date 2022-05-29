@@ -91,6 +91,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		ActorByID        func(childComplexity int, id int) int
 		ActorsOfMovie    func(childComplexity int, id int) int
 		DirectorByID     func(childComplexity int, id int) int
 		DirectorIDByName func(childComplexity int, name string) int
@@ -154,6 +155,7 @@ type QueryResolver interface {
 	Last5Added(ctx context.Context) ([]*ent.Movie, error)
 	DirectorByID(ctx context.Context, id int) ([]*ent.Director, error)
 	ActorsOfMovie(ctx context.Context, id int) ([]*ent.Actor, error)
+	ActorByID(ctx context.Context, id int) ([]*ent.Actor, error)
 	ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error)
 	FavoritesOfUser(ctx context.Context, userID int) ([]*ent.Favorite, error)
 	Users(ctx context.Context) ([]*ent.User, error)
@@ -429,6 +431,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateRank(childComplexity, args["id"].(int), args["rank"].(int)), true
+
+	case "Query.actorById":
+		if e.complexity.Query.ActorByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_actorById_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ActorByID(childComplexity, args["id"].(int)), true
 
 	case "Query.actorsOfMovie":
 		if e.complexity.Query.ActorsOfMovie == nil {
@@ -946,6 +960,7 @@ type Query {
     last5Added: [Movie!]
     directorById(id: ID!): [Director!]
     actorsOfMovie(id: ID!): [Actor]
+    actorById(id: ID!): [Actor!]
     reviewsOfMovie(movieID: Int!) : [Review]
     favoritesOfUser(userID: Int!): [Favorite]
     users: [User!]
@@ -1317,6 +1332,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_actorById_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -3008,6 +3038,45 @@ func (ec *executionContext) _Query_actorsOfMovie(ctx context.Context, field grap
 	res := resTmp.([]*ent.Actor)
 	fc.Result = res
 	return ec.marshalOActor2ᚕᚖimdbv2ᚋentᚐActor(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_actorById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_actorById_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ActorByID(rctx, args["id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Actor)
+	fc.Result = res
+	return ec.marshalOActor2ᚕᚖimdbv2ᚋentᚐActorᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_reviewsOfMovie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -6099,6 +6168,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "actorById":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_actorById(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "reviewsOfMovie":
 			field := field
 
@@ -6909,6 +6998,16 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) marshalNActor2ᚖimdbv2ᚋentᚐActor(ctx context.Context, sel ast.SelectionSet, v *ent.Actor) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Actor(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -7414,6 +7513,53 @@ func (ec *executionContext) marshalOActor2ᚕᚖimdbv2ᚋentᚐActor(ctx context
 
 	}
 	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOActor2ᚕᚖimdbv2ᚋentᚐActorᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Actor) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNActor2ᚖimdbv2ᚋentᚐActor(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
 
 	return ret
 }

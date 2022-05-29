@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"imdbv2/ent"
+	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
@@ -216,6 +217,14 @@ func (r *mutationResolver) AddToFavorites(ctx context.Context, favorite Favorite
 
 func (r *queryResolver) ActorsOfMovie(ctx context.Context, movieID int) ([]*ent.Actor, error) {
 	data, err := r.client.Movie.Query().Where(movie.ID(movieID)).QueryActor().All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}
+
+func (r *queryResolver) ActorByID(ctx context.Context, actorID int) ([]*ent.Actor, error) {
+	data, err := r.client.Actor.Query().Where(actor.ID(actorID)).All(ctx)
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
