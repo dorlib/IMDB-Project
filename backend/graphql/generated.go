@@ -36,6 +36,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Movie() MovieResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 	Review() ReviewResolver
@@ -68,6 +69,7 @@ type ComplexityRoot struct {
 	}
 
 	Movie struct {
+		Actors      func(childComplexity int) int
 		Description func(childComplexity int) int
 		Director    func(childComplexity int) int
 		Genre       func(childComplexity int) int
@@ -80,6 +82,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		AddActorToMovie        func(childComplexity int, movieID int, name string) int
 		AddToFavorites         func(childComplexity int, favorite FavoriteInput) int
 		CreateDirector         func(childComplexity int, director DirectorInput) int
 		CreateMovie            func(childComplexity int, movie MovieInput) int
@@ -134,6 +137,9 @@ type ComplexityRoot struct {
 	}
 }
 
+type MovieResolver interface {
+	Actors(ctx context.Context, obj *ent.Movie) ([]*ent.Actor, error)
+}
 type MutationResolver interface {
 	CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error)
 	CreateMovieAndDirector(ctx context.Context, title string, description string, rank int, genre string, directorName string, image string, topic string, text string, profileImage string, bornAt string, year int) (*ent.Movie, error)
@@ -143,6 +149,7 @@ type MutationResolver interface {
 	UpdateRank(ctx context.Context, id int, rank int) (*ent.Movie, error)
 	UpdateDirectorDetails(ctx context.Context, id int, bornAt string, profileImage string, description string) (*ent.Director, error)
 	AddToFavorites(ctx context.Context, favorite FavoriteInput) (*ent.Favorite, error)
+	AddActorToMovie(ctx context.Context, movieID int, name string) (*ent.Actor, error)
 }
 type QueryResolver interface {
 	Movies(ctx context.Context) ([]*ent.Movie, error)
@@ -273,6 +280,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Favorite.UserID(childComplexity), true
 
+	case "Movie.actors":
+		if e.complexity.Movie.Actors == nil {
+			break
+		}
+
+		return e.complexity.Movie.Actors(childComplexity), true
+
 	case "Movie.description":
 		if e.complexity.Movie.Description == nil {
 			break
@@ -335,6 +349,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Movie.Year(childComplexity), true
+
+	case "Mutation.addActorToMovie":
+		if e.complexity.Mutation.AddActorToMovie == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addActorToMovie_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddActorToMovie(childComplexity, args["movieId"].(int), args["name"].(string)), true
 
 	case "Mutation.addToFavorites":
 		if e.complexity.Mutation.AddToFavorites == nil {
@@ -820,6 +846,7 @@ type Movie implements Node   {
     year: Int!
     director: Director!
     reviews: [Review!]
+    actors: [Actor]
 }
 
 type Director {
@@ -946,6 +973,7 @@ type Mutation {
     updateRank(id: ID!, rank: Int!) : Movie!
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
     addToFavorites(favorite: FavoriteInput!): Favorite!
+    addActorToMovie(movieId: ID!, name: String!) : Actor!
 }
 
 # Define a query for getting all movies.
@@ -974,6 +1002,30 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_addActorToMovie_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["movieId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movieId"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["movieId"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg1
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_addToFavorites_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -2335,6 +2387,38 @@ func (ec *executionContext) _Movie_reviews(ctx context.Context, field graphql.Co
 	return ec.marshalOReview2ᚕᚖimdbv2ᚋentᚐReviewᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Movie_actors(ctx context.Context, field graphql.CollectedField, obj *ent.Movie) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Movie",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Movie().Actors(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Actor)
+	fc.Result = res
+	return ec.marshalOActor2ᚕᚖimdbv2ᚋentᚐActor(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_createMovie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2669,6 +2753,48 @@ func (ec *executionContext) _Mutation_addToFavorites(ctx context.Context, field 
 	res := resTmp.(*ent.Favorite)
 	fc.Result = res
 	return ec.marshalNFavorite2ᚖimdbv2ᚋentᚐFavorite(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_addActorToMovie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_addActorToMovie_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddActorToMovie(rctx, args["movieId"].(int), args["name"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Actor)
+	fc.Result = res
+	return ec.marshalNActor2ᚖimdbv2ᚋentᚐActor(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_movies(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5828,6 +5954,23 @@ func (ec *executionContext) _Movie(ctx context.Context, sel ast.SelectionSet, ob
 				return innerFunc(ctx)
 
 			})
+		case "actors":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Movie_actors(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5931,6 +6074,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "addToFavorites":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_addToFavorites(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "addActorToMovie":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addActorToMovie(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -6997,6 +7150,10 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 // endregion **************************** object.gotpl ****************************
 
 // region    ***************************** type.gotpl *****************************
+
+func (ec *executionContext) marshalNActor2imdbv2ᚋentᚐActor(ctx context.Context, sel ast.SelectionSet, v ent.Actor) graphql.Marshaler {
+	return ec._Actor(ctx, sel, &v)
+}
 
 func (ec *executionContext) marshalNActor2ᚖimdbv2ᚋentᚐActor(ctx context.Context, sel ast.SelectionSet, v *ent.Actor) graphql.Marshaler {
 	if v == nil {

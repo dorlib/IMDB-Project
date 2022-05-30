@@ -14,7 +14,7 @@ type Actor struct {
 // Fields of the Actor.
 func (Actor) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name"),
+		field.String("name").Unique(),
 		field.String("description"),
 		field.String("image"),
 	}

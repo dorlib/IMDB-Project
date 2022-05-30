@@ -24,6 +24,7 @@ type Movie implements Node   {
     year: Int!
     director: Director!
     reviews: [Review!]
+    actors: [Actor]
 }
 
 type Director {
@@ -150,6 +151,7 @@ type Mutation {
     updateRank(id: ID!, rank: Int!) : Movie!
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
     addToFavorites(favorite: FavoriteInput!): Favorite!
+    addActorToMovie(movieId: ID!, name: String!) : Actor!
 }
 
 # Define a query for getting all movies.

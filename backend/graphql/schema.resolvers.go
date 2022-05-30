@@ -252,3 +252,18 @@ func (r *queryResolver) LoginUser(ctx context.Context, nickname string, password
 	//}
 	panic("panic")
 }
+
+func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, name string) (*ent.Actor, error) {
+	newActor, err := r.client.Actor.Create().SetName(name).Save(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	
+	newActorToMovie, err1 := r.client.Movie.Update().AddActorIDs(newActor.ID).Save(ctx)
+	if err1 != nil {
+		return nil, ent.MaskNotFound(err1)
+	}
+	fmt.Println("new actor added to movie", newActorToMovie)
+
+	return newActor, nil
+}

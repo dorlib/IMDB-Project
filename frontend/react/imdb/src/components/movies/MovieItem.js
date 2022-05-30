@@ -13,6 +13,7 @@ import showReviews from "../reviews/showReviews";
 import ShowReviews from "../reviews/showReviews";
 import styled from "styled-components";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import Typography from "@mui/material/Typography";
 
 // function MovieItem(props) {
 //   const favoritesCtx = useContext(FavoritesContext);
@@ -80,6 +81,7 @@ function MovieItem(props) {
     let image = data["movieById"]["0"]["image"]
     let director = data["movieById"]["0"]["director"]["name"]
     let directorId = data["movieById"]["0"]["director"]["id"]
+    // let actors = data["movieById"]["0"]["actors"]
 
     console.log(data)
 
@@ -139,6 +141,14 @@ function MovieItem(props) {
                 </h4>
                 <h4 style={{color: "yellow"}}>
                     Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
+                </h4>
+                <h4 style={{color: "yellow"}}>
+                    Actors:
+                    {/*{data.actors.map(({id, name}) => (*/}
+                    {/*    <li key={actors.id}>*/}
+                    {/*        <Link to={"/actorPage/" + id}  style={{color: "yellow"}}> {name} </Link>*/}
+                    {/*    </li>*/}
+                    {/*))}*/}
                 </h4>
                     <div style={{fontSize: "xxx-large"}}>
                         <Fav>

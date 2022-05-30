@@ -11,7 +11,7 @@ var (
 	// ActorsColumns holds the columns for the "actors" table.
 	ActorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "name", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "description", Type: field.TypeString},
 		{Name: "image", Type: field.TypeString},
 	}

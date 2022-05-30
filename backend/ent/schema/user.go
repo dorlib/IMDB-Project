@@ -17,7 +17,7 @@ func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("firstname").NotEmpty(),
 		field.String("lastname").NotEmpty(),
-		field.String("nickname").NotEmpty().Unique().Annotations(entgql.OrderField("NICKNAME")),
+		field.String("nickname").Unique().NotEmpty().Annotations(entgql.OrderField("NICKNAME")),
 		field.String("description"),
 		field.String("password").NotEmpty().Sensitive(),
 		field.String("email").Unique(),
