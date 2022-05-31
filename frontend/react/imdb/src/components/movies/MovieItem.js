@@ -127,7 +127,7 @@ function MovieItem(props) {
                 </p>
             </div>
             <div>
-                <p style={{color: "yellow", fontSize: "x-large"}}>
+                <p className={classes.year}>
                     Year Of Release : {year}
                 </p>
             </div>
