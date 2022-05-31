@@ -14,11 +14,6 @@ import { useSnackbar } from 'notistack';
 function NewMovieForm() {
     const { enqueueSnackbar } = useSnackbar();
 
-    const handleClickVariant = (variant) => () => {
-        // variant could be success, error, warning, info, or default
-        enqueueSnackbar('This is a success message!', { variant });
-    };
-
     let NEW
 
     let NEW_MOVIE = gql`
@@ -103,15 +98,15 @@ function NewMovieForm() {
                 director_id: int,
                 director_name: givenDirector,
             },
-            onCompleted: function (data) {
+            onCompleted: function (data, variant) {
                 console.log("data:", data)
                 if (exist === true) {
                     unique = data["createMovie"]["id"]
                 } else {
                     unique = data["createMovieAndDirector"]["id"]
                 }
-                handleClickVariant('success')
-                return setTimeout(window.location.replace("/moviePage/" + unique),30000);
+                enqueueSnackbar('Thank You For Contributing!', { variant })
+                return setTimeout(() => window.location.replace("/moviePage/" + unique),2000);
 
             },
             onError: function (error) {
