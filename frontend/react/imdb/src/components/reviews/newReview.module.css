@@ -49,3 +49,10 @@
     left: 33%;
     font-size: x-large;
 }
+
+.addReviewBut {
+    width: 10cm;
+    margin-bottom: 2cm;
+    margin-top: 0.4cm;
+    margin-right: 3.3cm;
+}

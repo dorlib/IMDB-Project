@@ -14,6 +14,8 @@ import ShowReviews from "../reviews/showReviews";
 import styled from "styled-components";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Typography from "@mui/material/Typography";
+import CardContent from "@mui/material/CardContent";
+import EditIcon from "@mui/icons-material/Edit";
 
 // function MovieItem(props) {
 //   const favoritesCtx = useContext(FavoritesContext);
@@ -104,8 +106,8 @@ function MovieItem(props) {
         font-size: small;
         ${Fav}:hover & {
             display: flex;
-            left: 1cm;
-            top: -0.5cm;
+            right: 10.2cm;
+            top: 0.3cm;
             width: 4.5cm;
             color: black;
         }    
@@ -122,37 +124,45 @@ function MovieItem(props) {
     let loaded = (
         <Card>
             <div>
-                <p style={{color: "yellow", fontSize: "xx-large"}}>
+                <p className={classes.title}>
                     {title} : {rank} {"/100"}
                 </p>
             </div>
             <div>
-                <p style={{color: "yellow", fontSize: "x-large"}}>
+                <p className={classes.year}>
                     Year Of Release : {year}
                 </p>
             </div>
             <div className={classes.image}>
                 <img src={image}/>
-                {image}
             </div>
             <div>
-                <h4 style={{color: "yellow"}}>
-                    Movie description : {description}
-                </h4>
-                <h4 style={{color: "yellow"}}>
-                    Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
-                </h4>
-                <h4 style={{color: "yellow"}}>
-                    Actors:
-                    {/*{data.actors.map(({id, name}) => (*/}
-                    {/*    <li key={actors.id}>*/}
-                    {/*        <Link to={"/actorPage/" + id}  style={{color: "yellow"}}> {name} </Link>*/}
-                    {/*    </li>*/}
-                    {/*))}*/}
-                </h4>
+                <CardContent className={classes.about}>
+                    <EditIcon className={classes.editDetailsBut}/>
+                    <Typography component="div">
+                        About {title}
+                    </Typography>
+                </CardContent>
+                <CardContent className={classes.director}>
+                    <Typography component="div">
+                        Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
+                    </Typography>
+                </CardContent>
+                <CardContent className={classes.actors}>
+                    <Typography component="div">
+                        Actors:
+                    </Typography>
+                    <h4 style={{color: "yellow"}}>
+                        {/*{data.actors.map(({id, name}) => (*/}
+                        {/*    <li key={actors.id}>*/}
+                        {/*        <Link to={"/actorPage/" + id}  style={{color: "yellow"}}> {name} </Link>*/}
+                        {/*    </li>*/}
+                        {/*))}*/}
+                    </h4>
+                </CardContent>
                     <div style={{fontSize: "xxx-large"}}>
                         <Fav>
-                            <FavoriteIcon fontSize={'large'} onClick={handleClick} />
+                            <FavoriteIcon fontSize={'large'} onClick={handleClick} className={classes.heart} />
                             <TextBox><text >Click To Add To Favorites!</text></TextBox>
                         </Fav>
                     </div>
