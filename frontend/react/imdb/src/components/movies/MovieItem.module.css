@@ -101,11 +101,11 @@
 
 .image {
   width: 500px;
-  height: 350px;
+  height: 420px;
   position: absolute;
   display: flex;
   left: 3.4cm;
-  bottom: 9.4cm;
+  bottom: 7.4cm;
   border-radius: 50px;
 }
 
@@ -134,7 +134,7 @@
   position: absolute;
   color: yellow;
   font-size: 25px;
-  top: 17cm;
+  top: 19cm;
   left: 4.23cm;
 }
 
@@ -143,19 +143,19 @@
   border-radius: 13px;
   color: yellow;
   background-color: #cc2062;
-  height: 4cm;
+  height: 5cm;
 }
 
 .director {
   display: flex;
   position: absolute;
   top: 6.9cm;
-  right: 5.5cm;
-  width: 12cm;
+  right: 4.2cm;
+  width: 13cm;
   border-radius: 13px;
   color: yellow;
   background-color: #cc2062;
-  height: 9cm;
+  height: 1.4cm;
 }
 
 .editDetailsBut {
@@ -164,10 +164,26 @@
   right: 19cm;
 }
 
+.editDirectorPhotoBut {
+  display: flex;
+  position: absolute;
+  right: 0.6cm;
+}
+
 .actors {
   margin-top: 0.7cm;
   border-radius: 13px;
   color: yellow;
   background-color: #cc2062;
-  height: 4.3cm;
+  height: 5.35cm;
+}
+
+.directorImage {
+  display: flex;
+  position: absolute;
+  border-radius: 40px;
+  width: 13cm;
+  height: 9cm;
+  top: 2cm;
+  right: -0.1cm;
 }

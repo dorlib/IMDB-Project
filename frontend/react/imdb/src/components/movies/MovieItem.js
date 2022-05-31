@@ -144,8 +144,10 @@ function MovieItem(props) {
                     </Typography>
                 </CardContent>
                 <CardContent className={classes.director}>
+                    <EditIcon className={classes.editDirectorPhotoBut}/>
                     <Typography component="div">
                         Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
+                        <img src={image} className={classes.directorImage}/>
                     </Typography>
                 </CardContent>
                 <CardContent className={classes.actors}>
