@@ -8,12 +8,22 @@ import {gql, useMutation, useQuery} from "@apollo/client";
 import {Stack} from "@mui/material";
 import Button from "@mui/material/Button";
 
+import React from 'react';
+import { useSnackbar } from 'notistack';
+
 function NewMovieForm() {
+    const { enqueueSnackbar } = useSnackbar();
+
+    const handleClickVariant = (variant) => () => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar('This is a success message!', { variant });
+    };
+
     let NEW
 
     let NEW_MOVIE = gql`
-        mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID!, $image: String!, $topic: String!, $text: String!) {
-            createMovie(movie: {title: $title , description: $description, genre: $genre , rank: $rank, director_id: $director_id, image: $image, topic: $topic, text: $text}) {
+        mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID!, $image: String!, $topic: String!, $text: String!, $year: Int!) {
+            createMovie(movie: {title: $title , description: $description, genre: $genre , rank: $rank, director_id: $director_id, image: $image, topic: $topic, text: $text, year: $year}) {
                 id
             }
         }
@@ -26,8 +36,8 @@ function NewMovieForm() {
     `;
 
     let NEW_MOVIE_AND_DIRECTOR = gql`
-        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!, $image: String!, $topic: String!, $text: String! $profileImage: String!, $bornAt: String!){
-            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name, image: $image, topic: $topic, text: $text, profileImage: $profileImage, bornAt: $bornAt) {
+        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!, $image: String!, $topic: String!, $text: String! $profileImage: String!, $bornAt: String!, $year: Int!){
+            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name, image: $image, topic: $topic, text: $text, profileImage: $profileImage, bornAt: $bornAt, year: $year) {
                 id
             }
         }
@@ -89,6 +99,7 @@ function NewMovieForm() {
                 genre: givenGenre,
                 topic :givenTopic,
                 text: givenText,
+                year: givenYear,
                 director_id: int,
                 director_name: givenDirector,
             },
@@ -99,7 +110,8 @@ function NewMovieForm() {
                 } else {
                     unique = data["createMovieAndDirector"]["id"]
                 }
-                return window.location.replace("/moviePage/" + unique)
+                handleClickVariant('success')
+                return setTimeout(window.location.replace("/moviePage/" + unique),30000);
 
             },
             onError: function (error) {
@@ -118,7 +130,6 @@ function NewMovieForm() {
                 <div className={classes.ctrl}>
                     <label htmlFor="year">Year Of Release</label>
                     <input
-                        type="number"
                         name="year"
                         id="year"
                         min="1890"

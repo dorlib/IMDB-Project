@@ -1,4 +1,3 @@
-
 making comment "thank you for submitting"
 
 making user interface (sign in and log in)
@@ -11,12 +10,15 @@ tab indexses
 
 add option to log in with email or with nickname
 
-better user page - like in github
-
-user page - add more style
 add genre to user
 
-rotate on expand - director page
+change search options to : by movie, by director, by actor
+add search option also for users
+
+fix successful massage
+
+add option to add actors (clip open in tab)
+
 
 
 download docker
@@ -26,9 +28,6 @@ getting stated
 playing with atlas, try find error and bugs
 
 read atlas code - mysql merging
-
-change search options to : by movie, by director, by actor
-add search option also for users
 
 
 
