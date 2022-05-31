@@ -122,7 +122,7 @@ function MovieItem(props) {
     let loaded = (
         <Card>
             <div>
-                <p style={{color: "yellow", fontSize: "xx-large"}}>
+                <p className={classes.title}>
                     {title} : {rank} {"/100"}
                 </p>
             </div>
@@ -133,7 +133,6 @@ function MovieItem(props) {
             </div>
             <div className={classes.image}>
                 <img src={image}/>
-                {image}
             </div>
             <div>
                 <h4 style={{color: "yellow"}}>
@@ -152,7 +151,7 @@ function MovieItem(props) {
                 </h4>
                     <div style={{fontSize: "xxx-large"}}>
                         <Fav>
-                            <FavoriteIcon fontSize={'large'} onClick={handleClick} />
+                            <FavoriteIcon fontSize={'large'} onClick={handleClick} className={classes.heart} />
                             <TextBox><text >Click To Add To Favorites!</text></TextBox>
                         </Fav>
                     </div>

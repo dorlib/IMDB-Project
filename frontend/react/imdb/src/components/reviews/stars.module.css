@@ -1,3 +1,8 @@
 .item {
+    display: flex;
+    position: absolute;
+    bottom: 7cm;
+    left: 4.1cm;
     margin-bottom: 1cm;
+
 }

@@ -89,7 +89,7 @@ function NewReviewForm() {
                     ></input>
                 </div>
                 <div className={classes.actions}>
-                    <button onClick={addReview} type="button">Add Review</button>
+                    <button onClick={addReview} className={classes.addReviewBut} type="button">Add Review</button>
                 </div>
             </form>
         </Card>

@@ -100,12 +100,31 @@
 
 
 .image {
-  width: 700px;
-  position: relative;
+  width: 500px;
+  height: 350px;
+  position: absolute;
   display: flex;
+  left: 3.4cm;
+  bottom: 9.4cm;
+  border-radius: 50px;
 }
 
 .image{
   max-height: 200%;
   max-width: 200%;
+}
+
+.heart {
+  display: flex;
+  position: absolute;
+  bottom: -4.3cm;
+  right: 14.5cm;
+}
+
+.title {
+  font-size: 40px;
+  color: yellow;
+  display: flex;
+  position: absolute;
+  top: 3cm;
 }
