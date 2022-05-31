@@ -117,7 +117,7 @@
 .heart {
   display: flex;
   position: absolute;
-  bottom: -5.5cm;
+  bottom: -1.6cm;
   right: 14.8cm;
 }
 
@@ -144,4 +144,30 @@
   color: yellow;
   background-color: #cc2062;
   height: 4cm;
+}
+
+.director {
+  display: flex;
+  position: absolute;
+  top: 6.9cm;
+  right: 5.5cm;
+  width: 12cm;
+  border-radius: 13px;
+  color: yellow;
+  background-color: #cc2062;
+  height: 9cm;
+}
+
+.editDetailsBut {
+  display: flex;
+  position: absolute;
+  right: 19cm;
+}
+
+.actors {
+  margin-top: 0.7cm;
+  border-radius: 13px;
+  color: yellow;
+  background-color: #cc2062;
+  height: 4.3cm;
 }

@@ -15,6 +15,7 @@ import styled from "styled-components";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
+import EditIcon from "@mui/icons-material/Edit";
 
 // function MovieItem(props) {
 //   const favoritesCtx = useContext(FavoritesContext);
@@ -106,7 +107,7 @@ function MovieItem(props) {
         ${Fav}:hover & {
             display: flex;
             right: 10.2cm;
-            top: 4cm;
+            top: 0.3cm;
             width: 4.5cm;
             color: black;
         }    
@@ -137,21 +138,28 @@ function MovieItem(props) {
             </div>
             <div>
                 <CardContent className={classes.about}>
+                    <EditIcon className={classes.editDetailsBut}/>
                     <Typography component="div">
                         About {title}
                     </Typography>
                 </CardContent>
-                <h4 style={{color: "yellow"}}>
-                    Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
-                </h4>
-                <h4 style={{color: "yellow"}}>
-                    Actors:
-                    {/*{data.actors.map(({id, name}) => (*/}
-                    {/*    <li key={actors.id}>*/}
-                    {/*        <Link to={"/actorPage/" + id}  style={{color: "yellow"}}> {name} </Link>*/}
-                    {/*    </li>*/}
-                    {/*))}*/}
-                </h4>
+                <CardContent className={classes.director}>
+                    <Typography component="div">
+                        Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
+                    </Typography>
+                </CardContent>
+                <CardContent className={classes.actors}>
+                    <Typography component="div">
+                        Actors:
+                    </Typography>
+                    <h4 style={{color: "yellow"}}>
+                        {/*{data.actors.map(({id, name}) => (*/}
+                        {/*    <li key={actors.id}>*/}
+                        {/*        <Link to={"/actorPage/" + id}  style={{color: "yellow"}}> {name} </Link>*/}
+                        {/*    </li>*/}
+                        {/*))}*/}
+                    </h4>
+                </CardContent>
                     <div style={{fontSize: "xxx-large"}}>
                         <Fav>
                             <FavoriteIcon fontSize={'large'} onClick={handleClick} className={classes.heart} />
