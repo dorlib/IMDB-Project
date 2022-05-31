@@ -14,6 +14,7 @@ import ShowReviews from "../reviews/showReviews";
 import styled from "styled-components";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Typography from "@mui/material/Typography";
+import CardContent from "@mui/material/CardContent";
 
 // function MovieItem(props) {
 //   const favoritesCtx = useContext(FavoritesContext);
@@ -104,8 +105,8 @@ function MovieItem(props) {
         font-size: small;
         ${Fav}:hover & {
             display: flex;
-            left: 1cm;
-            top: -0.5cm;
+            right: 10.2cm;
+            top: 4cm;
             width: 4.5cm;
             color: black;
         }    
@@ -135,9 +136,11 @@ function MovieItem(props) {
                 <img src={image}/>
             </div>
             <div>
-                <h4 style={{color: "yellow"}}>
-                    Movie description : {description}
-                </h4>
+                <CardContent className={classes.about}>
+                    <Typography component="div">
+                        About {title}
+                    </Typography>
+                </CardContent>
                 <h4 style={{color: "yellow"}}>
                     Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
                 </h4>

@@ -117,8 +117,8 @@
 .heart {
   display: flex;
   position: absolute;
-  bottom: -7.5cm;
-  right: 15.1cm;
+  bottom: -5.5cm;
+  right: 14.8cm;
 }
 
 .title {
@@ -136,4 +136,12 @@
   font-size: 25px;
   top: 17cm;
   left: 4.23cm;
+}
+
+.about {
+  margin-top: 1.6cm;
+  border-radius: 13px;
+  color: yellow;
+  background-color: #cc2062;
+  height: 4cm;
 }
