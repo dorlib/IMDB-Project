@@ -129,3 +129,8 @@
 .day {
   width: 2cm;
 }
+
+.genderLabel {
+  font-weight: bolder;
+  color: black;
+}

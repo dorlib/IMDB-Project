@@ -74,6 +74,12 @@ func (uc *UserCreate) SetCountry(s string) *UserCreate {
 	return uc
 }
 
+// SetGender sets the "gender" field.
+func (uc *UserCreate) SetGender(s string) *UserCreate {
+	uc.mutation.SetGender(s)
+	return uc
+}
+
 // AddReviewIDs adds the "reviews" edge to the Review entity by IDs.
 func (uc *UserCreate) AddReviewIDs(ids ...int) *UserCreate {
 	uc.mutation.AddReviewIDs(ids...)
@@ -206,6 +212,9 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Country(); !ok {
 		return &ValidationError{Name: "country", err: errors.New(`ent: missing required field "User.country"`)}
 	}
+	if _, ok := uc.mutation.Gender(); !ok {
+		return &ValidationError{Name: "gender", err: errors.New(`ent: missing required field "User.gender"`)}
+	}
 	return nil
 }
 
@@ -304,6 +313,14 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldCountry,
 		})
 		_node.Country = value
+	}
+	if value, ok := uc.mutation.Gender(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldGender,
+		})
+		_node.Gender = value
 	}
 	if nodes := uc.mutation.ReviewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

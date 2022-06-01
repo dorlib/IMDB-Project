@@ -24,6 +24,7 @@ func (User) Fields() []ent.Field {
 		field.String("birthDay"),
 		field.String("profile"),
 		field.String("country"),
+		field.String("gender"),
 	}
 }
 

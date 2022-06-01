@@ -10,8 +10,20 @@ import classes from "./SignupForm.module.css";
 import {gql, useMutation} from "@apollo/client";
 import {styled} from "@mui/material/styles";
 
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import {getSpaceUntilMaxLength} from "@testing-library/user-event/dist/utils";
+
+
 export function SignUpForm(props) {
     const { switchToSignin } = useContext(AccountContext);
+
+    const handleChange = (event) => {
+        setGender(event.target.value);
+    };
 
     // let NEW_USER = gql`
     //     mutation CreateUser ($firstname: String!, $lastname: String!, $nickname: String!, $description: String!, $password: String!, $profile: String!, $birthday: String!, $email: String! $country: String! ) {
@@ -24,6 +36,7 @@ export function SignUpForm(props) {
     const [givenFirstName, setFirstName] = useState('')
     const [givenLastName, setLastName] = useState('')
     const [givenNickName, setNickName] = useState('')
+    const [givenGender, setGender] = useState('')
     const [givenDesc, setDesc] = useState('')
     const [givenPassword, setPassword] = useState('')
     const [givenProfile, setProfile] = useState('')
@@ -80,6 +93,19 @@ export function SignUpForm(props) {
                         <label htmlFor="nickName">Choose Your Own Uniqe Nickname!</label>
                         <input type="text" required id="nickName" value={givenNickName} onChange={event => setNickName(event.target.value)}/>
                     </div>
+
+                    <InputLabel id="demo-simple-select-label" className={classes.genderLabel}>Gender</InputLabel>
+                    <Select
+                        id="Gender"
+                        value={givenGender}
+                        placeholder="gender"
+                        onChange={handleChange}
+                        style={{width: "4cm", height: "1cm", marginBottom: "0.3cm"}}
+                    >
+                        <MenuItem value={'male'}>Male</MenuItem>
+                        <MenuItem value={'female'}>Female</MenuItem>
+                        <MenuItem value={'other'}>Other</MenuItem>
+                    </Select>
 
                     <div className={classes.control}>
                         <label htmlFor="email">Enter Your E-Mail</label>

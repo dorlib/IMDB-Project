@@ -72,3 +72,12 @@
   background-color: #a50e48;
   border-color: #a50e48;
 }
+
+.genreInput {
+  width: 4cm;
+  height: 1cm;
+  marginBottom: 0.3cm;
+  border-width: 3px;
+  background-color: white;
+  border-color: yellow;
+}
