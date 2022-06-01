@@ -10,8 +10,20 @@ import classes from "./SignupForm.module.css";
 import {gql, useMutation} from "@apollo/client";
 import {styled} from "@mui/material/styles";
 
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import {getSpaceUntilMaxLength} from "@testing-library/user-event/dist/utils";
+
+
 export function SignUpForm(props) {
     const { switchToSignin } = useContext(AccountContext);
+
+    const handleChange = (event) => {
+        setGender(event.target.value);
+    };
 
     // let NEW_USER = gql`
     //     mutation CreateUser ($firstname: String!, $lastname: String!, $nickname: String!, $description: String!, $password: String!, $profile: String!, $birthday: String!, $email: String! $country: String! ) {
@@ -82,14 +94,19 @@ export function SignUpForm(props) {
                         <input type="text" required id="nickName" value={givenNickName} onChange={event => setNickName(event.target.value)}/>
                     </div>
 
-                    <div className={classes.control}>
-                        <label htmlFor="gender">What is the genre of this movie?</label>
-                        <select name="gender" id="gender" value={givenGender} onChange={event => setGender(event.target.value)} required datatype="String">
-                            <option datatype="String" tvalue="male">Male</option>
-                            <option datatype="String" value="female">Female</option>
-                            <option datatype="String" value="other">Other</option>
-                        </select>
-                    </div>
+                    <InputLabel id="demo-simple-select-label" className={classes.genderLabel}>Gender</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={givenGender}
+                        placeholder="gender"
+                        onChange={handleChange}
+                        style={{width: "4cm", height: "1cm", marginBottom: "0.3cm"}}
+                    >
+                        <MenuItem value={'male'}>Male</MenuItem>
+                        <MenuItem value={'female'}>Female</MenuItem>
+                        <MenuItem value={'other'}>Other</MenuItem>
+                    </Select>
 
                     <div className={classes.control}>
                         <label htmlFor="email">Enter Your E-Mail</label>
