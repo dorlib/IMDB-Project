@@ -3165,6 +3165,7 @@ type UserMutation struct {
 	birthDay       *string
 	profile        *string
 	country        *string
+	gender         *string
 	clearedFields  map[string]struct{}
 	reviews        map[int]struct{}
 	removedreviews map[int]struct{}
@@ -3596,6 +3597,42 @@ func (m *UserMutation) ResetCountry() {
 	m.country = nil
 }
 
+// SetGender sets the "gender" field.
+func (m *UserMutation) SetGender(s string) {
+	m.gender = &s
+}
+
+// Gender returns the value of the "gender" field in the mutation.
+func (m *UserMutation) Gender() (r string, exists bool) {
+	v := m.gender
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGender returns the old "gender" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldGender(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGender is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGender requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGender: %w", err)
+	}
+	return oldValue.Gender, nil
+}
+
+// ResetGender resets all changes to the "gender" field.
+func (m *UserMutation) ResetGender() {
+	m.gender = nil
+}
+
 // AddReviewIDs adds the "reviews" edge to the Review entity by ids.
 func (m *UserMutation) AddReviewIDs(ids ...int) {
 	if m.reviews == nil {
@@ -3669,7 +3706,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.firstname != nil {
 		fields = append(fields, user.FieldFirstname)
 	}
@@ -3697,6 +3734,9 @@ func (m *UserMutation) Fields() []string {
 	if m.country != nil {
 		fields = append(fields, user.FieldCountry)
 	}
+	if m.gender != nil {
+		fields = append(fields, user.FieldGender)
+	}
 	return fields
 }
 
@@ -3723,6 +3763,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Profile()
 	case user.FieldCountry:
 		return m.Country()
+	case user.FieldGender:
+		return m.Gender()
 	}
 	return nil, false
 }
@@ -3750,6 +3792,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldProfile(ctx)
 	case user.FieldCountry:
 		return m.OldCountry(ctx)
+	case user.FieldGender:
+		return m.OldGender(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -3821,6 +3865,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCountry(v)
+		return nil
+	case user.FieldGender:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGender(v)
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
@@ -3897,6 +3948,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldCountry:
 		m.ResetCountry()
+		return nil
+	case user.FieldGender:
+		m.ResetGender()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

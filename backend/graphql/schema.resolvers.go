@@ -45,7 +45,7 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 		Save(ctx)
 }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string, country string) (*ent.User, error) {
+func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string, country string, gender string) (*ent.User, error) {
 	//bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 	//
 	//return r.client.User.Create().
@@ -258,7 +258,7 @@ func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, nam
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
-	
+
 	newActorToMovie, err1 := r.client.Movie.Update().AddActorIDs(newActor.ID).Save(ctx)
 	if err1 != nil {
 		return nil, ent.MaskNotFound(err1)

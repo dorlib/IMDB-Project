@@ -38,6 +38,7 @@ func signHandler(t *template.Template, c *ent.Client) http.Handler {
 		description := r.PostForm.Get("description")
 		fileProfile := r.PostForm.Get("fileProfile")
 		textProfile := r.PostForm.Get("textProfile")
+		gender := r.PostForm.Get("gender")
 
 		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 
@@ -58,6 +59,7 @@ func signHandler(t *template.Template, c *ent.Client) http.Handler {
 			SetBirthDay(birthday).
 			SetEmail(email).
 			SetCountry(country).
+			SetGender(gender).
 			SaveX(r.Context())
 		fmt.Println("new user added:", newUser)
 

@@ -114,6 +114,7 @@ var (
 		{Name: "birth_day", Type: field.TypeString},
 		{Name: "profile", Type: field.TypeString},
 		{Name: "country", Type: field.TypeString},
+		{Name: "gender", Type: field.TypeString},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

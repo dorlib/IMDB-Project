@@ -24,6 +24,7 @@ export function SignUpForm(props) {
     const [givenFirstName, setFirstName] = useState('')
     const [givenLastName, setLastName] = useState('')
     const [givenNickName, setNickName] = useState('')
+    const [givenGender, setGender] = useState('')
     const [givenDesc, setDesc] = useState('')
     const [givenPassword, setPassword] = useState('')
     const [givenProfile, setProfile] = useState('')
@@ -79,6 +80,15 @@ export function SignUpForm(props) {
                     <div className={classes.control}>
                         <label htmlFor="nickName">Choose Your Own Uniqe Nickname!</label>
                         <input type="text" required id="nickName" value={givenNickName} onChange={event => setNickName(event.target.value)}/>
+                    </div>
+
+                    <div className={classes.control}>
+                        <label htmlFor="gender">What is the genre of this movie?</label>
+                        <select name="gender" id="gender" value={givenGender} onChange={event => setGender(event.target.value)} required datatype="String">
+                            <option datatype="String" tvalue="male">Male</option>
+                            <option datatype="String" value="female">Female</option>
+                            <option datatype="String" value="other">Other</option>
+                        </select>
                     </div>
 
                     <div className={classes.control}>
