@@ -96,8 +96,7 @@ export function SignUpForm(props) {
 
                     <InputLabel id="demo-simple-select-label" className={classes.genderLabel}>Gender</InputLabel>
                     <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
+                        id="Gender"
                         value={givenGender}
                         placeholder="gender"
                         onChange={handleChange}

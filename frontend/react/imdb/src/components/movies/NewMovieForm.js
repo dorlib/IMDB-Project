@@ -10,9 +10,16 @@ import Button from "@mui/material/Button";
 
 import React from 'react';
 import { useSnackbar } from 'notistack';
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 function NewMovieForm() {
     const { enqueueSnackbar } = useSnackbar();
+
+    const handleChange = (event) => {
+        setGenre(event.target.value);
+    };
 
     let NEW
 
@@ -168,21 +175,29 @@ function NewMovieForm() {
                 </div>
 
                 <div className={classes.control}>
-                    <label htmlFor="genre">What is the genre of this movie?</label>
-                    <select name="genre" id="genre" value={givenGenre} onChange={event => setGenre(event.target.value)} required datatype="String">
-                        <option value="action">Action</option>
-                        <option value="drama">Drama</option>
-                        <option value="comedy">Comedy</option>
-                        <option value="crime">Crime</option>
-                        <option value="animation">Animation</option>
-                        <option value="fantasy">Fantasy</option>
-                        <option value="romance">Romance</option>
-                        <option value="thriller">Thriller</option>
-                        <option value="horror">Horror</option>
-                        <option value="science fiction">Science Fiction</option>
-                        <option value="historical">Historical</option>
-                        <option value="western">Western</option>
-                    </select>
+                    <InputLabel id="demo-simple-select-label" >Gender</InputLabel>
+                    <Select
+                        id="genre"
+                        name="genre"
+                        className={classes.genreInput}
+                        value={givenGenre}
+                        datatype="String"
+                        placeholder="genre"
+                        onChange={handleChange}
+                    >
+                        <MenuItem value="action">Action</MenuItem>
+                        <MenuItem value="drama">Drama</MenuItem>
+                        <MenuItem value="comedy">Comedy</MenuItem>
+                        <MenuItem value="crime">Crime</MenuItem>
+                        <MenuItem value="animation">Animation</MenuItem>
+                        <MenuItem value="fantasy">Fantasy</MenuItem>
+                        <MenuItem value="romance">Romance</MenuItem>
+                        <MenuItem value="thriller">Thriller</MenuItem>
+                        <MenuItem value="horror">Horror</MenuItem>
+                        <MenuItem value="science fiction">Science Fiction</MenuItem>
+                        <MenuItem value="historical">Historical</MenuItem>
+                        <MenuItem value="western">Western</MenuItem>
+                    </Select>
                 </div>
 
                 <div className={classes.control}>
