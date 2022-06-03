@@ -33,18 +33,18 @@ export function SignUpForm(props) {
     //     }
     // `;
 
-    const [givenFirstName, setFirstName] = useState('')
-    const [givenLastName, setLastName] = useState('')
-    const [givenNickName, setNickName] = useState('')
-    const [givenGender, setGender] = useState('')
-    const [givenDesc, setDesc] = useState('')
-    const [givenPassword, setPassword] = useState('')
-    const [givenProfile, setProfile] = useState('')
-    const [givenEmail, setEmail] = useState('')
-    const [givenCountry, setCountry] = useState('')
-    const [givenDayOfBirth, setDayOfBirth] = useState('')
-    const [givenMonthOfBirth, setMonthOfBirth] = useState('')
-    const [givenYearOfBirth, setYearOfBirth] = useState('')
+    // const [givenFirstName, setFirstName] = useState('')
+    // const [givenLastName, setLastName] = useState('')
+    // const [givenNickName, setNickName] = useState('')
+    // const [givenGender, setGender] = useState('')
+    // const [givenDesc, setDesc] = useState('')
+    // const [givenPassword, setPassword] = useState('')
+    // const [givenProfile, setProfile] = useState('')
+    // const [givenEmail, setEmail] = useState('')
+    // const [givenCountry, setCountry] = useState('')
+    // const [givenDayOfBirth, setDayOfBirth] = useState('')
+    // const [givenMonthOfBirth, setMonthOfBirth] = useState('')
+    // const [givenYearOfBirth, setYearOfBirth] = useState('')
 
     const Input = styled("input")({
         display: "none",
