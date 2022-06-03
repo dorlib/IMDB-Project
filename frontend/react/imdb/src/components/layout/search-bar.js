@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import onClickOutside from "react-onclickoutside";
 import classes from './search-bar.module.css'
 import {gql, useQuery} from "@apollo/client";
 import {Link, useNavigate} from "react-router-dom";
@@ -153,4 +152,4 @@ function SearchBar() {
     )
 }
 
-export default onClickOutside(SearchBar)
+export default SearchBar
