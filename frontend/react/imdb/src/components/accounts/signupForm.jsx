@@ -38,44 +38,43 @@ export function SignUpForm(props) {
     const [givenMonthOfBirth, setMonthOfBirth] = useState('')
     const [givenYearOfBirth, setYearOfBirth] = useState('')
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     const userData = {
-    //         givenFirstName,
-    //         givenLastName,
-    //         givenNickName,
-    //         givenGender,
-    //         givenDesc,
-    //         givenPassword,
-    //         givenProfile,
-    //         givenEmail,
-    //         givenCountry,
-    //         givenDayOfBirth,
-    //         givenMonthOfBirth,
-    //         givenYearOfBirth,
-    //     };
-    //
-    //     fetch('../backend/server/authentication.go', {
-    //         method: 'POST',
-    //         headers: {"Content-Type": "application/json"},
-    //         body: JSON.stringify(userData)
-    //     }).then(() => {
-    //         console.log('new user added')
-    //     })
-    // }
-    //
-    // const Input = styled("input")({
-    //     display: "none",
-    // });
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const userData = {
+            givenFirstName,
+            givenLastName,
+            givenNickName,
+            givenGender,
+            givenDesc,
+            givenPassword,
+            givenProfile,
+            givenEmail,
+            givenCountry,
+            givenDayOfBirth,
+            givenMonthOfBirth,
+            givenYearOfBirth,
+        };
+
+        fetch('http://localhost:8081/loginForm', {
+            method: 'post',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(userData)
+        }).then(() => {
+            console.log('new user added')
+        })
+    }
+
+    const Input = styled("input")({
+        display: "none",
+    });
 
     return (
         <BoxContainer>
             <Card>
                 <Typography variant="h6" align="center" color="#1c0907">
-                    Hello Dear Future User! Thank You For Signing In To My WebSite!
+                    Hello Dear Future User! Thank You For Signing Up To My WebSite!
                 </Typography>
-                <form className={classes.form} action="/" method="POST" /*onSubmit={handleSubmit}*/>
-
+                <form className={classes.form} onSubmit={handleSubmit}>
                     <div className={classes.control}>
                         <label htmlFor="firstname">Enter Your First Name</label>
                         <input type="text" required id="firstname" name="firstname" value={givenFirstName}
@@ -175,7 +174,7 @@ export function SignUpForm(props) {
 
                     <div className={classes.ctrl}>
                         <label htmlFor="password">Choose Your password (8 characters minimum)</label>
-                        <input type="password" id="password" name="password" name="password" minLength="8" value={givenPassword}
+                        <input type="password" id="password" name="password" minLength="8" value={givenPassword}
                                onChange={event => setPassword(event.target.value)}
                                autoComplete="new-password"/>
                     </div>
