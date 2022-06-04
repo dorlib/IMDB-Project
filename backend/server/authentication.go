@@ -1,20 +1,19 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/go-chi/chi"
 	"golang.org/x/crypto/bcrypt"
-	"html/template"
 	"imdbv2/ent"
 	"imdbv2/ent/user"
+	"io"
 	"log"
 	"net/http"
 )
 
-func signHandler(t *template.Template, c *ent.Client) http.Handler {
+func signHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if err := t.Execute(w, nil); err != nil {
-			http.Error(w, fmt.Sprintf("error excuting template (%s)", err), http.StatusInternalServerError)
-		}
 		if r.Method != "POST" {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
@@ -25,20 +24,40 @@ func signHandler(t *template.Template, c *ent.Client) http.Handler {
 			log.Fatal(err)
 		}
 
-		firstname := r.PostForm.Get("firstname")
-		lastname := r.PostForm.Get("lastname")
-		nickname := r.PostForm.Get("nickname")
-		email := r.PostForm.Get("email")
-		dayOfBirth := r.PostForm.Get("day")
-		monthOfBirth := r.PostForm.Get("month")
-		yearOfBirth := r.PostForm.Get("year")
-		birthday := dayOfBirth + "." + monthOfBirth + "." + yearOfBirth
-		country := r.PostForm.Get("country")
-		password := r.PostForm.Get("password")
-		description := r.PostForm.Get("description")
-		fileProfile := r.PostForm.Get("fileProfile")
-		textProfile := r.PostForm.Get("textProfile")
-		gender := r.PostForm.Get("gender")
+		fmt.Println(r.PostForm)
+		buf, err := io.ReadAll(r.Body)
+		fmt.Println(err, string(buf))
+		var userData struct {
+			firstName   string `json:"firstname"`
+			lastName    string `json:"lastName"`
+			nickName    string `json:"nickName"`
+			email       string `json:"email"`
+			dayOfBirth  string `json:"dayOfBirth"`
+			dayOfMonth  string `json:"dayOfMonth"`
+			dayOfYear   string `json:"dayOfYear"`
+			country     string `json:"country"`
+			password    string `json:"password"`
+			description string `json:"description"`
+			fileProfile string `json:"fileProfile"`
+			textProfile string `json:"textProfile"`
+			gender      string `json:"gender"`
+		}
+		err = json.Unmarshal(buf, &userData)
+
+		//firstname := r.PostForm.Get("firstname")
+		//lastname := r.PostForm.Get("lastname")
+		//nickname := r.PostForm.Get("nickname")
+		//email := r.PostForm.Get("email")
+		//dayOfBirth := r.PostForm.Get("day")
+		//monthOfBirth := r.PostForm.Get("month")
+		//yearOfBirth := r.PostForm.Get("year")
+		//birthday := dayOfBirth + "." + monthOfBirth + "." + yearOfBirth
+		//country := r.PostForm.Get("country")
+		//password := r.PostForm.Get("password")
+		//description := r.PostForm.Get("description")
+		//fileProfile := r.PostForm.Get("fileProfile")
+		//textProfile := r.PostForm.Get("textProfile")
+		//gender := r.PostForm.Get("gender")
 
 		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 
@@ -50,7 +69,7 @@ func signHandler(t *template.Template, c *ent.Client) http.Handler {
 
 		newUser := c.User.
 			Create().
-			SetFirstname(firstname).
+			SetFirstname(userDate.Firstname).
 			SetLastname(lastname).
 			SetNickname(nickname).
 			SetDescription(description).
@@ -66,12 +85,8 @@ func signHandler(t *template.Template, c *ent.Client) http.Handler {
 	})
 }
 
-func logInHandler(t *template.Template, c *ent.Client) http.Handler {
+func logInHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if err := t.Execute(w, nil); err != nil {
-			http.Error(w, fmt.Sprintf("error excuting template (%s)", err), http.StatusInternalServerError)
-		}
-
 		if r.Method != "POST" {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
@@ -99,17 +114,15 @@ func logInHandler(t *template.Template, c *ent.Client) http.Handler {
 			if err3 != nil {
 				panic(err3)
 			}
-			if err := t.Execute(w, userData); err != nil {
-				http.Error(w, fmt.Sprintf("error executing template (%s)", err), http.StatusInternalServerError)
-			}
+			_ = userData
 		}
 	})
 }
 
-func authentication(client *ent.Client) {
-	signPageTpl := template.Must(template.ParseFiles("../frontend/react/imdb/src/components/accounts/signupForm.jsx"))
-	loginPageTpl := template.Must(template.ParseFiles("../frontend/react/imdb/src/components/accounts/loginForm.jsx"))
+func authentication(router *chi.Mux, client *ent.Client) {
+	//signPageTpl := template.Must(template.ParseFiles("../frontend/react/imdb/src/components/accounts/signupForm.jsx"))
+	//loginPageTpl := template.Must(template.ParseFiles("../frontend/react/imdb/src/components/accounts/loginForm.jsx"))
 
-	http.Handle("/loginForm.jsx", signHandler(signPageTpl, client))
-	http.Handle("/signupForm.jsx", logInHandler(loginPageTpl, client))
+	router.Handle("/loginForm", signHandler(client))
+	router.Handle("/signupForm", logInHandler(client))
 }
