@@ -97,25 +97,60 @@ func logInHandler(c *ent.Client) http.Handler {
 			log.Fatal(err)
 		}
 
-		nickname := r.PostForm.Get("nickname")
-		//email := r.PostForm.Get("email")
-		password := r.PostForm.Get("password")
+		buf, err := io.ReadAll(r.Body)
+		fmt.Println(err, string(buf))
 
-		userID := c.User.Query().Where(user.Nickname(nickname)).OnlyIDX(r.Context())
+		var userData struct {
+			GivenNickName string `json:"givenNickName"`
+			GivenEmail    string `json:"givenEmail"`
+			GivenPassword string `json:"givenPassword"`
+		}
+
+		err = json.Unmarshal(buf, &userData)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		userID := c.User.Query().Where(user.Nickname(userData.GivenNickName)).OnlyIDX(r.Context())
 		data := c.User.GetX(r.Context(), userID)
 
 		currentPassword := data.Password
 
-		err2 := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(password))
+		err2 := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(userData.GivenPassword))
 		if err2 != nil {
 			http.Error(w, fmt.Sprintf("error executing template (%s)", err2), http.StatusInternalServerError)
+
+			errorMsg, err4 := json.Marshal(err2)
+			if err4 != nil {
+				fmt.Println(err4)
+			}
+
+			res1, err5 := w.Write(errorMsg)
+			if err5 != nil {
+				fmt.Println(err5)
+			}
+			fmt.Println(res1)
+
 		} else {
 			userData, err3 := c.User.Query().Where(user.ID(userID)).All(r.Context())
 			if err3 != nil {
 				panic(err3)
 			}
 			_ = userData
+
+			newID, err1 := json.Marshal(userID)
+			if err != nil {
+				fmt.Println(err1)
+			}
+
+			res2, e := w.Write(newID)
+			if e != nil {
+				fmt.Println(e)
+			}
+			fmt.Println(res2)
+
 		}
+
 	})
 }
 
