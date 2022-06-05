@@ -25,6 +25,9 @@ export function SignUpForm(props) {
         setGender(event.target.value);
     };
 
+    const [spinner, setSpinner] = useState(false);
+
+
     const [givenFirstName, setFirstName] = useState('')
     const [givenLastName, setLastName] = useState('')
     const [givenNickName, setNickName] = useState('')
@@ -57,6 +60,8 @@ export function SignUpForm(props) {
             givenYearOfBirth,
         };
 
+        setSpinner(true);
+
         fetch('http://localhost:8081/signupForm', {
             method: 'post',
             headers: {"Content-Type": "application/json"},
@@ -67,9 +72,10 @@ export function SignUpForm(props) {
                 console.error('error:', err)
             })
             .then((data) => {
-            console.log('new user added')
-            window.location.replace("/userPage/" + JSON.stringify(data))
-        })
+                setSpinner(false);
+                console.log('new user added')
+                window.location.replace("/userPage/" + JSON.stringify(data))
+            })
     }
 
     const Input = styled("input")({
@@ -154,11 +160,13 @@ export function SignUpForm(props) {
                         <table className={classes.tr}>
                             <tbody>
                             <tr>
-                                <td><input type="number" id="year" name="year" min="1920" max="2022" placeholder="Year" required
+                                <td><input type="number" id="year" name="year" min="1920" max="2022" placeholder="Year"
+                                           required
                                            value={givenYearOfBirth}
                                            onChange={event => setYearOfBirth(event.target.value)}
                                            className={classes.year}/></td>
-                                <td><input type="number" id="month" name="month" min="1" max="12" placeholder="Month" required
+                                <td><input type="number" id="month" name="month" min="1" max="12" placeholder="Month"
+                                           required
                                            value={givenMonthOfBirth}
                                            onChange={event => setMonthOfBirth(event.target.value)}
                                            className={classes.month}/></td>
@@ -187,7 +195,7 @@ export function SignUpForm(props) {
                                autoComplete="new-password"/>
                     </div>
                     <Marginer direction="vertical" margin={10}/>
-                    <SubmitButton type="submit" value="submit" /*onSubmit={handleSubmit}*/>Sign In!</SubmitButton>
+                    <SubmitButton type="submit" value="submit" /*onSubmit={handleSubmit}*/>{spinner? 'loading...' : 'Sign In!'}</SubmitButton>
                 </form>
             </Card>
             <MutedLink href="#">Forget your password?</MutedLink>
