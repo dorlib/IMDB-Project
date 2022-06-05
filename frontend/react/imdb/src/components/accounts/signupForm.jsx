@@ -61,8 +61,14 @@ export function SignUpForm(props) {
             method: 'post',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(userData)
-        }).then(() => {
+        })
+            .then(response => response.json())
+            .catch((err) => {
+                console.error('error:', err)
+            })
+            .then((data) => {
             console.log('new user added')
+            window.location.replace("/userPage/" + JSON.stringify(data))
         })
     }
 

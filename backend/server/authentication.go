@@ -72,6 +72,16 @@ func signHandler(c *ent.Client) http.Handler {
 			SaveX(r.Context())
 		fmt.Println("new user added:", newUser)
 
+		newID, err1 := json.Marshal(newUser.ID)
+		if err != nil {
+			fmt.Println(err1)
+		}
+
+		res, err2 := w.Write(newID)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		fmt.Println(res)
 	})
 }
 
