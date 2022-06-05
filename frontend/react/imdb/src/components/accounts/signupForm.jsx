@@ -31,7 +31,8 @@ export function SignUpForm(props) {
     const [givenGender, setGender] = useState('')
     const [givenDesc, setDesc] = useState('')
     const [givenPassword, setPassword] = useState('')
-    const [givenProfile, setProfile] = useState('')
+    const [givenTextProfile, setTextProfile] = useState('')
+    const [givenFileProfile, setFileProfile] = useState('')
     const [givenEmail, setEmail] = useState('')
     const [givenCountry, setCountry] = useState('')
     const [givenDayOfBirth, setDayOfBirth] = useState('')
@@ -47,7 +48,8 @@ export function SignUpForm(props) {
             givenGender,
             givenDesc,
             givenPassword,
-            givenProfile,
+            givenTextProfile,
+            givenFileProfile,
             givenEmail,
             givenCountry,
             givenDayOfBirth,
@@ -55,7 +57,7 @@ export function SignUpForm(props) {
             givenYearOfBirth,
         };
 
-        fetch('http://localhost:8081/loginForm', {
+        fetch('http://localhost:8081/signupForm', {
             method: 'post',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(userData)
@@ -116,8 +118,8 @@ export function SignUpForm(props) {
 
                     <div className={classes.im}>
                         <label htmlFor="textProfile">Profile Image</label>
-                        <input datatype="string" id="textProfile" name="textProfile" value={givenProfile}
-                               onChange={event => setProfile(event.target.value)}/>
+                        <input datatype="string" id="textProfile" name="textProfile" value={givenTextProfile}
+                               onChange={event => setTextProfile(event.target.value)}/>
                     </div>
 
                     <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
@@ -128,7 +130,7 @@ export function SignUpForm(props) {
                                     accept="image/*"
                                     id="fileProfile"
                                     name="fileProfile"
-                                    value={givenProfile} onChange={event => setProfile(event.target.value)}
+                                    value={givenFileProfile} onChange={event => setFileProfile(event.target.value)}
                                 />
                             </Button>
                         </label>
