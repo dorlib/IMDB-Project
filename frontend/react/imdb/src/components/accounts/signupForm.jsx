@@ -7,15 +7,10 @@ import {Typography} from "@mui/material";
 import {Button, Stack} from "@mui/material";
 import Card from "../ui/Card";
 import classes from "./SignupForm.module.css";
-import {gql, useMutation} from "@apollo/client";
 import {styled} from "@mui/material/styles";
-
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import {getSpaceUntilMaxLength} from "@testing-library/user-event/dist/utils";
 
 
 export function SignUpForm(props) {

@@ -11,47 +11,18 @@ import classes from "./loginForm.module.css";
 
 export function LoginForm() {
     const {switchToSignup} = useContext(AccountContext);
-    const LOGIN_USER = gql`
-        query LoginUser ($nickname: String!, $password: String!, $email: String!) {
-            loginUser(nickname: $nickname, password: $password, email: $email) {
-                id
-                firstname
-            }
-        }
-    `;
 
     const [givenPassword, setPassword] = useState('')
     const [givenNickname, setNickname] = useState('')
     const [givenEmail, setEmail] = useState('')
+
+    
+
+
+
     const Input = styled("input")({
         display: "none",
     });
-
-    const [loginUser, {loading, error}] = useLazyQuery(LOGIN_USER,
-        {
-            variables: {
-                nickname: givenNickname,
-                password: givenPassword,
-                email: givenEmail,
-            }, onCompleted: function (data) {
-                if (data && data["loginUser"]) {
-                    return (
-                        console.log(data),
-                            <p>Welcome Back {data["loginUser"]["0"]["firstname"]}</p>,
-                            window.location.replace("/userPage/" + data["loginUser"]["0"]["id"])
-                    )
-                } else {
-                    return (
-                        console.log(data),
-                            console.log("login failed"),
-                            window.location.reload()
-                    )
-                }
-            },
-        });
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Login Failed.. Please Try Again</p>;
 
     return (
         <BoxContainer>
