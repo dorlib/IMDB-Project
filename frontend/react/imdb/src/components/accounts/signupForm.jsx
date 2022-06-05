@@ -190,7 +190,7 @@ export function SignUpForm(props) {
                                autoComplete="new-password"/>
                     </div>
                     <Marginer direction="vertical" margin={10}/>
-                    <SubmitButton type="submit" value="submit" /*onSubmit={handleSubmit}*/>{spinner? 'loading...' : 'Sign In!'}</SubmitButton>
+                    <SubmitButton type="submit" value="submit" >{spinner? 'loading...' : 'Sign In!'}</SubmitButton>
                 </form>
             </Card>
             <MutedLink href="#">Forget your password?</MutedLink>

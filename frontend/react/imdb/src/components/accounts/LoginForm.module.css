@@ -58,4 +58,11 @@
     border-color: #a50e48;
   }
 
+  .err {
+    display: flex;
+    position: absolute;
+    top: 10.8cm;
+    left: 3.5cm;
+  }
+
 
