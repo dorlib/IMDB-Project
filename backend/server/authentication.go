@@ -24,61 +24,51 @@ func signHandler(c *ent.Client) http.Handler {
 			log.Fatal(err)
 		}
 
-		fmt.Println(r.PostForm)
 		buf, err := io.ReadAll(r.Body)
 		fmt.Println(err, string(buf))
+
 		var userData struct {
-			firstName   string `json:"firstname"`
-			lastName    string `json:"lastName"`
-			nickName    string `json:"nickName"`
-			email       string `json:"email"`
-			dayOfBirth  string `json:"dayOfBirth"`
-			dayOfMonth  string `json:"dayOfMonth"`
-			dayOfYear   string `json:"dayOfYear"`
-			country     string `json:"country"`
-			password    string `json:"password"`
-			description string `json:"description"`
-			fileProfile string `json:"fileProfile"`
-			textProfile string `json:"textProfile"`
-			gender      string `json:"gender"`
+			GivenFirstName    string `json:"givenFirstName"`
+			GivenLastName     string `json:"givenLastName"`
+			GivenNickName     string `json:"givenNickName"`
+			GivenEmail        string `json:"givenEmail"`
+			GivenDayOfBirth   string `json:"givenDayOfBirth"`
+			GivenMonthOfBirth string `json:"givenMonthOfBirth"`
+			GivenYearOfBirth  string `json:"givenYearOfBirth"`
+			GivenCountry      string `json:"givenCountry"`
+			GivenPassword     string `json:"givenPassword"`
+			GivenDesc         string `json:"givenDesc"`
+			GivenFileProfile  string `json:"givenFileProfile"`
+			GivenTextProfile  string `json:"givenTextProfile"`
+			GivenGender       string `json:"givenGender"`
 		}
+
 		err = json.Unmarshal(buf, &userData)
-
-		//firstname := r.PostForm.Get("firstname")
-		//lastname := r.PostForm.Get("lastname")
-		//nickname := r.PostForm.Get("nickname")
-		//email := r.PostForm.Get("email")
-		//dayOfBirth := r.PostForm.Get("day")
-		//monthOfBirth := r.PostForm.Get("month")
-		//yearOfBirth := r.PostForm.Get("year")
-		//birthday := dayOfBirth + "." + monthOfBirth + "." + yearOfBirth
-		//country := r.PostForm.Get("country")
-		//password := r.PostForm.Get("password")
-		//description := r.PostForm.Get("description")
-		//fileProfile := r.PostForm.Get("fileProfile")
-		//textProfile := r.PostForm.Get("textProfile")
-		//gender := r.PostForm.Get("gender")
-
-		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
-
-		profile := textProfile
-
-		if fileProfile != "" {
-			profile = fileProfile
+		if err != nil {
+			log.Fatal(err)
 		}
+
+		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.GivenPassword), 14)
+
+		profile := userData.GivenTextProfile
+		if userData.GivenFileProfile != "" {
+			profile = userData.GivenFileProfile
+		}
+
+		birthday := string(userData.GivenDayOfBirth) + string(userData.GivenMonthOfBirth) + string(userData.GivenYearOfBirth)
 
 		newUser := c.User.
 			Create().
-			SetFirstname(userDate.Firstname).
-			SetLastname(lastname).
-			SetNickname(nickname).
-			SetDescription(description).
+			SetFirstname(userData.GivenFirstName).
+			SetLastname(userData.GivenLastName).
+			SetNickname(userData.GivenNickName).
+			SetDescription(userData.GivenDesc).
 			SetPassword(string(bcrypedPassword)).
 			SetProfile(profile).
 			SetBirthDay(birthday).
-			SetEmail(email).
-			SetCountry(country).
-			SetGender(gender).
+			SetEmail(userData.GivenEmail).
+			SetCountry(userData.GivenCountry).
+			SetGender(userData.GivenGender).
 			SaveX(r.Context())
 		fmt.Println("new user added:", newUser)
 
@@ -120,9 +110,6 @@ func logInHandler(c *ent.Client) http.Handler {
 }
 
 func authentication(router *chi.Mux, client *ent.Client) {
-	//signPageTpl := template.Must(template.ParseFiles("../frontend/react/imdb/src/components/accounts/signupForm.jsx"))
-	//loginPageTpl := template.Must(template.ParseFiles("../frontend/react/imdb/src/components/accounts/loginForm.jsx"))
-
-	router.Handle("/loginForm", signHandler(client))
-	router.Handle("/signupForm", logInHandler(client))
+	router.Handle("/signupForm", signHandler(client))
+	router.Handle("/loginForm", logInHandler(client))
 }
