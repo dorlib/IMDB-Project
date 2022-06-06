@@ -8,6 +8,7 @@ import {styled} from "@mui/material/styles";
 import classes from "./LoginForm.module.css";
 import {BoldLink, BoxContainer, FormContainer, MutedLink, SubmitButton,} from "./common";
 import {Typography} from "@mui/material";
+import styledComponentsBrowserEsm from "styled-components/dist/styled-components.browser.esm";
 
 
 export function LoginForm() {
@@ -19,6 +20,8 @@ export function LoginForm() {
 
     const [spinner, setSpinner] = useState(false);
     const [loginError, setLoginError] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [userName, setUserName] = useState('')
 
 
     const handleLogin = (e) => {
@@ -30,7 +33,8 @@ export function LoginForm() {
         };
 
         setSpinner(true);
-        setLoginError(false)
+        setLoginError(false);
+        setSuccess(false);
 
         fetch('http://localhost:8081/loginForm', {
             method: 'post',
@@ -44,8 +48,10 @@ export function LoginForm() {
             .then((data) => {
                 if (data) {
                     console.log('login successfully')
+                    setUserName(data["FirstName"])
                     setSpinner(false);
-                    window.location.replace("/userPage/" + JSON.stringify(data))
+                    setSuccess(true);
+                    return setTimeout( () => window.location.replace("/userPage/" + JSON.stringify(data["ID"])), 1000)
                 } else {
                     console.log('login not successful')
                     setSpinner(false);
@@ -75,6 +81,7 @@ export function LoginForm() {
                         </div>
                     </Card>
                     <Typography className={classes.err}>{loginError? 'Login was not successful... please try again': null}</Typography>
+                    <Typography className={classes.success}>{success? 'Its Nice Seeing You Again '+ userName + ' !': null}</Typography>
                     <Marginer direction="vertical" margin={45}/>
                     <SubmitButton type="submit" value="submit" style={{display: "flex", marginLeft: "1.9cm"}}>{spinner? 'loading...' : 'Log In!'}</SubmitButton>
                 </form>
