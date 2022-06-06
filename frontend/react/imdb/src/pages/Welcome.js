@@ -1,5 +1,8 @@
 import React from "react";
 import classes from "./welcome.module.css"
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import EditIcon from "@mui/icons-material/Edit";
 
 function Welcome() {
 
@@ -25,6 +28,11 @@ function Welcome() {
 
                 </div>
             </div>
+            <CardContent className={classes.fresh}>
+                <Typography component="div" style={{marginLeft: "2.8cm", fontSize: "large"}}>
+                    Check Out Our Freshly Added Movies!
+                </Typography>
+            </CardContent>
             <div className={classes.actions}>
                 <button type="button" onClick={handleSignClick}>Sign In!</button>
                 <h2 className={classes.or}>OR</h2>

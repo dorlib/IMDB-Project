@@ -5,7 +5,7 @@ import {useState} from "react";
 import Card from "../ui/Card";
 import {styled} from "@mui/material/styles";
 
-import classes from "./loginForm.module.css";
+import classes from "./LoginForm.module.css";
 import {BoldLink, BoxContainer, FormContainer, MutedLink, SubmitButton,} from "./common";
 import {Typography} from "@mui/material";
 

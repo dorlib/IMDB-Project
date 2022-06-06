@@ -70,3 +70,15 @@ html,body {
     bottom: 1.7cm;
     color: white;
 }
+
+.fresh {
+    display: flex;
+    position: absolute;
+    top: 4.2cm;
+    right: 5.8cm;
+    width: 14cm;
+    border-radius: 20px;
+    color: white;
+    background-color: #cc2062;
+    height: 1.4cm;
+}
