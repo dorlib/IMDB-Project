@@ -19,6 +19,7 @@ export function LoginForm() {
 
     const [spinner, setSpinner] = useState(false);
     const [loginError, setLoginError] = useState(false);
+    const [success, setSuccess] = useState(false);
 
 
     const handleLogin = (e) => {
@@ -30,7 +31,8 @@ export function LoginForm() {
         };
 
         setSpinner(true);
-        setLoginError(false)
+        setLoginError(false);
+        setSuccess(false);
 
         fetch('http://localhost:8081/loginForm', {
             method: 'post',
@@ -45,7 +47,8 @@ export function LoginForm() {
                 if (data) {
                     console.log('login successfully')
                     setSpinner(false);
-                    window.location.replace("/userPage/" + JSON.stringify(data))
+                    setSuccess(true);
+                    return setTimeout( () => window.location.replace("/userPage/" + JSON.stringify(data)), 1000)
                 } else {
                     console.log('login not successful')
                     setSpinner(false);
@@ -75,6 +78,7 @@ export function LoginForm() {
                         </div>
                     </Card>
                     <Typography className={classes.err}>{loginError? 'Login was not successful... please try again': null}</Typography>
+                    <Typography className={classes.success}>{success? 'Welcome Back Again!': null}</Typography>
                     <Marginer direction="vertical" margin={45}/>
                     <SubmitButton type="submit" value="submit" style={{display: "flex", marginLeft: "1.9cm"}}>{spinner? 'loading...' : 'Log In!'}</SubmitButton>
                 </form>
