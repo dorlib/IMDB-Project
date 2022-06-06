@@ -85,6 +85,11 @@ func signHandler(c *ent.Client) http.Handler {
 	})
 }
 
+type loaded struct {
+	FirstName string
+	ID        int
+}
+
 func logInHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
@@ -138,19 +143,22 @@ func logInHandler(c *ent.Client) http.Handler {
 			}
 			_ = userData
 
-			newID, err1 := json.Marshal(userID)
-			if err != nil {
+			info := loaded{
+				FirstName: data.Firstname,
+				ID:        userID,
+			}
+
+			resInfo, err1 := json.Marshal(info)
+			if err1 != nil {
 				fmt.Println(err1)
 			}
 
-			res2, e := w.Write(newID)
+			res2, e := w.Write(resInfo)
 			if e != nil {
 				fmt.Println(e)
 			}
 			fmt.Println(res2)
-
 		}
-
 	})
 }
 
