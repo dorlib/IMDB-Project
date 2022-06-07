@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/go-chi/chi"
 	"golang.org/x/crypto/bcrypt"
 	"imdbv2/ent"
@@ -10,7 +11,10 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 )
+
+const SecretKey = "secret"
 
 func signHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -135,30 +139,53 @@ func logInHandler(c *ent.Client) http.Handler {
 				fmt.Println(err5)
 			}
 			fmt.Println(res1)
-
-		} else {
-			userData, err3 := c.User.Query().Where(user.ID(userID)).All(r.Context())
-			if err3 != nil {
-				panic(err3)
-			}
-			_ = userData
-
-			info := loaded{
-				FirstName: data.Firstname,
-				ID:        userID,
-			}
-
-			resInfo, err1 := json.Marshal(info)
-			if err1 != nil {
-				fmt.Println(err1)
-			}
-
-			res2, e := w.Write(resInfo)
-			if e != nil {
-				fmt.Println(e)
-			}
-			fmt.Println(res2)
+			return
 		}
+
+		// starting a token
+
+		claims := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.StandardClaims{
+			Issuer:    string(rune(data.ID)),
+			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), //1 day
+		})
+
+		token, err4 := claims.SignedString([]byte(SecretKey))
+		if err4 != nil {
+			log.Fatal(err4)
+		}
+
+		// initialize Cookie because login was successful
+		userCookie := http.Cookie{
+			Name:     "Username",
+			Value:    token,
+			Expires:  time.Now().Add(time.Hour * 24),
+			HttpOnly: true,
+		}
+
+		//setting the Cookie
+		http.SetCookie(w, &userCookie)
+		var cookie = userCookie.Value
+		fmt.Println("Cookie: ", cookie)
+
+		// building the info struct that will be sent as a response
+		info := loaded{
+			FirstName: data.Firstname,
+			ID:        userID,
+		}
+
+		// turns info to JSON encoding
+		resInfo, err1 := json.Marshal(info)
+		if err1 != nil {
+			fmt.Println(err1)
+		}
+
+		// writing the response for successful login
+		res2, e := w.Write(resInfo)
+		if e != nil {
+			fmt.Println(e)
+		}
+		fmt.Println(res2)
+
 	})
 }
 
