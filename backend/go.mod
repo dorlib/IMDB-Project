@@ -15,7 +15,10 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 )
 
-require golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
+require (
+	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
+	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
+)
 
 require (
 	ariga.io/atlas v0.3.7-0.20220303204946-787354f533c3 // indirect
