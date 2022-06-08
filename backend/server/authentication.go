@@ -143,10 +143,9 @@ func logInHandler(c *ent.Client) http.Handler {
 		}
 
 		// starting a token
-
 		claims := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.StandardClaims{
 			Issuer:    string(rune(data.ID)),
-			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), //1 day
+			ExpiresAt: jwt.NewTime(86400), //1 day
 		})
 
 		token, err4 := claims.SignedString([]byte(SecretKey))
