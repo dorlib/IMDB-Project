@@ -13,6 +13,8 @@ import styledComponentsBrowserEsm from "styled-components/dist/styled-components
 
 export function LoginForm() {
     const {switchToSignup} = useContext(AccountContext);
+    const {switchToReset} = useContext(AccountContext);
+
 
     const [givenPassword, setPassword] = useState('')
     const [givenNickname, setNickname] = useState('')
@@ -85,7 +87,11 @@ export function LoginForm() {
                     <Marginer direction="vertical" margin={45}/>
                     <SubmitButton type="submit" value="submit" style={{display: "flex", marginLeft: "1.9cm"}}>{spinner? 'loading...' : 'Log In!'}</SubmitButton>
                 </form>
-                <MutedLink href="#">Forget your password?</MutedLink>
+                <MutedLink href="#">Forget your password?
+                    <BoldLink href="#" onClick={switchToReset}>
+                        click here to reset
+                    </BoldLink>
+                </MutedLink>
                 <Marginer direction="vertical" margin="0.3em"/>
                 <Marginer direction="vertical" margin="1em"/>
                 <MutedLink href="#">
