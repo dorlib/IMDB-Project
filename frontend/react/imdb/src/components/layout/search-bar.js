@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import classes from './search-bar.module.css'
 import {gql, useQuery} from "@apollo/client";
 import {Link, useNavigate} from "react-router-dom";
@@ -36,6 +36,28 @@ function SearchBar() {
     const [filteredData, setFilteredData] = useState([]);
     const {loading: loading1, error: error1, data: data1} = useQuery(GET_MOVIES)
     const {loading: loading2, error: error2, data: data2} = useQuery(GET_DIRECTORS)
+
+    let menuRef = useRef()
+    let menuRef1 = useRef()
+
+
+
+    useEffect(() => {
+        let handler = (event) => {
+            if (!menuRef.current.contains(event.target)) {
+                if (!menuRef1.current.contains(event.target)) {
+                    setFilteredData([]);
+                    setWordEntered("")
+                }
+            }
+        }
+        document.addEventListener("mousedown", handler);
+
+        return () => {
+            document.removeEventListener("mousedown", handler)
+        }
+    })
+
     if (loading1 || loading2) return <p>Loading...</p>;
     if (error1 || error2) return <p>Error :</p>;
 
@@ -109,9 +131,9 @@ function SearchBar() {
 
     return (
         <div>
-            <div className={classes.search}>
-                <div className={classes.searchInput}>
-                    <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
+            <div className={classes.search} ref={menuRef1} >
+                <div className={classes.searchInput} >
+                    <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter} />
                     <div className={classes.searchIcon}>
                         {wordEntered.length === 0 ? (
                             <SearchIcon/>
@@ -119,9 +141,9 @@ function SearchBar() {
                             <CloseIcon id={"ClearBtn"} onClick={clearInput}/>
                         )}
                     </div>
-                </div>
+                </div >
                 {filteredData.length !== 0 && (
-                    <div className={classes.dataResult}>
+                    <div className={classes.dataResult} ref={menuRef}>
                         {filteredData}
                     </div>
                 )}
