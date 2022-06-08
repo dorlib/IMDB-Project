@@ -4,6 +4,7 @@ import { LoginForm } from "./loginForm";
 import { motion } from "framer-motion";
 import { AccountContext } from "./accountContext";
 import { SignUpForm } from "./signupForm";
+import { ResetForm } from "./resetForm";
 
 const BoxContainer = styled.div`
   width: 600px;
@@ -124,7 +125,14 @@ export function AccountBox(props) {
     }, 400);
   };
 
-  const contextValue = { switchToSignup, switchToSignin };
+  const switchToReset = () => {
+    playExpandingAnimation();
+    setTimeout(() => {
+      setActive("reset");
+    }, 400);
+  };
+
+  const contextValue = { switchToSignup, switchToSignin ,switchToReset };
 
   return (
     <AccountContext.Provider value={contextValue}>
@@ -150,9 +158,17 @@ export function AccountBox(props) {
               <SmallText>Please sign-up to continue!</SmallText>
             </HeaderContainer>
           )}
+          {active === "reset" && (
+              <HeaderContainer>
+                <HeaderText>Reset</HeaderText>
+                <HeaderText>Password</HeaderText>
+                <SmallText>Please enter your email to continue!</SmallText>
+              </HeaderContainer>
+          )}
         </TopContainer>
         <InnerContainer>
           {active === "signin" && <LoginForm />}
+          {active === "reset" && <ResetForm />}
           {active === "signup" && <SignUpForm />}
         </InnerContainer>
       </BoxContainer>
