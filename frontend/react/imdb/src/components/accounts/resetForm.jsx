@@ -32,7 +32,7 @@ export function ResetForm() {
         setLoginError(false);
         setSuccess(false);
 
-        fetch('http://localhost:8081/loginForm', {
+        fetch('http://localhost:8081/resetForm', {
             method: 'post',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(userData)

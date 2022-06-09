@@ -1,7 +1,12 @@
 package main
 
 import (
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"crypto/x509"
 	"encoding/json"
+	"encoding/pem"
 	"fmt"
 	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/go-chi/chi"
@@ -93,6 +98,42 @@ func signHandler(c *ent.Client) http.Handler {
 	})
 }
 
+func resetHandler(c *ent.Client) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+
+		err := r.ParseForm()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		buf, err := io.ReadAll(r.Body)
+		fmt.Println(err, string(buf))
+
+		var userData struct {
+			GivenPassword string `json:"GivenPassword"`
+			GivenID       int    `json:"GivenID"`
+		}
+
+		err = json.Unmarshal(buf, &userData)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.GivenPassword), 14)
+
+		newUser := c.User.
+			Update().Where(user.ID(userData.GivenID)).
+			SetPassword(string(bcrypedPassword)).
+			SaveX(r.Context())
+		fmt.Println("new user added:", newUser)
+
+	})
+}
+
 type loaded struct {
 	FirstName string
 	ID        int
@@ -146,29 +187,37 @@ func logInHandler(c *ent.Client) http.Handler {
 			return
 		}
 
+		key, err5 := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+		if err5 != nil {
+			log.Fatal(err5)
+		}
+
 		// starting a token
-		claims := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.StandardClaims{
+		claims := &jwt.StandardClaims{
 			Issuer:    string(rune(data.ID)),
 			ExpiresAt: jwt.NewTime(86400), //1 day
-		})
+		}
 
-		token, err4 := claims.SignedString([]byte(SecretKey))
+		token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+
+		tokenString, err4 := token.SignedString(key)
 		if err4 != nil {
-			log.Fatal(err4)
+			log.Fatal("error sign claims ", err4)
 		}
+		_ = tokenString
 
-		// initialize Cookie because login was successful
-		userCookie := http.Cookie{
-			Name:     "Username",
-			Value:    token,
-			Expires:  time.Now().Add(time.Hour * 24),
-			HttpOnly: true,
-		}
+		//// initialize Cookie because login was successful
+		//userCookie := http.Cookie{
+		//	Name:     "Username",
+		//	Value:    token,
+		//	Expires:  time.Now().Add(time.Hour * 24),
+		//	HttpOnly: true,
+		//}
 
-		//setting the Cookie
-		http.SetCookie(w, &userCookie)
-		var cookie = userCookie.Value
-		fmt.Println("Cookie: ", cookie)
+		////setting the Cookie
+		//http.SetCookie(w, &userCookie)
+		//var cookie = userCookie.Value
+		//fmt.Println("Cookie: ", cookie)
 
 		// building the info struct that will be sent as a response
 		info := loaded{
@@ -192,7 +241,32 @@ func logInHandler(c *ent.Client) http.Handler {
 	})
 }
 
+func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err error) {
+	der, err := x509.MarshalECPrivateKey(key)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	privKeyPEM = pem.EncodeToMemory(&pem.Block{
+		Type:  "EC PRIVATE KEY",
+		Bytes: der,
+	})
+
+	der, err = x509.MarshalPKIXPublicKey(key.Public())
+	if err != nil {
+		return nil, nil, err
+	}
+
+	pubKeyPEM = pem.EncodeToMemory(&pem.Block{
+		Type:  "EC PUBLIC KEY",
+		Bytes: der,
+	})
+
+	return
+}
+
 func authentication(router *chi.Mux, client *ent.Client) {
 	router.Handle("/signupForm", signHandler(client))
 	router.Handle("/loginForm", logInHandler(client))
+	router.Handle("/resetForm", resetHandler(client))
 }
