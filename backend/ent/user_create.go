@@ -80,6 +80,12 @@ func (uc *UserCreate) SetGender(s string) *UserCreate {
 	return uc
 }
 
+// SetSignupAt sets the "signup_at" field.
+func (uc *UserCreate) SetSignupAt(s string) *UserCreate {
+	uc.mutation.SetSignupAt(s)
+	return uc
+}
+
 // AddReviewIDs adds the "reviews" edge to the Review entity by IDs.
 func (uc *UserCreate) AddReviewIDs(ids ...int) *UserCreate {
 	uc.mutation.AddReviewIDs(ids...)
@@ -215,6 +221,9 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Gender(); !ok {
 		return &ValidationError{Name: "gender", err: errors.New(`ent: missing required field "User.gender"`)}
 	}
+	if _, ok := uc.mutation.SignupAt(); !ok {
+		return &ValidationError{Name: "signup_at", err: errors.New(`ent: missing required field "User.signup_at"`)}
+	}
 	return nil
 }
 
@@ -321,6 +330,14 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldGender,
 		})
 		_node.Gender = value
+	}
+	if value, ok := uc.mutation.SignupAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldSignupAt,
+		})
+		_node.SignupAt = value
 	}
 	if nodes := uc.mutation.ReviewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -27,6 +27,8 @@ const (
 	FieldCountry = "country"
 	// FieldGender holds the string denoting the gender field in the database.
 	FieldGender = "gender"
+	// FieldSignupAt holds the string denoting the signup_at field in the database.
+	FieldSignupAt = "signup_at"
 	// EdgeReviews holds the string denoting the reviews edge name in mutations.
 	EdgeReviews = "reviews"
 	// Table holds the table name of the user in the database.
@@ -53,6 +55,7 @@ var Columns = []string{
 	FieldProfile,
 	FieldCountry,
 	FieldGender,
+	FieldSignupAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

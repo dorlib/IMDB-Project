@@ -45,6 +45,7 @@ func signHandler(c *ent.Client) http.Handler {
 			GivenFileProfile  string `json:"givenFileProfile"`
 			GivenTextProfile  string `json:"givenTextProfile"`
 			GivenGender       string `json:"givenGender"`
+			GivenDate         string `json:"GivenDate"`
 		}
 
 		err = json.Unmarshal(buf, &userData)
@@ -61,6 +62,8 @@ func signHandler(c *ent.Client) http.Handler {
 
 		birthday := string(userData.GivenDayOfBirth) + string(userData.GivenMonthOfBirth) + string(userData.GivenYearOfBirth)
 
+		date := time.Now()
+
 		newUser := c.User.
 			Create().
 			SetFirstname(userData.GivenFirstName).
@@ -73,6 +76,7 @@ func signHandler(c *ent.Client) http.Handler {
 			SetEmail(userData.GivenEmail).
 			SetCountry(userData.GivenCountry).
 			SetGender(userData.GivenGender).
+			SetSignupAt(date.String()).
 			SaveX(r.Context())
 		fmt.Println("new user added:", newUser)
 
