@@ -162,6 +162,13 @@ func Gender(v string) predicate.User {
 	})
 }
 
+// SignupAt applies equality check predicate on the "signup_at" field. It's identical to SignupAtEQ.
+func SignupAt(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSignupAt), v))
+	})
+}
+
 // FirstnameEQ applies the EQ predicate on the "firstname" field.
 func FirstnameEQ(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
@@ -1269,6 +1276,117 @@ func GenderEqualFold(v string) predicate.User {
 func GenderContainsFold(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldGender), v))
+	})
+}
+
+// SignupAtEQ applies the EQ predicate on the "signup_at" field.
+func SignupAtEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSignupAt), v))
+	})
+}
+
+// SignupAtNEQ applies the NEQ predicate on the "signup_at" field.
+func SignupAtNEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSignupAt), v))
+	})
+}
+
+// SignupAtIn applies the In predicate on the "signup_at" field.
+func SignupAtIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldSignupAt), v...))
+	})
+}
+
+// SignupAtNotIn applies the NotIn predicate on the "signup_at" field.
+func SignupAtNotIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldSignupAt), v...))
+	})
+}
+
+// SignupAtGT applies the GT predicate on the "signup_at" field.
+func SignupAtGT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSignupAt), v))
+	})
+}
+
+// SignupAtGTE applies the GTE predicate on the "signup_at" field.
+func SignupAtGTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSignupAt), v))
+	})
+}
+
+// SignupAtLT applies the LT predicate on the "signup_at" field.
+func SignupAtLT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSignupAt), v))
+	})
+}
+
+// SignupAtLTE applies the LTE predicate on the "signup_at" field.
+func SignupAtLTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSignupAt), v))
+	})
+}
+
+// SignupAtContains applies the Contains predicate on the "signup_at" field.
+func SignupAtContains(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldSignupAt), v))
+	})
+}
+
+// SignupAtHasPrefix applies the HasPrefix predicate on the "signup_at" field.
+func SignupAtHasPrefix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldSignupAt), v))
+	})
+}
+
+// SignupAtHasSuffix applies the HasSuffix predicate on the "signup_at" field.
+func SignupAtHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldSignupAt), v))
+	})
+}
+
+// SignupAtEqualFold applies the EqualFold predicate on the "signup_at" field.
+func SignupAtEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldSignupAt), v))
+	})
+}
+
+// SignupAtContainsFold applies the ContainsFold predicate on the "signup_at" field.
+func SignupAtContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldSignupAt), v))
 	})
 }
 

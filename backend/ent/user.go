@@ -35,6 +35,8 @@ type User struct {
 	Country string `json:"country,omitempty"`
 	// Gender holds the value of the "gender" field.
 	Gender string `json:"gender,omitempty"`
+	// SignupAt holds the value of the "signup_at" field.
+	SignupAt string `json:"signup_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges UserEdges `json:"edges"`
@@ -65,7 +67,7 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case user.FieldID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldFirstname, user.FieldLastname, user.FieldNickname, user.FieldDescription, user.FieldPassword, user.FieldEmail, user.FieldBirthDay, user.FieldProfile, user.FieldCountry, user.FieldGender:
+		case user.FieldFirstname, user.FieldLastname, user.FieldNickname, user.FieldDescription, user.FieldPassword, user.FieldEmail, user.FieldBirthDay, user.FieldProfile, user.FieldCountry, user.FieldGender, user.FieldSignupAt:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type User", columns[i])
@@ -148,6 +150,12 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				u.Gender = value.String
 			}
+		case user.FieldSignupAt:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field signup_at", values[i])
+			} else if value.Valid {
+				u.SignupAt = value.String
+			}
 		}
 	}
 	return nil
@@ -200,6 +208,8 @@ func (u *User) String() string {
 	builder.WriteString(u.Country)
 	builder.WriteString(", gender=")
 	builder.WriteString(u.Gender)
+	builder.WriteString(", signup_at=")
+	builder.WriteString(u.SignupAt)
 	builder.WriteByte(')')
 	return builder.String()
 }

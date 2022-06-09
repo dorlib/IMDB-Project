@@ -6,12 +6,14 @@ package graphql
 import (
 	"context"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"imdbv2/ent"
 	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/user"
+	"time"
 )
 
 func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error) {
@@ -46,21 +48,23 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string, country string, gender string) (*ent.User, error) {
-	//bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
-	//
-	//return r.client.User.Create().
-	//	SetFirstname(firstname).
-	//	SetLastname(lastname).
-	//	SetNickname(nickname).
-	//	SetDescription(description).
-	//	SetPassword(string(bcrypedPassword)).
-	//	SetProfile(profile).
-	//	SetBirthDay(birthday).
-	//	SetEmail(email).
-	//	SetCountry(country).
-	//	Save(ctx)
+	bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
+	date := time.Now()
 
-	panic("panic")
+	return r.client.User.Create().
+		SetFirstname(firstname).
+		SetLastname(lastname).
+		SetNickname(nickname).
+		SetDescription(description).
+		SetPassword(string(bcrypedPassword)).
+		SetProfile(profile).
+		SetBirthDay(birthday).
+		SetEmail(email).
+		SetCountry(country).
+		SetSignupAt(date.String()).
+		Save(ctx)
+
+	//panic("panic")
 }
 
 func (r *queryResolver) Movies(ctx context.Context) ([]*ent.Movie, error) {
