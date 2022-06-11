@@ -50,6 +50,7 @@ export function LoginForm() {
             .then((data) => {
                 if (data) {
                     console.log('login successfully')
+                    console.log(data["Cookie"])
                     setUserName(data["FirstName"])
                     setSpinner(false);
                     setSuccess(true);

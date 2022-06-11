@@ -54,7 +54,7 @@
     position: absolute;
     display: flex;
     right: 6cm;
-    bottom: 4cm;
+    bottom: 6cm;
 }
 
 .backward {
@@ -62,6 +62,6 @@
     font-size: xxx-large;
     position: absolute;
     display: flex;
-    bottom: 4cm;
+    bottom: 6cm;
     right: 18cm;
 }

@@ -137,6 +137,7 @@ func resetHandler(c *ent.Client) http.Handler {
 type loaded struct {
 	FirstName string
 	ID        int
+	Cookie    string
 }
 
 func logInHandler(c *ent.Client) http.Handler {
@@ -199,12 +200,15 @@ func logInHandler(c *ent.Client) http.Handler {
 		}
 
 		token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+		fmt.Println("token :", token)
 
 		tokenString, err4 := token.SignedString(key)
 		if err4 != nil {
 			log.Fatal("error sign claims ", err4)
 		}
 		_ = tokenString
+
+		fmt.Println("token string :", tokenString)
 
 		//// initialize Cookie because login was successful
 		userCookie := http.Cookie{
@@ -223,6 +227,7 @@ func logInHandler(c *ent.Client) http.Handler {
 		info := loaded{
 			FirstName: data.Firstname,
 			ID:        userID,
+			Cookie:    cookie,
 		}
 
 		// turns info to JSON encoding
@@ -236,7 +241,7 @@ func logInHandler(c *ent.Client) http.Handler {
 		if e != nil {
 			fmt.Println(e)
 		}
-		fmt.Println(res2)
+		fmt.Println("res : ", res2)
 
 	})
 }
