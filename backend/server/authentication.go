@@ -16,10 +16,9 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
-
-const SecretKey = "secret"
 
 func signHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -140,6 +139,9 @@ type loaded struct {
 	Cookie    string
 }
 
+var SecretKey string
+var cookieData string
+
 func logInHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
@@ -208,6 +210,8 @@ func logInHandler(c *ent.Client) http.Handler {
 		}
 		_ = tokenString
 
+		SecretKey = tokenString
+
 		fmt.Println("token string :", tokenString)
 
 		//// initialize Cookie because login was successful
@@ -221,6 +225,7 @@ func logInHandler(c *ent.Client) http.Handler {
 		////setting the Cookie
 		http.SetCookie(w, &userCookie)
 		var cookie = userCookie.Value
+		cookieData = cookie
 		fmt.Println("Cookie: ", cookie)
 
 		// building the info struct that will be sent as a response
@@ -269,9 +274,46 @@ func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err
 
 	return
 }
+func UserHandler(c *ent.Client) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookie := cookieData
+		token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(SecretKey), nil
+		})
+		if err != nil {
+			fmt.Println("unauthenticated")
+		}
+		claims := token.Claims.(*jwt.StandardClaims)
+
+		id, err2 := strconv.Atoi(claims.Issuer)
+		if err2 != nil {
+			fmt.println("error with converting issuer to string")
+		}
+
+		userData, err3 := c.User.Get(r.Context(), id)
+		if err3 != nil {
+			http.Error(w, fmt.Sprintf("error executing template (%s)", err3), http.StatusInternalServerError)
+		}
+
+		// turns info to JSON encoding
+		resInfo, err1 := json.Marshal(userData)
+		if err1 != nil {
+			fmt.Println(err1)
+		}
+
+		// writing the response for successful login
+		res2, e := w.Write(resInfo)
+		if e != nil {
+			fmt.Println(e)
+		}
+		fmt.Println("res : ", res2)
+
+	})
+}
 
 func authentication(router *chi.Mux, client *ent.Client) {
 	router.Handle("/signupForm", signHandler(client))
 	router.Handle("/loginForm", logInHandler(client))
 	router.Handle("/resetForm", resetHandler(client))
+	router.Handle("/user", UserHandler(client))
 }
