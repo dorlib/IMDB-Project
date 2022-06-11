@@ -207,17 +207,17 @@ func logInHandler(c *ent.Client) http.Handler {
 		_ = tokenString
 
 		//// initialize Cookie because login was successful
-		//userCookie := http.Cookie{
-		//	Name:     "Username",
-		//	Value:    token,
-		//	Expires:  time.Now().Add(time.Hour * 24),
-		//	HttpOnly: true,
-		//}
+		userCookie := http.Cookie{
+			Name:     "Username",
+			Value:    tokenString,
+			Expires:  time.Now().Add(time.Hour * 24),
+			HttpOnly: true,
+		}
 
 		////setting the Cookie
-		//http.SetCookie(w, &userCookie)
-		//var cookie = userCookie.Value
-		//fmt.Println("Cookie: ", cookie)
+		http.SetCookie(w, &userCookie)
+		var cookie = userCookie.Value
+		fmt.Println("Cookie: ", cookie)
 
 		// building the info struct that will be sent as a response
 		info := loaded{
@@ -242,9 +242,9 @@ func logInHandler(c *ent.Client) http.Handler {
 }
 
 func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err error) {
-	der, err := x509.MarshalECPrivateKey(key)
-	if err != nil {
-		return nil, nil, err
+	der, err6 := x509.MarshalECPrivateKey(key)
+	if err6 != nil {
+		return nil, nil, err6
 	}
 
 	privKeyPEM = pem.EncodeToMemory(&pem.Block{
