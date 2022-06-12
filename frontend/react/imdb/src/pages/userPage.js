@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {gql, useQuery} from "@apollo/client";
 import Card from "../components/ui/Card";
 import {Link} from "react-router-dom";
@@ -41,7 +41,6 @@ function UserPage() {
     `;
 
 
-
     const Details = styled.div`
         color: white;
         position: absolute;
@@ -76,6 +75,17 @@ function UserPage() {
             }
 
         })
+
+    useEffect(() => {
+        (
+            async () => {
+                await fetch("http://localhost:8081/user", {
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include',
+                });
+            }
+        )();
+    });
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;

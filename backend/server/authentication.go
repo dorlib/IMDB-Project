@@ -296,6 +296,8 @@ func UserHandler(c *ent.Client) http.Handler {
 			http.Error(w, fmt.Sprintf("error executing template (%s)", err3), http.StatusInternalServerError)
 		}
 
+		fmt.Println("auth user: ", userData)
+
 		// turns info to JSON encoding
 		resInfo, err1 := json.Marshal(userData)
 		if err1 != nil {
@@ -312,9 +314,29 @@ func UserHandler(c *ent.Client) http.Handler {
 	})
 }
 
-func LogoutHandler(c *ent.Client) http.Handler {
+func LogoutHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		
+		cookie := http.Cookie{
+			Name:     "jwt",
+			Value:    "",
+			Expires:  time.Now().Add(-time.Hour),
+			HttpOnly: true,
+		}
+		http.SetCookie(w, &cookie)
+
+		// turns info to JSON encoding
+		msg, err1 := json.Marshal("logout successful")
+		if err1 != nil {
+			fmt.Println(err1)
+		}
+
+		// writing the response for successful login
+		res, e := w.Write(msg)
+		if e != nil {
+			fmt.Println(e)
+		}
+		fmt.Println("result : ", res)
+
 	})
 }
 
@@ -323,5 +345,5 @@ func authentication(router *chi.Mux, client *ent.Client) {
 	router.Handle("/loginForm", logInHandler(client))
 	router.Handle("/resetForm", resetHandler(client))
 	router.Handle("/user", UserHandler(client))
-	router.Handle("/logout", LogoutHandler(client))
+	router.Handle("/logout", LogoutHandler())
 }
