@@ -274,6 +274,7 @@ func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err
 
 	return
 }
+
 func UserHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie := cookieData
@@ -311,9 +312,16 @@ func UserHandler(c *ent.Client) http.Handler {
 	})
 }
 
+func LogoutHandler(c *ent.Client) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		
+	})
+}
+
 func authentication(router *chi.Mux, client *ent.Client) {
 	router.Handle("/signupForm", signHandler(client))
 	router.Handle("/loginForm", logInHandler(client))
 	router.Handle("/resetForm", resetHandler(client))
 	router.Handle("/user", UserHandler(client))
+	router.Handle("/logout", LogoutHandler(client))
 }
