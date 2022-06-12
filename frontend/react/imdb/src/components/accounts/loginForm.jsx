@@ -40,6 +40,7 @@ export function LoginForm() {
 
         fetch('http://localhost:8081/loginForm', {
             method: 'post',
+            credentials: 'include',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(userData)
         })
@@ -62,6 +63,12 @@ export function LoginForm() {
                     return setTimeout(() => window.location.reload(),2000);
                 }
             })
+            // .then(        NEED TO RETURN ANOTHER FETCH NOT TO THEN ANOTHER FETCH!!
+            //     fetch('http://localhost:8081/user', {
+            //         method: 'get',
+            //         headers: {"Content-Type": "application/json"},
+            //     }).then()
+            // )
     }
 
         const Input = styled("input")({

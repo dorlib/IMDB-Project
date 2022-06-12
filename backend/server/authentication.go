@@ -287,7 +287,7 @@ func UserHandler(c *ent.Client) http.Handler {
 
 		id, err2 := strconv.Atoi(claims.Issuer)
 		if err2 != nil {
-			fmt.println("error with converting issuer to string")
+			fmt.Println("error with converting issuer to string")
 		}
 
 		userData, err3 := c.User.Get(r.Context(), id)
