@@ -198,10 +198,12 @@ func logInHandler(c *ent.Client) http.Handler {
 
 		fmt.Println("generated key: ", key)
 
+		fmt.Println("issuer: ", userID)
+
 		// starting a token
 		claims := &jwt.StandardClaims{
-			Issuer:    string(rune(data.ID)),
-			ExpiresAt: jwt.NewTime(86400), //1 day
+			Issuer:    strconv.Itoa(userID),
+			ExpiresAt: jwt.NewTime(float64(time.Now().Add(time.Hour * 24).Unix())), //1 day
 		}
 
 		token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
@@ -217,19 +219,9 @@ func logInHandler(c *ent.Client) http.Handler {
 		if err3 != nil {
 			fmt.Println("err with pemKey function :", err3)
 		}
+		_ = publicKey
 
-		private, err6 := jwt.ParseECPrivateKeyFromPEM(privateKey)
-		if err6 != nil {
-			fmt.Println("error with PasrseECPrivate :", err5)
-		}
-		public, err7 := jwt.ParseECPublicKeyFromPEM(publicKey)
-		if err7 != nil {
-			fmt.Println("error with ParseECPublic :", err7)
-		}
-
-		_ = public
-		_ = private
-		SecretKey = publicKey
+		SecretKey = privateKey
 
 		//// initialize Cookie because login was successful
 		userCookie := http.Cookie{
@@ -294,17 +286,23 @@ func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err
 
 func UserHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		private, err6 := jwt.ParseECPrivateKeyFromPEM(SecretKey)
+		if err6 != nil {
+			fmt.Println("error with PasrseECPrivate :", err6)
+		}
 
 		fmt.Println("cookie :", cookieData)
 
 		token, err := jwt.ParseWithClaims(cookieData, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-			return SecretKey, nil
+			return private, nil
 		})
 		if err != nil {
 			fmt.Println("unauthenticated", err)
 		}
 
 		claims := token.Claims.(*jwt.StandardClaims)
+
+		fmt.Println("issuer", claims.Issuer)
 
 		id, err2 := strconv.Atoi(claims.Issuer)
 		if err2 != nil {
