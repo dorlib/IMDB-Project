@@ -139,7 +139,7 @@ type loaded struct {
 	Cookie    string
 }
 
-var SecretKey string
+var SecretKey []byte
 var cookieData string
 
 func logInHandler(c *ent.Client) http.Handler {
@@ -154,8 +154,8 @@ func logInHandler(c *ent.Client) http.Handler {
 			log.Fatal(err)
 		}
 
-		buf, err := io.ReadAll(r.Body)
-		fmt.Println(err, string(buf))
+		buf, er := io.ReadAll(r.Body)
+		fmt.Println(er, string(buf))
 
 		var userData struct {
 			GivenNickName string `json:"givenNickName"`
@@ -163,9 +163,9 @@ func logInHandler(c *ent.Client) http.Handler {
 			GivenPassword string `json:"givenPassword"`
 		}
 
-		err = json.Unmarshal(buf, &userData)
-		if err != nil {
-			log.Fatal(err)
+		er = json.Unmarshal(buf, &userData)
+		if er != nil {
+			log.Fatal(er)
 		}
 
 		userID := c.User.Query().Where(user.Nickname(userData.GivenNickName)).OnlyIDX(r.Context())
@@ -190,10 +190,13 @@ func logInHandler(c *ent.Client) http.Handler {
 			return
 		}
 
+		// generating a key
 		key, err5 := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err5 != nil {
 			log.Fatal(err5)
 		}
+
+		fmt.Println("generated key: ", key)
 
 		// starting a token
 		claims := &jwt.StandardClaims{
@@ -208,11 +211,25 @@ func logInHandler(c *ent.Client) http.Handler {
 		if err4 != nil {
 			log.Fatal("error sign claims ", err4)
 		}
-		_ = tokenString
-
-		SecretKey = tokenString
-
 		fmt.Println("token string :", tokenString)
+
+		privateKey, publicKey, err3 := pemKeyPair(key)
+		if err3 != nil {
+			fmt.Println("err with pemKey function :", err3)
+		}
+
+		private, err6 := jwt.ParseECPrivateKeyFromPEM(privateKey)
+		if err6 != nil {
+			fmt.Println("error with PasrseECPrivate :", err5)
+		}
+		public, err7 := jwt.ParseECPublicKeyFromPEM(publicKey)
+		if err7 != nil {
+			fmt.Println("error with ParseECPublic :", err7)
+		}
+
+		_ = public
+		_ = private
+		SecretKey = publicKey
 
 		//// initialize Cookie because login was successful
 		userCookie := http.Cookie{
@@ -222,7 +239,7 @@ func logInHandler(c *ent.Client) http.Handler {
 			HttpOnly: true,
 		}
 
-		////setting the Cookie
+		//setting the Cookie
 		http.SetCookie(w, &userCookie)
 		var cookie = userCookie.Value
 		cookieData = cookie
@@ -277,21 +294,26 @@ func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err
 
 func UserHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie := cookieData
-		token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-			return []byte(SecretKey), nil
+
+		fmt.Println("cookie :", cookieData)
+
+		token, err := jwt.ParseWithClaims(cookieData, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+			return SecretKey, nil
 		})
 		if err != nil {
-			fmt.Println("unauthenticated")
+			fmt.Println("unauthenticated", err)
 		}
+
 		claims := token.Claims.(*jwt.StandardClaims)
 
 		id, err2 := strconv.Atoi(claims.Issuer)
 		if err2 != nil {
-			fmt.Println("error with converting issuer to string")
+			fmt.Println("error with converting issuer to string", err2)
 		}
 
-		userData, err3 := c.User.Get(r.Context(), id)
+		fmt.Println("id :", id)
+
+		userData, err3 := c.User.Query().Where(user.ID(id)).All(r.Context())
 		if err3 != nil {
 			http.Error(w, fmt.Sprintf("error executing template (%s)", err3), http.StatusInternalServerError)
 		}
@@ -303,6 +325,8 @@ func UserHandler(c *ent.Client) http.Handler {
 		if err1 != nil {
 			fmt.Println(err1)
 		}
+
+		fmt.Println("resInfo :", resInfo)
 
 		// writing the response for successful login
 		res2, e := w.Write(resInfo)
