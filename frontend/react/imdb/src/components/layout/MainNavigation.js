@@ -62,6 +62,11 @@ function MainNavigation(props) {
         setUsername(props.firstname)
     }
 
+    const logoutHandler = (event) => {
+        // need to make an if statement to show diffrent menus if logged in or not
+        // need to resert the data and on click make the name Guest again and call to logout function from backend
+    }
+
     return (
         <div>
             <Grid container spacing={12}>
@@ -124,7 +129,7 @@ function MainNavigation(props) {
                                                     <Typography textAlign="center">Dashboard</Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center">Logout</Typography>
+                                                    <Typography textAlign="center" onClick={logoutHandler}>Logout</Typography>
                                             </MenuItem>
                                         </Menu>
                                     </Container>
