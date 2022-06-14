@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import classes from "./welcome.module.css"
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";

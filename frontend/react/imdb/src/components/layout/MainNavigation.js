@@ -29,7 +29,7 @@ const grid = {
 
 classes.sign = undefined;
 
-function MainNavigation() {
+function MainNavigation(props) {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const handleOpenUserMenu = (event) => {
@@ -42,12 +42,16 @@ function MainNavigation() {
     const favoritesCtx = useContext(FavoritesContext);
 
     const [searchBy, setSearchBy] = useState("GET_MOVIES");
+    const [username, setUsername] = useState('Guest')
 
     const HandleChange = (event) => {
         let input
         input = event.target.value
         console.log(input)
         setSearchBy(input);
+    }
+    if (props.firstname !== "Guest" && username === 'Guest') {
+        setUsername(props.firstname)
     }
 
     return (
@@ -81,8 +85,8 @@ function MainNavigation() {
                                                 <Avatar alt="Remy Sharp"
                                                         src="https://hope.be/wp-content/uploads/2015/05/no-user-image.gif"
                                                         style={{width: "1.5cm", height: "1.5cm"}}/>
-                                                <div style={{fontSize: "large", color: "#fcb8d2"}}>&nbsp;&nbsp;Hi,
-                                                    Guest!
+                                                <div style={{fontSize: "large", color: "#fcb8d2"}}>&nbsp;&nbsp;Hi,&nbsp;&nbsp;
+                                                    {username}&nbsp;!
                                                 </div>
                                             </IconButton>
                                         </Tooltip>
