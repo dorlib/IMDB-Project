@@ -50,6 +50,14 @@ function MainNavigation(props) {
         console.log(input)
         setSearchBy(input);
     }
+
+    const ProfileHandler = (event) => {
+        if (props.id !== 0) {
+            window.location.replace("/userPage/" + JSON.stringify(props.id))
+        }
+    }
+
+
     if (props.firstname !== "Guest" && username === 'Guest') {
         setUsername(props.firstname)
     }
@@ -107,7 +115,7 @@ function MainNavigation(props) {
                                             onClose={handleCloseUserMenu}
                                         >
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center">Profile</Typography>
+                                                    <Typography textAlign="center" onClick={ProfileHandler}>Profile</Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
                                                     <Typography textAlign="center">Account</Typography>
