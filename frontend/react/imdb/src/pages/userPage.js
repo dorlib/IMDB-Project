@@ -76,20 +76,6 @@ function UserPage() {
 
         })
 
-    useEffect(() => {
-        (
-            async () => {
-                await fetch("http://localhost:8081/user", {
-                    method: 'get',
-                    headers: {'Content-Type': 'application/json'},
-                    credentials: 'include',
-                }).then((data) => {
-                    console.log(data)
-                });
-            }
-        )();
-    });
-
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
 

@@ -55,20 +55,14 @@ export function LoginForm() {
                     setUserName(data["FirstName"])
                     setSpinner(false);
                     setSuccess(true);
-                    return setTimeout( () => window.location.replace("/userPage/" + JSON.stringify(data["ID"])), 1000)
+                    return setTimeout( () => window.location.replace("/"), 1000)
                 } else {
                     console.log('login not successful')
                     setSpinner(false);
                     setLoginError(true)
-                    return setTimeout(() => window.location.reload(),2000);
+                    return setTimeout(() => setLoginError(false),2000);
                 }
             })
-            // .then(        NEED TO RETURN ANOTHER FETCH NOT TO THEN ANOTHER FETCH!!
-            //     fetch('http://localhost:8081/user', {
-            //         method: 'get',
-            //         headers: {"Content-Type": "application/json"},
-            //     }).then()
-            // )
     }
 
         const Input = styled("input")({

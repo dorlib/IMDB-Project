@@ -29,7 +29,7 @@ const grid = {
 
 classes.sign = undefined;
 
-function MainNavigation() {
+function MainNavigation(props) {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const handleOpenUserMenu = (event) => {
@@ -42,12 +42,29 @@ function MainNavigation() {
     const favoritesCtx = useContext(FavoritesContext);
 
     const [searchBy, setSearchBy] = useState("GET_MOVIES");
+    const [username, setUsername] = useState('Guest')
 
     const HandleChange = (event) => {
         let input
         input = event.target.value
         console.log(input)
         setSearchBy(input);
+    }
+
+    const ProfileHandler = (event) => {
+        if (props.id !== 0) {
+            window.location.replace("/userPage/" + JSON.stringify(props.id))
+        }
+    }
+
+
+    if (props.firstname !== "Guest" && username === 'Guest') {
+        setUsername(props.firstname)
+    }
+
+    const logoutHandler = (event) => {
+        // need to make an if statement to show diffrent menus if logged in or not
+        // need to resert the data and on click make the name Guest again and call to logout function from backend
     }
 
     return (
@@ -81,8 +98,8 @@ function MainNavigation() {
                                                 <Avatar alt="Remy Sharp"
                                                         src="https://hope.be/wp-content/uploads/2015/05/no-user-image.gif"
                                                         style={{width: "1.5cm", height: "1.5cm"}}/>
-                                                <div style={{fontSize: "large", color: "#fcb8d2"}}>&nbsp;&nbsp;Hi,
-                                                    Guest!
+                                                <div style={{fontSize: "large", color: "#fcb8d2"}}>&nbsp;&nbsp;Hi,&nbsp;&nbsp;
+                                                    {username}&nbsp;!
                                                 </div>
                                             </IconButton>
                                         </Tooltip>
@@ -103,7 +120,7 @@ function MainNavigation() {
                                             onClose={handleCloseUserMenu}
                                         >
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center">Profile</Typography>
+                                                    <Typography textAlign="center" onClick={ProfileHandler}>Profile</Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
                                                     <Typography textAlign="center">Account</Typography>
@@ -112,7 +129,7 @@ function MainNavigation() {
                                                     <Typography textAlign="center">Dashboard</Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center">Logout</Typography>
+                                                    <Typography textAlign="center" onClick={logoutHandler}>Logout</Typography>
                                             </MenuItem>
                                         </Menu>
                                     </Container>
