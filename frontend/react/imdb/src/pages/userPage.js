@@ -80,8 +80,11 @@ function UserPage() {
         (
             async () => {
                 await fetch("http://localhost:8081/user", {
+                    method: 'get',
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include',
+                }).then((data) => {
+                    console.log(data)
                 });
             }
         )();
