@@ -42,7 +42,7 @@ function MainNavigation(props) {
     const favoritesCtx = useContext(FavoritesContext);
 
     const [searchBy, setSearchBy] = useState("GET_MOVIES");
-    const [username, setUsername] = useState('Guest')
+    const [username, setUsername] = useState('Guest');
 
     const HandleChange = (event) => {
         let input
@@ -57,14 +57,23 @@ function MainNavigation(props) {
         }
     }
 
-
     if (props.firstname !== "Guest" && username === 'Guest') {
         setUsername(props.firstname)
     }
 
-    const logoutHandler = (event) => {
-        // need to make an if statement to show diffrent menus if logged in or not
-        // need to resert the data and on click make the name Guest again and call to logout function from backend
+    const logoutHandler = async () => {
+        await fetch('http://localhost:8081/logout', {
+            method: 'post',
+            credentials: 'include',
+            headers: {"Content-Type": "application/json"},
+        })
+            .then(() => {
+                setUsername('Guest')
+                window.location.replace("/")
+            })
+            .catch((err) => {
+                console.error('error:', err)
+            })
     }
 
     return (

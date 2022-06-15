@@ -81,3 +81,66 @@
   background-color: white;
   border-color: yellow;
 }
+.oops {
+  display: flex;
+  position: absolute;
+  top: 6.9cm;
+  right: 18.2cm;
+  width: 18cm;
+  border-radius: 13px;
+  color: yellow;
+  background-color: #cc2062;
+  height: 15.5cm;
+}
+
+.oopsPic {
+  display: flex;
+  position: absolute;
+  width: 10cm;
+  height: 8cm;
+  border-radius: 200px;
+  right: 1cm;
+  bottom: -12.8cm;
+}
+
+.oopsMsg {
+  display: flex;
+  position: absolute;
+  top: 1cm;
+  right: 3cm;
+}
+
+.or {
+  position: relative;
+  width: 20cm;
+  display: flex;
+  left: 7.8cm;
+  bottom: -0.5cm;
+  color: white;
+}
+
+.thirdTitle {
+  font-size: xx-large;
+  color : white;
+  position: relative;
+  width: 20cm;
+  display: flex;
+  right: -2.5cm;
+  top: 0.7cm;
+}
+
+.regBut {
+  display: flex;
+  position: absolute;
+  top: 2.8cm;
+  left: 3cm;
+  border-radius: 30px;
+}
+
+.signBut {
+  display: flex;
+  position: relative;
+  top: 1.97cm;
+  left: 11.5cm;
+  border-radius: 30px;
+}

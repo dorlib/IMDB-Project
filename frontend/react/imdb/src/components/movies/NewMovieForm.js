@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 import Card from "../ui/Card";
 import classes from "./NewMovieForm.module.css";
@@ -13,6 +13,10 @@ import { useSnackbar } from 'notistack';
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import CardContent from "@mui/material/CardContent";
+import EditIcon from "@mui/icons-material/Edit";
+import Typography from "@mui/material/Typography";
+import {Link} from "react-router-dom";
 
 function NewMovieForm() {
     const { enqueueSnackbar } = useSnackbar();
@@ -58,9 +62,25 @@ function NewMovieForm() {
     const [givenImage2, setImage2] = useState('')
     const [givenTopic, setTopic] = useState('')
 
+    const [name, setName] = useState('');
 
     const Input = styled("input")({
         display: "none",
+    });
+
+    useEffect(() => {
+        (
+            async () => {
+                const response = await fetch("http://localhost:8081/user", {
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include',
+                });
+                const content = await response.json()
+                console.log(content["0"]["firstname"])
+                setName(content["firstname"])
+
+            }
+        )();
     });
 
     const id = useQuery(DIRECTOR_ID,
@@ -121,6 +141,32 @@ function NewMovieForm() {
             }
         });
 
+    function handleSignClick() {
+        window.location.replace("/register-sign-in")
+    }
+
+    function handleRegClick() {
+        window.location.replace("/register-sign-in")
+    }
+
+    if (name === '') {
+        return (
+            <div style={{color: "yellow"}}>
+                <CardContent className={classes.oops}>
+                    <Typography className={classes.oopsMsg} style={{fontSize: "x-large"}}>
+                        Oops! it seems that you are not logged In!
+                        <img src={"https://blog.qualimatch.co.il/wp-content/uploads/2017/12/Oops.jpg"} className={classes.oopsPic}/>
+                    </Typography>
+                    <div className={classes.actions}>
+                        <button type="button" onClick={handleSignClick} className={classes.signBut}>Sign In!</button>
+                        <h2 className={classes.or}>OR</h2>
+                        <h2 className={classes.thirdTitle} style={{position: "relative", display: "flex"}}>And Find A World Of Movies!</h2>
+                        <button type="button" onClick={handleRegClick} className={classes.regBut}>Register!</button>
+                    </div>
+                </CardContent>
+            </div>
+        )
+    }
 
     return (
         <Card>
