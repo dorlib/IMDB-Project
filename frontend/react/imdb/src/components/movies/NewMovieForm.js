@@ -13,6 +13,10 @@ import { useSnackbar } from 'notistack';
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import CardContent from "@mui/material/CardContent";
+import EditIcon from "@mui/icons-material/Edit";
+import Typography from "@mui/material/Typography";
+import {Link} from "react-router-dom";
 
 function NewMovieForm() {
     const { enqueueSnackbar } = useSnackbar();
@@ -137,10 +141,29 @@ function NewMovieForm() {
             }
         });
 
+    function handleSignClick() {
+        window.location.replace("/register-sign-in")
+    }
+
+    function handleRegClick() {
+        window.location.replace("/register-sign-in")
+    }
+
     if (name === '') {
         return (
             <div style={{color: "yellow"}}>
-                you are not connected
+                <CardContent className={classes.oops}>
+                    <Typography className={classes.oopsMsg} style={{fontSize: "x-large"}}>
+                        Oops! it seems that you are not logged In!
+                        <img src={"https://blog.qualimatch.co.il/wp-content/uploads/2017/12/Oops.jpg"} className={classes.oopsPic}/>
+                    </Typography>
+                    <div className={classes.actions}>
+                        <button type="button" onClick={handleSignClick} className={classes.signBut}>Sign In!</button>
+                        <h2 className={classes.or}>OR</h2>
+                        <h2 className={classes.thirdTitle} style={{position: "relative", display: "flex"}}>And Find A World Of Movies!</h2>
+                        <button type="button" onClick={handleRegClick} className={classes.regBut}>Register!</button>
+                    </div>
+                </CardContent>
             </div>
         )
     }
