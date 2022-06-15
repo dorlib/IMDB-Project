@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 import Card from "../ui/Card";
 import classes from "./NewMovieForm.module.css";
@@ -58,9 +58,25 @@ function NewMovieForm() {
     const [givenImage2, setImage2] = useState('')
     const [givenTopic, setTopic] = useState('')
 
+    const [name, setName] = useState('');
 
     const Input = styled("input")({
         display: "none",
+    });
+
+    useEffect(() => {
+        (
+            async () => {
+                const response = await fetch("http://localhost:8081/user", {
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include',
+                });
+                const content = await response.json()
+                console.log(content["0"]["firstname"])
+                setName(content["firstname"])
+
+            }
+        )();
     });
 
     const id = useQuery(DIRECTOR_ID,
@@ -121,6 +137,13 @@ function NewMovieForm() {
             }
         });
 
+    if (name === '') {
+        return (
+            <div style={{color: "yellow"}}>
+                you are not connected
+            </div>
+        )
+    }
 
     return (
         <Card>

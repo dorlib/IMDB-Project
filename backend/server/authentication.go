@@ -225,7 +225,7 @@ func logInHandler(c *ent.Client) http.Handler {
 
 		//// initialize Cookie because login was successful
 		userCookie := http.Cookie{
-			Name:     "Username",
+			Name:     "jwt",
 			Value:    tokenString,
 			Expires:  time.Now().Add(time.Hour * 24),
 			HttpOnly: true,
@@ -345,6 +345,9 @@ func LogoutHandler() http.Handler {
 			HttpOnly: true,
 		}
 		http.SetCookie(w, &cookie)
+
+		SecretKey = []byte{}
+		cookieData = ""
 
 		// turns info to JSON encoding
 		msg, err1 := json.Marshal("logout successful")
