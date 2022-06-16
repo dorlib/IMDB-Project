@@ -31,6 +31,7 @@
 
 }
 
+
 input:focus {
     outline: none;
 }
@@ -46,7 +47,7 @@ input:focus {
     left: 11.5cm;
     bottom: 18.33cm;
     margin-top: 5px;
-    width: 438px;
+    width: 432px;
     height: 200px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -90,5 +91,55 @@ Link:hover {
     display: flex;
     bottom: 1.03cm;
     left: 127.5%;
+}
+
+.loggedSearchInput {
+    display: flex;
+    position: absolute;
+    top: 0.9cm;
+}
+
+.loggedSearch input {
+    display: flex;
+    position: absolute;
+    background-color: white;
+    border-radius: 10px 0px 0px 10px;
+    font-size: 18px;
+    padding: 15px;
+    height: 30px;
+    left: 11.5cm;
+    width: 532px;
+    border: 3px solid #000000;
+
+}
+
+.loggedSearchIcon {
+    display: flex;
+    position: absolute;
+    height: 36px;
+    width: 40px;
+    left: 25.55cm;
+    background-color: white;
+    place-items: center;
+    border-radius: 0px 10px 10px 0px;
+    border: 3px solid #000000;
+
+}
+
+
+.loggedDataResult {
+    position: absolute;
+    border: 3px solid #000000;
+    border-radius: 15px;
+    left: 11.5cm;
+    bottom: 18.33cm;
+    margin-top: 5px;
+    width: 568px;
+    height: 200px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    overflow: hidden;
+    overflow-y: auto;
+    z-index: 1;
 }
 

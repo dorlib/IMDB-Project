@@ -44,6 +44,8 @@ function MainNavigation(props) {
 
     const [searchBy, setSearchBy] = useState("GET_MOVIES");
     const [username, setUsername] = useState('Guest');
+    const [userId, setUserId] = useState('Guest');
+
 
     const HandleChange = (event) => {
         let input
@@ -60,6 +62,7 @@ function MainNavigation(props) {
 
     if (props.firstname !== "Guest" && username === 'Guest') {
         setUsername(props.firstname)
+        setUserId(props.id)
     }
 
     const logoutHandler = async () => {
@@ -122,7 +125,7 @@ function MainNavigation(props) {
                             </nav>
                         </header>
                         <div>
-                            <SearchBar/>
+                            <SearchBar userId={userId}/>
                         </div>
                         <PopupState variant="popover" popupId="demo-popup-menu">
                             {(popupState) => (
@@ -235,7 +238,7 @@ function MainNavigation(props) {
                         </nav>
                     </header>
                     <div>
-                        <SearchBar/>
+                        <SearchBar userId={userId}/>
                     </div>
                     <PopupState variant="popover" popupId="demo-popup-menu">
                         {(popupState) => (
