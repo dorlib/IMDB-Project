@@ -188,13 +188,13 @@ function MainNavigation(props) {
                                     <Container maxWidth="xl">
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                                <Avatar alt="Remy Sharp"
-                                                        src="https://hope.be/wp-content/uploads/2015/05/no-user-image.gif"
-                                                        style={{width: "1.5cm", height: "1.5cm"}}/>
+                                                <img alt="Remy Sharp"
+                                                        src={props.profile}
+                                                        style={{width: "2.1cm", height: "2.1cm", borderRadius: "200px", marginLeft: "-1cm"}}/>
                                                 <div style={{
                                                     fontSize: "large",
                                                     color: "#fcb8d2"
-                                                }}>&nbsp;&nbsp;Hi,&nbsp;&nbsp;
+                                                }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hi,&nbsp;&nbsp;
                                                     {username}&nbsp;!
                                                 </div>
                                             </IconButton>

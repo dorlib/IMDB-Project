@@ -36,6 +36,7 @@ function App() {
   // from here this info can be delivered to any other components.
 
   const [userFirstName, setUserFirstName] = useState('Guest')
+  const [userProfileImage, setUserProfileImage] = useState('https://hope.be/wp-content/uploads/2015/05/no-user-image.gif')
   const [userId, setUserId] = useState(0)
 
   useEffect(() => {
@@ -53,13 +54,14 @@ function App() {
                 console.log(data)
                 setUserId(data["0"]["id"])
                 setUserFirstName(data["0"]["firstname"])
+                setUserProfileImage(data["0"]["profile"])
               });
         }
     )();
   });
 
   return (
-    <Layout username={userFirstName} userId={userId}>
+    <Layout username={userFirstName} userId={userId} profile={userProfileImage}>
       <Routes>
         <Route path="/" element={<><Welcome /><Last5Added/></>} />
         <Route path="/movies" element={<AllMoviesPage />} />
