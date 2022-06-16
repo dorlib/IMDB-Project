@@ -77,6 +77,7 @@ function MainNavigation(props) {
             })
     }
 
+    // this main navigation will be returned if user is NOT logged in
     if (username === '' || username === 'Guest') {
         return (
             <div>
@@ -160,6 +161,7 @@ function MainNavigation(props) {
         );
     }
 
+    // this main navigation will be returned if user is logged in
     let loaded =  (
         <div>
             <Grid container spacing={12}>
@@ -173,7 +175,7 @@ function MainNavigation(props) {
                                 <li>
                                     <Link to="/new-movie">Add New Movie</Link>
                                 </li>
-                                <li>
+                                <li style={{marginLeft: "1.8cm"}}>
                                     <Link to="/favorites">
                                         My Favorites
                                         <span className={classes.badge}>
@@ -182,15 +184,12 @@ function MainNavigation(props) {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/register-sign-in">Sign In \ Log In</Link>
-                                </li>
-                                <li>
                                     <Container maxWidth="xl">
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                                <img alt="Remy Sharp"
+                                                <img
                                                         src={props.profile}
-                                                        style={{width: "2.1cm", height: "2.1cm", borderRadius: "200px", marginLeft: "-1cm"}}/>
+                                                        style={{width: "2.1cm", height: "2.1cm", borderRadius: "200px", marginLeft: "-0.3cm"}}/>
                                                 <div style={{
                                                     fontSize: "large",
                                                     color: "#fcb8d2"
@@ -245,6 +244,7 @@ function MainNavigation(props) {
                                         style={{
                                             position: "relative",
                                             display: "flex",
+                                            marginLeft: "3.7cm",
                                             bottom: "50%",
                                             left: "44.8%",
                                             color: "white",

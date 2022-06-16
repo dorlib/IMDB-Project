@@ -54,7 +54,9 @@ function App() {
                 console.log(data)
                 setUserId(data["0"]["id"])
                 setUserFirstName(data["0"]["firstname"])
-                setUserProfileImage(data["0"]["profile"])
+                if (data["0"]["profile"] !== '') {
+                    setUserProfileImage(data["0"]["profile"])
+                }
               });
         }
     )();
