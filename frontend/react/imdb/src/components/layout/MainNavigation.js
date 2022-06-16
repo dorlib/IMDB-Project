@@ -18,6 +18,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
+import CardContent from "@mui/material/CardContent";
 
 const grid = {
     xs: 24,
@@ -76,7 +77,90 @@ function MainNavigation(props) {
             })
     }
 
-    return (
+    if (username === '' || username === 'Guest') {
+        return (
+            <div>
+                <Grid container spacing={12}>
+                    <Grid item {...grid}>
+                        <header className={classes.header}>
+                            <Link to={"/"}>
+                                <div className={classes.logo}>IMDB - Movies</div>
+                            </Link>
+                            <nav>
+                                <ul>
+                                    <li>
+                                        <Link to="/new-movie">Add New Movie</Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/favorites">
+                                            My Favorites
+                                            <span className={classes.badge}>
+                      {favoritesCtx.totalFavorites}
+                    </span>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/register-sign-in">Sign In \ Log In</Link>
+                                    </li>
+                                    <li>
+                                        <Container maxWidth="xl">
+                                                <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
+                                                    <Avatar alt="Remy Sharp"
+                                                            src="https://hope.be/wp-content/uploads/2015/05/no-user-image.gif"
+                                                            style={{width: "1.5cm", height: "1.5cm"}}/>
+                                                    <div style={{
+                                                        fontSize: "large",
+                                                        color: "#fcb8d2"
+                                                    }}>&nbsp;&nbsp;Hi,&nbsp;&nbsp;
+                                                        {username}&nbsp;!
+                                                    </div>
+                                                </IconButton>
+                                        </Container>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </header>
+                        <div>
+                            <SearchBar/>
+                        </div>
+                        <PopupState variant="popover" popupId="demo-popup-menu">
+                            {(popupState) => (
+                                <React.Fragment>
+                                    <Button className={classes.menu} variant="contained" {...bindTrigger(popupState)}
+                                            style={{
+                                                position: "relative",
+                                                display: "flex",
+                                                bottom: "50%",
+                                                left: "44.8%",
+                                                color: "white",
+                                                backgroundColor: "#cc2062",
+                                                borderRadius: "12px",
+                                                width: "3cm",
+                                                height: "1.2cm"
+                                            }}>
+                                        Menu
+                                    </Button>
+                                    <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "9cm"}}>
+                                        <MenuItem style={{backgroundColor: "lightblue"}}><Link to={"/movies"}
+                                                                                               style={{textDecoration: "none"}}>All
+                                            Movies</Link></MenuItem>
+                                        <MenuItem style={{backgroundColor: "lightblue"}}><Link to={"/directors"}
+                                                                                               style={{textDecoration: "none"}}>All
+                                            Directors</Link></MenuItem>
+                                        <MenuItem style={{backgroundColor: "lightblue"}}><Link to={"/top10"}
+                                                                                               style={{textDecoration: "none"}}>Top
+                                            10</Link></MenuItem>
+                                    </Menu>
+                                </React.Fragment>
+                            )}
+                        </PopupState>
+                    </Grid>
+                </Grid>
+            </div>
+        );
+    }
+
+    let loaded =  (
         <div>
             <Grid container spacing={12}>
                 <Grid item {...grid}>
@@ -107,7 +191,10 @@ function MainNavigation(props) {
                                                 <Avatar alt="Remy Sharp"
                                                         src="https://hope.be/wp-content/uploads/2015/05/no-user-image.gif"
                                                         style={{width: "1.5cm", height: "1.5cm"}}/>
-                                                <div style={{fontSize: "large", color: "#fcb8d2"}}>&nbsp;&nbsp;Hi,&nbsp;&nbsp;
+                                                <div style={{
+                                                    fontSize: "large",
+                                                    color: "#fcb8d2"
+                                                }}>&nbsp;&nbsp;Hi,&nbsp;&nbsp;
                                                     {username}&nbsp;!
                                                 </div>
                                             </IconButton>
@@ -129,16 +216,18 @@ function MainNavigation(props) {
                                             onClose={handleCloseUserMenu}
                                         >
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center" onClick={ProfileHandler}>Profile</Typography>
+                                                <Typography textAlign="center"
+                                                            onClick={ProfileHandler}>Profile</Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center">Account</Typography>
+                                                <Typography textAlign="center">Account</Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center">Dashboard</Typography>
+                                                <Typography textAlign="center">Dashboard</Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center" onClick={logoutHandler}>Logout</Typography>
+                                                <Typography textAlign="center"
+                                                            onClick={logoutHandler}>Logout</Typography>
                                             </MenuItem>
                                         </Menu>
                                     </Container>
@@ -184,6 +273,8 @@ function MainNavigation(props) {
             </Grid>
         </div>
     );
+
+    return loaded
 }
 
 export default MainNavigation;
