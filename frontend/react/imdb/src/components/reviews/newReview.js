@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {Link} from 'react-router-dom';
 
 import Card from "../ui/Card";
@@ -11,8 +11,11 @@ import MenuItem from "@mui/material/MenuItem";
 import UpdateRank from "./total-rank";
 
 import classes from "./newReview.module.css";
+import CardContent from "@mui/material/CardContent";
+import EditIcon from "@mui/icons-material/Edit";
+import Typography from "@mui/material/Typography";
 
-function NewReviewForm() {
+function NewReviewForm(props) {
     const ADD_REVIEW = gql`
         mutation CreateReview ($text: String!, $rank: Int!, $movieID: Int!, $topic: String!) {
             createReview(text: $text, rank: $rank, movieID: $movieID, topic: $topic) {
@@ -34,7 +37,6 @@ function NewReviewForm() {
     const [givenRank, setRank] = useState('')
     const [givenTopic, setTopic] = useState('')
 
-
     const [addReview] = useMutation(ADD_REVIEW,
         {
             variables: {
@@ -49,6 +51,33 @@ function NewReviewForm() {
                 window.location.reload();
             }
         });
+
+    function handleSignClick() {
+        window.location.replace("/register-sign-in")
+    }
+
+    function handleRegClick() {
+        window.location.replace("/register-sign-in")
+    }
+
+    if (props.username === '' || props.username === 'Guest') {
+        return (
+            <div style={{color: "yellow"}}>
+                <p htmlFor="review" style={{color: "yellow"}} className={classes.main}>Add Your Review!</p>
+                <CardContent className={classes.oops}>
+                    <Typography className={classes.oopsMsg} style={{fontSize: "x-large"}}>
+                        Oops! it seems that you are not logged In!
+                    </Typography>
+                    <div className={classes.actions}>
+                        <button type="button" onClick={handleSignClick} className={classes.signBut}>Sign In!</button>
+                        <h2 className={classes.or}>OR</h2>
+                        <button type="button" onClick={handleRegClick} className={classes.regBut}>Register!</button>
+                    </div>
+                </CardContent>
+                <p> &ensp;</p>
+            </div>
+        )
+    }
 
     let loaded =  (
         <Card>

@@ -1,32 +1,48 @@
-making user interface (sign in and log in)
+##########################
+###    UX missions     ###
+##########################
 
-making favorite system for users -- after log in and sign in
+# making favorite system for users -- after log in and sign in
 
-user authorization (only users can add reviews and ranks and new movies)
+# add option to log in with email or with nickname
 
-tab indexses
+# add fast scroll to the all movies and all directors
 
-add option to log in with email or with nickname
+# add option to crop profile image
 
-make the app match any screen size
-
-change search options to : by movie, by director, by actor
-add search option also for users
-
-add option to add actors (clip open in tab)
-
-forgot my password fitcher -- email process with nodemailer
+# forgot my password fitcher -- email process with nodemailer
 
 
+##########################
+###    UI missions     ###
+##########################
 
-download docker
+# tab indexses
 
-getting stated
+# make the app match any screen size
 
-playing with atlas, try find error and bugs
+# add search option also for users
 
-read atlas code - mysql merging
+# change search options to : by movie, by director, by actor
 
+# add option to add actors (clip open in tab)
+
+
+##########################
+###  private missions  ###
+##########################
+
+# download docker
+
+# getting stated
+
+# playing with atlas, try find error and bugs
+
+# read atlas code - mysql merging
+
+##########################
+###        notes       ###
+##########################
 
 bugs found in atlas:
 

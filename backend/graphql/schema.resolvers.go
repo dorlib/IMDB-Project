@@ -66,7 +66,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, las
 }
 
 func (r *queryResolver) Movies(ctx context.Context) ([]*ent.Movie, error) {
-	return r.client.Movie.Query().All(ctx)
+	return r.client.Movie.Query().Order(ent.Asc(movie.FieldTitle)).All(ctx)
 }
 
 func (r *queryResolver) Directors(ctx context.Context) ([]*ent.Director, error) {

@@ -10,7 +10,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import {render} from "react-dom";
 
-function SearchBar() {
+function SearchBar(props) {
     let GET_DIRECTORS = gql`
         query Directors{
             directors {
@@ -40,7 +40,7 @@ function SearchBar() {
     let menuRef = useRef()
     let menuRef1 = useRef()
 
-
+    const [userId, setUserId] = useState(0);
 
     useEffect(() => {
         let handler = (event) => {
@@ -129,12 +129,65 @@ function SearchBar() {
         }
     }
 
-    return (
+    if (props.userId && userId === 0) {
+        setUserId(props.id)
+        console.log(userId)
+    }
+
+    // this main navigation will be returned if user is NOT logged in
+    if (userId === 0 || !userId) {
+        return (
+            <div>
+                <div className={classes.search} ref={menuRef1} >
+                    <div className={classes.searchInput} >
+                        <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter} />
+                        <div className={classes.searchIcon}>
+                            {wordEntered.length === 0 ? (
+                                <SearchIcon/>
+                            ) : (
+                                <CloseIcon id={"ClearBtn"} onClick={clearInput}/>
+                            )}
+                        </div>
+                    </div >
+                    {filteredData.length !== 0 && (
+                        <div className={classes.dataResult} ref={menuRef}>
+                            {filteredData}
+                        </div>
+                    )}
+                </div>
+                <FormControl>
+                    <RadioGroup className={classes.by} row>
+                        <FormControlLabel
+                            value="GET_MOVIES"
+                            control={<Radio/>}
+                            label="By Movie"
+                            onClick={HandleChange}
+                        />
+                        <FormControlLabel
+                            value="GET_DIRECTORS"
+                            control={<Radio/>}
+                            label="By Director"
+                            onClick={HandleChange}
+                        />
+                        <FormControlLabel
+                            value="GET_GENRE"
+                            control={<Radio/>}
+                            label="By Genre"
+                            onClick={HandleChange}
+                        />
+                    </RadioGroup>
+                </FormControl>
+            </div>
+        )
+    }
+
+    // this main search bar will be returned if user is logged in
+    let logged = (
         <div>
-            <div className={classes.search} ref={menuRef1} >
-                <div className={classes.searchInput} >
+            <div className={classes.loggedSearch} ref={menuRef1} >
+                <div className={classes.loggedSearchInput} >
                     <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter} />
-                    <div className={classes.searchIcon}>
+                    <div className={classes.loggedSearchIcon}>
                         {wordEntered.length === 0 ? (
                             <SearchIcon/>
                         ) : (
@@ -143,7 +196,7 @@ function SearchBar() {
                     </div>
                 </div >
                 {filteredData.length !== 0 && (
-                    <div className={classes.dataResult} ref={menuRef}>
+                    <div className={classes.loggedDataResult} ref={menuRef}>
                         {filteredData}
                     </div>
                 )}
@@ -172,6 +225,8 @@ function SearchBar() {
             </FormControl>
         </div>
     )
+
+    return logged
 }
 
 export default SearchBar

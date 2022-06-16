@@ -7,7 +7,7 @@ import { AccountBox } from "./components/accounts";
 import AllMoviesPage from './pages/AllMovies';
 import FavoritesPage from './pages/Favorites';
 import Layout from './components/layout/Layout';
-import React from "react";
+import React, {useEffect, useState} from "react";
 import AllDirectorsPage from "./pages/AllDirectors";
 import NewMovieForm from "./components/movies/NewMovieForm";
 import NewReviewForm from "./components/reviews/newReview";
@@ -31,8 +31,39 @@ const AppContainer = styled.div`
 `;
 
 function App() {
+
+  // this useEffect checks if the user is authenticated.
+  // from here this info can be delivered to any other components.
+
+  const [userFirstName, setUserFirstName] = useState('Guest')
+  const [userProfileImage, setUserProfileImage] = useState('https://hope.be/wp-content/uploads/2015/05/no-user-image.gif')
+  const [userId, setUserId] = useState(0)
+
+  useEffect(() => {
+    (
+        async () => {
+          await fetch("http://localhost:8081/user", {
+            method: 'get',
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+          }).then(response => response.json())
+              .catch((err) => {
+                console.error('error:', err)
+              })
+              .then((data) => {
+                console.log(data)
+                setUserId(data["0"]["id"])
+                setUserFirstName(data["0"]["firstname"])
+                if (data["0"]["profile"] !== '') {
+                    setUserProfileImage(data["0"]["profile"])
+                }
+              });
+        }
+    )();
+  });
+
   return (
-    <Layout>
+    <Layout username={userFirstName} userId={userId} profile={userProfileImage}>
       <Routes>
         <Route path="/" element={<><Welcome /><Last5Added/></>} />
         <Route path="/movies" element={<AllMoviesPage />} />
@@ -41,7 +72,7 @@ function App() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path='/top10' element={<Top10Page />} />
         <Route path='/directorPage/:id' element={<DirectorPage />} />
-        <Route path="/moviePage/:id" element={<><UpdateRank/><HoverRating/><ShowReviews/><NewReviewForm/></>} />
+        <Route path="/moviePage/:id" element={<><UpdateRank/><HoverRating/><ShowReviews/><NewReviewForm username={userFirstName} userId={userId}/></>} />
         <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
         <Route path='/register-sign-in' element={<AccountBox />} />
         <Route path='/userPage/:id' element={<UserPage />} />
