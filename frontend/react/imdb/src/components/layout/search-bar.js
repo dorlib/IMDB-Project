@@ -29,6 +29,15 @@ function SearchBar(props) {
         }
     `;
 
+    let GET_USERS = gql`
+        query Users{
+            users {
+                nickname
+                id
+            }
+        }
+    `
+
     const genres = ["action", "drama", "comedy", "crime", "animation", "fantasy", "romance", "thriller", "horror", "science fiction", "historical", "western"]
     const [placeholder, setPlaceholder] = useState("Enter Movie Name");
     const [searchBy, setSearchBy] = useState("movies");
@@ -36,9 +45,12 @@ function SearchBar(props) {
     const [filteredData, setFilteredData] = useState([]);
     const {loading: loading1, error: error1, data: data1} = useQuery(GET_MOVIES)
     const {loading: loading2, error: error2, data: data2} = useQuery(GET_DIRECTORS)
+    const {loading: loading3, error: error3, data: data3} = useQuery(GET_USERS)
+
 
     let menuRef = useRef()
     let menuRef1 = useRef()
+    let menuRef2 = useRef()
 
     const [userId, setUserId] = useState(0);
 
@@ -58,11 +70,12 @@ function SearchBar(props) {
         }
     })
 
-    if (loading1 || loading2) return <p>Loading...</p>;
-    if (error1 || error2) return <p>Error :</p>;
+    if (loading1 || loading2 || loading3) return <p>Loading...</p>;
+    if (error1 || error2 || error3) return <p>Error :</p>;
 
     console.log(data1)
     console.log(data2)
+    console.log(data3)
 
     let loaded
 
@@ -80,6 +93,15 @@ function SearchBar(props) {
                 data2.directors.map(({name, id}) => (
                     <Link to={"/directorPage/" + id} className={classes.dataItem} target={"_blank"}
                           style={{textDecoration: "none", fontSize: "large"}}> {name} </Link>
+                )))
+        )
+    }
+    if (searchBy === "users") {
+        loaded = (
+            loaded = (
+                data3.users.map(({nickname, id}) => (
+                    <Link to={"/userPage/" + id} className={classes.dataItem} target={"_blank"}
+                          style={{textDecoration: "none", fontSize: "large"}}> {nickname} </Link>
                 )))
         )
     }
@@ -109,6 +131,10 @@ function SearchBar(props) {
             setPlaceholder("Enter Director Name")
             setSearchBy("directors")
         }
+        if (input === "GET_USERS") {
+            setPlaceholder("Enter User Name")
+            setSearchBy("users")
+        }
         if (input === "GET_GENRE") {
             setSearchBy("genres")
             setPlaceholder("Enter Genre Name")
@@ -130,12 +156,14 @@ function SearchBar(props) {
     }
 
     if (props.userId && userId === 0) {
-        setUserId(props.id)
+        setUserId(props.userId)
         console.log(userId)
     }
 
+    console.log(userId)
+
     // this main navigation will be returned if user is NOT logged in
-    if (userId === 0 || !userId) {
+    if (!userId || userId === 0) {
         return (
             <div>
                 <div className={classes.search} ref={menuRef1} >
@@ -202,7 +230,7 @@ function SearchBar(props) {
                 )}
             </div>
             <FormControl>
-                <RadioGroup className={classes.by} row>
+                <RadioGroup className={classes.loggedBy} row>
                     <FormControlLabel
                         value="GET_MOVIES"
                         control={<Radio/>}
@@ -219,6 +247,12 @@ function SearchBar(props) {
                         value="GET_GENRE"
                         control={<Radio/>}
                         label="By Genre"
+                        onClick={HandleChange}
+                    />
+                    <FormControlLabel
+                        value="GET_USERS"
+                        control={<Radio/>}
+                        label="By User"
                         onClick={HandleChange}
                     />
                 </RadioGroup>

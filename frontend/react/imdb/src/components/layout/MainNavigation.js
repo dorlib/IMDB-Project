@@ -44,7 +44,7 @@ function MainNavigation(props) {
 
     const [searchBy, setSearchBy] = useState("GET_MOVIES");
     const [username, setUsername] = useState('Guest');
-    const [userId, setUserId] = useState('Guest');
+    const [userId, setUserId] = useState(0);
 
 
     const HandleChange = (event) => {

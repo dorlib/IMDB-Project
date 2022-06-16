@@ -143,3 +143,10 @@ Link:hover {
     z-index: 1;
 }
 
+.loggedBy{
+    position: relative;
+    display: flex;
+    bottom: 1.03cm;
+    left: 100.5%;
+}
+
