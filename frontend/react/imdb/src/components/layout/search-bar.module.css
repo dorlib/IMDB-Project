@@ -150,3 +150,17 @@ Link:hover {
     left: 100.5%;
 }
 
+.loggedDataResult .dataItem {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    color: black;
+}
+
+.loggedDataResult::-webkit-scrollbar {
+    display: none;
+    position: relative;
+}
+

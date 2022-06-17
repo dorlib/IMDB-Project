@@ -149,7 +149,7 @@ type Mutation {
     createMovie(movie: MovieInput!): Movie!
     createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String!, directorName: String!, image: String!, topic: String!, text: String!, profileImage: String!, bornAt: String!, year: Int!): Movie!
     createDirector(director: DirectorInput!): Director!
-    createReview(text: String!, rank: Int!, movieID: Int!, topic: String!): Review!
+    createReview(text: String!, rank: Int!, movieID: Int!, userID: Int!, topic: String!): Review!
     createUser(firstname: String!, lastname: String!, nickname: String!, description: String!, password: String!, profile: String!,birthday: String!, email: String!, country: String!, gender: String!): User!
     updateRank(id: ID!, rank: Int!) : Movie!
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
@@ -159,6 +159,7 @@ type Mutation {
 
 # Define a query for getting all movies.
 type Query {
+    reviews: [Review!]
     movies: [Movie!]
     directors: [Director!]
     directorIdByName(name: String!): ID

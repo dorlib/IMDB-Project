@@ -36,12 +36,16 @@ func (r *mutationResolver) CreateDirector(ctx context.Context, director Director
 		Save(ctx)
 }
 
-func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank int, movieID int, topic string) (*ent.Review, error) {
+func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank int, movieID int, userID int, topic string) (*ent.Review, error) {
+	user, _ := r.client.User.Get(ctx, userID)
+
 	return r.client.Review.Create().
 		SetTopic(topic).
 		SetText(text).
 		SetRank(rank).
 		SetMovieID(movieID).
+		SetUserID(userID).
+		SetUser(user).
 		Save(ctx)
 }
 
@@ -75,6 +79,10 @@ func (r *queryResolver) Directors(ctx context.Context) ([]*ent.Director, error) 
 
 func (r *queryResolver) Users(ctx context.Context) ([]*ent.User, error) {
 	return r.client.User.Query().All(ctx)
+}
+
+func (r *queryResolver) Reviews(ctx context.Context) ([]*ent.Review, error) {
+	return r.client.Review.Query().All(ctx)
 }
 
 func (r *queryResolver) Node(ctx context.Context, id int) (ent.Noder, error) {
