@@ -149,6 +149,142 @@ function NewMovieForm() {
         window.location.replace("/register-sign-in")
     }
 
+    // this form will be returned to the client if authenticated
+    if (name !== '') {
+        return (
+            <Card>
+                <form className={classes.form}>
+                    <div className={classes.control}>
+                        <label htmlFor="title">Movie Title</label>
+                        <input type="text" datatype="String" required id="title" value={givenTitle}
+                               onChange={event => setTitle(event.target.value)}/>
+                    </div>
+                    <div className={classes.ctrl}>
+                        <label htmlFor="year">Year Of Release</label>
+                        <input
+                            name="year"
+                            id="year"
+                            min="1890"
+                            max="2022"
+                            value={givenYear} onChange={event => setYear(event.target.value)}
+                            datatype="Int"
+                            required
+                        ></input>
+                    </div>
+
+                    <div className={classes.im}>
+                        <label htmlFor="image">Movie Image</label>
+                        <input type="url" datatype="string" id="image" value={givenImage1}
+                               onChange={event => setImage1(event.target.value)}/>
+                    </div>
+
+                    <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
+                        <label htmlFor="contained-button-file">
+                            <Input
+                                accept="image/*"
+                                type="file"
+                                id="contained-button-file"
+                                value={givenImage2}
+                                onChange={event => setImage2(event.target.value)}
+                            />
+                            <Button variant="contained" component="span">
+                                Upload
+                            </Button>
+                        </label>
+                    </Stack>
+
+                    <div className={classes.control}>
+                        <label htmlFor="director">Director's Name</label>
+                        <input type="text" required id="director" datatype="String" value={givenDirector}
+                               onChange={event => setDirector(event.target.value)}/>
+                    </div>
+
+                    <div className={classes.control}>
+                        <label htmlFor="worth">
+                            How Much Do You Think This Movie Is worth Waching?
+                        </label>
+                        <input type="range" datatype="Int" id="worth" min="1" max="5" value={givenWorth}
+                               onChange={event => setWorth(event.target.value)}/>
+                    </div>
+
+                    <div className={classes.control}>
+                        <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                        <Select
+                            id="genre"
+                            name="genre"
+                            className={classes.genreInput}
+                            value={givenGenre}
+                            datatype="String"
+                            placeholder="genre"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="action">Action</MenuItem>
+                            <MenuItem value="drama">Drama</MenuItem>
+                            <MenuItem value="comedy">Comedy</MenuItem>
+                            <MenuItem value="crime">Crime</MenuItem>
+                            <MenuItem value="animation">Animation</MenuItem>
+                            <MenuItem value="fantasy">Fantasy</MenuItem>
+                            <MenuItem value="romance">Romance</MenuItem>
+                            <MenuItem value="thriller">Thriller</MenuItem>
+                            <MenuItem value="horror">Horror</MenuItem>
+                            <MenuItem value="science fiction">Science Fiction</MenuItem>
+                            <MenuItem value="historical">Historical</MenuItem>
+                            <MenuItem value="western">Western</MenuItem>
+                        </Select>
+                    </div>
+
+                    <div className={classes.control}>
+                        <label htmlFor="description">Description</label>
+                        <textarea
+                            id="description"
+                            type="text"
+                            datatype="String"
+                            required
+                            rows="5"
+                            value={givenDescription} onChange={event => setDescription(event.target.value)}
+                        ></textarea>
+                    </div>
+
+                    <div className={classes.control}>
+                        <label htmlFor="topic">Review title</label>
+                        <textarea
+                            id="topic"
+                            type="text"
+                            datatype="String"
+                            required
+                            rows="1"
+                            value={givenTopic} onChange={event => setTopic(event.target.value)}
+                        ></textarea>
+                    </div>
+
+                    <div className={classes.control}>
+                        <label htmlFor="review">Review Text</label>
+                        <textarea id="review" rows="5" datatype="String" value={givenText}
+                                  onChange={event => setText(event.target.value)}></textarea>
+                    </div>
+
+                    <div className={classes.ctrl}>
+                        <label htmlFor="rank">Add Your Rank</label>
+                        <input
+                            type="number"
+                            name="ranking"
+                            id="ranking"
+                            min="1"
+                            max="100"
+                            value={givenRank} onChange={event => setRank(event.target.value)}
+                            datatype="Int"
+                        ></input>
+                    </div>
+
+                    <div className={classes.actions}>
+                        <button type="button" onClick={addMovie}>Add Movie</button>
+                    </div>
+                </form>
+            </Card>
+        );
+    }
+
+    // this form will be returned to the client if NOT authenticated
     if (name === '') {
         return (
             <div style={{color: "yellow"}}>
@@ -167,133 +303,6 @@ function NewMovieForm() {
             </div>
         )
     }
-
-    return (
-        <Card>
-            <form className={classes.form} >
-                <div className={classes.control}>
-                    <label htmlFor="title">Movie Title</label>
-                    <input type="text" datatype="String" required id="title" value={givenTitle} onChange={event => setTitle(event.target.value)}/>
-                </div>
-                <div className={classes.ctrl}>
-                    <label htmlFor="year">Year Of Release</label>
-                    <input
-                        name="year"
-                        id="year"
-                        min="1890"
-                        max="2022"
-                        value={givenYear} onChange={event => setYear(event.target.value)}
-                        datatype="Int"
-                        required
-                    ></input>
-                </div>
-
-                <div className={classes.im}>
-                    <label htmlFor="image">Movie Image</label>
-                    <input type="url" datatype="string" id="image" value={givenImage1} onChange={event => setImage1(event.target.value)}/>
-                </div>
-
-                <Stack direction="row" alignItems="center" spacing={2} className={classes.but} >
-                    <label htmlFor="contained-button-file">
-                        <Input
-                            accept="image/*"
-                            type="file"
-                            id="contained-button-file"
-                            value={givenImage2}
-                            onChange={event => setImage2(event.target.value)}
-                        />
-                        <Button variant="contained" component="span">
-                            Upload
-                        </Button>
-                    </label>
-                </Stack>
-
-                <div className={classes.control}>
-                    <label htmlFor="director">Director's Name</label>
-                    <input type="text" required id="director"  datatype="String" value={givenDirector} onChange={event => setDirector(event.target.value)}/>
-                </div>
-
-                <div className={classes.control}>
-                    <label htmlFor="worth">
-                        How Much Do You Think This Movie Is worth Waching?
-                    </label>
-                    <input type="range" datatype="Int" id="worth" min="1" max="5" value={givenWorth} onChange={event => setWorth(event.target.value)}/>
-                </div>
-
-                <div className={classes.control}>
-                    <InputLabel id="demo-simple-select-label" >Gender</InputLabel>
-                    <Select
-                        id="genre"
-                        name="genre"
-                        className={classes.genreInput}
-                        value={givenGenre}
-                        datatype="String"
-                        placeholder="genre"
-                        onChange={handleChange}
-                    >
-                        <MenuItem value="action">Action</MenuItem>
-                        <MenuItem value="drama">Drama</MenuItem>
-                        <MenuItem value="comedy">Comedy</MenuItem>
-                        <MenuItem value="crime">Crime</MenuItem>
-                        <MenuItem value="animation">Animation</MenuItem>
-                        <MenuItem value="fantasy">Fantasy</MenuItem>
-                        <MenuItem value="romance">Romance</MenuItem>
-                        <MenuItem value="thriller">Thriller</MenuItem>
-                        <MenuItem value="horror">Horror</MenuItem>
-                        <MenuItem value="science fiction">Science Fiction</MenuItem>
-                        <MenuItem value="historical">Historical</MenuItem>
-                        <MenuItem value="western">Western</MenuItem>
-                    </Select>
-                </div>
-
-                <div className={classes.control}>
-                    <label htmlFor="description">Description</label>
-                    <textarea
-                        id="description"
-                        type="text"
-                        datatype="String"
-                        required
-                        rows="5"
-                        value={givenDescription} onChange={event => setDescription(event.target.value)}
-                    ></textarea>
-                </div>
-
-                <div className={classes.control}>
-                    <label htmlFor="topic">Review title</label>
-                    <textarea
-                        id="topic"
-                        type="text"
-                        datatype="String"
-                        required
-                        rows="1"
-                        value={givenTopic} onChange={event => setTopic(event.target.value)}
-                    ></textarea>
-                </div>
-
-                <div className={classes.control}>
-                    <label htmlFor="review">Review Text</label>
-                    <textarea id="review" rows="5" datatype="String" value={givenText} onChange={event => setText(event.target.value)}></textarea>
-                </div>
-
-                <div className={classes.ctrl}>
-                    <label htmlFor="rank">Add Your Rank</label>
-                    <input
-                        type="number"
-                        name="ranking"
-                        id="ranking"
-                        min="1"
-                        max="100"
-                        value={givenRank} onChange={event => setRank(event.target.value)}
-                        datatype="Int"
-                    ></input>
-                </div>
-
-                <div className={classes.actions}>
-                    <button type="button" onClick={addMovie}>Add Movie</button>
-                </div>
-            </form>
-        </Card>
-    );
 }
 
 export default NewMovieForm;
