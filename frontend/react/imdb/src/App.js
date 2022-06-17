@@ -38,8 +38,10 @@ function App() {
   const [userFirstName, setUserFirstName] = useState('Guest')
   const [userProfileImage, setUserProfileImage] = useState('https://hope.be/wp-content/uploads/2015/05/no-user-image.gif')
   const [userId, setUserId] = useState(0)
+  const [userNickname, setUserNickname] = useState('')
 
-  useEffect(() => {
+
+    useEffect(() => {
     (
         async () => {
           await fetch("http://localhost:8081/user", {
@@ -54,6 +56,7 @@ function App() {
                 console.log(data)
                 setUserId(data["0"]["id"])
                 setUserFirstName(data["0"]["firstname"])
+                setUserNickname(data["0"]["nickname"])
                 if (data["0"]["profile"] !== '') {
                     setUserProfileImage(data["0"]["profile"])
                 }
@@ -72,7 +75,7 @@ function App() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path='/top10' element={<Top10Page />} />
         <Route path='/directorPage/:id' element={<DirectorPage />} />
-        <Route path="/moviePage/:id" element={<><UpdateRank/><HoverRating/><ShowReviews/><NewReviewForm username={userFirstName} userId={userId}/></>} />
+        <Route path="/moviePage/:id" element={<><UpdateRank/><HoverRating/><ShowReviews /><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>} />
         <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
         <Route path='/register-sign-in' element={<AccountBox />} />
         <Route path='/userPage/:id' element={<UserPage />} />

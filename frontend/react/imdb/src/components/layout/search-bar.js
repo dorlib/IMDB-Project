@@ -51,15 +51,26 @@ function SearchBar(props) {
     let menuRef = useRef()
     let menuRef1 = useRef()
     let menuRef2 = useRef()
+    let menuRef3 = useRef()
+
 
     const [userId, setUserId] = useState(0);
 
     useEffect(() => {
         let handler = (event) => {
-            if (!menuRef.current.contains(event.target)) {
-                if (!menuRef1.current.contains(event.target)) {
-                    setFilteredData([]);
-                    setWordEntered("")
+            if (userId !== 0) {
+                if (!menuRef.current.contains(event.target)) {
+                    if (!menuRef1.current.contains(event.target)) {
+                        setFilteredData([]);
+                        setWordEntered("")
+                    }
+                }
+            } else {
+                if (!menuRef2.current.contains(event.target)) {
+                    if (!menuRef3.current.contains(event.target)) {
+                        setFilteredData([]);
+                        setWordEntered("")
+                    }
                 }
             }
         }
@@ -166,9 +177,9 @@ function SearchBar(props) {
     if (!userId || userId === 0) {
         return (
             <div>
-                <div className={classes.search} ref={menuRef1} >
-                    <div className={classes.searchInput} >
-                        <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter} />
+                <div className={classes.search} ref={menuRef1}>
+                    <div className={classes.searchInput}>
+                        <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
                         <div className={classes.searchIcon}>
                             {wordEntered.length === 0 ? (
                                 <SearchIcon/>
@@ -176,7 +187,7 @@ function SearchBar(props) {
                                 <CloseIcon id={"ClearBtn"} onClick={clearInput}/>
                             )}
                         </div>
-                    </div >
+                    </div>
                     {filteredData.length !== 0 && (
                         <div className={classes.dataResult} ref={menuRef}>
                             {filteredData}
@@ -212,9 +223,9 @@ function SearchBar(props) {
     // this main search bar will be returned if user is logged in
     let logged = (
         <div>
-            <div className={classes.loggedSearch} ref={menuRef1} >
-                <div className={classes.loggedSearchInput} >
-                    <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter} />
+            <div className={classes.loggedSearch} ref={menuRef2}>
+                <div className={classes.loggedSearchInput}>
+                    <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
                     <div className={classes.loggedSearchIcon}>
                         {wordEntered.length === 0 ? (
                             <SearchIcon/>
@@ -222,9 +233,9 @@ function SearchBar(props) {
                             <CloseIcon id={"ClearBtn"} onClick={clearInput}/>
                         )}
                     </div>
-                </div >
+                </div>
                 {filteredData.length !== 0 && (
-                    <div className={classes.loggedDataResult} ref={menuRef}>
+                    <div className={classes.loggedDataResult} ref={menuRef3}>
                         {filteredData}
                     </div>
                 )}

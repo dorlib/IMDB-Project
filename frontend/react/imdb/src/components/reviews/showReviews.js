@@ -18,7 +18,7 @@ import UpdateRank from "./total-rank";
 import classes from "./showReviews.module.css";
 
 
-function ShowReviews() {
+function ShowReviews(props) {
     const SHOW_REVIEWS = gql`
         query ReviewsOfMovie ($movieID: Int!) {
             reviewsOfMovie (movieID: $movieID){

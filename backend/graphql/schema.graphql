@@ -49,6 +49,7 @@ type Review {
     text: String!
     rank: Int!
     movie: Movie!
+    user: User!
 }
 
 type Favorite {

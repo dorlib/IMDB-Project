@@ -17,8 +17,8 @@ import Typography from "@mui/material/Typography";
 
 function NewReviewForm(props) {
     const ADD_REVIEW = gql`
-        mutation CreateReview ($text: String!, $rank: Int!, $movieID: Int!, $topic: String!) {
-            createReview(text: $text, rank: $rank, movieID: $movieID, topic: $topic) {
+        mutation CreateReview ($text: String!, $rank: Int!, $movieID: Int!, $userID: Int! $topic: String!) {
+            createReview(text: $text, rank: $rank, movieID: $movieID, userID: $userID, topic: $topic) {
                 text
                 rank
                 topic
@@ -44,6 +44,7 @@ function NewReviewForm(props) {
                 text: givenText,
                 rank: givenRank,
                 topic: givenTopic,
+                userID: props.userId,
             },
             onError: function (error) {
                 console.log("error:",error)
