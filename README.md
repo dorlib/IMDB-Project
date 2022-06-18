@@ -18,10 +18,7 @@ _I am not associated with nor speak for IMDB site._
     <img alt="Netlify Deploy Status" src="https://api.netlify.com/api/v1/badges/87975815-cdc6-4c7f-b8c3-7adefa714190/deploy-status"/>
 </p>
 
-<p align="center">
-    <img alt="Screenshot" src="![IMDB WELCOME](https://user-images.githubusercontent.com/90474428/174454303-d990a9d2-f881-4a63-838f-cb34b7a77698.png)
-" width="700px">
-</p>
+![IMDB WELCOME](https://user-images.githubusercontent.com/90474428/174454702-4f343853-7da1-41e7-a68f-201261dfc613.png)
 
 ## Built With
 
