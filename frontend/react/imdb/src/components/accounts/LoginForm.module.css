@@ -72,4 +72,14 @@
     left: 4.5cm;
 }
 
+.OR {
+    display: flex;
+    position: absolute;
+    font-weight: bold;
+    top: 7.32cm;
+    left: 6cm;
+}
 
+.here {
+    font-weight: bolder;
+}
