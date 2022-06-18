@@ -59,15 +59,15 @@ function SearchBar(props) {
     useEffect(() => {
         let handler = (event) => {
             if (userId !== 0) {
-                if (!menuRef.current.contains(event.target)) {
-                    if (!menuRef1.current.contains(event.target)) {
+                if (menuRef.current && !menuRef.current.contains(event.target)) {
+                    if (menuRef1.current && !menuRef1.current.contains(event.target)) {
                         setFilteredData([]);
                         setWordEntered("")
                     }
                 }
             } else {
-                if (!menuRef2.current.contains(event.target)) {
-                    if (!menuRef3.current.contains(event.target)) {
+                if (menuRef2.current && !menuRef2.current.contains(event.target)) {
+                    if (menuRef3.current && !menuRef3.current.contains(event.target)) {
                         setFilteredData([]);
                         setWordEntered("")
                     }

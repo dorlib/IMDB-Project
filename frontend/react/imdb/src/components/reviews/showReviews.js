@@ -58,7 +58,6 @@ function ShowReviews(props) {
     if (error) return <div>Error!</div>
     if (loading) return <div>Loading...</div>
 
-
     let loaded
     let load
 

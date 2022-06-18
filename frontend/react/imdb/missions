@@ -4,13 +4,15 @@
 
 # making favorite system for users -- after log in and sign in
 
-# add option to log in with email or with nickname
-
 # add fast scroll to the all movies and all directors
 
 # add option to crop profile image
 
 # forgot my password fitcher -- email process with nodemailer
+
+# search box doesnt close after clicking outside. (fixed before)
+
+# make review system by users (show their name and avatar)
 
 
 ##########################
