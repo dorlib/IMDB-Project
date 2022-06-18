@@ -4,63 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="920aa575-476d-47e9-bbf4-ab3f278025c9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/client.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/config.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/context.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/director.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/director/director.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/director/where.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/director_create.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/director_delete.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/director_query.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/director_update.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/ent.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/enttest/enttest.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/generate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/hook/hook.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/migrate/migrate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/migrate/schema.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/movie.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/movie/movie.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/movie/where.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/movie_create.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/movie_delete.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/movie_query.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/movie_update.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/mutation.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/predicate/predicate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/review.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/review/review.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/review/where.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/review_create.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/review_delete.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/review_query.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/review_update.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/runtime.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/runtime/runtime.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/schema/director.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/schema/movie.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/schema/review.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/schema/user.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/tx.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/user.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/user/user.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/user/where.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/user_create.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/user_delete.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/user_query.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/ent/user_update.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/frontend/search.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/frontend/searchStyle.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/frontend/site.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/frontend/siteStyle.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/frontend/top10.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/frontend/top10Style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/go.sum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IMDB/main.go" beforeDir="false" />
-    </list>
+    <list default="true" id="920aa575-476d-47e9-bbf4-ab3f278025c9" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
