@@ -168,7 +168,14 @@ func logInHandler(c *ent.Client) http.Handler {
 			log.Fatal(er)
 		}
 
-		userID := c.User.Query().Where(user.Nickname(userData.GivenNickName)).OnlyIDX(r.Context())
+		var userID int
+
+		if userData.GivenNickName != string("") {
+			userID = c.User.Query().Where(user.Nickname(userData.GivenNickName)).OnlyIDX(r.Context())
+		} else {
+			userID = c.User.Query().Where(user.Email(userData.GivenEmail)).OnlyIDX(r.Context())
+		}
+
 		data := c.User.GetX(r.Context(), userID)
 
 		currentPassword := data.Password

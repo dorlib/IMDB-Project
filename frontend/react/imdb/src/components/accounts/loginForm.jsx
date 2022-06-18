@@ -18,7 +18,7 @@ export function LoginForm() {
 
     const [givenPassword, setPassword] = useState('')
     const [givenNickname, setNickname] = useState('')
-    // const [givenEmail, setEmail] = useState('')
+    const [givenEmail, setEmail] = useState('')
 
     const [signWithEmail, setSignWithEmail] = useState(false)
 
@@ -34,7 +34,7 @@ export function LoginForm() {
         const userData = {
             givenPassword,
             givenNickname,
-            // givenEmail
+            givenEmail
         };
 
         setSpinner(true);
@@ -125,7 +125,7 @@ export function LoginForm() {
                         <label htmlFor="email">Enter Your Nickname</label>
                         <Typography className={classes.OR}>OR click&ensp;<Link className={classes.here} onClick={handleNickname}>Here</Link>&ensp;to sigh in with nickname</Typography>
                         <input type="email" id="email" name="email" required placeholder="enter email here"
-                               onChange={event => setNickname(event.target.value)} autoComplete="username"/>
+                               onChange={event => setEmail(event.target.value)} autoComplete="username"/>
                     </div>
                     <div className={classes.ctrl}>
                         <label htmlFor="password">Enter Your password (8 characters minimum</label>
