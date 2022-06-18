@@ -7,7 +7,7 @@ import {styled} from "@mui/material/styles";
 
 import classes from "./LoginForm.module.css";
 import {BoldLink, BoxContainer, FormContainer, MutedLink, SubmitButton,} from "./common";
-import {Typography} from "@mui/material";
+import {Link, Typography} from "@mui/material";
 import styledComponentsBrowserEsm from "styled-components/dist/styled-components.browser.esm";
 
 
@@ -18,7 +18,10 @@ export function LoginForm() {
 
     const [givenPassword, setPassword] = useState('')
     const [givenNickname, setNickname] = useState('')
-    // const [givenEmail, setEmail] = useState('')
+    const [givenEmail, setEmail] = useState('')
+
+    const [signWithEmail, setSignWithEmail] = useState(false)
+
 
     const [spinner, setSpinner] = useState(false);
     const [loginError, setLoginError] = useState(false);
@@ -31,7 +34,7 @@ export function LoginForm() {
         const userData = {
             givenPassword,
             givenNickname,
-            // givenEmail
+            givenEmail
         };
 
         setSpinner(true);
@@ -69,18 +72,27 @@ export function LoginForm() {
             display: "none",
         });
 
-        return (
+    const handleEmail = () => {
+        setSignWithEmail(true)
+    }
+
+    const handleNickname = () => {
+        setSignWithEmail(false)
+    }
+
+        let withNickname =  (
             <BoxContainer>
                 <form className={classes.form} onSubmit={handleLogin}>
                     <Card>
                         <div className={classes.control}>
                             <label htmlFor="nickname">Enter Your Nickname</label>
-                            <input type="text" id="nickname" name="nickname" required
+                            <Typography className={classes.OR}>OR click&ensp;<Link className={classes.here} onClick={handleEmail}>Here</Link>&ensp;to sigh in with email</Typography>
+                            <input type="text" id="nickname" name="nickname" required placeholder="enter nickname here"
                                    onChange={event => setNickname(event.target.value)} autoComplete="username"/>
                         </div>
                         <div className={classes.ctrl}>
                             <label htmlFor="password">Enter Your password (8 characters minimum</label>
-                            <input type="password" id="password" name="password" minLength="8" required
+                            <input type="password" id="password" name="password" minLength="8" required placeholder="password"
                                    onChange={event => setPassword(event.target.value)} autoComplete="new-password"/>
                         </div>
                     </Card>
@@ -104,4 +116,47 @@ export function LoginForm() {
                 </MutedLink>
             </BoxContainer>
         );
+
+    let withEmail =  (
+        <BoxContainer>
+            <form className={classes.form} onSubmit={handleLogin}>
+                <Card>
+                    <div className={classes.control}>
+                        <label htmlFor="email">Enter Your Nickname</label>
+                        <Typography className={classes.OR}>OR click&ensp;<Link className={classes.here} onClick={handleNickname}>Here</Link>&ensp;to sigh in with nickname</Typography>
+                        <input type="email" id="email" name="email" required placeholder="enter email here"
+                               onChange={event => setEmail(event.target.value)} autoComplete="username"/>
+                    </div>
+                    <div className={classes.ctrl}>
+                        <label htmlFor="password">Enter Your password (8 characters minimum</label>
+                        <input type="password" id="password" name="password" minLength="8" required placeholder="password"
+                               onChange={event => setPassword(event.target.value)} autoComplete="new-password"/>
+                    </div>
+                </Card>
+                <Typography className={classes.err}>{loginError? 'Login was not successful... please try again': null}</Typography>
+                <Typography className={classes.success}>{success? 'Its Nice Seeing You Again '+ userName + ' !': null}</Typography>
+                <Marginer direction="vertical" margin={45}/>
+                <SubmitButton type="submit" value="submit" style={{display: "flex", marginLeft: "1.9cm"}}>{spinner? 'loading...' : 'Log In!'}</SubmitButton>
+            </form>
+            <MutedLink href="#">Forget your password?
+                <BoldLink href="#" onClick={switchToReset}>
+                    click here to reset
+                </BoldLink>
+            </MutedLink>
+            <Marginer direction="vertical" margin="0.3em"/>
+            <Marginer direction="vertical" margin="1em"/>
+            <MutedLink href="#">
+                Don't have an account?{" "}
+                <BoldLink href="#" onClick={switchToSignup}>
+                    Sign Up
+                </BoldLink>
+            </MutedLink>
+        </BoxContainer>
+    );
+
+        if (signWithEmail) {
+            return withEmail
+        } else {
+            return withNickname
+        }
     }
