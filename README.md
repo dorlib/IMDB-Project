@@ -83,7 +83,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Creator / Maintainer
 
-Annie Wu ([anniedotexe](https://github.com/anniedotexe))
+Dor Liberman ([dorlib](https://github.com/anniedotexe))
 
 If you have any questions, comments, or concerns, feel free to contact me below.
 
