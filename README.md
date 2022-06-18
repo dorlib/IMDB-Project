@@ -67,7 +67,7 @@ Here's what you need to do to get this running locally on your computer.
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Please make sure to update tests as appropriate.
 
-# _notise the "mission.txt" file to see futre fitchers which planned to be added!_
+### _notise the "mission.txt" file to see futre fitchers which planned to be added!_
 
 ### How To Contribute
 
