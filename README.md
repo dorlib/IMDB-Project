@@ -19,7 +19,7 @@ _I am not associated with nor speak for IMDB site._
 </p>
 
 <p align="center">
-    <img alt="Screenshot" src="![IMDB WELCOME](https://user-images.githubusercontent.com/90474428/174452156-927ead51-4874-487f-b33e-0a99be1d30c9.png)" width="700px">
+    <img alt="Screenshot" src="![This is an image](https://user-images.githubusercontent.com/90474428/174452156-927ead51-4874-487f-b33e-0a99be1d30c9.png)" width="700px">
 </p>
 
 ## Built With
