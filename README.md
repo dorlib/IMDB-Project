@@ -14,10 +14,19 @@ _Notice That Im currently working on the app, so NEW FITCHERS are been added on 
 
 <p align="center">
     <img alt="React" src="https://img.shields.io/badge/-React-61DBFB?style=flat&logo=react&logoColor=FFFFFF"/>
-    <img alt="Redux" src="https://img.shields.io/badge/-Redux-764abc?style=flat&logo=redux&logoColor=FFFFFF"/>
+    <img alt="Go" style="height: 0.55cm" src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white
+"/>
     <img alt="Styled Components" src="https://img.shields.io/badge/-<💅>%20Styled%20Components-grey?style=flat"/>
     <img alt="Open Source? Yes!" src="https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github"/>
     <img alt="Netlify Deploy Status" src="https://api.netlify.com/api/v1/badges/87975815-cdc6-4c7f-b8c3-7adefa714190/deploy-status"/>
+</p>
+
+<p align="center">
+    <img alt="Issues" src="https://img.shields.io/bitbucket/issues/dorlib/imabv3"/>
+    <img alt="pull request" src="https://img.shields.io/bitbucket/pr/dorlib/imdbv3"/>
+    <img alt="stars" src="https://img.shields.io/github/stars/dorlib/imdbv3?style=social">
+    <img alt="updated" src="https://img.shields.io/eclipse-marketplace/last-update/dorlib">
+
 </p>
 
 ![IMDB WELCOME](https://user-images.githubusercontent.com/90474428/174454702-4f343853-7da1-41e7-a68f-201261dfc613.png)
@@ -56,10 +65,20 @@ The app has fully working authentication and authorization processes!
 
 Here's what you need to do to get this running locally on your computer.
 
-1. Clone the project to your machine with `git clone https://github.com/anniedotexe/subuwu.git`
-2. On a command line inside of the application's folder, run `npm install`
-3. After installing reactJS, run `npm start` and `go run ./server`
-5. Open [http://localhost:3000](http://localhost:3000) to view it in the browser
+1. Clone the project to your machine with `git clone https://github.com/dorlib/imdbv3.git`
+2. Install Go on your machine from [here](https://go.dev/doc/install)
+3. Install MySQL on your machine from [here](https://www.mysql.com/downloads/)
+4. On a command line inside of the application's folder, run `npm start`
+5. On another terminal run the server with `go run ./server`
+6. Open [http://localhost:3000](http://localhost:3000) to view it in the browser
+
+---
+
+## Seed data to your database
+
+Here's what you need to do to get pre-made data to your local MySQL database.
+
+
 
 ---
 
