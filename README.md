@@ -18,9 +18,8 @@ _I am not associated with nor speak for IMDB site._
     <img alt="Netlify Deploy Status" src="https://api.netlify.com/api/v1/badges/87975815-cdc6-4c7f-b8c3-7adefa714190/deploy-status"/>
 </p>
 
-<p align="center">
-    <img alt="Screenshot" src="![This is an image](https://user-images.githubusercontent.com/90474428/174452156-927ead51-4874-487f-b33e-0a99be1d30c9.png)" width="700px">
-</p>
+![IMDB WELCOME](https://user-images.githubusercontent.com/90474428/174454702-4f343853-7da1-41e7-a68f-201261dfc613.png)
+
 
 ## Built With
 
@@ -29,5 +28,5 @@ _I am not associated with nor speak for IMDB site._
 - [Material UI Icons](https://material-ui.com/components/material-icons/)
 - [ent](https://entgo.io/)
 - [graphql](https://graphql.org/)
-- [gqlgen]([https://github.com/gkaemmer/react-fade-i](https://gqlgen.com/getting-started/)n) 
+- [gqlgen](https://gqlgen.com/getting-started/)n) 
 - Hosted on [Netlify](https://www.netlify.com/)
