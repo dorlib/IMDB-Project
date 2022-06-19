@@ -8,7 +8,9 @@ The client side is written with javascript, css and ReactJS (including materialU
 The sever is written with GO (including ent and gqlgen) and the database we use is is MySQL.
 
 _I am not associated with nor speak for IMDB site._
-_The main welcome page's photo Belong to NETFLIX inc._
+
+_The main welcome page's photo Belong to NETFLIX inc._ 
+
 _Notice That Im currently working on the app, so NEW FITCHERS are been added on daily basics!_
 
 
@@ -76,7 +78,11 @@ Here's what you need to do to get this running locally on your computer.
 
 ## Seed data to your database
 
-Here's what you need to do to get pre-made data to your local MySQL database.
+In my opinion, the best way to test this app is by createing a user, add your favoritre movies, actors and directors and nake some review and rating!
+
+but, if your looking for pre-made data to insert, Here's what you need to do to get it:
+
+
 
 
 
