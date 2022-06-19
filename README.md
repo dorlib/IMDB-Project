@@ -21,10 +21,6 @@ _Notice That Im currently working on the app, so NEW FITCHERS are been added on 
 </p>
 
 ![IMDB WELCOME](https://user-images.githubusercontent.com/90474428/174454702-4f343853-7da1-41e7-a68f-201261dfc613.png)
-<<<<<<< HEAD
-
-=======
->>>>>>> 0e8c6c65b6aca05c4dba0af27ace4cfab1e6e8c7
 
 ## Built With
 
