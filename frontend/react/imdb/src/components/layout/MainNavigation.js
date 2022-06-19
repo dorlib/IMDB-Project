@@ -44,6 +44,7 @@ function MainNavigation(props) {
 
     const [searchBy, setSearchBy] = useState("GET_MOVIES");
     const [username, setUsername] = useState('Guest');
+    const [insert, setInsert] = useState(true)
     const [userId, setUserId] = useState(0);
 
 
@@ -78,6 +79,23 @@ function MainNavigation(props) {
             .catch((err) => {
                 console.error('error:', err)
             })
+    }
+
+    const insertHandler = async () => {
+        if (insert) {
+            await fetch('http://localhost:8081/insert', {
+                method: 'post',
+                credentials: 'include',
+                headers: {"Content-Type": "application/json"},
+            })
+                .then(() => {
+                    setInsert(false)
+                    window.location.replace("/")
+                })
+                .catch((err) => {
+                    console.error('error:', err)
+                })
+        }
     }
 
     // this main navigation will be returned if user is NOT logged in
@@ -226,6 +244,10 @@ function MainNavigation(props) {
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
                                                 <Typography textAlign="center">Dashboard</Typography>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                <Typography textAlign="center"
+                                                            onClick={insertHandler}>insert data</Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
                                                 <Typography textAlign="center"
