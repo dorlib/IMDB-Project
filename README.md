@@ -29,7 +29,7 @@ _Notice That Im currently working on the app, so NEW FITCHERS are been added on 
 - [Material UI Icons](https://material-ui.com/components/material-icons/)
 - [ent](https://entgo.io/)
 - [graphql](https://graphql.org/)
-- [gqlgen](https://gqlgen.com/getting-started/)n) 
+- [gqlgen](https://gqlgen.com/getting-started/) 
 - Hosted on [Netlify](https://www.netlify.com/)
 
 ---
