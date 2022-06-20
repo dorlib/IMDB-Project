@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/go-chi/chi"
 	"golang.org/x/crypto/bcrypt"
 	"imdbv2/ent"
@@ -93,17 +92,10 @@ func insertHandler(c *ent.Client) http.Handler {
 		direc1ID, _ := c.Director.Query().Where(director.Name("Quantin Tarantino")).OnlyID(r.Context())
 		direc2ID, _ := c.Director.Query().Where(director.Name("David Fincher")).OnlyID(r.Context())
 		direc3ID, _ := c.Director.Query().Where(director.Name("Stanley Kubrick")).OnlyID(r.Context())
-
+		direc4ID, _ := c.Director.Query().Where(director.Name("Steven Spielberg")).OnlyID(r.Context())
+		direc5ID, _ := c.Director.Query().Where(director.Name("Frank Darabont")).OnlyID(r.Context())
 
 		// creating new movies
-		mov1 := c.Movie.Create().SetTitle("Pulp Fiction").SetGenre("ctime").SetDescription("best movie of quantin").SetRank(94).SetDirectorID(direc1ID).SetYear(1994).SaveX(r.Context())
-		mov2 := c.Movie.Create().SetTitle("Pulp Fiction").SetGenre("ctime").SetDescription("best movie of quantin").SetRank(94).SetDirectorID(direc1ID).SetYear(1994).SaveX(r.Context())
-		mov3 := c.Movie.Create().SetTitle("Pulp Fiction").SetGenre("ctime").SetDescription("best movie of quantin").SetRank(94).SetDirectorID(direc1ID).SetYear(1994).SaveX(r.Context())
-		mov4 := c.Movie.Create().SetTitle("Pulp Fiction").SetGenre("ctime").SetDescription("best movie of quantin").SetRank(94).SetDirectorID(direc1ID).SetYear(1994).SaveX(r.Context())
-		mov5 := c.Movie.Create().SetTitle("Pulp Fiction").SetGenre("ctime").SetDescription("best movie of quantin").SetRank(94).SetDirectorID(direc1ID).SetYear(1994).SaveX(r.Context())
-		mov6 := c.Movie.Create().SetTitle("Pulp Fiction").SetGenre("ctime").SetDescription("best movie of quantin").SetRank(94).SetDirectorID(direc1ID).SetYear(1994).SaveX(r.Context())
-		mov7 := c.Movie.Create().SetTitle("Pulp Fiction").SetGenre("ctime").SetDescription("best movie of quantin").SetRank(94).SetDirectorID(direc1ID).SetYear(1994).SaveX(r.Context())
-		mov8 := c.Movie.Create().SetTitle("Pulp Fiction").SetGenre("ctime").SetDescription("best movie of quantin").SetRank(94).SetDirectorID(direc1ID).SetYear(1994).SaveX(r.Context())
 		mov1 := c.Movie.Create().SetTitle("Pulp Fiction").SetGenre("crime").SetDescription("best movie of quantin").SetRank(94).SetDirectorID(direc1ID).SetYear(1994).SaveX(r.Context())
 		mov2 := c.Movie.Create().SetTitle("Kill Bill Vol.1").SetGenre("drama").SetDescription("noam's favorite movie of quantin").SetRank(92).SetDirectorID(direc1ID).SetYear(1991).SaveX(r.Context())
 		mov3 := c.Movie.Create().SetTitle("The Shining").SetGenre("horror").SetDescription("very scary").SetRank(82).SetDirectorID(direc3ID).SetYear(1981).SaveX(r.Context())
@@ -131,7 +123,6 @@ func insertHandler(c *ent.Client) http.Handler {
 		movie11ID, _ := c.Movie.Query().Where(movie.Title("The Shawshank Redemption")).OnlyID(r.Context())
 		movie12ID, _ := c.Movie.Query().Where(movie.Title("Jurrasic Park")).OnlyID(r.Context())
 
-
 		// reviews for the movies
 		review1 := c.Review.Create().SetTopic("wow").SetText("this is my favorite movie").SetRank(85).SetMovieID(movie1ID).SetUserID(user1ID).SaveX(r.Context())
 		review2 := c.Review.Create().SetTopic("wow2").SetText("this movie is great").SetRank(88).SetMovieID(movie1ID).SetUserID(user2ID).SaveX(r.Context())
@@ -155,7 +146,7 @@ func insertHandler(c *ent.Client) http.Handler {
 
 		_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = review1, review2, review3, review4, review5, review6, review7, review8, review9, review10, review11, review12, review13, review14, review15, review16, review17, review18, review19
 
-	}
+	})
 }
 
 func insert(router *chi.Mux, client *ent.Client) {
