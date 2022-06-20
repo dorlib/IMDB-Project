@@ -257,7 +257,7 @@ function DirectorPage() {
 
     let loaded = data.directorById["0"]["movies"].map(({title, id, rank, image}) => (
         <div key={id}>
-            <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px"}}
+            <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "1cm", borderRadius: "15px"}}
                   key={id}>
                 <CardMedia
                     component="img"
@@ -278,6 +278,7 @@ function DirectorPage() {
                         Movie's Page</Button></Link>
                 </CardActions>
             </Card>
+            <h3>&ensp;</h3>
         </div>
     ))
     return <>{d}{edit}{l}{loaded}</>

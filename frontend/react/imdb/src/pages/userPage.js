@@ -97,8 +97,8 @@ function UserPage() {
         </Box>
     );
 
+    let Birth =  Birthday.slice(2,4) + '.' + Birthday.slice(0,2) + '.' + Birthday.slice(4,8)
     const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
-
 
     let loaded = (
         <Card>
@@ -156,7 +156,7 @@ function UserPage() {
                     </div>
                     <div>
                         <h4 className={classes.birth}>
-                            I Was Born In {Birthday} So Im {getAge(Birthday)} Years Old
+                            I Was Born In {Birth} So Im {getAge(Birth)} Years Old
                         </h4>
                     </div>
                     <h4 className={classes.contact}>

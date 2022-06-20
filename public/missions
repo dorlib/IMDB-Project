@@ -10,8 +10,6 @@
 
 # forgot my password fitcher -- email process with nodemailer
 
-# search box doesnt close after clicking outside. (fixed before)
-
 # make review system by users (show their name and avatar)
 
 # add warning massage before insert data
@@ -39,8 +37,6 @@
 ##########################
 
 # add comments to functions
-
-# make instructions for seeding data
 
 
 ##########################
