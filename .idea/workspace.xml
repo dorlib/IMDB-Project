@@ -7,7 +7,7 @@
     <list default="true" id="920aa575-476d-47e9-bbf4-ab3f278025c9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/server/insert.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server/insert.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/missions" beforeDir="false" afterPath="$PROJECT_DIR$/public/missions" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
