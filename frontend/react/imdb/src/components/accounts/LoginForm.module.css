@@ -75,11 +75,12 @@
 .OR {
     display: flex;
     position: absolute;
-    font-weight: bold;
+    font-weight: bolder;
     top: 7.32cm;
     left: 6cm;
 }
 
 .here {
+    color: black;
     font-weight: bolder;
 }

@@ -86,12 +86,12 @@ export function LoginForm() {
                     <Card>
                         <div className={classes.control}>
                             <label htmlFor="nickname">Enter Your Nickname</label>
-                            <Typography className={classes.OR}>OR click&ensp;<Link className={classes.here} onClick={handleEmail}>Here</Link>&ensp;to sigh in with email</Typography>
+                            <Typography className={classes.OR} style={{fontWeight: "bolder"}}>OR click&ensp;<Link className={classes.here} onClick={handleEmail}>Here</Link>&ensp;to sigh in with email</Typography>
                             <input type="text" id="nickname" name="nickname" required placeholder="enter nickname here"
                                    onChange={event => setNickname(event.target.value)} autoComplete="username"/>
                         </div>
-                        <div className={classes.ctrl}>
-                            <label htmlFor="password">Enter Your password (8 characters minimum</label>
+                        <div className={classes.control}>
+                            <label htmlFor="password">Enter Your password (8 characters minimum)</label>
                             <input type="password" id="password" name="password" minLength="8" required placeholder="password"
                                    onChange={event => setPassword(event.target.value)} autoComplete="new-password"/>
                         </div>
@@ -123,12 +123,12 @@ export function LoginForm() {
                 <Card>
                     <div className={classes.control}>
                         <label htmlFor="email">Enter Your Nickname</label>
-                        <Typography className={classes.OR}>OR click&ensp;<Link className={classes.here} onClick={handleNickname}>Here</Link>&ensp;to sigh in with nickname</Typography>
+                        <Typography className={classes.OR} style={{fontWeight: "bolder"}}>OR click&ensp;<Link onClick={handleNickname}>Here</Link>&ensp;to sigh in with nickname</Typography>
                         <input type="email" id="email" name="email" required placeholder="enter email here"
                                onChange={event => setEmail(event.target.value)} autoComplete="username"/>
                     </div>
-                    <div className={classes.ctrl}>
-                        <label htmlFor="password">Enter Your password (8 characters minimum</label>
+                    <div className={classes.control}>
+                        <label htmlFor="password">Enter Your password (8 characters minimum)</label>
                         <input type="password" id="password" name="password" minLength="8" required placeholder="password"
                                onChange={event => setPassword(event.target.value)} autoComplete="new-password"/>
                     </div>
