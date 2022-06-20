@@ -162,8 +162,7 @@ function MovieItem(props) {
                 </CardContent>
                     <div style={{fontSize: "xxx-large"}}>
                         <Fav>
-                            <FavoriteIcon fontSize={'large'} style={{color: itemIsFavorite ? '#8B0000' : 'white'}} onClick={toggleFavoriteStatusHandler} className={classes.heart} >
-                            </FavoriteIcon>
+                            <FavoriteIcon fontSize={'large'} style={{color: itemIsFavorite ? '#8B0000' : 'white'}} onClick={toggleFavoriteStatusHandler} className={classes.heart} />
                             <TextBox><text >Click To Add To Favorites!</text></TextBox>
                         </Fav>
                     </div>
