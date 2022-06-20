@@ -17,30 +17,10 @@ import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import EditIcon from "@mui/icons-material/Edit";
 
-// function MovieItem(props) {
-//   const favoritesCtx = useContext(FavoritesContext);
-//
-//   const itemIsFavorite = favoritesCtx.itemIsFavorite(props.id);
-//
-//   function toggleFavoriteStatusHandler() {
-//     if (itemIsFavorite) {
-//       favoritesCtx.removeFavorite(props.id);
-//     } else {
-//       favoritesCtx.addFavorite({
-//         id: props.id,
-//         title: props.title,
-//         description: props.description,
-//         image: props.image,
-//         director: props.director,
-//       });
-//     }
-//   }
-//
-//   const direc = props.director
-//
-
-
 function MovieItem(props) {
+
+    const favoritesCtx = useContext(FavoritesContext);
+
     const MOVIE_DATA = gql`
         query MovieById($id : ID!) {
             movieById(id: $id) {
@@ -76,6 +56,7 @@ function MovieItem(props) {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
 
+    let movieID = data["movieById"]["0"]["id"]
     let title = data["movieById"]["0"]["title"]
     let originalRank = data["movieById"]["0"]["rank"]
     let description = data["movieById"]["0"]["description"]
@@ -112,6 +93,24 @@ function MovieItem(props) {
             color: black;
         }    
     `;
+
+    const itemIsFavorite = favoritesCtx.itemIsFavorite(movieID);
+
+    function toggleFavoriteStatusHandler(e) {
+        if (itemIsFavorite) {
+            e.target.style.color = 'white'
+            favoritesCtx.removeFavorite(movieID);
+        } else {
+            e.target.style.color = '#8B0000'
+            favoritesCtx.addFavorite({
+                id: movieID,
+                title: title,
+                description: description,
+                image: image,
+                director: director,
+            });
+        }
+    }
 
     const handleClick = (e) => {
         if (e.target.style.color == 'white') {
@@ -164,7 +163,9 @@ function MovieItem(props) {
                 </CardContent>
                     <div style={{fontSize: "xxx-large"}}>
                         <Fav>
-                            <FavoriteIcon fontSize={'large'} onClick={handleClick} className={classes.heart} />
+                            <FavoriteIcon fontSize={'large'} onClick={toggleFavoriteStatusHandler} className={classes.heart} >
+                                {itemIsFavorite ? "Remove from Favorites" : "To Favorites"}
+                            </FavoriteIcon>
                             <TextBox><text >Click To Add To Favorites!</text></TextBox>
                         </Fav>
                     </div>
@@ -173,23 +174,6 @@ function MovieItem(props) {
     )
 
     return loaded
-
-    // const favoritesCtx = useContext(FavoritesContext);
-    // const itemIsFavorite = favoritesCtx.itemIsFavorite(props.id);
-    //
-    // function toggleFavoriteStatusHandler() {
-    //     if (itemIsFavorite) {
-    //         favoritesCtx.removeFavorite(props.id);
-    //     } else {
-    //         favoritesCtx.addFavorite({
-    //             id: props.id,
-    //             title: props.title,
-    //             description: props.description,
-    //             image: props.image,
-    //             director: props.director,
-    //         });
-    //     }
-    // }
 
 }
 
