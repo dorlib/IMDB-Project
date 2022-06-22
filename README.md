@@ -22,11 +22,11 @@ _Notice That Im currently working on the app, so NEW FITCHERS are been added on 
 </p>
 
 <p align="center">
-    <img alt="Issues" src="https://img.shields.io/github/issues/dorlib/imabv3"/>
-    <img alt="pull request" src="https://img.shields.io/github/pr/dorlib/imdbv3"/>
-    <img alt="stars" src="https://img.shields.io/github/stars/dorlib/imdbv3?style=social">
-    <img alt="updated" src="https://img.shields.io/eclipse-marketplace/last-update/dorlib">
-
+    <img alt="Issues" src="https://img.shields.io/github/issues-raw/dorlib/IMDB-Project"/>
+    <img alt="pull request" src="https://img.shields.io/github/issues-pr-closed/dorlib/IMDB-Project"/>
+    <img alt="stars" src="https://img.shields.io/github/stars/dorlib/IMDB-Project?style=social">
+    <img alt="updated" src="https://img.shields.io/github/last-commit/dorlib/IMDB-project">
+    <img alt="size" src="https://img.shields.io/github/repo-size/dorlib/IMDB-Project" >
 </p>
 
 ![IMDB WELCOME](https://user-images.githubusercontent.com/90474428/174454702-4f343853-7da1-41e7-a68f-201261dfc613.png)
