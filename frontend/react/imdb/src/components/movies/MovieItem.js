@@ -97,11 +97,10 @@ function MovieItem(props) {
     const itemIsFavorite = favoritesCtx.itemIsFavorite(movieID);
 
     function toggleFavoriteStatusHandler(e) {
+        handleClick(e)
         if (itemIsFavorite) {
-            e.target.style.color = 'white'
             favoritesCtx.removeFavorite(movieID);
         } else {
-            e.target.style.color = '#8B0000'
             favoritesCtx.addFavorite({
                 id: movieID,
                 title: title,
@@ -113,7 +112,7 @@ function MovieItem(props) {
     }
 
     const handleClick = (e) => {
-        if (e.target.style.color == 'white') {
+        if (e.target.style.color === 'white') {
             e.target.style.color = '#8B0000'
         } else {
             e.target.style.color = 'white'
@@ -163,9 +162,7 @@ function MovieItem(props) {
                 </CardContent>
                     <div style={{fontSize: "xxx-large"}}>
                         <Fav>
-                            <FavoriteIcon fontSize={'large'} onClick={toggleFavoriteStatusHandler} className={classes.heart} >
-                                {itemIsFavorite ? "Remove from Favorites" : "To Favorites"}
-                            </FavoriteIcon>
+                            <FavoriteIcon fontSize={'large'} style={{color: itemIsFavorite ? '#8B0000' : 'white'}} onClick={toggleFavoriteStatusHandler} className={classes.heart} />
                             <TextBox><text >Click To Add To Favorites!</text></TextBox>
                         </Fav>
                     </div>

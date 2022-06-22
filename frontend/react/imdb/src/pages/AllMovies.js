@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {gql, useQuery} from "@apollo/client";
 import MenuItem from "@mui/material/MenuItem";
 import {Link} from "react-router-dom";
@@ -13,9 +13,13 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoritesContext from "../store/favorites-context";
+import AllMoviesFavorite from "./AllMoviesFavorite";
 
 function AllMoviesPage(props) {
     const [loadedMovies, setLoadedMovies] = useState([]);
+    const favoritesCtx = useContext(FavoritesContext);
+
     const GET_MOVIES = gql`
         query Movies{
             movies {
@@ -70,13 +74,25 @@ function AllMoviesPage(props) {
         let loaded
         //let movieId = data["movies"]["id"]
 
-    const handleClick = (e) => {
-        if (e.target.style.color == 'white') {
-        e.target.style.color = '#8B0000'
+    let itemIsFavorite
+
+
+    // need to move it to another component
+    function ToggleFavoriteStatusHandler(id, title, description, image, director) {
+        itemIsFavorite = favoritesCtx.itemIsFavorite(id);
+        if (itemIsFavorite) {
+            favoritesCtx.removeFavorite(id);
         } else {
-            e.target.style.color = 'white'
+            favoritesCtx.addFavorite({
+                id: id,
+                title: title,
+                description: description,
+                image: image,
+                director: director,
+            });
         }
     }
+
 
     loaded = data.movies.map(( {title, rank, id, image, description, director}) => (
             // <div key={id}>
@@ -107,7 +123,7 @@ function AllMoviesPage(props) {
                         {Icons.map(list=>(
                             <div style={{fontSize: "xxx-large"}}>
                                 <Fav>
-                                    <list.icon fontSize={'large'} onClick={handleClick} />
+                                    <FavoriteIcon fontSize={'large'} style={{color: itemIsFavorite ? '#8B0000' : 'white'}} onClick=<AllMoviesFavorite id={id} title={title} description={description} image={image} director={director}  /> className={classes.heart} />
                                     <TextBox><text >Click To Add To Favorites!</text></TextBox>
                                 </Fav>
 
