@@ -14,6 +14,7 @@ import Button from "@mui/material/Button";
 import styled from "styled-components";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoritesContext from "../store/favorites-context";
+import AllMoviesFavorite from "./AllMoviesFavorite";
 
 function AllMoviesPage(props) {
     const [loadedMovies, setLoadedMovies] = useState([]);
@@ -76,8 +77,8 @@ function AllMoviesPage(props) {
     let itemIsFavorite
 
 
-    //need to move it to another component
-    function toggleFavoriteStatusHandler(id, title, description, image, director) {
+    // need to move it to another component
+    function ToggleFavoriteStatusHandler(id, title, description, image, director) {
         itemIsFavorite = favoritesCtx.itemIsFavorite(id);
         if (itemIsFavorite) {
             favoritesCtx.removeFavorite(id);
@@ -122,7 +123,7 @@ function AllMoviesPage(props) {
                         {Icons.map(list=>(
                             <div style={{fontSize: "xxx-large"}}>
                                 <Fav>
-                                    <FavoriteIcon fontSize={'large'} style={{color: itemIsFavorite ? '#8B0000' : 'white'}} {toggleFavoriteStatusHandler(id,title,description, image, director)} className={classes.heart} />
+                                    <FavoriteIcon fontSize={'large'} style={{color: itemIsFavorite ? '#8B0000' : 'white'}} onClick=<AllMoviesFavorite id={id} title={title} description={description} image={image} director={director}  /> className={classes.heart} />
                                     <TextBox><text >Click To Add To Favorites!</text></TextBox>
                                 </Fav>
 

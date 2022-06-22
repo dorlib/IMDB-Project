@@ -16,16 +16,14 @@ _Notice That Im currently working on the app, so NEW FITCHERS are been added on 
 
 <p align="center">
     <img alt="React" src="https://img.shields.io/badge/-React-61DBFB?style=flat&logo=react&logoColor=FFFFFF"/>
-    <img alt="Go" style="height: 0.55cm" src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white
-"/>
+    <img alt="Go" style="height: 0.55cm" src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white"/>
     <img alt="Styled Components" src="https://img.shields.io/badge/-<💅>%20Styled%20Components-grey?style=flat"/>
     <img alt="Open Source? Yes!" src="https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github"/>
-    <img alt="Netlify Deploy Status" src="https://api.netlify.com/api/v1/badges/87975815-cdc6-4c7f-b8c3-7adefa714190/deploy-status"/>
 </p>
 
 <p align="center">
-    <img alt="Issues" src="https://img.shields.io/bitbucket/issues/dorlib/imabv3"/>
-    <img alt="pull request" src="https://img.shields.io/bitbucket/pr/dorlib/imdbv3"/>
+    <img alt="Issues" src="https://img.shields.io/github/issues/dorlib/imabv3"/>
+    <img alt="pull request" src="https://img.shields.io/github/pr/dorlib/imdbv3"/>
     <img alt="stars" src="https://img.shields.io/github/stars/dorlib/imdbv3?style=social">
     <img alt="updated" src="https://img.shields.io/eclipse-marketplace/last-update/dorlib">
 
@@ -116,7 +114,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Dor Liberman ([dorlib](https://github.com/anniedotexe))
 
-If you have any questions, comments, or concerns, feel free to contact me below.
+If you have any questions or feedback, i would be glad if you will contact me via mail.
 
 <p align="left">
   <a href="dorlibrm@gmail.com"> 
@@ -126,8 +124,7 @@ If you have any questions, comments, or concerns, feel free to contact me below.
 
 This project was created for educational purposes and for personal and open-source use.
 
-If you like my content or find this code useful, give it a :star: or support me by buying me a coffee :coffee::heart:
+If you like my content or find my code useful, give it a :star: 
 
-<a href="https://www.buymeacoffee.com/awu2303" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
 ---

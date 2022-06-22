@@ -21,7 +21,7 @@ func insertHandler(c *ent.Client) http.Handler {
 		}
 
 		// creating users
-		pass1, _ := bcrypt.GenerateFromPassword([]byte("0508800898"), 14)
+		pass1, _ := bcrypt.GenerateFromPassword([]byte("0508403898"), 14)
 		user1 := c.User.Create().
 			SetFirstname("Dor").
 			SetLastname("Liberman").
@@ -30,13 +30,13 @@ func insertHandler(c *ent.Client) http.Handler {
 			SetGender("male").
 			SetCountry("Israel").
 			SetDescription("im the one who created this site").
-			SetEmail("dorlib318@gmail.com").
-			SetBirthDay("12091997").
+			SetEmail("d@gmail.com").
+			SetBirthDay("22011997").
 			SetSignupAt("2020-01-01").
 			SetProfile("https://upload.wikimedia.org/wikipedia/he/c/c2/Peter_Griffin.png").
 			SaveX(r.Context())
 
-		pass2, _ := bcrypt.GenerateFromPassword([]byte("0544938401"), 14)
+		pass2, _ := bcrypt.GenerateFromPassword([]byte("0544934401"), 14)
 		user2 := c.User.Create().
 			SetFirstname("Noam").
 			SetLastname("Lavie").
@@ -45,8 +45,8 @@ func insertHandler(c *ent.Client) http.Handler {
 			SetGender("female").
 			SetCountry("Israel").
 			SetDescription("behind every great man there is a great woman").
-			SetEmail("noam4661@gmail.com").
-			SetBirthDay("29121997").
+			SetEmail("n@gmail.com").
+			SetBirthDay("20111997").
 			SetSignupAt("2020-01-01").
 			SetProfile("https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg/1200px-ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg").
 			SaveX(r.Context())
@@ -124,27 +124,25 @@ func insertHandler(c *ent.Client) http.Handler {
 		movie12ID, _ := c.Movie.Query().Where(movie.Title("Jurrasic Park")).OnlyID(r.Context())
 
 		// reviews for the movies
-		review1 := c.Review.Create().SetTopic("wow").SetText("this is my favorite movie").SetRank(85).SetMovieID(movie1ID).SetUserID(user1ID).SaveX(r.Context())
-		review2 := c.Review.Create().SetTopic("wow2").SetText("this movie is great").SetRank(88).SetMovieID(movie1ID).SetUserID(user2ID).SaveX(r.Context())
-		review3 := c.Review.Create().SetTopic("like").SetText("wowww").SetRank(90).SetMovieID(movie2ID).SetUserID(user2ID).SaveX(r.Context())
-		review4 := c.Review.Create().SetTopic("like it").SetText("this is my favorite movie").SetRank(80).SetMovieID(movie2ID).SetUserID(user1ID).SaveX(r.Context())
-		review5 := c.Review.Create().SetTopic("love it").SetText("this movie is great").SetRank(81).SetMovieID(movie3ID).SetUserID(user2ID).SaveX(r.Context())
-		review6 := c.Review.Create().SetTopic("amazing").SetText("this is my favorite movie").SetRank(82).SetMovieID(movie4ID).SetUserID(user1ID).SaveX(r.Context())
-		review7 := c.Review.Create().SetTopic("wowwww").SetText("this movie is great").SetRank(92).SetMovieID(movie5ID).SetUserID(user2ID).SaveX(r.Context())
-		review8 := c.Review.Create().SetTopic("favortie of mine").SetText("this is my favorite movie").SetRank(95).SetMovieID(movie5ID).SetUserID(user1ID).SaveX(r.Context())
-		review9 := c.Review.Create().SetTopic("like it").SetText("this movie is great").SetRank(98).SetMovieID(movie6ID).SetUserID(user2ID).SaveX(r.Context())
-		review10 := c.Review.Create().SetTopic("loveee itt").SetText("this is my favorite movie").SetRank(100).SetMovieID(movie6ID).SetUserID(user1ID).SaveX(r.Context())
-		review11 := c.Review.Create().SetTopic("this is wow").SetText("this movie is great").SetRank(99).SetMovieID(movie7ID).SetUserID(user2ID).SaveX(r.Context())
-		review12 := c.Review.Create().SetTopic("the best").SetText("this is my favorite movie").SetRank(92).SetMovieID(movie7ID).SetUserID(user1ID).SaveX(r.Context())
-		review13 := c.Review.Create().SetTopic("the best of the best").SetText("this movie is great").SetRank(88).SetMovieID(movie8ID).SetUserID(user2ID).SaveX(r.Context())
-		review14 := c.Review.Create().SetTopic("never seen").SetText("this is my favorite movie").SetRank(89).SetMovieID(movie9ID).SetUserID(user1ID).SaveX(r.Context())
-		review15 := c.Review.Create().SetTopic("wonderful").SetText("this movie is great").SetRank(78).SetMovieID(movie10ID).SetUserID(user2ID).SaveX(r.Context())
-		review16 := c.Review.Create().SetTopic("amazingg").SetText("this is my favorite movie").SetRank(95).SetMovieID(movie10ID).SetUserID(user1ID).SaveX(r.Context())
-		review17 := c.Review.Create().SetTopic("the best movie").SetText("this movie is great").SetRank(68).SetMovieID(movie11ID).SetUserID(user2ID).SaveX(r.Context())
-		review18 := c.Review.Create().SetTopic("the best movie!").SetText("this movie is great i love it").SetRank(78).SetMovieID(movie12ID).SetUserID(user2ID).SaveX(r.Context())
-		review19 := c.Review.Create().SetTopic("the best movie").SetText("this movie is great").SetRank(98).SetMovieID(movie12ID).SetUserID(user1ID).SaveX(r.Context())
-
-		_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = review1, review2, review3, review4, review5, review6, review7, review8, review9, review10, review11, review12, review13, review14, review15, review16, review17, review18, review19
+		c.Review.Create().SetTopic("wow").SetText("this is my favorite movie").SetRank(85).SetMovieID(movie1ID).SetUserID(user1ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("wow2").SetText("this movie is great").SetRank(88).SetMovieID(movie1ID).SetUserID(user2ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("like").SetText("wowww").SetRank(90).SetMovieID(movie2ID).SetUserID(user2ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("like it").SetText("this is my favorite movie").SetRank(80).SetMovieID(movie2ID).SetUserID(user1ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("love it").SetText("this movie is great").SetRank(81).SetMovieID(movie3ID).SetUserID(user2ID).Exec(r.Context())
+		c.Review.Create().SetTopic("amazing").SetText("this is my favorite movie").SetRank(82).SetMovieID(movie4ID).SetUserID(user1ID).Exec(r.Context())
+		c.Review.Create().SetTopic("wowwww").SetText("this movie is great").SetRank(92).SetMovieID(movie5ID).SetUserID(user2ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("favortie of mine").SetText("this is my favorite movie").SetRank(95).SetMovieID(movie5ID).ExecX(user1ID).SaveX(r.Context())
+		c.Review.Create().SetTopic("like it").SetText("this movie is great").SetRank(98).SetMovieID(movie6ID).SetUserID(user2ID).Exec(r.Context())
+		c.Review.Create().SetTopic("loveee itt").SetText("this is my favorite movie").SetRank(100).SetMovieID(movie6ID).SetUserID(user1ID).Exec(r.Context())
+		c.Review.Create().SetTopic("this is wow").SetText("this movie is great").SetRank(99).SetMovieID(movie7ID).SetUserID(user2ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("the best").SetText("this is my favorite movie").SetRank(92).SetMovieID(movie7ID).SetUserID(user1ID).Exec(r.Context())
+		c.Review.Create().SetTopic("the best of the best").SetText("this movie is great").SetRank(88).SetMovieID(movie8ID).SetUserID(user2ID).Exec(r.Context())
+		c.Review.Create().SetTopic("never seen").SetText("this is my favorite movie").SetRank(89).SetMovieID(movie9ID).SetUserID(user1ID).Exec(r.Context())
+		c.Review.Create().SetTopic("wonderful").SetText("this movie is great").SetRank(78).SetMovieID(movie10ID).SetUserID(user2ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("amazingg").SetText("this is my favorite movie").SetRank(95).SetMovieID(movie10ID).SetUserID(user1ID).Exec(r.Context())
+		c.Review.Create().SetTopic("the best movie").SetText("this movie is great").SetRank(68).SetMovieID(movie11ID).SetUserID(user2ID).Exec(r.Context())
+		c.Review.Create().SetTopic("the best movie!").SetText("this movie is great i love it").SetRank(78).SetMovieID(movie12ID).SetUserID(user2ID).Exec(r.Context())
+		c.Review.Create().SetTopic("the best movie").SetText("this movie is great").SetRank(98).SetMovieID(movie12ID).SetUserID(user1ID).Exec(r.Context())
 
 	})
 }
