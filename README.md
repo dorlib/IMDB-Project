@@ -40,7 +40,7 @@ _Notice That Im currently working on the app, so NEW FITCHERS are been added on 
 - [ent](https://entgo.io/)
 - [graphql](https://graphql.org/)
 - [gqlgen](https://gqlgen.com/getting-started/) 
-- Hosted on [Netlify](https://www.netlify.com/)
+- [Go](https://go.dev/)
 
 ---
 
