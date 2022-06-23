@@ -10,6 +10,9 @@ import React from "react";
 import classes from "../../pages/AllMovies"
 
 function MovieList(props) {
+
+  //need to think where to get data of every favorite movie, here or on favorites.js and how to pass the data
+
   return (
     <ul className={classes.list}>
       {props.movies.map((movie) => (

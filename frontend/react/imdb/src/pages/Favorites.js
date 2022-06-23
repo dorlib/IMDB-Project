@@ -1,26 +1,43 @@
-import { useContext } from 'react';
-
-import FavoritesContext from '../store/favorites-context';
+import React, {useContext} from 'react';
 import MovieList from '../components/movies/MovieList';
+import {gql, useQuery} from "@apollo/client";
 
-function FavoritesPage() {
-  const favoritesCtx = useContext(FavoritesContext);
+// this function component get user's favorite list data and send it to another component that shows those movies on by one
+function FavoritesPage(props) {
+    const GET_FAVORITES = gql`
+        query FavoritesOfUser($userID : ID!){
+            favoritesOfUser(userID : $userID){
+                movieID
+            }
+        }
+    `;
 
-  let content;
+    let userID = props.userID
 
-  if (favoritesCtx.totalFavorites === 0) {
-    content = <p 
-    style={{color: "yellow"}}>You got no favorites yet. Start adding some?</p>;
-  } else {
-    content = <MovieList movies={favoritesCtx.favorites} />;
-  }
+    const {loading, error, data} = useQuery(GET_FAVORITES,
+        {
+            variables: {
+                userID: userID || 0
+            }
+        })
 
-  return (
-    <section>
-      <h1 style={{color: "yellow"}}>My Favorites</h1>
-      {content}
-    </section>
-  );
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :</p>;
+
+    let content
+    if (data["favoritesOfUser"] === null) {
+        content = <p
+            style={{color: "yellow"}}>You got no favorites yet. Start adding some?</p>;
+    } else {
+        content = <MovieList movies={data["favoritesOfUser"]}/>;
+    }
+    
+    return (
+        <section>
+            <h1 style={{color: "yellow"}}>My Favorites</h1>
+            {content}
+        </section>
+    );
 }
 
 export default FavoritesPage;

@@ -172,7 +172,7 @@ type Query {
     actorsOfMovie(id: ID!): [Actor]
     actorById(id: ID!): [Actor!]
     reviewsOfMovie(movieID: Int!) : [Review]
-    favoritesOfUser(userID: Int!): [Favorite]
+    favoritesOfUser(userID: ID!): [Favorite]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node

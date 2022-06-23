@@ -1013,7 +1013,7 @@ type Query {
     actorsOfMovie(id: ID!): [Actor]
     actorById(id: ID!): [Actor!]
     reviewsOfMovie(movieID: Int!) : [Review]
-    favoritesOfUser(userID: Int!): [Favorite]
+    favoritesOfUser(userID: ID!): [Favorite]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node
@@ -1413,7 +1413,7 @@ func (ec *executionContext) field_Query_favoritesOfUser_args(ctx context.Context
 	var arg0 int
 	if tmp, ok := rawArgs["userID"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
