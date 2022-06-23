@@ -16,7 +16,6 @@ function AllMoviesFavorite(props) {
     let director = props.director
 
     function ToggleFavoriteStatusHandler(id, title, description, image, director) {
-
         let itemIsFavorite = favoritesCtx.itemIsFavorite(id);
 
         if (itemIsFavorite) {
@@ -31,8 +30,8 @@ function AllMoviesFavorite(props) {
             });
         }
     }
-
     ToggleFavoriteStatusHandler(id, title, description, image, director)
+    return null
 }
 
 export default AllMoviesFavorite

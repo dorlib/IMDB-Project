@@ -13,8 +13,8 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoritesContext from "../store/favorites-context";
 import AllMoviesFavorite from "./AllMoviesFavorite";
+import FavoritesContext from "../store/favorites-context";
 
 function AllMoviesPage(props) {
     const [loadedMovies, setLoadedMovies] = useState([]);
@@ -74,21 +74,18 @@ function AllMoviesPage(props) {
         let loaded
         //let movieId = data["movies"]["id"]
 
-    let itemIsFavorite
+    const itemIsFavorite = favoritesCtx.itemIsFavorite(props.id);
 
-
-    // need to move it to another component
-    function ToggleFavoriteStatusHandler(id, title, description, image, director) {
-        itemIsFavorite = favoritesCtx.itemIsFavorite(id);
+    function toggleFavoriteStatusHandler() {
         if (itemIsFavorite) {
-            favoritesCtx.removeFavorite(id);
+            favoritesCtx.removeFavorite(props.id);
         } else {
             favoritesCtx.addFavorite({
-                id: id,
-                title: title,
-                description: description,
-                image: image,
-                director: director,
+                id: props.id,
+                title: props.title,
+                description: props.description,
+                image: props.image,
+                director: props.director,
             });
         }
     }
@@ -120,19 +117,13 @@ function AllMoviesPage(props) {
                         <Typography variant="body2" color="text.secondary" style={{fontSize: "large", fontWeight: "bolder"}}>
                             Directed By: {director.name}
                         </Typography>
-                        {Icons.map(list=>(
-                            <div style={{fontSize: "xxx-large"}}>
-                                <Fav>
-                                    <FavoriteIcon fontSize={'large'} style={{color: itemIsFavorite ? '#8B0000' : 'white'}} onClick=<AllMoviesFavorite id={id} title={title} description={description} image={image} director={director}  /> className={classes.heart} />
-                                    <TextBox><text >Click To Add To Favorites!</text></TextBox>
-                                </Fav>
-
-                            </div>
-                        ))}
                     </CardContent>
                     <CardActions>
                         <Button size="large">Share</Button>
                         <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
+                        <Button size="large" onClick={toggleFavoriteStatusHandler}>
+                            { itemIsFavorite ? "Remove from Favorites" : "Add To Favorites"}
+                        </Button>
                     </CardActions>
                 </Card>
             </div>
