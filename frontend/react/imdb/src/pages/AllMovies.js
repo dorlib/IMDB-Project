@@ -13,7 +13,6 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import AllMoviesFavorite from "./AllMoviesFavorite";
 import FavoritesContext from "../store/favorites-context";
 
 function AllMoviesPage(props) {

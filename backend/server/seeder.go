@@ -110,6 +110,7 @@ func insertHandler(c *ent.Client) http.Handler {
 		mov12 := c.Movie.Create().SetTitle("Jurrasic Park").SetGenre("fantasy").SetDescription("nice movie").SetRank(79).SetDirectorID(direc4ID).SetYear(1994).SaveX(r.Context())
 
 		_, _, _, _, _, _, _, _, _, _, _, _ = mov1, mov2, mov3, mov4, mov5, mov6, mov7, mov8, mov9, mov10, mov11, mov12
+
 		movie1ID, _ := c.Movie.Query().Where(movie.Title("Pulp Fiction")).OnlyID(r.Context())
 		movie2ID, _ := c.Movie.Query().Where(movie.Title("Kill Bill Vol.1")).OnlyID(r.Context())
 		movie3ID, _ := c.Movie.Query().Where(movie.Title("The Shining")).OnlyID(r.Context())
@@ -128,25 +129,25 @@ func insertHandler(c *ent.Client) http.Handler {
 		c.Review.Create().SetTopic("wow2").SetText("this movie is great").SetRank(88).SetMovieID(movie1ID).SetUserID(user2ID).ExecX(r.Context())
 		c.Review.Create().SetTopic("like").SetText("wowww").SetRank(90).SetMovieID(movie2ID).SetUserID(user2ID).ExecX(r.Context())
 		c.Review.Create().SetTopic("like it").SetText("this is my favorite movie").SetRank(80).SetMovieID(movie2ID).SetUserID(user1ID).ExecX(r.Context())
-		c.Review.Create().SetTopic("love it").SetText("this movie is great").SetRank(81).SetMovieID(movie3ID).SetUserID(user2ID).Exec(r.Context())
-		c.Review.Create().SetTopic("amazing").SetText("this is my favorite movie").SetRank(82).SetMovieID(movie4ID).SetUserID(user1ID).Exec(r.Context())
+		c.Review.Create().SetTopic("love it").SetText("this movie is great").SetRank(81).SetMovieID(movie3ID).SetUserID(user2ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("amazing").SetText("this is my favorite movie").SetRank(82).SetMovieID(movie4ID).SetUserID(user1ID).ExecX(r.Context())
 		c.Review.Create().SetTopic("wowwww").SetText("this movie is great").SetRank(92).SetMovieID(movie5ID).SetUserID(user2ID).ExecX(r.Context())
-		c.Review.Create().SetTopic("favortie of mine").SetText("this is my favorite movie").SetRank(95).SetMovieID(movie5ID).ExecX(user1ID).SaveX(r.Context())
-		c.Review.Create().SetTopic("like it").SetText("this movie is great").SetRank(98).SetMovieID(movie6ID).SetUserID(user2ID).Exec(r.Context())
-		c.Review.Create().SetTopic("loveee itt").SetText("this is my favorite movie").SetRank(100).SetMovieID(movie6ID).SetUserID(user1ID).Exec(r.Context())
+		c.Review.Create().SetTopic("favortie of mine").SetText("this is my favorite movie").SetRank(95).SetMovieID(movie5ID).SetUserID(user1ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("like it").SetText("this movie is great").SetRank(98).SetMovieID(movie6ID).SetUserID(user2ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("loveee itt").SetText("this is my favorite movie").SetRank(100).SetMovieID(movie6ID).SetUserID(user1ID).ExecX(r.Context())
 		c.Review.Create().SetTopic("this is wow").SetText("this movie is great").SetRank(99).SetMovieID(movie7ID).SetUserID(user2ID).ExecX(r.Context())
-		c.Review.Create().SetTopic("the best").SetText("this is my favorite movie").SetRank(92).SetMovieID(movie7ID).SetUserID(user1ID).Exec(r.Context())
-		c.Review.Create().SetTopic("the best of the best").SetText("this movie is great").SetRank(88).SetMovieID(movie8ID).SetUserID(user2ID).Exec(r.Context())
-		c.Review.Create().SetTopic("never seen").SetText("this is my favorite movie").SetRank(89).SetMovieID(movie9ID).SetUserID(user1ID).Exec(r.Context())
+		c.Review.Create().SetTopic("the best").SetText("this is my favorite movie").SetRank(92).SetMovieID(movie7ID).SetUserID(user1ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("the best of the best").SetText("this movie is great").SetRank(88).SetMovieID(movie8ID).SetUserID(user2ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("never seen").SetText("this is my favorite movie").SetRank(89).SetMovieID(movie9ID).SetUserID(user1ID).ExecX(r.Context())
 		c.Review.Create().SetTopic("wonderful").SetText("this movie is great").SetRank(78).SetMovieID(movie10ID).SetUserID(user2ID).ExecX(r.Context())
-		c.Review.Create().SetTopic("amazingg").SetText("this is my favorite movie").SetRank(95).SetMovieID(movie10ID).SetUserID(user1ID).Exec(r.Context())
-		c.Review.Create().SetTopic("the best movie").SetText("this movie is great").SetRank(68).SetMovieID(movie11ID).SetUserID(user2ID).Exec(r.Context())
-		c.Review.Create().SetTopic("the best movie!").SetText("this movie is great i love it").SetRank(78).SetMovieID(movie12ID).SetUserID(user2ID).Exec(r.Context())
-		c.Review.Create().SetTopic("the best movie").SetText("this movie is great").SetRank(98).SetMovieID(movie12ID).SetUserID(user1ID).Exec(r.Context())
+		c.Review.Create().SetTopic("amazingg").SetText("this is my favorite movie").SetRank(95).SetMovieID(movie10ID).SetUserID(user1ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("the best movie").SetText("this movie is great").SetRank(68).SetMovieID(movie11ID).SetUserID(user2ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("the best movie!").SetText("this movie is great i love it").SetRank(78).SetMovieID(movie12ID).SetUserID(user2ID).ExecX(r.Context())
+		c.Review.Create().SetTopic("the best movie").SetText("this movie is great").SetRank(98).SetMovieID(movie12ID).SetUserID(user1ID).ExecX(r.Context())
 
 	})
 }
 
-func insert(router *chi.Mux, client *ent.Client) {
+func seeder(router *chi.Mux, client *ent.Client) {
 	router.Handle("/insert", insertHandler(client))
 }

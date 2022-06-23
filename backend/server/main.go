@@ -44,7 +44,10 @@ func main() {
 	if err := client.Schema.Create(ctx, migrate.WithGlobalUniqueID(true)); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
+
 	authentication(router, client)
+	seeder(router, client)
+
 	srv := handler.NewDefaultServer(graphql.NewSchema(client))
 	srv.Use(entgql.Transactioner{TxOpener: client})
 

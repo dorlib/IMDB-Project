@@ -49,26 +49,6 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 		Save(ctx)
 }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, firstname string, lastname string, nickname string, description string, password string, profile string, birthday string, email string, country string, gender string) (*ent.User, error) {
-	//bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
-	//date := time.Now()
-	//
-	//return r.client.User.Create().
-	//	SetFirstname(firstname).
-	//	SetLastname(lastname).
-	//	SetNickname(nickname).
-	//	SetDescription(description).
-	//	SetPassword(string(bcrypedPassword)).
-	//	SetProfile(profile).
-	//	SetBirthDay(birthday).
-	//	SetEmail(email).
-	//	SetCountry(country).
-	//	SetSignupAt(date.String()).
-	//	Save(ctx)
-
-	panic("panic")
-}
-
 func (r *queryResolver) Movies(ctx context.Context) ([]*ent.Movie, error) {
 	return r.client.Movie.Query().Order(ent.Asc(movie.FieldTitle)).All(ctx)
 }
@@ -225,6 +205,17 @@ func (r *mutationResolver) AddToFavorites(ctx context.Context, favorite Favorite
 		SetUserID(favorite.UserID).Save(ctx)
 }
 
+func (r *mutationResolver) RemoveFromFavorites(ctx context.Context, id int) ([]*ent.Favorite, error) {
+	favoriteItem := r.client.Favorite.GetX(ctx, id)
+	r.client.Favorite.DeleteOne(favoriteItem).ExecX(ctx)
+
+	data, err := r.client.Favorite.Query().Where(favorite.UserID(id)).All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}
+
 func (r *queryResolver) ActorsOfMovie(ctx context.Context, movieID int) ([]*ent.Actor, error) {
 	data, err := r.client.Movie.Query().Where(movie.ID(movieID)).QueryActor().All(ctx)
 	if err != nil {
@@ -239,28 +230,6 @@ func (r *queryResolver) ActorByID(ctx context.Context, actorID int) ([]*ent.Acto
 		return nil, ent.MaskNotFound(err)
 	}
 	return data, nil
-}
-
-func (r *queryResolver) LoginUser(ctx context.Context, nickname string, password string, email string) ([]*ent.User, error) {
-	//userID, error := r.client.User.Query().Where(user.Nickname(nickname)).OnlyID(ctx)
-	//if error != nil {
-	//	return nil, ent.MaskNotFound(error)
-	//}
-	//
-	//data, err := r.client.User.Get(ctx, userID)
-	//if err != nil {
-	//	return nil, ent.MaskNotFound(err)
-	//}
-	//
-	//currentPassword := data.Password
-	//
-	//e := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(password))
-	//if e != nil {
-	//	return nil, ent.MaskNotFound(err)
-	//} else {
-	//	return r.client.User.Query().Where(user.ID(userID)).All(ctx)
-	//}
-	panic("panic")
 }
 
 func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, name string) (*ent.Actor, error) {
