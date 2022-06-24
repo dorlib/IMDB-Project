@@ -153,7 +153,7 @@ func (f *Favorite) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     f.ID,
 		Type:   "Favorite",
-		Fields: make([]*Field, 3),
+		Fields: make([]*Field, 4),
 		Edges:  make([]*Edge, 0),
 	}
 	var buf []byte
@@ -165,10 +165,18 @@ func (f *Favorite) Node(ctx context.Context) (node *Node, err error) {
 		Name:  "movie_title",
 		Value: string(buf),
 	}
-	if buf, err = json.Marshal(f.MovieID); err != nil {
+	if buf, err = json.Marshal(f.MovieImage); err != nil {
 		return nil, err
 	}
 	node.Fields[1] = &Field{
+		Type:  "string",
+		Name:  "movie_image",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(f.MovieID); err != nil {
+		return nil, err
+	}
+	node.Fields[2] = &Field{
 		Type:  "int",
 		Name:  "movie_id",
 		Value: string(buf),
@@ -176,7 +184,7 @@ func (f *Favorite) Node(ctx context.Context) (node *Node, err error) {
 	if buf, err = json.Marshal(f.UserID); err != nil {
 		return nil, err
 	}
-	node.Fields[2] = &Field{
+	node.Fields[3] = &Field{
 		Type:  "int",
 		Name:  "user_id",
 		Value: string(buf),

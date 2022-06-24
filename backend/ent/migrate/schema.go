@@ -39,6 +39,7 @@ var (
 	FavoritesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "movie_title", Type: field.TypeString},
+		{Name: "movie_image", Type: field.TypeString},
 		{Name: "movie_id", Type: field.TypeInt},
 		{Name: "user_id", Type: field.TypeInt},
 	}

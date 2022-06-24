@@ -9,6 +9,8 @@ const (
 	FieldID = "id"
 	// FieldMovieTitle holds the string denoting the movie_title field in the database.
 	FieldMovieTitle = "movie_title"
+	// FieldMovieImage holds the string denoting the movie_image field in the database.
+	FieldMovieImage = "movie_image"
 	// FieldMovieID holds the string denoting the movie_id field in the database.
 	FieldMovieID = "movie_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
@@ -21,6 +23,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldMovieTitle,
+	FieldMovieImage,
 	FieldMovieID,
 	FieldUserID,
 }

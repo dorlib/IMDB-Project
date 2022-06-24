@@ -15,6 +15,7 @@ type Favorite struct {
 func (Favorite) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("movie_title").Annotations(entgql.OrderField("MOVIE_TITLE")),
+		field.String("movie_image"),
 		field.Int("movie_id").Annotations(entgql.OrderField("MOVIE_ID")),
 		field.Int("user_id").Annotations(entgql.OrderField("USER_ID")),
 	}

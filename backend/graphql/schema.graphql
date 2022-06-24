@@ -57,6 +57,7 @@ type Favorite {
     movieID: Int!
     userID: Int!
     movieTitle: String!
+    movieImage: String!
 }
 
 type User {
@@ -142,6 +143,7 @@ input FavoriteInput {
     movieID: Int!
     userID: Int!
     movieTitle: String!
+    movieImage: String!
 }
 
 # Define a mutation for creating movies.

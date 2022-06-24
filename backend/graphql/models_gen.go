@@ -18,6 +18,7 @@ type FavoriteInput struct {
 	MovieID    int    `json:"movieID"`
 	UserID     int    `json:"userID"`
 	MovieTitle string `json:"movieTitle"`
+	MovieImage string `json:"movieImage"`
 }
 
 type MovieInput struct {

@@ -64,6 +64,7 @@ type ComplexityRoot struct {
 	Favorite struct {
 		ID         func(childComplexity int) int
 		MovieID    func(childComplexity int) int
+		MovieImage func(childComplexity int) int
 		MovieTitle func(childComplexity int) int
 		UserID     func(childComplexity int) int
 	}
@@ -268,6 +269,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Favorite.MovieID(childComplexity), true
+
+	case "Favorite.movieImage":
+		if e.complexity.Favorite.MovieImage == nil {
+			break
+		}
+
+		return e.complexity.Favorite.MovieImage(childComplexity), true
 
 	case "Favorite.movieTitle":
 		if e.complexity.Favorite.MovieTitle == nil {
@@ -898,6 +906,7 @@ type Favorite {
     movieID: Int!
     userID: Int!
     movieTitle: String!
+    movieImage: String!
 }
 
 type User {
@@ -983,6 +992,7 @@ input FavoriteInput {
     movieID: Int!
     userID: Int!
     movieTitle: String!
+    movieImage: String!
 }
 
 # Define a mutation for creating movies.
@@ -1986,6 +1996,41 @@ func (ec *executionContext) _Favorite_movieTitle(ctx context.Context, field grap
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.MovieTitle, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Favorite_movieImage(ctx context.Context, field graphql.CollectedField, obj *ent.Favorite) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Favorite",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MovieImage, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5410,6 +5455,14 @@ func (ec *executionContext) unmarshalInputFavoriteInput(ctx context.Context, obj
 			if err != nil {
 				return it, err
 			}
+		case "movieImage":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movieImage"))
+			it.MovieImage, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -5849,6 +5902,16 @@ func (ec *executionContext) _Favorite(ctx context.Context, sel ast.SelectionSet,
 		case "movieTitle":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Favorite_movieTitle(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "movieImage":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Favorite_movieImage(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

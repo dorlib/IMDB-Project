@@ -98,6 +98,13 @@ func MovieTitle(v string) predicate.Favorite {
 	})
 }
 
+// MovieImage applies equality check predicate on the "movie_image" field. It's identical to MovieImageEQ.
+func MovieImage(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldMovieImage), v))
+	})
+}
+
 // MovieID applies equality check predicate on the "movie_id" field. It's identical to MovieIDEQ.
 func MovieID(v int) predicate.Favorite {
 	return predicate.Favorite(func(s *sql.Selector) {
@@ -220,6 +227,117 @@ func MovieTitleEqualFold(v string) predicate.Favorite {
 func MovieTitleContainsFold(v string) predicate.Favorite {
 	return predicate.Favorite(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldMovieTitle), v))
+	})
+}
+
+// MovieImageEQ applies the EQ predicate on the "movie_image" field.
+func MovieImageEQ(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldMovieImage), v))
+	})
+}
+
+// MovieImageNEQ applies the NEQ predicate on the "movie_image" field.
+func MovieImageNEQ(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldMovieImage), v))
+	})
+}
+
+// MovieImageIn applies the In predicate on the "movie_image" field.
+func MovieImageIn(vs ...string) predicate.Favorite {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Favorite(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldMovieImage), v...))
+	})
+}
+
+// MovieImageNotIn applies the NotIn predicate on the "movie_image" field.
+func MovieImageNotIn(vs ...string) predicate.Favorite {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Favorite(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldMovieImage), v...))
+	})
+}
+
+// MovieImageGT applies the GT predicate on the "movie_image" field.
+func MovieImageGT(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldMovieImage), v))
+	})
+}
+
+// MovieImageGTE applies the GTE predicate on the "movie_image" field.
+func MovieImageGTE(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldMovieImage), v))
+	})
+}
+
+// MovieImageLT applies the LT predicate on the "movie_image" field.
+func MovieImageLT(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldMovieImage), v))
+	})
+}
+
+// MovieImageLTE applies the LTE predicate on the "movie_image" field.
+func MovieImageLTE(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldMovieImage), v))
+	})
+}
+
+// MovieImageContains applies the Contains predicate on the "movie_image" field.
+func MovieImageContains(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldMovieImage), v))
+	})
+}
+
+// MovieImageHasPrefix applies the HasPrefix predicate on the "movie_image" field.
+func MovieImageHasPrefix(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldMovieImage), v))
+	})
+}
+
+// MovieImageHasSuffix applies the HasSuffix predicate on the "movie_image" field.
+func MovieImageHasSuffix(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldMovieImage), v))
+	})
+}
+
+// MovieImageEqualFold applies the EqualFold predicate on the "movie_image" field.
+func MovieImageEqualFold(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldMovieImage), v))
+	})
+}
+
+// MovieImageContainsFold applies the ContainsFold predicate on the "movie_image" field.
+func MovieImageContainsFold(v string) predicate.Favorite {
+	return predicate.Favorite(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldMovieImage), v))
 	})
 }
 

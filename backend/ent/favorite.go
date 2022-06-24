@@ -17,6 +17,8 @@ type Favorite struct {
 	ID int `json:"id,omitempty"`
 	// MovieTitle holds the value of the "movie_title" field.
 	MovieTitle string `json:"movie_title,omitempty"`
+	// MovieImage holds the value of the "movie_image" field.
+	MovieImage string `json:"movie_image,omitempty"`
 	// MovieID holds the value of the "movie_id" field.
 	MovieID int `json:"movie_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
@@ -30,7 +32,7 @@ func (*Favorite) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case favorite.FieldID, favorite.FieldMovieID, favorite.FieldUserID:
 			values[i] = new(sql.NullInt64)
-		case favorite.FieldMovieTitle:
+		case favorite.FieldMovieTitle, favorite.FieldMovieImage:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Favorite", columns[i])
@@ -58,6 +60,12 @@ func (f *Favorite) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field movie_title", values[i])
 			} else if value.Valid {
 				f.MovieTitle = value.String
+			}
+		case favorite.FieldMovieImage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field movie_image", values[i])
+			} else if value.Valid {
+				f.MovieImage = value.String
 			}
 		case favorite.FieldMovieID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -101,6 +109,8 @@ func (f *Favorite) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", f.ID))
 	builder.WriteString(", movie_title=")
 	builder.WriteString(f.MovieTitle)
+	builder.WriteString(", movie_image=")
+	builder.WriteString(f.MovieImage)
 	builder.WriteString(", movie_id=")
 	builder.WriteString(fmt.Sprintf("%v", f.MovieID))
 	builder.WriteString(", user_id=")
