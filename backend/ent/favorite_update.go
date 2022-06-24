@@ -33,6 +33,12 @@ func (fu *FavoriteUpdate) SetMovieTitle(s string) *FavoriteUpdate {
 	return fu
 }
 
+// SetMovieImage sets the "movie_image" field.
+func (fu *FavoriteUpdate) SetMovieImage(s string) *FavoriteUpdate {
+	fu.mutation.SetMovieImage(s)
+	return fu
+}
+
 // SetMovieID sets the "movie_id" field.
 func (fu *FavoriteUpdate) SetMovieID(i int) *FavoriteUpdate {
 	fu.mutation.ResetMovieID()
@@ -143,6 +149,13 @@ func (fu *FavoriteUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: favorite.FieldMovieTitle,
 		})
 	}
+	if value, ok := fu.mutation.MovieImage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: favorite.FieldMovieImage,
+		})
+	}
 	if value, ok := fu.mutation.MovieID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
@@ -193,6 +206,12 @@ type FavoriteUpdateOne struct {
 // SetMovieTitle sets the "movie_title" field.
 func (fuo *FavoriteUpdateOne) SetMovieTitle(s string) *FavoriteUpdateOne {
 	fuo.mutation.SetMovieTitle(s)
+	return fuo
+}
+
+// SetMovieImage sets the "movie_image" field.
+func (fuo *FavoriteUpdateOne) SetMovieImage(s string) *FavoriteUpdateOne {
+	fuo.mutation.SetMovieImage(s)
 	return fuo
 }
 
@@ -328,6 +347,13 @@ func (fuo *FavoriteUpdateOne) sqlSave(ctx context.Context) (_node *Favorite, err
 			Type:   field.TypeString,
 			Value:  value,
 			Column: favorite.FieldMovieTitle,
+		})
+	}
+	if value, ok := fuo.mutation.MovieImage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: favorite.FieldMovieImage,
 		})
 	}
 	if value, ok := fuo.mutation.MovieID(); ok {

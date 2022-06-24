@@ -25,6 +25,12 @@ func (fc *FavoriteCreate) SetMovieTitle(s string) *FavoriteCreate {
 	return fc
 }
 
+// SetMovieImage sets the "movie_image" field.
+func (fc *FavoriteCreate) SetMovieImage(s string) *FavoriteCreate {
+	fc.mutation.SetMovieImage(s)
+	return fc
+}
+
 // SetMovieID sets the "movie_id" field.
 func (fc *FavoriteCreate) SetMovieID(i int) *FavoriteCreate {
 	fc.mutation.SetMovieID(i)
@@ -110,6 +116,9 @@ func (fc *FavoriteCreate) check() error {
 	if _, ok := fc.mutation.MovieTitle(); !ok {
 		return &ValidationError{Name: "movie_title", err: errors.New(`ent: missing required field "Favorite.movie_title"`)}
 	}
+	if _, ok := fc.mutation.MovieImage(); !ok {
+		return &ValidationError{Name: "movie_image", err: errors.New(`ent: missing required field "Favorite.movie_image"`)}
+	}
 	if _, ok := fc.mutation.MovieID(); !ok {
 		return &ValidationError{Name: "movie_id", err: errors.New(`ent: missing required field "Favorite.movie_id"`)}
 	}
@@ -150,6 +159,14 @@ func (fc *FavoriteCreate) createSpec() (*Favorite, *sqlgraph.CreateSpec) {
 			Column: favorite.FieldMovieTitle,
 		})
 		_node.MovieTitle = value
+	}
+	if value, ok := fc.mutation.MovieImage(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: favorite.FieldMovieImage,
+		})
+		_node.MovieImage = value
 	}
 	if value, ok := fc.mutation.MovieID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

@@ -13,7 +13,6 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import AllMoviesFavorite from "./AllMoviesFavorite";
 import FavoritesContext from "../store/favorites-context";
 
 function AllMoviesPage(props) {
@@ -33,39 +32,6 @@ function AllMoviesPage(props) {
                 }
             }
         }
-    `;
-    const Icons = [
-        {
-            id: 1,
-            name: "favorite",
-            description:"icon",
-            icon: FavoriteIcon,
-        }]
-
-
-
-    const Fav = styled.div`
-        color: white;
-        position: absolute;
-        display: flex;
-        right: 27.3cm;
-        margin-top: 0.65cm;
-    `;
-
-    let TextBox = styled.text` 
-        position: absolute;
-        display: none;
-        margin-top: 1cm;
-        right: 21.9cm;
-        background: #fff;
-        font-size: small;
-        ${Fav}:hover & {
-            display: flex;
-            left: 1cm;
-            top: -0.5cm;
-            width: 4.5cm;
-            color: black;
-        }    
     `;
 
     const { loading, error, data } = useQuery(GET_MOVIES)
@@ -89,7 +55,6 @@ function AllMoviesPage(props) {
             });
         }
     }
-
 
     loaded = data.movies.map(( {title, rank, id, image, description, director}) => (
             // <div key={id}>
@@ -128,9 +93,7 @@ function AllMoviesPage(props) {
                 </Card>
             </div>
         ));
-
         return loaded
-
 }
 
 export default AllMoviesPage;

@@ -72,7 +72,7 @@ function App() {
         <Route path="/movies" element={<AllMoviesPage />} />
         <Route path="/directors" element={<AllDirectorsPage />} />
         <Route path="/new-movie" element={<NewMovieForm />} />
-        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/favorites" element={<FavoritesPage userID={userId}/>} />
         <Route path='/top10' element={<Top10Page />} />
         <Route path='/directorPage/:id' element={<DirectorPage />} />
         <Route path="/moviePage/:id" element={<><UpdateRank/><HoverRating/><ShowReviews /><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>} />

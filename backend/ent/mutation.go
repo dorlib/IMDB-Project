@@ -1120,6 +1120,7 @@ type FavoriteMutation struct {
 	typ           string
 	id            *int
 	movie_title   *string
+	movie_image   *string
 	movie_id      *int
 	addmovie_id   *int
 	user_id       *int
@@ -1264,6 +1265,42 @@ func (m *FavoriteMutation) ResetMovieTitle() {
 	m.movie_title = nil
 }
 
+// SetMovieImage sets the "movie_image" field.
+func (m *FavoriteMutation) SetMovieImage(s string) {
+	m.movie_image = &s
+}
+
+// MovieImage returns the value of the "movie_image" field in the mutation.
+func (m *FavoriteMutation) MovieImage() (r string, exists bool) {
+	v := m.movie_image
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMovieImage returns the old "movie_image" field's value of the Favorite entity.
+// If the Favorite object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FavoriteMutation) OldMovieImage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMovieImage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMovieImage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMovieImage: %w", err)
+	}
+	return oldValue.MovieImage, nil
+}
+
+// ResetMovieImage resets all changes to the "movie_image" field.
+func (m *FavoriteMutation) ResetMovieImage() {
+	m.movie_image = nil
+}
+
 // SetMovieID sets the "movie_id" field.
 func (m *FavoriteMutation) SetMovieID(i int) {
 	m.movie_id = &i
@@ -1395,9 +1432,12 @@ func (m *FavoriteMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *FavoriteMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.movie_title != nil {
 		fields = append(fields, favorite.FieldMovieTitle)
+	}
+	if m.movie_image != nil {
+		fields = append(fields, favorite.FieldMovieImage)
 	}
 	if m.movie_id != nil {
 		fields = append(fields, favorite.FieldMovieID)
@@ -1415,6 +1455,8 @@ func (m *FavoriteMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case favorite.FieldMovieTitle:
 		return m.MovieTitle()
+	case favorite.FieldMovieImage:
+		return m.MovieImage()
 	case favorite.FieldMovieID:
 		return m.MovieID()
 	case favorite.FieldUserID:
@@ -1430,6 +1472,8 @@ func (m *FavoriteMutation) OldField(ctx context.Context, name string) (ent.Value
 	switch name {
 	case favorite.FieldMovieTitle:
 		return m.OldMovieTitle(ctx)
+	case favorite.FieldMovieImage:
+		return m.OldMovieImage(ctx)
 	case favorite.FieldMovieID:
 		return m.OldMovieID(ctx)
 	case favorite.FieldUserID:
@@ -1449,6 +1493,13 @@ func (m *FavoriteMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetMovieTitle(v)
+		return nil
+	case favorite.FieldMovieImage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMovieImage(v)
 		return nil
 	case favorite.FieldMovieID:
 		v, ok := value.(int)
@@ -1542,6 +1593,9 @@ func (m *FavoriteMutation) ResetField(name string) error {
 	switch name {
 	case favorite.FieldMovieTitle:
 		m.ResetMovieTitle()
+		return nil
+	case favorite.FieldMovieImage:
+		m.ResetMovieImage()
 		return nil
 	case favorite.FieldMovieID:
 		m.ResetMovieID()
