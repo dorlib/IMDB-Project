@@ -8,6 +8,8 @@ function FavoritesPage(props) {
         query FavoritesOfUser($userID : ID!){
             favoritesOfUser(userID : $userID){
                 movieID
+                movieTitle
+                movieImage
             }
         }
     `;
@@ -29,9 +31,9 @@ function FavoritesPage(props) {
         content = <p
             style={{color: "yellow"}}>You got no favorites yet. Start adding some?</p>;
     } else {
-        content = <MovieList movies={data["favoritesOfUser"]}/>;
+        content = <MovieList movies={data}/>;
     }
-    
+
     return (
         <section>
             <h1 style={{color: "yellow"}}>My Favorites</h1>
