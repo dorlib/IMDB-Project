@@ -8,7 +8,7 @@ import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import classes from "./top10.module.css";
+import classes from "./AllMovies.module.css";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
@@ -17,7 +17,16 @@ import FavoritesContext from "../store/favorites-context";
 
 function AllMoviesPage(props) {
     const [loadedMovies, setLoadedMovies] = useState([]);
+    const [itemClickedToFavorite, setItemClickedToFavorite] = useState(0)
     const favoritesCtx = useContext(FavoritesContext);
+
+    const ADD_TO_FAVORITE = gql`
+        query AddToFavorite ($movieID: ID!){
+            addToFavorite (movieID: $movieID){
+                id
+            }
+        }
+    `;
 
     const GET_MOVIES = gql`
         query Movies{
@@ -42,28 +51,22 @@ function AllMoviesPage(props) {
 
     const itemIsFavorite = favoritesCtx.itemIsFavorite(props.id);
 
+    console.log(itemClickedToFavorite)
+
     function toggleFavoriteStatusHandler() {
-        if (itemIsFavorite) {
-            favoritesCtx.removeFavorite(props.id);
-        } else {
-            favoritesCtx.addFavorite({
-                id: props.id,
-                title: props.title,
-                description: props.description,
-                image: props.image,
-                director: props.director,
-            });
-        }
+        return
     }
 
-    loaded = data.movies.map(( {title, rank, id, image, description, director}) => (
+    loaded =
             // <div key={id}>
             //     <p style={{color: "yellow"}}>
             //         <MenuItem style={{fontSize: "x-large"}}><Link to={"/moviePage/" + id} style={{color: "yellow"}} >{title}</Link>:{rank}</MenuItem>
             //     </p>
             // </div>
+        <ul className={classes.list}>
+            {data.movies.map(( {title, rank, id, image, description, director}) => (
             <div>
-                <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px"}} key={id}>
+                <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px", display: "inline-block"}} key={id}>
                     <CardMedia
                         component="img"
                         alt="movie image"
@@ -86,13 +89,14 @@ function AllMoviesPage(props) {
                     <CardActions>
                         <Button size="large">Share</Button>
                         <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
-                        <Button size="large" onClick={toggleFavoriteStatusHandler}>
+                        <Button size="large" onClick={() => setItemClickedToFavorite(id)}>
                             { itemIsFavorite ? "Remove from Favorites" : "Add To Favorites"}
                         </Button>
                     </CardActions>
                 </Card>
             </div>
-        ));
+            ))};
+        </ul>
         return loaded
 }
 
