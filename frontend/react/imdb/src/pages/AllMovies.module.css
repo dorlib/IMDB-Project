@@ -1,13 +1,3 @@
-.list {
-    border: 5px solid none;
-    margin-left: -11cm;
-    width: 1500px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 60px);
-    grid-gap: 400px;
-    justify-content: center;
-  }
-
 .movie {
     background-color: #cc2062;
     color: white;
@@ -33,11 +23,12 @@
     right: 27.6cm;
 }
 
-.movieTitle {
-    color: yellow;
-    text-decoration: none;
-    display: flex;
-    position: relative;
-    width: 230px;
-
+.list {
+    border: 5px solid none;
+    margin-left: -10cm;
+    width: 1400px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 600px);
+    grid-gap: 100px;
+    justify-content: center;
 }

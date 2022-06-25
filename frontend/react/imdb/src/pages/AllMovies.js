@@ -1,23 +1,18 @@
 import React, {useContext, useState} from "react";
-import {gql, useQuery} from "@apollo/client";
-import MenuItem from "@mui/material/MenuItem";
+import {gql, useMutation, useQuery} from "@apollo/client";
 import {Link} from "react-router-dom";
-import NewMovieForm from "../components/movies/NewMovieForm";
-import App from "../App";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import classes from "./top10.module.css";
+import classes from "./AllMovies.module.css";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-import styled from "styled-components";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoritesContext from "../store/favorites-context";
 
 function AllMoviesPage(props) {
-    const [loadedMovies, setLoadedMovies] = useState([]);
-    const favoritesCtx = useContext(FavoritesContext);
+    const [itemClickedToFavorite, setItemClickedToFavorite] = useState(0)
+
+    let ADD_TO_FAVORITE
 
     const GET_MOVIES = gql`
         query Movies{
@@ -32,7 +27,9 @@ function AllMoviesPage(props) {
                 }
             }
         }
-    `;
+    `
+    // this will be a function that checks if item is already favorite
+    let itemIsFavorite = true
 
     const { loading, error, data } = useQuery(GET_MOVIES)
         if (loading) return <p>Loading...</p>;
@@ -40,30 +37,32 @@ function AllMoviesPage(props) {
         let loaded
         //let movieId = data["movies"]["id"]
 
-    const itemIsFavorite = favoritesCtx.itemIsFavorite(props.id);
-
-    function toggleFavoriteStatusHandler() {
-        if (itemIsFavorite) {
-            favoritesCtx.removeFavorite(props.id);
-        } else {
-            favoritesCtx.addFavorite({
-                id: props.id,
-                title: props.title,
-                description: props.description,
-                image: props.image,
-                director: props.director,
-            });
-        }
+    if (itemClickedToFavorite !== 0 /*add here condition if item is already favorite*/) {
+        ADD_TO_FAVORITE = gql`
+            query AddToFavorite ($movieID: ID!){
+                addToFavorite (movieID: $movieID){
+                    id
+                }
+            }
+        `;
     }
 
-    loaded = data.movies.map(( {title, rank, id, image, description, director}) => (
-            // <div key={id}>
-            //     <p style={{color: "yellow"}}>
-            //         <MenuItem style={{fontSize: "x-large"}}><Link to={"/moviePage/" + id} style={{color: "yellow"}} >{title}</Link>:{rank}</MenuItem>
-            //     </p>
-            // </div>
+    const [addToFavorite] = useMutation(ADD_TO_FAVORITE,
+        {
+            variables: {
+                title: itemClickedToFavorite,
+            },
+            onCompleted: function () {
+                setItemClickedToFavorite(0)
+                return window.location.reload();
+            }
+        })
+
+    loaded =
+        <ul className={classes.list}>
+            {data.movies.map(( {title, rank, id, image, description, director}) => (
             <div>
-                <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px"}} key={id}>
+                <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px", display: "inline-block"}} key={id}>
                     <CardMedia
                         component="img"
                         alt="movie image"
@@ -86,13 +85,14 @@ function AllMoviesPage(props) {
                     <CardActions>
                         <Button size="large">Share</Button>
                         <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
-                        <Button size="large" onClick={toggleFavoriteStatusHandler}>
+                        <Button size="large" onClick={() => setItemClickedToFavorite(id)}>
                             { itemIsFavorite ? "Remove from Favorites" : "Add To Favorites"}
                         </Button>
                     </CardActions>
                 </Card>
             </div>
-        ));
+            ))};
+        </ul>
         return loaded
 }
 
