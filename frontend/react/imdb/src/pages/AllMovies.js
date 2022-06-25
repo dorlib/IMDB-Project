@@ -1,9 +1,6 @@
 import React, {useContext, useState} from "react";
-import {gql, useQuery} from "@apollo/client";
-import MenuItem from "@mui/material/MenuItem";
+import {gql, useMutation, useQuery} from "@apollo/client";
 import {Link} from "react-router-dom";
-import NewMovieForm from "../components/movies/NewMovieForm";
-import App from "../App";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -11,22 +8,11 @@ import Typography from "@mui/material/Typography";
 import classes from "./AllMovies.module.css";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-import styled from "styled-components";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoritesContext from "../store/favorites-context";
 
 function AllMoviesPage(props) {
-    const [loadedMovies, setLoadedMovies] = useState([]);
     const [itemClickedToFavorite, setItemClickedToFavorite] = useState(0)
-    const favoritesCtx = useContext(FavoritesContext);
 
-    const ADD_TO_FAVORITE = gql`
-        query AddToFavorite ($movieID: ID!){
-            addToFavorite (movieID: $movieID){
-                id
-            }
-        }
-    `;
+    let ADD_TO_FAVORITE
 
     const GET_MOVIES = gql`
         query Movies{
@@ -41,7 +27,9 @@ function AllMoviesPage(props) {
                 }
             }
         }
-    `;
+    `
+    // this will be a function that checks if item is already favorite
+    let itemIsFavorite = true
 
     const { loading, error, data } = useQuery(GET_MOVIES)
         if (loading) return <p>Loading...</p>;
@@ -49,20 +37,28 @@ function AllMoviesPage(props) {
         let loaded
         //let movieId = data["movies"]["id"]
 
-    const itemIsFavorite = favoritesCtx.itemIsFavorite(props.id);
-
-    console.log(itemClickedToFavorite)
-
-    function toggleFavoriteStatusHandler() {
-        return
+    if (itemClickedToFavorite !== 0 /*add here condition if item is already favorite*/) {
+        ADD_TO_FAVORITE = gql`
+            query AddToFavorite ($movieID: ID!){
+                addToFavorite (movieID: $movieID){
+                    id
+                }
+            }
+        `;
     }
 
+    const [addToFavorite] = useMutation(ADD_TO_FAVORITE,
+        {
+            variables: {
+                title: itemClickedToFavorite,
+            },
+            onCompleted: function () {
+                setItemClickedToFavorite(0)
+                return window.location.reload();
+            }
+        })
+
     loaded =
-            // <div key={id}>
-            //     <p style={{color: "yellow"}}>
-            //         <MenuItem style={{fontSize: "x-large"}}><Link to={"/moviePage/" + id} style={{color: "yellow"}} >{title}</Link>:{rank}</MenuItem>
-            //     </p>
-            // </div>
         <ul className={classes.list}>
             {data.movies.map(( {title, rank, id, image, description, director}) => (
             <div>
