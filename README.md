@@ -16,14 +16,8 @@ _Notice That Im currently working on the app, so NEW FITCHERS are been added on 
 
 <p align="center">
     <img alt="React" src="https://img.shields.io/badge/-React-61DBFB?style=flat&logo=react&logoColor=FFFFFF"/>
-<<<<<<< HEAD
     <img alt="Go" style="height: 0.55cm; border-radius: 3px" src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white"/>
     <img alt="apollo" style="height: 0.55cm; border-radius: 3px" src="https://img.shields.io/badge/-ApolloGraphQL-311C87?style=for-the-badge&logo=apollo-graphql"/>
-=======
-    <img alt="Go" style="height: 0.55cm;" src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white"/>
-    <img alt="apollo" style="height: 0.55cm;" src="https://img.shields.io/badge/-ApolloGraphQL-311C87?style=for-the-badge&logo=apollo-graphql"/>
-    <img alt="Go" style="height:0.55cm;" src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white"/>
->>>>>>> 791b86c26dd6c83a86b9ec9f562a1cf658b285b0
     <img alt="Styled Components" src="https://img.shields.io/badge/-<💅>%20Styled%20Components-grey?style=flat"/>
     <img alt="Open Source? Yes!" src="https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github"/>
 </p>
