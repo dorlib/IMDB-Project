@@ -10,9 +10,9 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 
 function AllMoviesPage(props) {
-    const [itemClickedToFavorite, setItemClickedToFavorite] = useState(0)
+    const [itemClicked, setItemClicked] = useState(0)
 
-    let ADD_TO_FAVORITE
+    let REMOVE_FROM_FAVORITES
 
     const GET_MOVIES = gql`
         query Movies{
@@ -29,34 +29,34 @@ function AllMoviesPage(props) {
         }
     `
     // this will be a function that checks if item is already favorite
-    let itemIsFavorite = true
-
+    // let itemIsFavorite = true
+    //
     const { loading, error, data } = useQuery(GET_MOVIES)
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :</p>;
         let loaded
         //let movieId = data["movies"]["id"]
 
-    if (itemClickedToFavorite !== 0 /*add here condition if item is already favorite*/) {
+    if (itemClicked !== 0 /*add here condition if item is already favorite*/) {
         ADD_TO_FAVORITE = gql`
-            query AddToFavorite ($movieID: ID!){
-                addToFavorite (movieID: $movieID){
+            mutation AddToFavorite ($movieID: ID!, $userID: ID!, $movieTitle: String!, $movieImage: String!){
+                addToFavorite (movieID: $movieID, userID: $userID, movieTitle: $movieTitle, movieImage: $movieImage){
                     id
                 }
             }
         `;
     }
 
-    const [addToFavorite] = useMutation(ADD_TO_FAVORITE,
-        {
-            variables: {
-                title: itemClickedToFavorite,
-            },
-            onCompleted: function () {
-                setItemClickedToFavorite(0)
-                return window.location.reload();
-            }
-        })
+    // const [addToFavorite] = useMutation(ADD_TO_FAVORITE,
+    //     {
+    //         variables: {
+    //             title: itemClickedToFavorite,
+    //         },
+    //         onCompleted: function () {
+    //             setItemClickedToFavorite(0)
+    //             return window.location.reload();
+    //         }
+    //     })
 
     loaded =
         <ul className={classes.list}>
@@ -85,8 +85,8 @@ function AllMoviesPage(props) {
                     <CardActions>
                         <Button size="large">Share</Button>
                         <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
-                        <Button size="large" onClick={() => setItemClickedToFavorite(id)}>
-                            { itemIsFavorite ? "Remove from Favorites" : "Add To Favorites"}
+                        <Button size="large" onClick={() => setItemClicked(id)}>
+                            { isFavorite ? "Remove from Favorites" : "Add To Favorites"}
                         </Button>
                     </CardActions>
                 </Card>
