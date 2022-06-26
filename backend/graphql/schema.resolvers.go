@@ -205,11 +205,12 @@ func (r *mutationResolver) AddToFavorites(ctx context.Context, favorite Favorite
 		SetUserID(favorite.UserID).Save(ctx)
 }
 
-func (r *mutationResolver) RemoveFromFavorites(ctx context.Context, id int) ([]*ent.Favorite, error) {
-	favoriteItem := r.client.Favorite.GetX(ctx, id)
+func (r *mutationResolver) RemoveFromFavorites(ctx context.Context, movieID int, userID int) ([]*ent.Favorite, error) {
+	favoriteID := r.client.Favorite.Query().Where(favorite.UserID(userID)).Where(favorite.MovieID(movieID)).OnlyIDX(ctx)
+	favoriteItem := r.client.Favorite.GetX(ctx, favoriteID)
 	r.client.Favorite.DeleteOne(favoriteItem).ExecX(ctx)
 
-	data, err := r.client.Favorite.Query().Where(favorite.UserID(id)).All(ctx)
+	data, err := r.client.Favorite.Query().Where(favorite.UserID(userID)).All(ctx)
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
