@@ -38,18 +38,26 @@ function AllMoviesPage(props) {
         }
     `;
 
-    const { loading: loading2, error: error2, data: data2 } = useQuery(GET_MOVIES)
-    const { loading: loading1, error: error1, data: data1 } = useQuery(FAVORITES_OF_USER)
-    if (loading2) return <p>Loading...</p>;
-    if (error2) return <p>Error :</p>;
-    if (loading1) return <p>Loading...</p>
-    if (error1) return <p>Error :</p>
+    const { loading: loading, error: error, data: data } = useQuery(GET_MOVIES)
+    const { loading: loading1, error: error1, data: data1 } = useQuery(FAVORITES_OF_USER,
+        {
+            variables: {
+                userID: props.userID
+            }
+        })
 
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :</p>;
+    if (loading1) return <p>Loading Favorites...</p>;
+    if (error1) return <p>Error Loading Favorites :</p>;
 
     let loaded
+    let sumOfFavorites = data1["favoritesOfUser"].length
+    let favorites = [];
 
-
-    console.log(data1)
+    for (let i = 0; i < sumOfFavorites; i++) {
+        favorites.push(data1["favoritesOfUser"][i]["movieID"])
+    }
 
     // this will be a function that checks if item is already favorite
     // let itemIsFavorite = true
@@ -78,7 +86,7 @@ function AllMoviesPage(props) {
 
     loaded =
         <ul className={classes.list}>
-            {data2.movies.map(( {title, rank, id, image, description, director}) => (
+            {data.movies.map(( {title, rank, id, image, description, director}) => (
             <div>
                 <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px", display: "inline-block"}} key={id}>
                     <CardMedia
@@ -104,7 +112,7 @@ function AllMoviesPage(props) {
                         <Button size="large">Share</Button>
                         <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
                         <Button size="large" onClick={() => setItemClicked(id)}>
-                            {/*{ isFavorite ? "Remove from Favorites" : "Add To Favorites"}*/}
+                            { favorites.includes(parseInt(id)) ? "Remove from Favorites" : "Add To Favorites"}
                         </Button>
                     </CardActions>
                 </Card>
