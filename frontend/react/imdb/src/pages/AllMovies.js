@@ -12,8 +12,7 @@ import Button from "@mui/material/Button";
 function AllMoviesPage(props) {
     const [itemClicked, setItemClicked] = useState(0)
 
-    let REMOVE_FROM_FAVORITES
-    let ADD_TO_FAVORITES
+    let TOGGLE_FAVORITE
 
     const GET_MOVIES = gql`
         query Movies{
@@ -59,21 +58,27 @@ function AllMoviesPage(props) {
         favorites.push(data1["favoritesOfUser"][i]["movieID"])
     }
 
-    // this will be a function that checks if item is already favorite
-    // let itemIsFavorite = true
-    //
+    if (itemClicked !== 0 && favorites.indexOf(itemClicked) === -1) {
+        TOGGLE_FAVORITE = gql`
+            mutation AddToFavorite ($movieID: ID!, $userID: ID!, $movieTitle: String!, $movieImage: String!){
+                addToFavorite (movieID: $movieID, userID: $userID, movieTitle: $movieTitle, movieImage: $movieImage){
+                    id
+                }
+            }
+        `;
+    }
 
-    // if (itemClicked !== 0 /*add here condition if item is already favorite*/) {
-    //     ADD_TO_FAVORITE = gql`
-    //         mutation AddToFavorite ($movieID: ID!, $userID: ID!, $movieTitle: String!, $movieImage: String!){
-    //             addToFavorite (movieID: $movieID, userID: $userID, movieTitle: $movieTitle, movieImage: $movieImage){
-    //                 id
-    //             }
-    //         }
-    //     `;
-    // }
+    if (itemClicked !== 0 && favorites.indexOf(itemClicked) !== -1) {
+        TOGGLE_FAVORITE = gql`
+            mutation RemoveFromFavorites ($ID: ID!) {
+                removeFromFavorites (ID: $ID) {
+                    id
+                }
+            }
+        `;
+    }
 
-    // const [addToFavorite] = useMutation(ADD_TO_FAVORITE,
+    // const [toggleFavorite] = useMutation(ADD_TO_FAVORITE,
     //     {
     //         variables: {
     //             title: itemClickedToFavorite,
@@ -83,6 +88,11 @@ function AllMoviesPage(props) {
     //             return window.location.reload();
     //         }
     //     })
+
+    function handleClick (id) {
+        setItemClicked(parseInt(id))
+
+    }
 
     loaded =
         <ul className={classes.list}>
@@ -111,7 +121,7 @@ function AllMoviesPage(props) {
                     <CardActions>
                         <Button size="large">Share</Button>
                         <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
-                        <Button size="large" onClick={() => setItemClicked(id)}>
+                        <Button size="large" onClick={() => handleClick(id)}>
                             { favorites.includes(parseInt(id)) ? "Remove from Favorites" : "Add To Favorites"}
                         </Button>
                     </CardActions>
