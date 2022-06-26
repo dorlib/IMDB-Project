@@ -10,9 +10,9 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 
 function AllMoviesPage(props) {
-    const [itemClickedToFavorite, setItemClickedToFavorite] = useState(0)
+    const [itemClicked, setItemClicked] = useState(0)
 
-    let ADD_TO_FAVORITE
+    let TOGGLE_FAVORITE
 
     const GET_MOVIES = gql`
         query Movies{
@@ -27,36 +27,72 @@ function AllMoviesPage(props) {
                 }
             }
         }
-    `
-    // this will be a function that checks if item is already favorite
-    let itemIsFavorite = true
+    `;
 
-    const { loading, error, data } = useQuery(GET_MOVIES)
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error :</p>;
-        let loaded
-        //let movieId = data["movies"]["id"]
+    const FAVORITES_OF_USER = gql`
+        query FavoritesOfUser ($userID: ID!){
+            favoritesOfUser (userID: $userID) {
+                movieID
+            }
+        }
+    `;
 
-    if (itemClickedToFavorite !== 0 /*add here condition if item is already favorite*/) {
-        ADD_TO_FAVORITE = gql`
-            query AddToFavorite ($movieID: ID!){
-                addToFavorite (movieID: $movieID){
+    const { loading: loading, error: error, data: data } = useQuery(GET_MOVIES)
+    const { loading: loading1, error: error1, data: data1 } = useQuery(FAVORITES_OF_USER,
+        {
+            variables: {
+                userID: props.userID
+            }
+        })
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :</p>;
+    if (loading1) return <p>Loading Favorites...</p>;
+    if (error1) return <p>Error Loading Favorites :</p>;
+
+    let loaded
+    let sumOfFavorites = data1["favoritesOfUser"].length
+    let favorites = [];
+
+    for (let i = 0; i < sumOfFavorites; i++) {
+        favorites.push(data1["favoritesOfUser"][i]["movieID"])
+    }
+
+    if (itemClicked !== 0 && favorites.indexOf(itemClicked) === -1) {
+        TOGGLE_FAVORITE = gql`
+            mutation AddToFavorite ($movieID: ID!, $userID: ID!, $movieTitle: String!, $movieImage: String!){
+                addToFavorite (movieID: $movieID, userID: $userID, movieTitle: $movieTitle, movieImage: $movieImage){
                     id
                 }
             }
         `;
     }
 
-    const [addToFavorite] = useMutation(ADD_TO_FAVORITE,
-        {
-            variables: {
-                title: itemClickedToFavorite,
-            },
-            onCompleted: function () {
-                setItemClickedToFavorite(0)
-                return window.location.reload();
+    if (itemClicked !== 0 && favorites.indexOf(itemClicked) !== -1) {
+        TOGGLE_FAVORITE = gql`
+            mutation RemoveFromFavorites ($ID: ID!) {
+                removeFromFavorites (ID: $ID) {
+                    id
+                }
             }
-        })
+        `;
+    }
+
+    // const [toggleFavorite] = useMutation(ADD_TO_FAVORITE,
+    //     {
+    //         variables: {
+    //             title: itemClickedToFavorite,
+    //         },
+    //         onCompleted: function () {
+    //             setItemClickedToFavorite(0)
+    //             return window.location.reload();
+    //         }
+    //     })
+
+    function handleClick (id) {
+        setItemClicked(parseInt(id))
+
+    }
 
     loaded =
         <ul className={classes.list}>
@@ -85,8 +121,8 @@ function AllMoviesPage(props) {
                     <CardActions>
                         <Button size="large">Share</Button>
                         <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
-                        <Button size="large" onClick={() => setItemClickedToFavorite(id)}>
-                            { itemIsFavorite ? "Remove from Favorites" : "Add To Favorites"}
+                        <Button size="large" onClick={() => handleClick(id)}>
+                            { favorites.includes(parseInt(id)) ? "Remove from Favorites" : "Add To Favorites"}
                         </Button>
                     </CardActions>
                 </Card>

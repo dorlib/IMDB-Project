@@ -69,7 +69,7 @@ function App() {
     <Layout username={userFirstName} userId={userId} profile={userProfileImage}>
       <Routes>
         <Route path="/" element={<><Welcome /><Last5Added/></>} />
-        <Route path="/movies" element={<AllMoviesPage />} />
+        <Route path="/movies" element={<AllMoviesPage userID={userId} />} />
         <Route path="/directors" element={<AllDirectorsPage />} />
         <Route path="/new-movie" element={<NewMovieForm />} />
         <Route path="/favorites" element={<FavoritesPage userID={userId}/>} />
