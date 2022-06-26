@@ -13,6 +13,7 @@ function AllMoviesPage(props) {
     const [itemClicked, setItemClicked] = useState(0)
 
     let REMOVE_FROM_FAVORITES
+    let ADD_TO_FAVORITES
 
     const GET_MOVIES = gql`
         query Movies{
@@ -27,25 +28,42 @@ function AllMoviesPage(props) {
                 }
             }
         }
-    `
+    `;
+
+    const FAVORITES_OF_USER = gql`
+        query FavoritesOfUser ($userID: ID!){
+            favoritesOfUser (userID: $userID) {
+                movieID
+            }
+        }
+    `;
+
+    const { loading: loading2, error: error2, data: data2 } = useQuery(GET_MOVIES)
+    const { loading: loading1, error: error1, data: data1 } = useQuery(FAVORITES_OF_USER)
+    if (loading2) return <p>Loading...</p>;
+    if (error2) return <p>Error :</p>;
+    if (loading1) return <p>Loading...</p>
+    if (error1) return <p>Error :</p>
+
+
+    let loaded
+
+
+    console.log(data1)
+
     // this will be a function that checks if item is already favorite
     // let itemIsFavorite = true
     //
-    const { loading, error, data } = useQuery(GET_MOVIES)
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error :</p>;
-        let loaded
-        //let movieId = data["movies"]["id"]
 
-    if (itemClicked !== 0 /*add here condition if item is already favorite*/) {
-        ADD_TO_FAVORITE = gql`
-            mutation AddToFavorite ($movieID: ID!, $userID: ID!, $movieTitle: String!, $movieImage: String!){
-                addToFavorite (movieID: $movieID, userID: $userID, movieTitle: $movieTitle, movieImage: $movieImage){
-                    id
-                }
-            }
-        `;
-    }
+    // if (itemClicked !== 0 /*add here condition if item is already favorite*/) {
+    //     ADD_TO_FAVORITE = gql`
+    //         mutation AddToFavorite ($movieID: ID!, $userID: ID!, $movieTitle: String!, $movieImage: String!){
+    //             addToFavorite (movieID: $movieID, userID: $userID, movieTitle: $movieTitle, movieImage: $movieImage){
+    //                 id
+    //             }
+    //         }
+    //     `;
+    // }
 
     // const [addToFavorite] = useMutation(ADD_TO_FAVORITE,
     //     {
@@ -60,7 +78,7 @@ function AllMoviesPage(props) {
 
     loaded =
         <ul className={classes.list}>
-            {data.movies.map(( {title, rank, id, image, description, director}) => (
+            {data2.movies.map(( {title, rank, id, image, description, director}) => (
             <div>
                 <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px", display: "inline-block"}} key={id}>
                     <CardMedia
@@ -86,7 +104,7 @@ function AllMoviesPage(props) {
                         <Button size="large">Share</Button>
                         <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
                         <Button size="large" onClick={() => setItemClicked(id)}>
-                            { isFavorite ? "Remove from Favorites" : "Add To Favorites"}
+                            {/*{ isFavorite ? "Remove from Favorites" : "Add To Favorites"}*/}
                         </Button>
                     </CardActions>
                 </Card>

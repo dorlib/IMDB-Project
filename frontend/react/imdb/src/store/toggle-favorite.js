@@ -17,8 +17,8 @@ function ToggleFavorite () {
     `;
 
     let REMOVE_FROM_FAVORITES = gql`
-        mutation RemoveFromFavorites ($movieID: ID!) {
-            removeFromFavorites (movieID: $movieID) {
+        mutation RemoveFromFavorites ($ID: ID!) {
+            removeFromFavorites (ID: $ID) {
                 id
             }
         }
