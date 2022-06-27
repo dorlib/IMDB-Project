@@ -15,6 +15,7 @@ function AllMoviesPage(props) {
     const [itemClickedTitle, setItemClickedTitle] = useState('')
     const [itemClickedImage, setItemClickedImage] = useState('')
     const [removeFromFavorites, setRemoveFromFavorites] = useState(false)
+    const [toggle, setToggle] = useState(false)
 
     // let TOGGLE_FAVORITE
     //
@@ -82,6 +83,7 @@ function AllMoviesPage(props) {
         setItemClickedID(parseInt(id))
         setItemClickedTitle(title)
         setItemClickedImage(image)
+        setToggle(true)
 
         if (itemClickedID !== 0 && favorites.indexOf(itemClickedID) !== -1) {
             setRemoveFromFavorites(true)
@@ -90,9 +92,10 @@ function AllMoviesPage(props) {
 
     let load = (
         <div>
-            <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={removeFromFavorites}/>
+            <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={removeFromFavorites} toggle={toggle}/>
+            {() => setToggle(false)}
         </div>
-    )
+    )   
 
     loaded =
         <ul className={classes.list}>

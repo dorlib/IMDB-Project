@@ -1,9 +1,8 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {gql, useMutation, useQuery} from "@apollo/client";
 
-function ToggleFavorite (props) {
-
-    console.log("yay")
+function ToggleFavorite(props) {
+    const [toggle, setToggle] = useState(false)
     let TOGGLE_FAVORITE
 
     let REMOVE_FROM_FAVORITES = gql`
@@ -28,17 +27,33 @@ function ToggleFavorite (props) {
         TOGGLE_FAVORITE = ADD_TO_FAVORITES
     }
 
-    const [toggleFavorite] = useMutation(TOGGLE_FAVORITE,
+    let movieID = props.movieID
+    let userID = props.userID
+    let movieTitle = props.movieTitle
+    let movieImage = props.movieImage
+
+    const [toggleFav] = useMutation(TOGGLE_FAVORITE,
         {
             variables: {
-                movieID: props.movieID,
-                userID: props.userID,
-                movieTitle: props.movieTitle,
-                movieImage: props.movieImage
-            },
+                movieID: movieID,
+                userID: userID,
+                movieTitle: movieTitle,
+                movieImage: movieImage
+            }, onCompleted: function (data) {
+                window.location.reload();
+            }
         })
 
-    return toggleFavorite
+    useEffect(() => {
+        if (toggle) {
+            toggleFav().then(() => setToggle(false))
+        }
+    })
+
+    return (
+        <div>
+        </div>
+    )
 }
 
 export default ToggleFavorite
