@@ -41,21 +41,18 @@ function ToggleFavorite(props) {
                 movieImage: movieImage
             }, onCompleted: function (data) {
                 window.location.reload();
+                setToggle(false)
             },
             onError: function (error) {
                 console.log("error:", error)
             }
         })
 
-    useEffect(() => {
-        if (toggle) {
-            toggleFav()
-            .then(() => setToggle(false))
-        }
-    })
-
-    return <div> </div>
-
+    if (toggle) {
+        setToggle(false)
+        toggleFav().then(() => setToggle(false))
+    }
+    return null
 }
 
 export default ToggleFavorite

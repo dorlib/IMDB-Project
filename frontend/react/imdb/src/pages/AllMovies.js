@@ -126,7 +126,7 @@ function AllMoviesPage(props) {
                 </div>
             ))}
         </ul>
-    return <>{loaded}{itemClickedID !== 0? load: null}</>
+    return <>{loaded}{toggle? load: null}</>
 }
 
 export default AllMoviesPage;
