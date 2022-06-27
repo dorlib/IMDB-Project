@@ -198,11 +198,13 @@ func (r *queryResolver) FavoritesOfUser(ctx context.Context, userID int) ([]*ent
 	return data, nil
 }
 
-func (r *mutationResolver) AddToFavorites(ctx context.Context, favorite FavoriteInput) (*ent.Favorite, error) {
+func (r *mutationResolver) AddToFavorites(ctx context.Context, movieID int, userID int, movieTitle string, movieImage string) (*ent.Favorite, error) {
 	return r.client.Favorite.Create().
-		SetMovieID(favorite.MovieID).
-		SetMovieTitle(favorite.MovieTitle).
-		SetUserID(favorite.UserID).Save(ctx)
+		SetMovieID(movieID).
+		SetMovieTitle(movieTitle).
+		SetMovieImage(movieImage).
+		SetUserID(userID).
+		Save(ctx)
 }
 
 func (r *mutationResolver) RemoveFromFavorites(ctx context.Context, movieID int, userID int) ([]*ent.Favorite, error) {

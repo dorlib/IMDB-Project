@@ -8,34 +8,16 @@ import Typography from "@mui/material/Typography";
 import classes from "./AllMovies.module.css";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-
-import toggleFavorite from "../store/toggle-favorite";
-import ToggleFavorite from "../store/toggle-favorite";
+import ToggleFavorite from "../favorites/toggle-favorite";
 
 function AllMoviesPage(props) {
     const [itemClickedID, setItemClickedID] = useState(0)
     const [itemClickedTitle, setItemClickedTitle] = useState('')
     const [itemClickedImage, setItemClickedImage] = useState('')
     const [removeFromFavorites, setRemoveFromFavorites] = useState(false)
+    const [toggle, setToggle] = useState(false)
 
-    // let TOGGLE_FAVORITE
-    //
-    // let REMOVE_FROM_FAVORITES = gql`
-    //     mutation RemoveFromFavorites ($movieID: ID!, $userID: ID!) {
-    //         removeFromFavorites (movieID: $movieID, userID: $userID) {
-    //             id
-    //         }
-    //     }
-    // `;
-    //
-    // let ADD_TO_FAVORITES = gql`
-    //     mutation AddToFavorite ($movieID: ID!, $userID: ID!, $movieTitle: String!, $movieImage: String!){
-    //         addToFavorite (movieID: $movieID, userID: $userID, movieTitle: $movieTitle, movieImage: $movieImage){
-    //             id
-    //         }
-    //     }
-    // `;
-
+    // getting all movies query
     const GET_MOVIES = gql`
         query Movies{
             movies {
@@ -50,7 +32,9 @@ function AllMoviesPage(props) {
             }
         }
     `;
+    const {loading: loading, error: error, data: data} = useQuery(GET_MOVIES)
 
+    // getting all the favorites of the user
     const FAVORITES_OF_USER = gql`
         query FavoritesOfUser ($userID: ID!){
             favoritesOfUser (userID: $userID) {
@@ -59,7 +43,6 @@ function AllMoviesPage(props) {
         }
     `;
 
-    const {loading: loading, error: error, data: data} = useQuery(GET_MOVIES)
     const {loading: loading1, error: error1, data: data1} = useQuery(FAVORITES_OF_USER,
         {
             variables: {
@@ -80,19 +63,24 @@ function AllMoviesPage(props) {
         favorites.push(data1["favoritesOfUser"][i]["movieID"])
     }
 
+    // handling click on add/remove from favorites
     function handleClick(id, title, image) {
         setItemClickedID(parseInt(id))
         setItemClickedTitle(title)
         setItemClickedImage(image)
+        setToggle(true)
 
         if (itemClickedID !== 0 && favorites.indexOf(itemClickedID) !== -1) {
-            // TOGGLE_FAVORITE = REMOVE_FROM_FAVORITES
             setRemoveFromFavorites(true)
-        } else if (itemClickedID !== 0 && favorites.indexOf(itemClickedID) === -1) {
-            // TOGGLE_FAVORITE = ADD_TO_FAVORITES
         }
-        return <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={removeFromFavorites}/>
     }
+
+    let load = (
+        <div>
+            <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={removeFromFavorites} toggle={toggle}/>
+            {() => setToggle(false)}
+        </div>
+    )
 
     loaded =
         <ul className={classes.list}>
@@ -136,9 +124,9 @@ function AllMoviesPage(props) {
                         </CardActions>
                     </Card>
                 </div>
-            ))};
+            ))}
         </ul>
-    return loaded
+    return <>{loaded}{itemClickedID !== 0? load: null}</>
 }
 
 export default AllMoviesPage;

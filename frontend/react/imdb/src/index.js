@@ -10,7 +10,7 @@ import {
 
 import "./index.css";
 import App from "./App";
-import {FavoritesContextProvider} from "./store/favorites-context";
+import {FavoritesContextProvider} from "./favorites/favorites-context";
 import {SnackbarProvider} from "notistack";
 
 

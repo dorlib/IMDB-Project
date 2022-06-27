@@ -155,7 +155,7 @@ type Mutation {
     createReview(text: String!, rank: Int!, movieID: Int!, userID: Int!, topic: String!): Review!
     updateRank(id: ID!, rank: Int!) : Movie!
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
-    addToFavorites(favorite: FavoriteInput!): Favorite!
+    addToFavorites(movieID: ID!, userID: ID!, movieTitle: String!, movieImage: String!): Favorite!
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
     addActorToMovie(movieId: ID!, name: String!) : Actor!
 }

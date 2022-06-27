@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 
 import Card from "../ui/Card";
 import classes from "./MovieItem.module.css";
-import FavoritesContext from "../../store/favorites-context";
+import FavoritesContext from "../../favorites/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
 import {Stack} from "@mui/material";
 import Button from "@mui/material/Button";

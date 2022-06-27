@@ -84,7 +84,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		AddActorToMovie        func(childComplexity int, movieID int, name string) int
-		AddToFavorites         func(childComplexity int, favorite FavoriteInput) int
+		AddToFavorites         func(childComplexity int, movieID int, userID int, movieTitle string, movieImage string) int
 		CreateDirector         func(childComplexity int, director DirectorInput) int
 		CreateMovie            func(childComplexity int, movie MovieInput) int
 		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string, image string, topic string, text string, profileImage string, bornAt string, year int) int
@@ -151,7 +151,7 @@ type MutationResolver interface {
 	CreateReview(ctx context.Context, text string, rank int, movieID int, userID int, topic string) (*ent.Review, error)
 	UpdateRank(ctx context.Context, id int, rank int) (*ent.Movie, error)
 	UpdateDirectorDetails(ctx context.Context, id int, bornAt string, profileImage string, description string) (*ent.Director, error)
-	AddToFavorites(ctx context.Context, favorite FavoriteInput) (*ent.Favorite, error)
+	AddToFavorites(ctx context.Context, movieID int, userID int, movieTitle string, movieImage string) (*ent.Favorite, error)
 	RemoveFromFavorites(ctx context.Context, movieID int, userID int) ([]*ent.Favorite, error)
 	AddActorToMovie(ctx context.Context, movieID int, name string) (*ent.Actor, error)
 }
@@ -383,7 +383,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.AddToFavorites(childComplexity, args["favorite"].(FavoriteInput)), true
+		return e.complexity.Mutation.AddToFavorites(childComplexity, args["movieID"].(int), args["userID"].(int), args["movieTitle"].(string), args["movieImage"].(string)), true
 
 	case "Mutation.createDirector":
 		if e.complexity.Mutation.CreateDirector == nil {
@@ -1004,7 +1004,7 @@ type Mutation {
     createReview(text: String!, rank: Int!, movieID: Int!, userID: Int!, topic: String!): Review!
     updateRank(id: ID!, rank: Int!) : Movie!
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
-    addToFavorites(favorite: FavoriteInput!): Favorite!
+    addToFavorites(movieID: ID!, userID: ID!, movieTitle: String!, movieImage: String!): Favorite!
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
     addActorToMovie(movieId: ID!, name: String!) : Actor!
 }
@@ -1063,15 +1063,42 @@ func (ec *executionContext) field_Mutation_addActorToMovie_args(ctx context.Cont
 func (ec *executionContext) field_Mutation_addToFavorites_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 FavoriteInput
-	if tmp, ok := rawArgs["favorite"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("favorite"))
-		arg0, err = ec.unmarshalNFavoriteInput2imdbv2ᚋgraphqlᚐFavoriteInput(ctx, tmp)
+	var arg0 int
+	if tmp, ok := rawArgs["movieID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movieID"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["favorite"] = arg0
+	args["movieID"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["userID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+		arg1, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["movieTitle"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movieTitle"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["movieTitle"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["movieImage"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movieImage"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["movieImage"] = arg3
 	return args, nil
 }
 
@@ -2677,7 +2704,7 @@ func (ec *executionContext) _Mutation_addToFavorites(ctx context.Context, field 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AddToFavorites(rctx, args["favorite"].(FavoriteInput))
+		return ec.resolvers.Mutation().AddToFavorites(rctx, args["movieID"].(int), args["userID"].(int), args["movieTitle"].(string), args["movieImage"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7350,11 +7377,6 @@ func (ec *executionContext) marshalNFavorite2ᚖimdbv2ᚋentᚐFavorite(ctx cont
 		return graphql.Null
 	}
 	return ec._Favorite(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNFavoriteInput2imdbv2ᚋgraphqlᚐFavoriteInput(ctx context.Context, v interface{}) (FavoriteInput, error) {
-	res, err := ec.unmarshalInputFavoriteInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNID2int(ctx context.Context, v interface{}) (int, error) {
