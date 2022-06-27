@@ -8,9 +8,9 @@ import {Link} from "react-router-dom";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import React from "react";
-import classes from "./MovieList.module.css"
+import classes from "./FavoriteList.module.css"
 
-function MovieList(props) {
+function FavoriteList(props) {
   let movies = props.movies
 
   return (
@@ -42,4 +42,4 @@ function MovieList(props) {
   );
 }
 
-export default MovieList;
+export default FavoriteList;

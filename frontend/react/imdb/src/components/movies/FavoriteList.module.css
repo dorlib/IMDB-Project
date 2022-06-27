@@ -1,10 +1,10 @@
 .list {
     border: 5px solid none;
-    margin-left: -11cm;
-    width: 1500px;
+    margin-left: -14cm;
+    width: 1700px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, 60px);
-    grid-gap: 400px;
+    grid-template-columns: repeat(auto-fill, 440px);
+    grid-gap: 70px;
     justify-content: center;
   }
 

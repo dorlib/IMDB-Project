@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import MovieList from '../components/movies/MovieList';
+import FavoriteList from '../components/movies/FavoriteList';
 import {gql, useQuery} from "@apollo/client";
 
 // this function component get user's favorite list data and send it to another component that shows those movies on by one
@@ -31,7 +31,7 @@ function FavoritesPage(props) {
         content = <p
             style={{color: "yellow"}}>You got no favorites yet. Start adding some?</p>;
     } else {
-        content = <MovieList movies={data}/>;
+        content = <FavoriteList movies={data}/>;
     }
 
     return (
