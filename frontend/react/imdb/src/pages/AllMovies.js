@@ -95,7 +95,7 @@ function AllMoviesPage(props) {
             <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={removeFromFavorites} toggle={toggle}/>
             {() => setToggle(false)}
         </div>
-    )   
+    )
 
     loaded =
         <ul className={classes.list}>
