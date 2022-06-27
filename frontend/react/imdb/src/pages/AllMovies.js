@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import classes from "./AllMovies.module.css";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-import ToggleFavorite from "../store/toggle-favorite";
+import ToggleFavorite from "../favorites/toggle-favorite";
 
 function AllMoviesPage(props) {
     const [itemClickedID, setItemClickedID] = useState(0)
@@ -17,6 +17,7 @@ function AllMoviesPage(props) {
     const [removeFromFavorites, setRemoveFromFavorites] = useState(false)
     const [toggle, setToggle] = useState(false)
 
+    // getting all movies query
     const GET_MOVIES = gql`
         query Movies{
             movies {
@@ -31,7 +32,9 @@ function AllMoviesPage(props) {
             }
         }
     `;
+    const {loading: loading, error: error, data: data} = useQuery(GET_MOVIES)
 
+    // getting all the favorites of the user
     const FAVORITES_OF_USER = gql`
         query FavoritesOfUser ($userID: ID!){
             favoritesOfUser (userID: $userID) {
@@ -40,7 +43,6 @@ function AllMoviesPage(props) {
         }
     `;
 
-    const {loading: loading, error: error, data: data} = useQuery(GET_MOVIES)
     const {loading: loading1, error: error1, data: data1} = useQuery(FAVORITES_OF_USER,
         {
             variables: {
@@ -61,6 +63,7 @@ function AllMoviesPage(props) {
         favorites.push(data1["favoritesOfUser"][i]["movieID"])
     }
 
+    // handling click on add/remove from favorites
     function handleClick(id, title, image) {
         setItemClickedID(parseInt(id))
         setItemClickedTitle(title)

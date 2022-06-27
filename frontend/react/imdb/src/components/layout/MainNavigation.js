@@ -1,6 +1,6 @@
 import {useContext, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import FavoritesContext from "../../store/favorites-context";
+import FavoritesContext from "../../favorites/favorites-context";
 
 import * as React from "react";
 import Grid from "@mui/material/Grid";

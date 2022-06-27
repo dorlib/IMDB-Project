@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom';
 
 import Card from "../ui/Card";
-import FavoritesContext from "../../store/favorites-context";
+import FavoritesContext from "../../favorites/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
 import {isIterableObject} from "graphql/jsutils/isIterableObject";
 
