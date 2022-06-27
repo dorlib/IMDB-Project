@@ -8,8 +8,6 @@ import Typography from "@mui/material/Typography";
 import classes from "./AllMovies.module.css";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-
-import toggleFavorite from "../store/toggle-favorite";
 import ToggleFavorite from "../store/toggle-favorite";
 
 function AllMoviesPage(props) {
@@ -86,13 +84,15 @@ function AllMoviesPage(props) {
         setItemClickedImage(image)
 
         if (itemClickedID !== 0 && favorites.indexOf(itemClickedID) !== -1) {
-            // TOGGLE_FAVORITE = REMOVE_FROM_FAVORITES
             setRemoveFromFavorites(true)
-        } else if (itemClickedID !== 0 && favorites.indexOf(itemClickedID) === -1) {
-            // TOGGLE_FAVORITE = ADD_TO_FAVORITES
         }
-        return <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={removeFromFavorites}/>
     }
+
+    let load = (
+        <div>
+            <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={removeFromFavorites}/>
+        </div>
+    )
 
     loaded =
         <ul className={classes.list}>
@@ -136,9 +136,9 @@ function AllMoviesPage(props) {
                         </CardActions>
                     </Card>
                 </div>
-            ))};
+            ))}
         </ul>
-    return loaded
+    return <>{loaded}{itemClickedID !== 0? load: null}</>
 }
 
 export default AllMoviesPage;

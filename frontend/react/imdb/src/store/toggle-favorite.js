@@ -2,6 +2,8 @@ import React, {useContext, useState} from "react";
 import {gql, useMutation, useQuery} from "@apollo/client";
 
 function ToggleFavorite (props) {
+
+    console.log("yay")
     let TOGGLE_FAVORITE
 
     let REMOVE_FROM_FAVORITES = gql`
@@ -26,7 +28,6 @@ function ToggleFavorite (props) {
         TOGGLE_FAVORITE = ADD_TO_FAVORITES
     }
 
-
     const [toggleFavorite] = useMutation(TOGGLE_FAVORITE,
         {
             variables: {
@@ -37,7 +38,7 @@ function ToggleFavorite (props) {
             },
         })
 
-    return toggleFavorite()
+    return toggleFavorite
 }
 
 export default ToggleFavorite
