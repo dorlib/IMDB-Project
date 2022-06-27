@@ -15,7 +15,7 @@ function ToggleFavorite(props) {
 
     let ADD_TO_FAVORITES = gql`
         mutation AddToFavorites ($movieID: ID!, $userID: ID!, $movieTitle: String!, $movieImage: String!){
-            addToFavorite (movieID: $movieID, userID: $userID, movieTitle: $movieTitle, movieImage: $movieImage){
+            addToFavorites (movieID: $movieID, userID: $userID, movieTitle: $movieTitle, movieImage: $movieImage){
                 id
             }
         }

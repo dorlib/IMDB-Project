@@ -17,24 +17,6 @@ function AllMoviesPage(props) {
     const [removeFromFavorites, setRemoveFromFavorites] = useState(false)
     const [toggle, setToggle] = useState(false)
 
-    // let TOGGLE_FAVORITE
-    //
-    // let REMOVE_FROM_FAVORITES = gql`
-    //     mutation RemoveFromFavorites ($movieID: ID!, $userID: ID!) {
-    //         removeFromFavorites (movieID: $movieID, userID: $userID) {
-    //             id
-    //         }
-    //     }
-    // `;
-    //
-    // let ADD_TO_FAVORITES = gql`
-    //     mutation AddToFavorite ($movieID: ID!, $userID: ID!, $movieTitle: String!, $movieImage: String!){
-    //         addToFavorite (movieID: $movieID, userID: $userID, movieTitle: $movieTitle, movieImage: $movieImage){
-    //             id
-    //         }
-    //     }
-    // `;
-
     const GET_MOVIES = gql`
         query Movies{
             movies {
