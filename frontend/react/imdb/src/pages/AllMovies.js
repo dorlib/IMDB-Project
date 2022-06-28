@@ -14,7 +14,6 @@ function AllMoviesPage(props) {
     const [itemClickedID, setItemClickedID] = useState(0)
     const [itemClickedTitle, setItemClickedTitle] = useState('')
     const [itemClickedImage, setItemClickedImage] = useState('')
-    const [removeFromFavorites, setRemoveFromFavorites] = useState(false)
     const [toggle, setToggle] = useState(false)
 
     // getting all movies query
@@ -55,7 +54,6 @@ function AllMoviesPage(props) {
     if (loading1) return <p>Loading Favorites...</p>;
     if (error1) return <p>Error Loading Favorites :</p>;
 
-    let loaded
     let sumOfFavorites = data1["favoritesOfUser"].length
     let favorites = [];
 
@@ -63,26 +61,26 @@ function AllMoviesPage(props) {
         favorites.push(data1["favoritesOfUser"][i]["movieID"])
     }
 
-    // handling click on add/remove from favorites
-    function handleClick(id, title, image) {
+    function handleFirstClick (id, title, image) {
         setItemClickedID(parseInt(id))
+        handleSecondClick(id, title, image)
+    }
+
+    // handling click on add/remove from favorites
+    function handleSecondClick(id, title, image) {
         setItemClickedTitle(title)
         setItemClickedImage(image)
         setToggle(true)
-
-        if (itemClickedID !== 0 && favorites.indexOf(itemClickedID) !== -1) {
-            setRemoveFromFavorites(true)
-        }
     }
 
     let load = (
         <div>
-            <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={removeFromFavorites} toggle={toggle}/>
+            <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={favorites.includes(itemClickedID) && itemClickedID !== 0} toggle={toggle}/>
             {() => setToggle(false)}
         </div>
     )
 
-    loaded =
+    let loaded =
         <ul className={classes.list}>
             {data.movies.map(({title, rank, id, image, description, director}) => (
                 <div>
@@ -118,15 +116,15 @@ function AllMoviesPage(props) {
                             <Button size="large">Share</Button>
                             <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To
                                 Movie's Page</Button></Link>
-                            <Button size="large" onClick={() => handleClick(id, title, image)}>
+                            {props.userID? <Button size="large" onClick={() => handleFirstClick(id, title, image)}>
                                 {favorites.includes(parseInt(id)) ? "Remove from Favorites" : "Add To Favorites"}
-                            </Button>
+                            </Button>: null}
                         </CardActions>
                     </Card>
                 </div>
             ))}
         </ul>
-    return <>{loaded}{itemClickedID !== 0? load: null}</>
+    return <>{loaded}{toggle? load: null}</>
 }
 
 export default AllMoviesPage;

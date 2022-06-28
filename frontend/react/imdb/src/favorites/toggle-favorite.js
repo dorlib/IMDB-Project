@@ -21,7 +21,7 @@ function ToggleFavorite(props) {
         }
     `;
 
-    if (props.removeOrAdd === true) {
+    if (props.removeOrAdd) {
         TOGGLE_FAVORITE = REMOVE_FROM_FAVORITES
     } else {
         TOGGLE_FAVORITE = ADD_TO_FAVORITES
@@ -47,15 +47,11 @@ function ToggleFavorite(props) {
             }
         })
 
-    useEffect(() => {
-        if (toggle) {
-            toggleFav()
-            .then(() => setToggle(false))
-        }
-    })
-
-    return <div> </div>
-
+    if (toggle) {
+        setToggle(false)
+        toggleFav().then(() => setToggle(false))
+    }
+    return null
 }
 
 export default ToggleFavorite

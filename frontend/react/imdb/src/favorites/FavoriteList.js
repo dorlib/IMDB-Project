@@ -7,13 +7,24 @@ import Typography from "@mui/material/Typography";
 import {Link} from "react-router-dom";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-import React from "react";
-import classes from "./MovieList.module.css"
+import React, {useState} from "react";
+import classes from "./FavoriteList.module.css"
+import ToggleFavorite from "./toggle-favorite";
 
-function MovieList(props) {
+function FavoriteList(props) {
+  const [itemClickedID, setItemClickedID] = useState(0)
+  const [toggle, setToggle] = useState(false)
+
   let movies = props.movies
 
-  return (
+  let load = (
+      <div>
+        <ToggleFavorite userID={props.userID} movieID={itemClickedID} removeOrAdd={true} toggle={toggle}/>
+        {() => setToggle(false)}
+      </div>
+  )
+
+  let loaded =  (
     <ul className={classes.list}>
       {movies.favoritesOfUser.map(( {movieID, movieTitle, movieImage} ) => (
           <div>
@@ -34,12 +45,18 @@ function MovieList(props) {
               <CardActions>
                 <Button size="large">Share</Button>
                 <Link to={"/moviePage/" + movieID} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
+                <Button size="large" onClick={() => {
+                  setItemClickedID(movieID)
+                  setToggle(true)
+                }}>Remove</Button>
               </CardActions>
             </Card>
           </div>
       ))}
     </ul>
   );
+
+  return <>{loaded}{toggle? load : null}</>
 }
 
-export default MovieList;
+export default FavoriteList;

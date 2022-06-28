@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {gql, useQuery} from "@apollo/client";
 import {Link} from "react-router-dom";
 
@@ -10,10 +10,13 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import styled from "styled-components";
+import ToggleFavorite from "../favorites/toggle-favorite";
 
-function Top10Page() {
+function Top10Page(props) {
+    const [itemClickedID, setItemClickedID] = useState(0)
+    const [itemClickedTitle, setItemClickedTitle] = useState('')
+    const [itemClickedImage, setItemClickedImage] = useState('')
+    const [toggle, setToggle] = useState(false)
 
     const GET_TOP10_MOVIES = gql`
         query Top10Movies{
@@ -26,53 +29,55 @@ function Top10Page() {
         }
     `;
 
-    const {loading, error, data} = useQuery(GET_TOP10_MOVIES)
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :</p>;
-    let loaded
-
-    const Icons = [
-        {
-            id: 1,
-            name: "favorite",
-            description:"icon",
-            icon: FavoriteIcon,
-        }]
-
-    const Fav = styled.div`
-        color: white;
-        position: absolute;
-        display: flex;
-        right: 27.3cm;
-        margin-top: -1.25cm;
-    `;
-
-    let TextBox = styled.text` 
-        position: absolute;
-        display: none;
-        margin-top: 1cm;
-        right: 21.9cm;
-        background: #fff;
-        font-size: small;
-        ${Fav}:hover & {
-            display: flex;
-            left: 1cm;
-            top: -0.5cm;
-            width: 4.5cm;
-            color: black;
-        }    
-    `;
-
-
-    const handleClick = (e) => {
-        if (e.target.style.color == 'white') {
-            e.target.style.color = '#8B0000'
-        } else {
-            e.target.style.color = 'white'
+    // getting all the favorites of the user
+    const FAVORITES_OF_USER = gql`
+        query FavoritesOfUser ($userID: ID!){
+            favoritesOfUser (userID: $userID) {
+                movieID
+            }
         }
+    `;
+
+    const {loading, error, data} = useQuery(GET_TOP10_MOVIES)
+    const {loading: loading1, error: error1, data: data1} = useQuery(FAVORITES_OF_USER,
+        {
+            variables: {
+                userID: props.userID
+            }
+        })
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :{error}</p>;
+    if (loading1) return <p>Loading Favorites...</p>;
+    if (error1) return <p>Error Loading Favorites :</p>;
+
+    let sumOfFavorites = data1["favoritesOfUser"].length
+    let favorites = [];
+
+    for (let i = 0; i < sumOfFavorites; i++) {
+        favorites.push(data1["favoritesOfUser"][i]["movieID"])
     }
 
-    loaded = data.top10Movies.map(({title, rank, id, image}) => (
+    function handleFirstClick (id, title, image) {
+        setItemClickedID(parseInt(id))
+        handleSecondClick(id, title, image)
+    }
+
+    // handling click on add/remove from favorites
+    function handleSecondClick(id, title, image) {
+        setItemClickedTitle(title)
+        setItemClickedImage(image)
+        setToggle(true)
+    }
+
+    let load = (
+        <div>
+            <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={favorites.includes(itemClickedID) && itemClickedID !== 0} toggle={toggle}/>
+            {() => setToggle(false)}
+        </div>
+    )
+
+    let loaded = data.top10Movies.map(({title, rank, id, image}) => (
         <div>
             <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px"}} key={id}>
                 <CardMedia
@@ -91,20 +96,14 @@ function Top10Page() {
                 <CardActions>
                     <Button size="large">Share</Button>
                     <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Movie's Page</Button></Link>
+                    {props.userID !== 0? <Button size="large" onClick={() => handleFirstClick(id, title, image)}>
+                        {favorites.includes(parseInt(id)) ? "Remove from Favorites" : "Add To Favorites"}
+                    </Button>: null}
                 </CardActions>
-                {Icons.map(list=>(
-                    <div style={{fontSize: "xxx-large"}}>
-                        <Fav>
-                            <list.icon fontSize={'large'} onClick={handleClick} />
-                            <TextBox><text >Click To Add To Favorites!</text></TextBox>
-                        </Fav>
-
-                    </div>
-                ))}
             </Card>
         </div>
     ))
-    return <>{loaded}</>
+    return <>{loaded}{toggle? load: null}</>
 }
 
 export default Top10Page;

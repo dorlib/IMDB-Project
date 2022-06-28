@@ -3,6 +3,7 @@
 ##########################
 
 # making favorite system for users -- after log in and sign in
+# make error massage if unsigned in try to add to favorite
 
 # add fast scroll to the all movies and all directors
 
@@ -14,6 +15,7 @@
 
 # add warning massage before insert data
 
+# add option to edit movie's details
 
 ##########################
 ###    UI missions     ###
@@ -30,6 +32,10 @@
 # add option to add actors (clip open in tab)
 
 # add a connection between movies and users - we want to know who contributed each movie
+
+# make photos match their size
+
+# make the favorite system more smooth and without refresh
 
 
 ##########################
