@@ -71,7 +71,6 @@ function AllMoviesPage(props) {
     function handleSecondClick(id, title, image) {
         setItemClickedTitle(title)
         setItemClickedImage(image)
-        console.log(favorites,itemClickedID)
         setToggle(true)
     }
 

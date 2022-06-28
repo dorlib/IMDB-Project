@@ -21,8 +21,6 @@ function ToggleFavorite(props) {
         }
     `;
 
-    console.log(props.removeOrAdd)
-
     if (props.removeOrAdd) {
         TOGGLE_FAVORITE = REMOVE_FROM_FAVORITES
     } else {
@@ -42,7 +40,7 @@ function ToggleFavorite(props) {
                 movieTitle: movieTitle,
                 movieImage: movieImage
             }, onCompleted: function (data) {
-                // window.location.reload();
+                window.location.reload();
             },
             onError: function (error) {
                 console.log("error:", error)

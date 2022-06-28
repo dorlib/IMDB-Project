@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import FavoriteList from '../components/movies/FavoriteList';
+import FavoriteList from '../favorites/FavoriteList';
 import {gql, useQuery} from "@apollo/client";
 import CardContent from "@mui/material/CardContent";
 import classes from "../components/movies/NewMovieForm.module.css";
@@ -59,7 +59,7 @@ function FavoritesPage(props) {
             </div>
         )
     } else {
-        content = <FavoriteList movies={data}/>;
+        content = <FavoriteList movies={data} userID={props.userID}/>;
     }
 
     return (
