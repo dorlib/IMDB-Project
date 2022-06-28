@@ -116,9 +116,9 @@ function AllMoviesPage(props) {
                             <Button size="large">Share</Button>
                             <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To
                                 Movie's Page</Button></Link>
-                            <Button size="large" onClick={() => handleFirstClick(id, title, image)}>
+                            {props.userID? <Button size="large" onClick={() => handleFirstClick(id, title, image)}>
                                 {favorites.includes(parseInt(id)) ? "Remove from Favorites" : "Add To Favorites"}
-                            </Button>
+                            </Button>: null}
                         </CardActions>
                     </Card>
                 </div>
