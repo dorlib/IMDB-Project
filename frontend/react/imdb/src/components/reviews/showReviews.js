@@ -74,13 +74,15 @@ function ShowReviews(props) {
                             secondary={
                                 <React.Fragment>
                                     <Typography
-                                        sx={{display: 'inline'}}
-                                        component="span"
-                                        variant="body2"
-                                        color="text.primary"
+                                        className={classes.text}
                                     >
+                                        {text}
                                     </Typography>
-                                    {text}: {rank}
+                                    <Typography
+                                        className={classes.rank}
+                                    >
+                                        {rank}
+                                    </Typography>
                                 </React.Fragment>
                             }
                         />
