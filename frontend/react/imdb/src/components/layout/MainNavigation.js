@@ -117,7 +117,7 @@ function MainNavigation(props) {
                                         <Link to="/favorites">
                                             My Favorites
                                             <span className={classes.badge}>
-                      {favoritesCtx.totalFavorites}
+                      {props.sumOfFavorites}
                     </span>
                                         </Link>
                                     </li>
@@ -200,7 +200,7 @@ function MainNavigation(props) {
                                     <Link to="/favorites">
                                         My Favorites
                                         <span className={classes.badge}>
-                      {favoritesCtx.totalFavorites}
+                      {props.sumOfFavorites}
                     </span>
                                     </Link>
                                 </li>
