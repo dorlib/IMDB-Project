@@ -15,6 +15,7 @@
 
 # add warning massage before insert data
 
+# add option to edit movie's details
 
 ##########################
 ###    UI missions     ###
@@ -31,6 +32,8 @@
 # add option to add actors (clip open in tab)
 
 # add a connection between movies and users - we want to know who contributed each movie
+
+# make photos match their size
 
 
 ##########################

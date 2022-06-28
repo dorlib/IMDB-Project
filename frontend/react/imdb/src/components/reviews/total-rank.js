@@ -52,7 +52,7 @@ function UpdateRank(props) {
 
     return (
         <div>
-            <MovieItem total={total} counter={counter} />
+            <MovieItem total={total} counter={counter} userID={props.userID} />
         </div>
     )
 

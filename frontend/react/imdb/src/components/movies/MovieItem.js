@@ -1,25 +1,18 @@
-import React, {useContext, useRef} from "react";
+import React, {useContext, useRef, useState} from "react";
 import {Link} from 'react-router-dom';
 
 import Card from "../ui/Card";
 import classes from "./MovieItem.module.css";
-import FavoritesContext from "../../favorites/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
-import {Stack} from "@mui/material";
-import Button from "@mui/material/Button";
-import {isIterableObject} from "graphql/jsutils/isIterableObject";
-import MenuItem from "@mui/material/MenuItem";
-import showReviews from "../reviews/showReviews";
-import ShowReviews from "../reviews/showReviews";
 import styled from "styled-components";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import EditIcon from "@mui/icons-material/Edit";
+import ToggleFavorite from "../../favorites/toggle-favorite";
 
 function MovieItem(props) {
-
-    const favoritesCtx = useContext(FavoritesContext);
+    const [toggle, setToggle] = useState(false)
 
     const MOVIE_DATA = gql`
         query MovieById($id : ID!) {
@@ -43,6 +36,13 @@ function MovieItem(props) {
         }
     `;
 
+    const FAVORITES_OF_USER = gql`
+        query FavoritesOfUser ($userID: ID!){
+            favoritesOfUser (userID: $userID) {
+                movieID
+            }
+        }
+    `;
 
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
@@ -52,10 +52,19 @@ function MovieItem(props) {
             variables: {
                 id: lastSegment || 0
             }
-
         })
+
+    const {loading: loading1, error: error1, data: data1} = useQuery(FAVORITES_OF_USER,
+        {
+            variables: {
+                userID: props.userID
+            }
+        })
+
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :</p>;
+    if (error) return <p>Error :{error}</p>;
+    if (loading1) return <p>Loading...</p>
+    if (error1) return <p>Error : {error1}</p>
 
     let movieID = data["movieById"]["0"]["id"]
     let title = data["movieById"]["0"]["title"]
@@ -68,7 +77,12 @@ function MovieItem(props) {
     let directorImage = data["movieById"]["0"]["director"]["profileImage"]
     // let actors = data["movieById"]["0"]["actors"]
 
-    console.log(data)
+    let numOfFavorites = data1["favoritesOfUser"].length
+    let favorites = [];
+
+    for (let i = 0; i < numOfFavorites; i++) {
+        favorites.push(data1["favoritesOfUser"][i]["movieID"])
+    }
 
     let rank = Math.floor((originalRank + props.total) / (props.counter + 1))
 
@@ -96,30 +110,12 @@ function MovieItem(props) {
         }    
     `;
 
-    const itemIsFavorite = favoritesCtx.itemIsFavorite(movieID);
-
-    function toggleFavoriteStatusHandler(e) {
-        handleClick(e)
-        if (itemIsFavorite) {
-            favoritesCtx.removeFavorite(movieID);
-        } else {
-            favoritesCtx.addFavorite({
-                id: movieID,
-                title: title,
-                description: description,
-                image: image,
-                director: director,
-            });
-        }
-    }
-
-    const handleClick = (e) => {
-        if (e.target.style.color === 'white') {
-            e.target.style.color = '#8B0000'
-        } else {
-            e.target.style.color = 'white'
-        }
-    }
+    let load = (
+        <div>
+            <ToggleFavorite userID={props.userID} movieID={movieID} movieTitle={title} movieImage={image} removeOrAdd={favorites.includes(parseInt(movieID)) && movieID !== 0} toggle={toggle}/>
+            {() => setToggle(false)}
+        </div>
+    )
 
     let loaded = (
         <Card>
@@ -141,6 +137,9 @@ function MovieItem(props) {
                     <EditIcon className={classes.editDetailsBut}/>
                     <Typography component="div">
                         About {title}
+                    </Typography>
+                    <Typography style={{color: "yellow", fontSize: "xx-large"}}>
+                        {description}
                     </Typography>
                 </CardContent>
                 <CardContent className={classes.director}>
@@ -164,7 +163,7 @@ function MovieItem(props) {
                 </CardContent>
                     <div style={{fontSize: "xxx-large"}}>
                         <Fav>
-                            <FavoriteIcon fontSize={'large'} style={{color: itemIsFavorite ? '#8B0000' : 'white'}} onClick={toggleFavoriteStatusHandler} className={classes.heart} />
+                            <FavoriteIcon fontSize={'large'} style={{color: favorites.includes(parseInt(movieID)) ? '#8B0000' : 'white'}} onClick={() => setToggle(true)} className={classes.heart} />
                             <TextBox><text >Click To Add To Favorites!</text></TextBox>
                         </Fav>
                     </div>
@@ -172,7 +171,7 @@ function MovieItem(props) {
         </Card>
     )
 
-    return loaded
+    return <>{loaded}{toggle? load: null}</>
 
 }
 

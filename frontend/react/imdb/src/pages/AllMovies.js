@@ -54,7 +54,6 @@ function AllMoviesPage(props) {
     if (loading1) return <p>Loading Favorites...</p>;
     if (error1) return <p>Error Loading Favorites :</p>;
 
-    let loaded
     let sumOfFavorites = data1["favoritesOfUser"].length
     let favorites = [];
 
@@ -81,7 +80,7 @@ function AllMoviesPage(props) {
         </div>
     )
 
-    loaded =
+    let loaded =
         <ul className={classes.list}>
             {data.movies.map(({title, rank, id, image, description, director}) => (
                 <div>
