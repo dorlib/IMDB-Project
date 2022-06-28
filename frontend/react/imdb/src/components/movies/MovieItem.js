@@ -37,6 +37,7 @@ function MovieItem(props) {
                 director {
                     id
                     name
+                    profileImage
                 }
             }
         }
@@ -64,6 +65,7 @@ function MovieItem(props) {
     let image = data["movieById"]["0"]["image"]
     let director = data["movieById"]["0"]["director"]["name"]
     let directorId = data["movieById"]["0"]["director"]["id"]
+    let directorImage = data["movieById"]["0"]["director"]["profileImage"]
     // let actors = data["movieById"]["0"]["actors"]
 
     console.log(data)
@@ -145,7 +147,7 @@ function MovieItem(props) {
                     <EditIcon className={classes.editDirectorPhotoBut}/>
                     <Typography component="div">
                         Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
-                        <img src={image} className={classes.directorImage}/>
+                        <img src={directorImage} className={classes.directorImage}/>
                     </Typography>
                 </CardContent>
                 <CardContent className={classes.actors}>
