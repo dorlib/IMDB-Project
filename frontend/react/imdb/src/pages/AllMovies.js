@@ -63,7 +63,7 @@ function AllMoviesPage(props) {
     }
 
     function handleFirstClick (id, title, image) {
-        setItemClickedID(id)
+        setItemClickedID(parseInt(id))
         handleSecondClick(id, title, image)
     }
 
