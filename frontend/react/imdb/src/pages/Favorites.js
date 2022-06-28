@@ -41,7 +41,7 @@ function FavoritesPage(props) {
     if (data["favoritesOfUser"] === null) {
         content = <p
             style={{color: "yellow"}}>You got no favorites yet. Start adding some?</p>;
-    } else if (props.userID !== null) {
+    } else if (props.userID === null) {
         content = (
             <div style={{color: "yellow"}}>
                 <CardContent className={classes.oops} style={{top: "8.5cm"}}>

@@ -14,7 +14,6 @@ function AllMoviesPage(props) {
     const [itemClickedID, setItemClickedID] = useState(0)
     const [itemClickedTitle, setItemClickedTitle] = useState('')
     const [itemClickedImage, setItemClickedImage] = useState('')
-    const [removeFromFavorites, setRemoveFromFavorites] = useState(false)
     const [toggle, setToggle] = useState(false)
 
     // getting all movies query
@@ -63,21 +62,22 @@ function AllMoviesPage(props) {
         favorites.push(data1["favoritesOfUser"][i]["movieID"])
     }
 
+    function handleFirstClick (id, title, image) {
+        setItemClickedID(id)
+        handleSecondClick(id, title, image)
+    }
+
     // handling click on add/remove from favorites
-    function handleClick(id, title, image) {
-        setItemClickedID(parseInt(id))
+    function handleSecondClick(id, title, image) {
         setItemClickedTitle(title)
         setItemClickedImage(image)
+        console.log(favorites,itemClickedID)
         setToggle(true)
-
-        if (itemClickedID !== 0 && favorites.indexOf(itemClickedID) !== -1) {
-            setRemoveFromFavorites(true)
-        }
     }
 
     let load = (
         <div>
-            <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={removeFromFavorites} toggle={toggle}/>
+            <ToggleFavorite userID={props.userID} movieID={itemClickedID} movieTitle={itemClickedTitle} movieImage={itemClickedImage} removeOrAdd={favorites.includes(itemClickedID) && itemClickedID !== 0} toggle={toggle}/>
             {() => setToggle(false)}
         </div>
     )
@@ -118,7 +118,7 @@ function AllMoviesPage(props) {
                             <Button size="large">Share</Button>
                             <Link to={"/moviePage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To
                                 Movie's Page</Button></Link>
-                            <Button size="large" onClick={() => handleClick(id, title, image)}>
+                            <Button size="large" onClick={() => handleFirstClick(id, title, image)}>
                                 {favorites.includes(parseInt(id)) ? "Remove from Favorites" : "Add To Favorites"}
                             </Button>
                         </CardActions>

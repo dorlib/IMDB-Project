@@ -21,7 +21,9 @@ function ToggleFavorite(props) {
         }
     `;
 
-    if (props.removeOrAdd === true) {
+    console.log(props.removeOrAdd)
+
+    if (props.removeOrAdd) {
         TOGGLE_FAVORITE = REMOVE_FROM_FAVORITES
     } else {
         TOGGLE_FAVORITE = ADD_TO_FAVORITES
@@ -40,8 +42,7 @@ function ToggleFavorite(props) {
                 movieTitle: movieTitle,
                 movieImage: movieImage
             }, onCompleted: function (data) {
-                window.location.reload();
-                setToggle(false)
+                // window.location.reload();
             },
             onError: function (error) {
                 console.log("error:", error)
