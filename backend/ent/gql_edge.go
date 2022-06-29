@@ -12,6 +12,14 @@ func (a *Actor) Actors(ctx context.Context) ([]*Movie, error) {
 	return result, err
 }
 
+func (c *Comment) User(ctx context.Context) ([]*User, error) {
+	result, err := c.Edges.UserOrErr()
+	if IsNotLoaded(err) {
+		result, err = c.QueryUser().All(ctx)
+	}
+	return result, err
+}
+
 func (c *Comment) Review(ctx context.Context) ([]*Review, error) {
 	result, err := c.Edges.ReviewOrErr()
 	if IsNotLoaded(err) {
@@ -80,6 +88,14 @@ func (u *User) Reviews(ctx context.Context) ([]*Review, error) {
 	result, err := u.Edges.ReviewsOrErr()
 	if IsNotLoaded(err) {
 		result, err = u.QueryReviews().All(ctx)
+	}
+	return result, err
+}
+
+func (u *User) Comments(ctx context.Context) ([]*Comment, error) {
+	result, err := u.Edges.CommentsOrErr()
+	if IsNotLoaded(err) {
+		result, err = u.QueryComments().All(ctx)
 	}
 	return result, err
 }

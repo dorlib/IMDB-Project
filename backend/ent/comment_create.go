@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"imdbv2/ent/comment"
 	"imdbv2/ent/review"
+	"imdbv2/ent/user"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -30,6 +31,21 @@ func (cc *CommentCreate) SetTopic(s string) *CommentCreate {
 func (cc *CommentCreate) SetText(s string) *CommentCreate {
 	cc.mutation.SetText(s)
 	return cc
+}
+
+// AddUserIDs adds the "user" edge to the User entity by IDs.
+func (cc *CommentCreate) AddUserIDs(ids ...int) *CommentCreate {
+	cc.mutation.AddUserIDs(ids...)
+	return cc
+}
+
+// AddUser adds the "user" edges to the User entity.
+func (cc *CommentCreate) AddUser(u ...*User) *CommentCreate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cc.AddUserIDs(ids...)
 }
 
 // AddReviewIDs adds the "review" edge to the Review entity by IDs.
@@ -165,6 +181,25 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 			Column: comment.FieldText,
 		})
 		_node.Text = value
+	}
+	if nodes := cc.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   comment.UserTable,
+			Columns: comment.UserPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := cc.mutation.ReviewIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

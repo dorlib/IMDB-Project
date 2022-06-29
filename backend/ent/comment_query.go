@@ -10,6 +10,7 @@ import (
 	"imdbv2/ent/comment"
 	"imdbv2/ent/predicate"
 	"imdbv2/ent/review"
+	"imdbv2/ent/user"
 	"math"
 
 	"entgo.io/ent/dialect/sql"
@@ -27,6 +28,7 @@ type CommentQuery struct {
 	fields     []string
 	predicates []predicate.Comment
 	// eager-loading edges.
+	withUser   *UserQuery
 	withReview *ReviewQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -62,6 +64,28 @@ func (cq *CommentQuery) Unique(unique bool) *CommentQuery {
 func (cq *CommentQuery) Order(o ...OrderFunc) *CommentQuery {
 	cq.order = append(cq.order, o...)
 	return cq
+}
+
+// QueryUser chains the current query on the "user" edge.
+func (cq *CommentQuery) QueryUser() *UserQuery {
+	query := &UserQuery{config: cq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := cq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := cq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(comment.Table, comment.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, comment.UserTable, comment.UserPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QueryReview chains the current query on the "review" edge.
@@ -267,12 +291,24 @@ func (cq *CommentQuery) Clone() *CommentQuery {
 		offset:     cq.offset,
 		order:      append([]OrderFunc{}, cq.order...),
 		predicates: append([]predicate.Comment{}, cq.predicates...),
+		withUser:   cq.withUser.Clone(),
 		withReview: cq.withReview.Clone(),
 		// clone intermediate query.
 		sql:    cq.sql.Clone(),
 		path:   cq.path,
 		unique: cq.unique,
 	}
+}
+
+// WithUser tells the query-builder to eager-load the nodes that are connected to
+// the "user" edge. The optional arguments are used to configure the query builder of the edge.
+func (cq *CommentQuery) WithUser(opts ...func(*UserQuery)) *CommentQuery {
+	query := &UserQuery{config: cq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	cq.withUser = query
+	return cq
 }
 
 // WithReview tells the query-builder to eager-load the nodes that are connected to
@@ -351,7 +387,8 @@ func (cq *CommentQuery) sqlAll(ctx context.Context) ([]*Comment, error) {
 	var (
 		nodes       = []*Comment{}
 		_spec       = cq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
+			cq.withUser != nil,
 			cq.withReview != nil,
 		}
 	)
@@ -373,6 +410,71 @@ func (cq *CommentQuery) sqlAll(ctx context.Context) ([]*Comment, error) {
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
+	}
+
+	if query := cq.withUser; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		ids := make(map[int]*Comment, len(nodes))
+		for _, node := range nodes {
+			ids[node.ID] = node
+			fks = append(fks, node.ID)
+			node.Edges.User = []*User{}
+		}
+		var (
+			edgeids []int
+			edges   = make(map[int][]*Comment)
+		)
+		_spec := &sqlgraph.EdgeQuerySpec{
+			Edge: &sqlgraph.EdgeSpec{
+				Inverse: true,
+				Table:   comment.UserTable,
+				Columns: comment.UserPrimaryKey,
+			},
+			Predicate: func(s *sql.Selector) {
+				s.Where(sql.InValues(comment.UserPrimaryKey[1], fks...))
+			},
+			ScanValues: func() [2]interface{} {
+				return [2]interface{}{new(sql.NullInt64), new(sql.NullInt64)}
+			},
+			Assign: func(out, in interface{}) error {
+				eout, ok := out.(*sql.NullInt64)
+				if !ok || eout == nil {
+					return fmt.Errorf("unexpected id value for edge-out")
+				}
+				ein, ok := in.(*sql.NullInt64)
+				if !ok || ein == nil {
+					return fmt.Errorf("unexpected id value for edge-in")
+				}
+				outValue := int(eout.Int64)
+				inValue := int(ein.Int64)
+				node, ok := ids[outValue]
+				if !ok {
+					return fmt.Errorf("unexpected node id in edges: %v", outValue)
+				}
+				if _, ok := edges[inValue]; !ok {
+					edgeids = append(edgeids, inValue)
+				}
+				edges[inValue] = append(edges[inValue], node)
+				return nil
+			},
+		}
+		if err := sqlgraph.QueryEdges(ctx, cq.driver, _spec); err != nil {
+			return nil, fmt.Errorf(`query edges "user": %w`, err)
+		}
+		query.Where(user.IDIn(edgeids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := edges[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected "user" node returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.User = append(nodes[i].Edges.User, n)
+			}
+		}
 	}
 
 	if query := cq.withReview; query != nil {

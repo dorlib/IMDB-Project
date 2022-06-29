@@ -186,6 +186,31 @@ var (
 			},
 		},
 	}
+	// UserCommentsColumns holds the columns for the "user_comments" table.
+	UserCommentsColumns = []*schema.Column{
+		{Name: "user_id", Type: field.TypeInt},
+		{Name: "comment_id", Type: field.TypeInt},
+	}
+	// UserCommentsTable holds the schema information for the "user_comments" table.
+	UserCommentsTable = &schema.Table{
+		Name:       "user_comments",
+		Columns:    UserCommentsColumns,
+		PrimaryKey: []*schema.Column{UserCommentsColumns[0], UserCommentsColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "user_comments_user_id",
+				Columns:    []*schema.Column{UserCommentsColumns[0]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "user_comments_comment_id",
+				Columns:    []*schema.Column{UserCommentsColumns[1]},
+				RefColumns: []*schema.Column{CommentsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		ActorsTable,
@@ -197,6 +222,7 @@ var (
 		UsersTable,
 		ActorActorsTable,
 		CommentReviewTable,
+		UserCommentsTable,
 	}
 )
 
@@ -208,4 +234,6 @@ func init() {
 	ActorActorsTable.ForeignKeys[1].RefTable = MoviesTable
 	CommentReviewTable.ForeignKeys[0].RefTable = CommentsTable
 	CommentReviewTable.ForeignKeys[1].RefTable = ReviewsTable
+	UserCommentsTable.ForeignKeys[0].RefTable = UsersTable
+	UserCommentsTable.ForeignKeys[1].RefTable = CommentsTable
 }

@@ -358,6 +358,22 @@ func (c *CommentClient) GetX(ctx context.Context, id int) *Comment {
 	return obj
 }
 
+// QueryUser queries the user edge of a Comment.
+func (c *CommentClient) QueryUser(co *Comment) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := co.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(comment.Table, comment.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, comment.UserTable, comment.UserPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(co.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryReview queries the review edge of a Comment.
 func (c *CommentClient) QueryReview(co *Comment) *ReviewQuery {
 	query := &ReviewQuery{config: c.config}
@@ -945,6 +961,22 @@ func (c *UserClient) QueryReviews(u *User) *ReviewQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(review.Table, review.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.ReviewsTable, user.ReviewsColumn),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryComments queries the comments edge of a User.
+func (c *UserClient) QueryComments(u *User) *CommentQuery {
+	query := &CommentQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(comment.Table, comment.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, user.CommentsTable, user.CommentsPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil

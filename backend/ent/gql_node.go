@@ -102,7 +102,7 @@ func (c *Comment) Node(ctx context.Context) (node *Node, err error) {
 		ID:     c.ID,
 		Type:   "Comment",
 		Fields: make([]*Field, 2),
-		Edges:  make([]*Edge, 1),
+		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(c.Topic); err != nil {
@@ -122,12 +122,22 @@ func (c *Comment) Node(ctx context.Context) (node *Node, err error) {
 		Value: string(buf),
 	}
 	node.Edges[0] = &Edge{
+		Type: "User",
+		Name: "user",
+	}
+	err = c.QueryUser().
+		Select(user.FieldID).
+		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[1] = &Edge{
 		Type: "Review",
 		Name: "review",
 	}
 	err = c.QueryReview().
 		Select(review.FieldID).
-		Scan(ctx, &node.Edges[0].IDs)
+		Scan(ctx, &node.Edges[1].IDs)
 	if err != nil {
 		return nil, err
 	}
@@ -397,7 +407,7 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 		ID:     u.ID,
 		Type:   "User",
 		Fields: make([]*Field, 11),
-		Edges:  make([]*Edge, 1),
+		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(u.Firstname); err != nil {
@@ -495,6 +505,16 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 	err = u.QueryReviews().
 		Select(review.FieldID).
 		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[1] = &Edge{
+		Type: "Comment",
+		Name: "comments",
+	}
+	err = u.QueryComments().
+		Select(comment.FieldID).
+		Scan(ctx, &node.Edges[1].IDs)
 	if err != nil {
 		return nil, err
 	}

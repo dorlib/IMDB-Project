@@ -558,6 +558,9 @@ type CommentMutation struct {
 	topic         *string
 	text          *string
 	clearedFields map[string]struct{}
+	user          map[int]struct{}
+	removeduser   map[int]struct{}
+	cleareduser   bool
 	review        map[int]struct{}
 	removedreview map[int]struct{}
 	clearedreview bool
@@ -734,6 +737,60 @@ func (m *CommentMutation) OldText(ctx context.Context) (v string, err error) {
 // ResetText resets all changes to the "text" field.
 func (m *CommentMutation) ResetText() {
 	m.text = nil
+}
+
+// AddUserIDs adds the "user" edge to the User entity by ids.
+func (m *CommentMutation) AddUserIDs(ids ...int) {
+	if m.user == nil {
+		m.user = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.user[ids[i]] = struct{}{}
+	}
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (m *CommentMutation) ClearUser() {
+	m.cleareduser = true
+}
+
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *CommentMutation) UserCleared() bool {
+	return m.cleareduser
+}
+
+// RemoveUserIDs removes the "user" edge to the User entity by IDs.
+func (m *CommentMutation) RemoveUserIDs(ids ...int) {
+	if m.removeduser == nil {
+		m.removeduser = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.user, ids[i])
+		m.removeduser[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedUser returns the removed IDs of the "user" edge to the User entity.
+func (m *CommentMutation) RemovedUserIDs() (ids []int) {
+	for id := range m.removeduser {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// UserIDs returns the "user" edge IDs in the mutation.
+func (m *CommentMutation) UserIDs() (ids []int) {
+	for id := range m.user {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetUser resets all changes to the "user" edge.
+func (m *CommentMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
+	m.removeduser = nil
 }
 
 // AddReviewIDs adds the "review" edge to the Review entity by ids.
@@ -925,7 +982,10 @@ func (m *CommentMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *CommentMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
+	if m.user != nil {
+		edges = append(edges, comment.EdgeUser)
+	}
 	if m.review != nil {
 		edges = append(edges, comment.EdgeReview)
 	}
@@ -936,6 +996,12 @@ func (m *CommentMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *CommentMutation) AddedIDs(name string) []ent.Value {
 	switch name {
+	case comment.EdgeUser:
+		ids := make([]ent.Value, 0, len(m.user))
+		for id := range m.user {
+			ids = append(ids, id)
+		}
+		return ids
 	case comment.EdgeReview:
 		ids := make([]ent.Value, 0, len(m.review))
 		for id := range m.review {
@@ -948,7 +1014,10 @@ func (m *CommentMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *CommentMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
+	if m.removeduser != nil {
+		edges = append(edges, comment.EdgeUser)
+	}
 	if m.removedreview != nil {
 		edges = append(edges, comment.EdgeReview)
 	}
@@ -959,6 +1028,12 @@ func (m *CommentMutation) RemovedEdges() []string {
 // the given name in this mutation.
 func (m *CommentMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
+	case comment.EdgeUser:
+		ids := make([]ent.Value, 0, len(m.removeduser))
+		for id := range m.removeduser {
+			ids = append(ids, id)
+		}
+		return ids
 	case comment.EdgeReview:
 		ids := make([]ent.Value, 0, len(m.removedreview))
 		for id := range m.removedreview {
@@ -971,7 +1046,10 @@ func (m *CommentMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *CommentMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
+	if m.cleareduser {
+		edges = append(edges, comment.EdgeUser)
+	}
 	if m.clearedreview {
 		edges = append(edges, comment.EdgeReview)
 	}
@@ -982,6 +1060,8 @@ func (m *CommentMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *CommentMutation) EdgeCleared(name string) bool {
 	switch name {
+	case comment.EdgeUser:
+		return m.cleareduser
 	case comment.EdgeReview:
 		return m.clearedreview
 	}
@@ -1000,6 +1080,9 @@ func (m *CommentMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *CommentMutation) ResetEdge(name string) error {
 	switch name {
+	case comment.EdgeUser:
+		m.ResetUser()
+		return nil
 	case comment.EdgeReview:
 		m.ResetReview()
 		return nil
@@ -3750,27 +3833,30 @@ func (m *ReviewMutation) ResetEdge(name string) error {
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op             Op
-	typ            string
-	id             *int
-	firstname      *string
-	lastname       *string
-	nickname       *string
-	description    *string
-	password       *string
-	email          *string
-	birthDay       *string
-	profile        *string
-	country        *string
-	gender         *string
-	signup_at      *string
-	clearedFields  map[string]struct{}
-	reviews        map[int]struct{}
-	removedreviews map[int]struct{}
-	clearedreviews bool
-	done           bool
-	oldValue       func(context.Context) (*User, error)
-	predicates     []predicate.User
+	op              Op
+	typ             string
+	id              *int
+	firstname       *string
+	lastname        *string
+	nickname        *string
+	description     *string
+	password        *string
+	email           *string
+	birthDay        *string
+	profile         *string
+	country         *string
+	gender          *string
+	signup_at       *string
+	clearedFields   map[string]struct{}
+	reviews         map[int]struct{}
+	removedreviews  map[int]struct{}
+	clearedreviews  bool
+	comments        map[int]struct{}
+	removedcomments map[int]struct{}
+	clearedcomments bool
+	done            bool
+	oldValue        func(context.Context) (*User, error)
+	predicates      []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -4321,6 +4407,60 @@ func (m *UserMutation) ResetReviews() {
 	m.removedreviews = nil
 }
 
+// AddCommentIDs adds the "comments" edge to the Comment entity by ids.
+func (m *UserMutation) AddCommentIDs(ids ...int) {
+	if m.comments == nil {
+		m.comments = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.comments[ids[i]] = struct{}{}
+	}
+}
+
+// ClearComments clears the "comments" edge to the Comment entity.
+func (m *UserMutation) ClearComments() {
+	m.clearedcomments = true
+}
+
+// CommentsCleared reports if the "comments" edge to the Comment entity was cleared.
+func (m *UserMutation) CommentsCleared() bool {
+	return m.clearedcomments
+}
+
+// RemoveCommentIDs removes the "comments" edge to the Comment entity by IDs.
+func (m *UserMutation) RemoveCommentIDs(ids ...int) {
+	if m.removedcomments == nil {
+		m.removedcomments = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.comments, ids[i])
+		m.removedcomments[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedComments returns the removed IDs of the "comments" edge to the Comment entity.
+func (m *UserMutation) RemovedCommentsIDs() (ids []int) {
+	for id := range m.removedcomments {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// CommentsIDs returns the "comments" edge IDs in the mutation.
+func (m *UserMutation) CommentsIDs() (ids []int) {
+	for id := range m.comments {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetComments resets all changes to the "comments" edge.
+func (m *UserMutation) ResetComments() {
+	m.comments = nil
+	m.clearedcomments = false
+	m.removedcomments = nil
+}
+
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -4609,9 +4749,12 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.reviews != nil {
 		edges = append(edges, user.EdgeReviews)
+	}
+	if m.comments != nil {
+		edges = append(edges, user.EdgeComments)
 	}
 	return edges
 }
@@ -4626,15 +4769,24 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeComments:
+		ids := make([]ent.Value, 0, len(m.comments))
+		for id := range m.comments {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.removedreviews != nil {
 		edges = append(edges, user.EdgeReviews)
+	}
+	if m.removedcomments != nil {
+		edges = append(edges, user.EdgeComments)
 	}
 	return edges
 }
@@ -4649,15 +4801,24 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeComments:
+		ids := make([]ent.Value, 0, len(m.removedcomments))
+		for id := range m.removedcomments {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.clearedreviews {
 		edges = append(edges, user.EdgeReviews)
+	}
+	if m.clearedcomments {
+		edges = append(edges, user.EdgeComments)
 	}
 	return edges
 }
@@ -4668,6 +4829,8 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 	switch name {
 	case user.EdgeReviews:
 		return m.clearedreviews
+	case user.EdgeComments:
+		return m.clearedcomments
 	}
 	return false
 }
@@ -4686,6 +4849,9 @@ func (m *UserMutation) ResetEdge(name string) error {
 	switch name {
 	case user.EdgeReviews:
 		m.ResetReviews()
+		return nil
+	case user.EdgeComments:
+		m.ResetComments()
 		return nil
 	}
 	return fmt.Errorf("unknown User edge %s", name)

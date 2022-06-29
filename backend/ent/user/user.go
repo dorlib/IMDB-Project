@@ -31,6 +31,8 @@ const (
 	FieldSignupAt = "signup_at"
 	// EdgeReviews holds the string denoting the reviews edge name in mutations.
 	EdgeReviews = "reviews"
+	// EdgeComments holds the string denoting the comments edge name in mutations.
+	EdgeComments = "comments"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// ReviewsTable is the table that holds the reviews relation/edge.
@@ -40,6 +42,11 @@ const (
 	ReviewsInverseTable = "reviews"
 	// ReviewsColumn is the table column denoting the reviews relation/edge.
 	ReviewsColumn = "user_reviews"
+	// CommentsTable is the table that holds the comments relation/edge. The primary key declared below.
+	CommentsTable = "user_comments"
+	// CommentsInverseTable is the table name for the Comment entity.
+	// It exists in this package in order to avoid circular dependency with the "comment" package.
+	CommentsInverseTable = "comments"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -57,6 +64,12 @@ var Columns = []string{
 	FieldGender,
 	FieldSignupAt,
 }
+
+var (
+	// CommentsPrimaryKey and CommentsColumn2 are the table columns denoting the
+	// primary key for the comments relation (M2M).
+	CommentsPrimaryKey = []string{"user_id", "comment_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {

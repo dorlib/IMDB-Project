@@ -9,6 +9,7 @@ import (
 	"imdbv2/ent/comment"
 	"imdbv2/ent/predicate"
 	"imdbv2/ent/review"
+	"imdbv2/ent/user"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -40,6 +41,21 @@ func (cu *CommentUpdate) SetText(s string) *CommentUpdate {
 	return cu
 }
 
+// AddUserIDs adds the "user" edge to the User entity by IDs.
+func (cu *CommentUpdate) AddUserIDs(ids ...int) *CommentUpdate {
+	cu.mutation.AddUserIDs(ids...)
+	return cu
+}
+
+// AddUser adds the "user" edges to the User entity.
+func (cu *CommentUpdate) AddUser(u ...*User) *CommentUpdate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cu.AddUserIDs(ids...)
+}
+
 // AddReviewIDs adds the "review" edge to the Review entity by IDs.
 func (cu *CommentUpdate) AddReviewIDs(ids ...int) *CommentUpdate {
 	cu.mutation.AddReviewIDs(ids...)
@@ -58,6 +74,27 @@ func (cu *CommentUpdate) AddReview(r ...*Review) *CommentUpdate {
 // Mutation returns the CommentMutation object of the builder.
 func (cu *CommentUpdate) Mutation() *CommentMutation {
 	return cu.mutation
+}
+
+// ClearUser clears all "user" edges to the User entity.
+func (cu *CommentUpdate) ClearUser() *CommentUpdate {
+	cu.mutation.ClearUser()
+	return cu
+}
+
+// RemoveUserIDs removes the "user" edge to User entities by IDs.
+func (cu *CommentUpdate) RemoveUserIDs(ids ...int) *CommentUpdate {
+	cu.mutation.RemoveUserIDs(ids...)
+	return cu
+}
+
+// RemoveUser removes "user" edges to User entities.
+func (cu *CommentUpdate) RemoveUser(u ...*User) *CommentUpdate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cu.RemoveUserIDs(ids...)
 }
 
 // ClearReview clears all "review" edges to the Review entity.
@@ -167,6 +204,60 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldText,
 		})
 	}
+	if cu.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   comment.UserTable,
+			Columns: comment.UserPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.RemovedUserIDs(); len(nodes) > 0 && !cu.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   comment.UserTable,
+			Columns: comment.UserPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   comment.UserTable,
+			Columns: comment.UserPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if cu.mutation.ReviewCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -252,6 +343,21 @@ func (cuo *CommentUpdateOne) SetText(s string) *CommentUpdateOne {
 	return cuo
 }
 
+// AddUserIDs adds the "user" edge to the User entity by IDs.
+func (cuo *CommentUpdateOne) AddUserIDs(ids ...int) *CommentUpdateOne {
+	cuo.mutation.AddUserIDs(ids...)
+	return cuo
+}
+
+// AddUser adds the "user" edges to the User entity.
+func (cuo *CommentUpdateOne) AddUser(u ...*User) *CommentUpdateOne {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cuo.AddUserIDs(ids...)
+}
+
 // AddReviewIDs adds the "review" edge to the Review entity by IDs.
 func (cuo *CommentUpdateOne) AddReviewIDs(ids ...int) *CommentUpdateOne {
 	cuo.mutation.AddReviewIDs(ids...)
@@ -270,6 +376,27 @@ func (cuo *CommentUpdateOne) AddReview(r ...*Review) *CommentUpdateOne {
 // Mutation returns the CommentMutation object of the builder.
 func (cuo *CommentUpdateOne) Mutation() *CommentMutation {
 	return cuo.mutation
+}
+
+// ClearUser clears all "user" edges to the User entity.
+func (cuo *CommentUpdateOne) ClearUser() *CommentUpdateOne {
+	cuo.mutation.ClearUser()
+	return cuo
+}
+
+// RemoveUserIDs removes the "user" edge to User entities by IDs.
+func (cuo *CommentUpdateOne) RemoveUserIDs(ids ...int) *CommentUpdateOne {
+	cuo.mutation.RemoveUserIDs(ids...)
+	return cuo
+}
+
+// RemoveUser removes "user" edges to User entities.
+func (cuo *CommentUpdateOne) RemoveUser(u ...*User) *CommentUpdateOne {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cuo.RemoveUserIDs(ids...)
 }
 
 // ClearReview clears all "review" edges to the Review entity.
@@ -402,6 +529,60 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 			Value:  value,
 			Column: comment.FieldText,
 		})
+	}
+	if cuo.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   comment.UserTable,
+			Columns: comment.UserPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.RemovedUserIDs(); len(nodes) > 0 && !cuo.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   comment.UserTable,
+			Columns: comment.UserPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   comment.UserTable,
+			Columns: comment.UserPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if cuo.mutation.ReviewCleared() {
 		edge := &sqlgraph.EdgeSpec{

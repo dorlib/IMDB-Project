@@ -11,10 +11,17 @@ const (
 	FieldTopic = "topic"
 	// FieldText holds the string denoting the text field in the database.
 	FieldText = "text"
+	// EdgeUser holds the string denoting the user edge name in mutations.
+	EdgeUser = "user"
 	// EdgeReview holds the string denoting the review edge name in mutations.
 	EdgeReview = "review"
 	// Table holds the table name of the comment in the database.
 	Table = "comments"
+	// UserTable is the table that holds the user relation/edge. The primary key declared below.
+	UserTable = "user_comments"
+	// UserInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UserInverseTable = "users"
 	// ReviewTable is the table that holds the review relation/edge. The primary key declared below.
 	ReviewTable = "comment_review"
 	// ReviewInverseTable is the table name for the Review entity.
@@ -30,6 +37,9 @@ var Columns = []string{
 }
 
 var (
+	// UserPrimaryKey and UserColumn2 are the table columns denoting the
+	// primary key for the user relation (M2M).
+	UserPrimaryKey = []string{"user_id", "comment_id"}
 	// ReviewPrimaryKey and ReviewColumn2 are the table columns denoting the
 	// primary key for the review relation (M2M).
 	ReviewPrimaryKey = []string{"comment_id", "review_id"}

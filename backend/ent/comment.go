@@ -26,17 +26,28 @@ type Comment struct {
 
 // CommentEdges holds the relations/edges for other nodes in the graph.
 type CommentEdges struct {
+	// User holds the value of the user edge.
+	User []*User `json:"user,omitempty"`
 	// Review holds the value of the review edge.
 	Review []*Review `json:"review,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
+}
+
+// UserOrErr returns the User value or an error if the edge
+// was not loaded in eager-loading.
+func (e CommentEdges) UserOrErr() ([]*User, error) {
+	if e.loadedTypes[0] {
+		return e.User, nil
+	}
+	return nil, &NotLoadedError{edge: "user"}
 }
 
 // ReviewOrErr returns the Review value or an error if the edge
 // was not loaded in eager-loading.
 func (e CommentEdges) ReviewOrErr() ([]*Review, error) {
-	if e.loadedTypes[0] {
+	if e.loadedTypes[1] {
 		return e.Review, nil
 	}
 	return nil, &NotLoadedError{edge: "review"}
@@ -87,6 +98,11 @@ func (c *Comment) assignValues(columns []string, values []interface{}) error {
 		}
 	}
 	return nil
+}
+
+// QueryUser queries the "user" edge of the Comment entity.
+func (c *Comment) QueryUser() *UserQuery {
+	return (&CommentClient{config: c.config}).QueryUser(c)
 }
 
 // QueryReview queries the "review" edge of the Comment entity.
