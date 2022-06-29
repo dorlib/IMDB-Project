@@ -249,3 +249,25 @@ func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, nam
 
 	return newActor, nil
 }
+
+func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, topic string, text string) (*ent.Comment, error) {
+	userData := r.client.User.GetX(ctx, userID)
+	review := r.client.Review.GetX(ctx, reviewID)
+
+	return r.client.Comment.Create().
+		SetTopic(topic).
+		SetText(text).
+		AddUser(userData).
+		AddReview(review).
+		Save(ctx)
+}
+
+func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, userID int) (int, error) {
+	userIdOfComment := r.client.Comment.GetX(ctx, commentID).QueryUser().OnlyIDX(ctx)
+	if userIdOfComment == userID {
+		comment := r.client.Comment.GetX(ctx, commentID)
+		r.client.Comment.DeleteOne(comment).ExecX(ctx)
+	}
+
+	return userID, nil
+}

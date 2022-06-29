@@ -7,6 +7,11 @@ type ActorInput struct {
 	Description string `json:"description"`
 }
 
+type CommentInput struct {
+	Topic string `json:"topic"`
+	Text  string `json:"text"`
+}
+
 type DirectorInput struct {
 	Name         string `json:"name"`
 	ProfileImage string `json:"profileImage"`

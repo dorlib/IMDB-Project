@@ -52,6 +52,14 @@ type Review {
     user: User!
 }
 
+type Comment {
+    id: ID!
+    topic: String!
+    text: String!
+    user: User!
+    Review: Review!
+}
+
 type Favorite {
     id: ID!
     movieID: Int!
@@ -74,11 +82,6 @@ type User {
     gender: String!
     signup_at: String!
     reviews: [Review!]
-}
-
-type Comment {
-    id: ID!
-
 }
 
 # These enums are matched the entgql annotations in the ent/schema.
@@ -151,6 +154,11 @@ input FavoriteInput {
     movieImage: String!
 }
 
+input CommentInput {
+    topic: String!
+    text: String!
+}
+
 # Define a mutation for creating movies.
 # https://graphql.org/learn/queries/#mutations
 type Mutation {
@@ -163,6 +171,8 @@ type Mutation {
     addToFavorites(movieID: ID!, userID: ID!, movieTitle: String!, movieImage: String!): Favorite!
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
     addActorToMovie(movieId: ID!, name: String!) : Actor!
+    addComment(userID: ID!, reviewID: ID!, topic: String!, text: String!) : Comment!
+    deleteComment(commentID: ID!, userID: ID!) : ID!
 }
 
 # Define a query for getting all movies.
