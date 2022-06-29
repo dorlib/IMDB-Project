@@ -26,6 +26,9 @@ function ShowReviews(props) {
                 text
                 rank
                 id
+                user {
+                    nickname
+                }
             }
         }
     `;
@@ -61,7 +64,7 @@ function ShowReviews(props) {
     let loaded
     let load
 
-    loaded = data.reviewsOfMovie.map(({text, rank, topic, id}) => (
+    loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
         text !== '' ? (
             <div key={id} className={classes.item}>
                 <List sx={{width: '100%',}} className={classes.rev}>
@@ -70,18 +73,29 @@ function ShowReviews(props) {
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg"/>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={topic}
+                            primary={
+                            <React.Fragment>
+                            <Typography style={{fontSize: "x-large"}}>
+                                {topic}
+                            </Typography>
+                                <Typography>
+                                    by: {user["nickname"]}
+                                </Typography>
+                                <Typography className={classes.rank} style={{fontSize: "xx-large"}}>
+                                    {rank}
+                                </Typography>
+                            </React.Fragment>
+
+                            }
                             secondary={
                                 <React.Fragment>
-                                    <Typography
-                                        className={classes.text}
-                                    >
-                                        {text}
+                                    <Typography style={{height: "0.3cm"}}>
+                                        &ensp;
                                     </Typography>
                                     <Typography
-                                        className={classes.rank}
+
                                     >
-                                        {rank}
+                                        {text}
                                     </Typography>
                                 </React.Fragment>
                             }

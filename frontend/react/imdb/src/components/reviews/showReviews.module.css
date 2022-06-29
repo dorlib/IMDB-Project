@@ -24,11 +24,10 @@
 }
 
 .rank {
-    font-size: x-large;
     position: absolute;
     display: flex;
-    right: -1.5cm;
-    bottom: 0.8cm;
+    right: -1.2cm;
+    bottom: 2cm;
 
 }
 
