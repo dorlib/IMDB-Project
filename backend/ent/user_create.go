@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/like"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
 
@@ -115,6 +116,21 @@ func (uc *UserCreate) AddComments(c ...*Comment) *UserCreate {
 		ids[i] = c[i].ID
 	}
 	return uc.AddCommentIDs(ids...)
+}
+
+// AddLikeIDs adds the "likes" edge to the Like entity by IDs.
+func (uc *UserCreate) AddLikeIDs(ids ...int) *UserCreate {
+	uc.mutation.AddLikeIDs(ids...)
+	return uc
+}
+
+// AddLikes adds the "likes" edges to the Like entity.
+func (uc *UserCreate) AddLikes(l ...*Like) *UserCreate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return uc.AddLikeIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -385,6 +401,25 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: comment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.LikesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.LikesTable,
+			Columns: user.LikesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: like.FieldID,
 				},
 			},
 		}

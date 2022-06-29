@@ -61,6 +61,18 @@ var (
 		Columns:    FavoritesColumns,
 		PrimaryKey: []*schema.Column{FavoritesColumns[0]},
 	}
+	// LikesColumns holds the columns for the "likes" table.
+	LikesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "user_id", Type: field.TypeInt},
+		{Name: "review_id", Type: field.TypeInt},
+	}
+	// LikesTable holds the schema information for the "likes" table.
+	LikesTable = &schema.Table{
+		Name:       "likes",
+		Columns:    LikesColumns,
+		PrimaryKey: []*schema.Column{LikesColumns[0]},
+	}
 	// MoviesColumns holds the columns for the "movies" table.
 	MoviesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -92,7 +104,6 @@ var (
 		{Name: "topic", Type: field.TypeString},
 		{Name: "text", Type: field.TypeString},
 		{Name: "rank", Type: field.TypeInt},
-		{Name: "likes", Type: field.TypeInt},
 		{Name: "review_movie", Type: field.TypeInt, Nullable: true},
 		{Name: "user_reviews", Type: field.TypeInt, Nullable: true},
 	}
@@ -104,13 +115,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "reviews_movies_movie",
-				Columns:    []*schema.Column{ReviewsColumns[5]},
+				Columns:    []*schema.Column{ReviewsColumns[4]},
 				RefColumns: []*schema.Column{MoviesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "reviews_users_reviews",
-				Columns:    []*schema.Column{ReviewsColumns[6]},
+				Columns:    []*schema.Column{ReviewsColumns[5]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -187,6 +198,31 @@ var (
 			},
 		},
 	}
+	// LikeReviewColumns holds the columns for the "like_review" table.
+	LikeReviewColumns = []*schema.Column{
+		{Name: "like_id", Type: field.TypeInt},
+		{Name: "review_id", Type: field.TypeInt},
+	}
+	// LikeReviewTable holds the schema information for the "like_review" table.
+	LikeReviewTable = &schema.Table{
+		Name:       "like_review",
+		Columns:    LikeReviewColumns,
+		PrimaryKey: []*schema.Column{LikeReviewColumns[0], LikeReviewColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "like_review_like_id",
+				Columns:    []*schema.Column{LikeReviewColumns[0]},
+				RefColumns: []*schema.Column{LikesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "like_review_review_id",
+				Columns:    []*schema.Column{LikeReviewColumns[1]},
+				RefColumns: []*schema.Column{ReviewsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// UserCommentsColumns holds the columns for the "user_comments" table.
 	UserCommentsColumns = []*schema.Column{
 		{Name: "user_id", Type: field.TypeInt},
@@ -212,18 +248,46 @@ var (
 			},
 		},
 	}
+	// UserLikesColumns holds the columns for the "user_likes" table.
+	UserLikesColumns = []*schema.Column{
+		{Name: "user_id", Type: field.TypeInt},
+		{Name: "like_id", Type: field.TypeInt},
+	}
+	// UserLikesTable holds the schema information for the "user_likes" table.
+	UserLikesTable = &schema.Table{
+		Name:       "user_likes",
+		Columns:    UserLikesColumns,
+		PrimaryKey: []*schema.Column{UserLikesColumns[0], UserLikesColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "user_likes_user_id",
+				Columns:    []*schema.Column{UserLikesColumns[0]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "user_likes_like_id",
+				Columns:    []*schema.Column{UserLikesColumns[1]},
+				RefColumns: []*schema.Column{LikesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		ActorsTable,
 		CommentsTable,
 		DirectorsTable,
 		FavoritesTable,
+		LikesTable,
 		MoviesTable,
 		ReviewsTable,
 		UsersTable,
 		ActorActorsTable,
 		CommentReviewTable,
+		LikeReviewTable,
 		UserCommentsTable,
+		UserLikesTable,
 	}
 )
 
@@ -235,6 +299,10 @@ func init() {
 	ActorActorsTable.ForeignKeys[1].RefTable = MoviesTable
 	CommentReviewTable.ForeignKeys[0].RefTable = CommentsTable
 	CommentReviewTable.ForeignKeys[1].RefTable = ReviewsTable
+	LikeReviewTable.ForeignKeys[0].RefTable = LikesTable
+	LikeReviewTable.ForeignKeys[1].RefTable = ReviewsTable
 	UserCommentsTable.ForeignKeys[0].RefTable = UsersTable
 	UserCommentsTable.ForeignKeys[1].RefTable = CommentsTable
+	UserLikesTable.ForeignKeys[0].RefTable = UsersTable
+	UserLikesTable.ForeignKeys[1].RefTable = LikesTable
 }

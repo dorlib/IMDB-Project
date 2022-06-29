@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/like"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -37,12 +38,6 @@ func (rc *ReviewCreate) SetText(s string) *ReviewCreate {
 // SetRank sets the "rank" field.
 func (rc *ReviewCreate) SetRank(i int) *ReviewCreate {
 	rc.mutation.SetRank(i)
-	return rc
-}
-
-// SetLikes sets the "likes" field.
-func (rc *ReviewCreate) SetLikes(i int) *ReviewCreate {
-	rc.mutation.SetLikes(i)
 	return rc
 }
 
@@ -97,6 +92,21 @@ func (rc *ReviewCreate) AddComments(c ...*Comment) *ReviewCreate {
 		ids[i] = c[i].ID
 	}
 	return rc.AddCommentIDs(ids...)
+}
+
+// AddLikeIDs adds the "likes" edge to the Like entity by IDs.
+func (rc *ReviewCreate) AddLikeIDs(ids ...int) *ReviewCreate {
+	rc.mutation.AddLikeIDs(ids...)
+	return rc
+}
+
+// AddLikes adds the "likes" edges to the Like entity.
+func (rc *ReviewCreate) AddLikes(l ...*Like) *ReviewCreate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return rc.AddLikeIDs(ids...)
 }
 
 // Mutation returns the ReviewMutation object of the builder.
@@ -178,9 +188,6 @@ func (rc *ReviewCreate) check() error {
 	if _, ok := rc.mutation.Rank(); !ok {
 		return &ValidationError{Name: "rank", err: errors.New(`ent: missing required field "Review.rank"`)}
 	}
-	if _, ok := rc.mutation.Likes(); !ok {
-		return &ValidationError{Name: "likes", err: errors.New(`ent: missing required field "Review.likes"`)}
-	}
 	return nil
 }
 
@@ -231,14 +238,6 @@ func (rc *ReviewCreate) createSpec() (*Review, *sqlgraph.CreateSpec) {
 			Column: review.FieldRank,
 		})
 		_node.Rank = value
-	}
-	if value, ok := rc.mutation.Likes(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: review.FieldLikes,
-		})
-		_node.Likes = value
 	}
 	if nodes := rc.mutation.MovieIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -291,6 +290,25 @@ func (rc *ReviewCreate) createSpec() (*Review, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: comment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.LikesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.LikesTable,
+			Columns: review.LikesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: like.FieldID,
 				},
 			},
 		}

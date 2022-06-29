@@ -13,6 +13,7 @@ import (
 	"imdbv2/ent/comment"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
+	"imdbv2/ent/like"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -35,6 +36,8 @@ type Client struct {
 	Director *DirectorClient
 	// Favorite is the client for interacting with the Favorite builders.
 	Favorite *FavoriteClient
+	// Like is the client for interacting with the Like builders.
+	Like *LikeClient
 	// Movie is the client for interacting with the Movie builders.
 	Movie *MovieClient
 	// Review is the client for interacting with the Review builders.
@@ -60,6 +63,7 @@ func (c *Client) init() {
 	c.Comment = NewCommentClient(c.config)
 	c.Director = NewDirectorClient(c.config)
 	c.Favorite = NewFavoriteClient(c.config)
+	c.Like = NewLikeClient(c.config)
 	c.Movie = NewMovieClient(c.config)
 	c.Review = NewReviewClient(c.config)
 	c.User = NewUserClient(c.config)
@@ -100,6 +104,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Comment:  NewCommentClient(cfg),
 		Director: NewDirectorClient(cfg),
 		Favorite: NewFavoriteClient(cfg),
+		Like:     NewLikeClient(cfg),
 		Movie:    NewMovieClient(cfg),
 		Review:   NewReviewClient(cfg),
 		User:     NewUserClient(cfg),
@@ -126,6 +131,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Comment:  NewCommentClient(cfg),
 		Director: NewDirectorClient(cfg),
 		Favorite: NewFavoriteClient(cfg),
+		Like:     NewLikeClient(cfg),
 		Movie:    NewMovieClient(cfg),
 		Review:   NewReviewClient(cfg),
 		User:     NewUserClient(cfg),
@@ -162,6 +168,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Comment.Use(hooks...)
 	c.Director.Use(hooks...)
 	c.Favorite.Use(hooks...)
+	c.Like.Use(hooks...)
 	c.Movie.Use(hooks...)
 	c.Review.Use(hooks...)
 	c.User.Use(hooks...)
@@ -591,6 +598,128 @@ func (c *FavoriteClient) Hooks() []Hook {
 	return c.hooks.Favorite
 }
 
+// LikeClient is a client for the Like schema.
+type LikeClient struct {
+	config
+}
+
+// NewLikeClient returns a client for the Like from the given config.
+func NewLikeClient(c config) *LikeClient {
+	return &LikeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `like.Hooks(f(g(h())))`.
+func (c *LikeClient) Use(hooks ...Hook) {
+	c.hooks.Like = append(c.hooks.Like, hooks...)
+}
+
+// Create returns a create builder for Like.
+func (c *LikeClient) Create() *LikeCreate {
+	mutation := newLikeMutation(c.config, OpCreate)
+	return &LikeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Like entities.
+func (c *LikeClient) CreateBulk(builders ...*LikeCreate) *LikeCreateBulk {
+	return &LikeCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Like.
+func (c *LikeClient) Update() *LikeUpdate {
+	mutation := newLikeMutation(c.config, OpUpdate)
+	return &LikeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *LikeClient) UpdateOne(l *Like) *LikeUpdateOne {
+	mutation := newLikeMutation(c.config, OpUpdateOne, withLike(l))
+	return &LikeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *LikeClient) UpdateOneID(id int) *LikeUpdateOne {
+	mutation := newLikeMutation(c.config, OpUpdateOne, withLikeID(id))
+	return &LikeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Like.
+func (c *LikeClient) Delete() *LikeDelete {
+	mutation := newLikeMutation(c.config, OpDelete)
+	return &LikeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *LikeClient) DeleteOne(l *Like) *LikeDeleteOne {
+	return c.DeleteOneID(l.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *LikeClient) DeleteOneID(id int) *LikeDeleteOne {
+	builder := c.Delete().Where(like.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &LikeDeleteOne{builder}
+}
+
+// Query returns a query builder for Like.
+func (c *LikeClient) Query() *LikeQuery {
+	return &LikeQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Like entity by its id.
+func (c *LikeClient) Get(ctx context.Context, id int) (*Like, error) {
+	return c.Query().Where(like.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *LikeClient) GetX(ctx context.Context, id int) *Like {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryUser queries the user edge of a Like.
+func (c *LikeClient) QueryUser(l *Like) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := l.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(like.Table, like.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, like.UserTable, like.UserPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryReview queries the review edge of a Like.
+func (c *LikeClient) QueryReview(l *Like) *ReviewQuery {
+	query := &ReviewQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := l.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(like.Table, like.FieldID, id),
+			sqlgraph.To(review.Table, review.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, like.ReviewTable, like.ReviewPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *LikeClient) Hooks() []Hook {
+	return c.hooks.Like
+}
+
 // MovieClient is a client for the Movie schema.
 type MovieClient struct {
 	config
@@ -862,6 +991,22 @@ func (c *ReviewClient) QueryComments(r *Review) *CommentQuery {
 	return query
 }
 
+// QueryLikes queries the likes edge of a Review.
+func (c *ReviewClient) QueryLikes(r *Review) *LikeQuery {
+	query := &LikeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(review.Table, review.FieldID, id),
+			sqlgraph.To(like.Table, like.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, review.LikesTable, review.LikesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *ReviewClient) Hooks() []Hook {
 	return c.hooks.Review
@@ -977,6 +1122,22 @@ func (c *UserClient) QueryComments(u *User) *CommentQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(comment.Table, comment.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.CommentsTable, user.CommentsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryLikes queries the likes edge of a User.
+func (c *UserClient) QueryLikes(u *User) *LikeQuery {
+	query := &LikeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(like.Table, like.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, user.LikesTable, user.LikesPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil

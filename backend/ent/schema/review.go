@@ -17,7 +17,6 @@ func (Review) Fields() []ent.Field {
 		field.String("topic"),
 		field.String("text"),
 		field.Int("rank"),
-		field.Int("likes"),
 	}
 }
 
@@ -30,5 +29,6 @@ func (Review) Edges() []ent.Edge {
 			Ref("reviews").
 			Unique(),
 		edge.From("comments", Comment.Type).Ref("review"),
+		edge.From("likes", Like.Type).Ref("review"),
 	}
 }

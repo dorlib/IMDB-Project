@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/like"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/predicate"
 	"imdbv2/ent/review"
@@ -52,19 +53,6 @@ func (ru *ReviewUpdate) SetRank(i int) *ReviewUpdate {
 // AddRank adds i to the "rank" field.
 func (ru *ReviewUpdate) AddRank(i int) *ReviewUpdate {
 	ru.mutation.AddRank(i)
-	return ru
-}
-
-// SetLikes sets the "likes" field.
-func (ru *ReviewUpdate) SetLikes(i int) *ReviewUpdate {
-	ru.mutation.ResetLikes()
-	ru.mutation.SetLikes(i)
-	return ru
-}
-
-// AddLikes adds i to the "likes" field.
-func (ru *ReviewUpdate) AddLikes(i int) *ReviewUpdate {
-	ru.mutation.AddLikes(i)
 	return ru
 }
 
@@ -121,6 +109,21 @@ func (ru *ReviewUpdate) AddComments(c ...*Comment) *ReviewUpdate {
 	return ru.AddCommentIDs(ids...)
 }
 
+// AddLikeIDs adds the "likes" edge to the Like entity by IDs.
+func (ru *ReviewUpdate) AddLikeIDs(ids ...int) *ReviewUpdate {
+	ru.mutation.AddLikeIDs(ids...)
+	return ru
+}
+
+// AddLikes adds the "likes" edges to the Like entity.
+func (ru *ReviewUpdate) AddLikes(l ...*Like) *ReviewUpdate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return ru.AddLikeIDs(ids...)
+}
+
 // Mutation returns the ReviewMutation object of the builder.
 func (ru *ReviewUpdate) Mutation() *ReviewMutation {
 	return ru.mutation
@@ -157,6 +160,27 @@ func (ru *ReviewUpdate) RemoveComments(c ...*Comment) *ReviewUpdate {
 		ids[i] = c[i].ID
 	}
 	return ru.RemoveCommentIDs(ids...)
+}
+
+// ClearLikes clears all "likes" edges to the Like entity.
+func (ru *ReviewUpdate) ClearLikes() *ReviewUpdate {
+	ru.mutation.ClearLikes()
+	return ru
+}
+
+// RemoveLikeIDs removes the "likes" edge to Like entities by IDs.
+func (ru *ReviewUpdate) RemoveLikeIDs(ids ...int) *ReviewUpdate {
+	ru.mutation.RemoveLikeIDs(ids...)
+	return ru
+}
+
+// RemoveLikes removes "likes" edges to Like entities.
+func (ru *ReviewUpdate) RemoveLikes(l ...*Like) *ReviewUpdate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return ru.RemoveLikeIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -257,20 +281,6 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: review.FieldRank,
-		})
-	}
-	if value, ok := ru.mutation.Likes(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: review.FieldLikes,
-		})
-	}
-	if value, ok := ru.mutation.AddedLikes(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: review.FieldLikes,
 		})
 	}
 	if ru.mutation.MovieCleared() {
@@ -397,6 +407,60 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ru.mutation.LikesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.LikesTable,
+			Columns: review.LikesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: like.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.RemovedLikesIDs(); len(nodes) > 0 && !ru.mutation.LikesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.LikesTable,
+			Columns: review.LikesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: like.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.LikesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.LikesTable,
+			Columns: review.LikesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: like.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{review.Label}
@@ -438,19 +502,6 @@ func (ruo *ReviewUpdateOne) SetRank(i int) *ReviewUpdateOne {
 // AddRank adds i to the "rank" field.
 func (ruo *ReviewUpdateOne) AddRank(i int) *ReviewUpdateOne {
 	ruo.mutation.AddRank(i)
-	return ruo
-}
-
-// SetLikes sets the "likes" field.
-func (ruo *ReviewUpdateOne) SetLikes(i int) *ReviewUpdateOne {
-	ruo.mutation.ResetLikes()
-	ruo.mutation.SetLikes(i)
-	return ruo
-}
-
-// AddLikes adds i to the "likes" field.
-func (ruo *ReviewUpdateOne) AddLikes(i int) *ReviewUpdateOne {
-	ruo.mutation.AddLikes(i)
 	return ruo
 }
 
@@ -507,6 +558,21 @@ func (ruo *ReviewUpdateOne) AddComments(c ...*Comment) *ReviewUpdateOne {
 	return ruo.AddCommentIDs(ids...)
 }
 
+// AddLikeIDs adds the "likes" edge to the Like entity by IDs.
+func (ruo *ReviewUpdateOne) AddLikeIDs(ids ...int) *ReviewUpdateOne {
+	ruo.mutation.AddLikeIDs(ids...)
+	return ruo
+}
+
+// AddLikes adds the "likes" edges to the Like entity.
+func (ruo *ReviewUpdateOne) AddLikes(l ...*Like) *ReviewUpdateOne {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return ruo.AddLikeIDs(ids...)
+}
+
 // Mutation returns the ReviewMutation object of the builder.
 func (ruo *ReviewUpdateOne) Mutation() *ReviewMutation {
 	return ruo.mutation
@@ -543,6 +609,27 @@ func (ruo *ReviewUpdateOne) RemoveComments(c ...*Comment) *ReviewUpdateOne {
 		ids[i] = c[i].ID
 	}
 	return ruo.RemoveCommentIDs(ids...)
+}
+
+// ClearLikes clears all "likes" edges to the Like entity.
+func (ruo *ReviewUpdateOne) ClearLikes() *ReviewUpdateOne {
+	ruo.mutation.ClearLikes()
+	return ruo
+}
+
+// RemoveLikeIDs removes the "likes" edge to Like entities by IDs.
+func (ruo *ReviewUpdateOne) RemoveLikeIDs(ids ...int) *ReviewUpdateOne {
+	ruo.mutation.RemoveLikeIDs(ids...)
+	return ruo
+}
+
+// RemoveLikes removes "likes" edges to Like entities.
+func (ruo *ReviewUpdateOne) RemoveLikes(l ...*Like) *ReviewUpdateOne {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return ruo.RemoveLikeIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -669,20 +756,6 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 			Column: review.FieldRank,
 		})
 	}
-	if value, ok := ruo.mutation.Likes(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: review.FieldLikes,
-		})
-	}
-	if value, ok := ruo.mutation.AddedLikes(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: review.FieldLikes,
-		})
-	}
 	if ruo.mutation.MovieCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -799,6 +872,60 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: comment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.LikesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.LikesTable,
+			Columns: review.LikesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: like.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.RemovedLikesIDs(); len(nodes) > 0 && !ruo.mutation.LikesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.LikesTable,
+			Columns: review.LikesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: like.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.LikesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.LikesTable,
+			Columns: review.LikesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: like.FieldID,
 				},
 			},
 		}

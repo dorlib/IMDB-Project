@@ -57,6 +57,18 @@ func (f *FavoriteQuery) collectField(ctx *graphql.OperationContext, field graphq
 }
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (l *LikeQuery) CollectFields(ctx context.Context, satisfies ...string) *LikeQuery {
+	if fc := graphql.GetFieldContext(ctx); fc != nil {
+		l = l.collectField(graphql.GetOperationContext(ctx), fc.Field, satisfies...)
+	}
+	return l
+}
+
+func (l *LikeQuery) collectField(ctx *graphql.OperationContext, field graphql.CollectedField, satisfies ...string) *LikeQuery {
+	return l
+}
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
 func (m *MovieQuery) CollectFields(ctx context.Context, satisfies ...string) *MovieQuery {
 	if fc := graphql.GetFieldContext(ctx); fc != nil {
 		m = m.collectField(graphql.GetOperationContext(ctx), fc.Field, satisfies...)

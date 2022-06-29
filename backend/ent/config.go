@@ -28,6 +28,7 @@ type hooks struct {
 	Comment  []ent.Hook
 	Director []ent.Hook
 	Favorite []ent.Hook
+	Like     []ent.Hook
 	Movie    []ent.Hook
 	Review   []ent.Hook
 	User     []ent.Hook
