@@ -12,6 +12,14 @@ func (a *Actor) Actors(ctx context.Context) ([]*Movie, error) {
 	return result, err
 }
 
+func (c *Comment) Review(ctx context.Context) ([]*Review, error) {
+	result, err := c.Edges.ReviewOrErr()
+	if IsNotLoaded(err) {
+		result, err = c.QueryReview().All(ctx)
+	}
+	return result, err
+}
+
 func (d *Director) Movies(ctx context.Context) ([]*Movie, error) {
 	result, err := d.Edges.MoviesOrErr()
 	if IsNotLoaded(err) {
@@ -58,6 +66,14 @@ func (r *Review) User(ctx context.Context) (*User, error) {
 		result, err = r.QueryUser().Only(ctx)
 	}
 	return result, MaskNotFound(err)
+}
+
+func (r *Review) Comments(ctx context.Context) ([]*Comment, error) {
+	result, err := r.Edges.CommentsOrErr()
+	if IsNotLoaded(err) {
+		result, err = r.QueryComments().All(ctx)
+	}
+	return result, err
 }
 
 func (u *User) Reviews(ctx context.Context) ([]*Review, error) {

@@ -36,9 +36,11 @@ type ReviewEdges struct {
 	Movie *Movie `json:"movie,omitempty"`
 	// User holds the value of the user edge.
 	User *User `json:"user,omitempty"`
+	// Comments holds the value of the comments edge.
+	Comments []*Comment `json:"comments,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // MovieOrErr returns the Movie value or an error if the edge
@@ -67,6 +69,15 @@ func (e ReviewEdges) UserOrErr() (*User, error) {
 		return e.User, nil
 	}
 	return nil, &NotLoadedError{edge: "user"}
+}
+
+// CommentsOrErr returns the Comments value or an error if the edge
+// was not loaded in eager-loading.
+func (e ReviewEdges) CommentsOrErr() ([]*Comment, error) {
+	if e.loadedTypes[2] {
+		return e.Comments, nil
+	}
+	return nil, &NotLoadedError{edge: "comments"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -148,6 +159,11 @@ func (r *Review) QueryMovie() *MovieQuery {
 // QueryUser queries the "user" edge of the Review entity.
 func (r *Review) QueryUser() *UserQuery {
 	return (&ReviewClient{config: r.config}).QueryUser(r)
+}
+
+// QueryComments queries the "comments" edge of the Review entity.
+func (r *Review) QueryComments() *CommentQuery {
+	return (&ReviewClient{config: r.config}).QueryComments(r)
 }
 
 // Update returns a builder for updating this Review.

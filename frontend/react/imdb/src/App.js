@@ -78,7 +78,7 @@ function App() {
         <Route path="/moviePage/:id" element={<><UpdateRank userID={userId}/><HoverRating/><ShowReviews /><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>} />
         <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
         <Route path='/register-sign-in' element={<AccountBox />} />
-        <Route path='/userPage/:id' element={<UserPage />} />
+        <Route path='/userPage/:id' element={<UserPage LoggedInUser={userId}/>} />
       </Routes>
     </Layout>
   );

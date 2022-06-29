@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"imdbv2/ent/actor"
+	"imdbv2/ent/comment"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
@@ -89,6 +90,43 @@ func (a *Actor) Node(ctx context.Context) (node *Node, err error) {
 	}
 	err = a.QueryActors().
 		Select(movie.FieldID).
+		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
+	}
+	return node, nil
+}
+
+func (c *Comment) Node(ctx context.Context) (node *Node, err error) {
+	node = &Node{
+		ID:     c.ID,
+		Type:   "Comment",
+		Fields: make([]*Field, 2),
+		Edges:  make([]*Edge, 1),
+	}
+	var buf []byte
+	if buf, err = json.Marshal(c.Topic); err != nil {
+		return nil, err
+	}
+	node.Fields[0] = &Field{
+		Type:  "string",
+		Name:  "topic",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(c.Text); err != nil {
+		return nil, err
+	}
+	node.Fields[1] = &Field{
+		Type:  "string",
+		Name:  "text",
+		Value: string(buf),
+	}
+	node.Edges[0] = &Edge{
+		Type: "Review",
+		Name: "review",
+	}
+	err = c.QueryReview().
+		Select(review.FieldID).
 		Scan(ctx, &node.Edges[0].IDs)
 	if err != nil {
 		return nil, err
@@ -294,7 +332,7 @@ func (r *Review) Node(ctx context.Context) (node *Node, err error) {
 		ID:     r.ID,
 		Type:   "Review",
 		Fields: make([]*Field, 3),
-		Edges:  make([]*Edge, 2),
+		Edges:  make([]*Edge, 3),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(r.Topic); err != nil {
@@ -338,6 +376,16 @@ func (r *Review) Node(ctx context.Context) (node *Node, err error) {
 	err = r.QueryUser().
 		Select(user.FieldID).
 		Scan(ctx, &node.Edges[1].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[2] = &Edge{
+		Type: "Comment",
+		Name: "comments",
+	}
+	err = r.QueryComments().
+		Select(comment.FieldID).
+		Scan(ctx, &node.Edges[2].IDs)
 	if err != nil {
 		return nil, err
 	}
@@ -529,6 +577,15 @@ func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error)
 			return nil, err
 		}
 		return n, nil
+	case comment.Table:
+		n, err := c.Comment.Query().
+			Where(comment.ID(id)).
+			CollectFields(ctx, "Comment").
+			Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
 	case director.Table:
 		n, err := c.Director.Query().
 			Where(director.ID(id)).
@@ -651,6 +708,19 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 		nodes, err := c.Actor.Query().
 			Where(actor.IDIn(ids...)).
 			CollectFields(ctx, "Actor").
+			All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
+	case comment.Table:
+		nodes, err := c.Comment.Query().
+			Where(comment.IDIn(ids...)).
+			CollectFields(ctx, "Comment").
 			All(ctx)
 		if err != nil {
 			return nil, err

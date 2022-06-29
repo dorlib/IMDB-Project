@@ -4,11 +4,11 @@
 
 # add fast scroll to the all movies and all directors
 
-# add option to crop profile image
+# add option to crop profile image  (include updateUserImage resolver)     ### TOP PRIORITY
 
-# forgot my password fitcher -- email process with nodemailer
+# forgot my password fitcher -- email process with nodemailer           ### TOP PRIORITY
 
-# make review system by users (show their name and avatar)
+# make review system by users (show their name and avatar)      ### TOP PRIORITY
 
 # add warning massage before insert data
 
@@ -20,11 +20,7 @@
 
 # tab indexses
 
-# make the app match any screen size
-
-# add search option also for users
-
-# change search options to : by movie, by director, by actor
+# make the app match any screen size       ### TOP PRIORITY
 
 # add option to add actors (clip open in tab)
 

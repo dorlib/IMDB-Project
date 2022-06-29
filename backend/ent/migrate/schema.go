@@ -21,6 +21,18 @@ var (
 		Columns:    ActorsColumns,
 		PrimaryKey: []*schema.Column{ActorsColumns[0]},
 	}
+	// CommentsColumns holds the columns for the "comments" table.
+	CommentsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "topic", Type: field.TypeString},
+		{Name: "text", Type: field.TypeString},
+	}
+	// CommentsTable holds the schema information for the "comments" table.
+	CommentsTable = &schema.Table{
+		Name:       "comments",
+		Columns:    CommentsColumns,
+		PrimaryKey: []*schema.Column{CommentsColumns[0]},
+	}
 	// DirectorsColumns holds the columns for the "directors" table.
 	DirectorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -149,15 +161,42 @@ var (
 			},
 		},
 	}
+	// CommentReviewColumns holds the columns for the "comment_review" table.
+	CommentReviewColumns = []*schema.Column{
+		{Name: "comment_id", Type: field.TypeInt},
+		{Name: "review_id", Type: field.TypeInt},
+	}
+	// CommentReviewTable holds the schema information for the "comment_review" table.
+	CommentReviewTable = &schema.Table{
+		Name:       "comment_review",
+		Columns:    CommentReviewColumns,
+		PrimaryKey: []*schema.Column{CommentReviewColumns[0], CommentReviewColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "comment_review_comment_id",
+				Columns:    []*schema.Column{CommentReviewColumns[0]},
+				RefColumns: []*schema.Column{CommentsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "comment_review_review_id",
+				Columns:    []*schema.Column{CommentReviewColumns[1]},
+				RefColumns: []*schema.Column{ReviewsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		ActorsTable,
+		CommentsTable,
 		DirectorsTable,
 		FavoritesTable,
 		MoviesTable,
 		ReviewsTable,
 		UsersTable,
 		ActorActorsTable,
+		CommentReviewTable,
 	}
 )
 
@@ -167,4 +206,6 @@ func init() {
 	ReviewsTable.ForeignKeys[1].RefTable = UsersTable
 	ActorActorsTable.ForeignKeys[0].RefTable = ActorsTable
 	ActorActorsTable.ForeignKeys[1].RefTable = MoviesTable
+	CommentReviewTable.ForeignKeys[0].RefTable = CommentsTable
+	CommentReviewTable.ForeignKeys[1].RefTable = ReviewsTable
 }

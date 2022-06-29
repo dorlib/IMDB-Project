@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// Actor is the client for interacting with the Actor builders.
 	Actor *ActorClient
+	// Comment is the client for interacting with the Comment builders.
+	Comment *CommentClient
 	// Director is the client for interacting with the Director builders.
 	Director *DirectorClient
 	// Favorite is the client for interacting with the Favorite builders.
@@ -160,6 +162,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Actor = NewActorClient(tx.config)
+	tx.Comment = NewCommentClient(tx.config)
 	tx.Director = NewDirectorClient(tx.config)
 	tx.Favorite = NewFavoriteClient(tx.config)
 	tx.Movie = NewMovieClient(tx.config)

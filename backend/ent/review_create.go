@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"imdbv2/ent/comment"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -75,6 +76,21 @@ func (rc *ReviewCreate) SetNillableUserID(id *int) *ReviewCreate {
 // SetUser sets the "user" edge to the User entity.
 func (rc *ReviewCreate) SetUser(u *User) *ReviewCreate {
 	return rc.SetUserID(u.ID)
+}
+
+// AddCommentIDs adds the "comments" edge to the Comment entity by IDs.
+func (rc *ReviewCreate) AddCommentIDs(ids ...int) *ReviewCreate {
+	rc.mutation.AddCommentIDs(ids...)
+	return rc
+}
+
+// AddComments adds the "comments" edges to the Comment entity.
+func (rc *ReviewCreate) AddComments(c ...*Comment) *ReviewCreate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return rc.AddCommentIDs(ids...)
 }
 
 // Mutation returns the ReviewMutation object of the builder.
@@ -245,6 +261,25 @@ func (rc *ReviewCreate) createSpec() (*Review, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.user_reviews = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.CommentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.CommentsTable,
+			Columns: review.CommentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: comment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

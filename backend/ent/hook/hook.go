@@ -21,6 +21,19 @@ func (f ActorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	return f(ctx, mv)
 }
 
+// The CommentFunc type is an adapter to allow the use of ordinary
+// function as Comment mutator.
+type CommentFunc func(context.Context, *ent.CommentMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CommentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.CommentMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CommentMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The DirectorFunc type is an adapter to allow the use of ordinary
 // function as Director mutator.
 type DirectorFunc func(context.Context, *ent.DirectorMutation) (ent.Value, error)
