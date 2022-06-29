@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import EditIcon from "@mui/icons-material/Edit";
 import ToggleFavorite from "../../favorites/toggle-favorite";
+import Button from "@mui/material/Button";
 
 function MovieItem(props) {
     const [toggle, setToggle] = useState(false)
@@ -162,10 +163,10 @@ function MovieItem(props) {
                     </h4>
                 </CardContent>
                     <div style={{fontSize: "xxx-large"}}>
-                        <Fav>
-                            <FavoriteIcon fontSize={'large'} style={{color: favorites.includes(parseInt(movieID)) ? '#8B0000' : 'white'}} onClick={() => setToggle(true)} className={classes.heart} />
+                        {props.userID !== 0 ? <Fav>
+                            <Button><FavoriteIcon fontSize={'large'} style={{color: favorites.includes(parseInt(movieID)) ? '#8B0000' : 'white'}} onClick={() => setToggle(true)} className={classes.heart} /></Button>
                             <TextBox><text >Click To Add To Favorites!</text></TextBox>
-                        </Fav>
+                        </Fav> : null}
                     </div>
             </div>
         </Card>

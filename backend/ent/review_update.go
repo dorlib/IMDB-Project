@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"imdbv2/ent/comment"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/predicate"
 	"imdbv2/ent/review"
@@ -92,6 +93,21 @@ func (ru *ReviewUpdate) SetUser(u *User) *ReviewUpdate {
 	return ru.SetUserID(u.ID)
 }
 
+// AddCommentIDs adds the "comments" edge to the Comment entity by IDs.
+func (ru *ReviewUpdate) AddCommentIDs(ids ...int) *ReviewUpdate {
+	ru.mutation.AddCommentIDs(ids...)
+	return ru
+}
+
+// AddComments adds the "comments" edges to the Comment entity.
+func (ru *ReviewUpdate) AddComments(c ...*Comment) *ReviewUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ru.AddCommentIDs(ids...)
+}
+
 // Mutation returns the ReviewMutation object of the builder.
 func (ru *ReviewUpdate) Mutation() *ReviewMutation {
 	return ru.mutation
@@ -107,6 +123,27 @@ func (ru *ReviewUpdate) ClearMovie() *ReviewUpdate {
 func (ru *ReviewUpdate) ClearUser() *ReviewUpdate {
 	ru.mutation.ClearUser()
 	return ru
+}
+
+// ClearComments clears all "comments" edges to the Comment entity.
+func (ru *ReviewUpdate) ClearComments() *ReviewUpdate {
+	ru.mutation.ClearComments()
+	return ru
+}
+
+// RemoveCommentIDs removes the "comments" edge to Comment entities by IDs.
+func (ru *ReviewUpdate) RemoveCommentIDs(ids ...int) *ReviewUpdate {
+	ru.mutation.RemoveCommentIDs(ids...)
+	return ru
+}
+
+// RemoveComments removes "comments" edges to Comment entities.
+func (ru *ReviewUpdate) RemoveComments(c ...*Comment) *ReviewUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ru.RemoveCommentIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -279,6 +316,60 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ru.mutation.CommentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.CommentsTable,
+			Columns: review.CommentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: comment.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.RemovedCommentsIDs(); len(nodes) > 0 && !ru.mutation.CommentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.CommentsTable,
+			Columns: review.CommentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: comment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.CommentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.CommentsTable,
+			Columns: review.CommentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: comment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{review.Label}
@@ -361,6 +452,21 @@ func (ruo *ReviewUpdateOne) SetUser(u *User) *ReviewUpdateOne {
 	return ruo.SetUserID(u.ID)
 }
 
+// AddCommentIDs adds the "comments" edge to the Comment entity by IDs.
+func (ruo *ReviewUpdateOne) AddCommentIDs(ids ...int) *ReviewUpdateOne {
+	ruo.mutation.AddCommentIDs(ids...)
+	return ruo
+}
+
+// AddComments adds the "comments" edges to the Comment entity.
+func (ruo *ReviewUpdateOne) AddComments(c ...*Comment) *ReviewUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ruo.AddCommentIDs(ids...)
+}
+
 // Mutation returns the ReviewMutation object of the builder.
 func (ruo *ReviewUpdateOne) Mutation() *ReviewMutation {
 	return ruo.mutation
@@ -376,6 +482,27 @@ func (ruo *ReviewUpdateOne) ClearMovie() *ReviewUpdateOne {
 func (ruo *ReviewUpdateOne) ClearUser() *ReviewUpdateOne {
 	ruo.mutation.ClearUser()
 	return ruo
+}
+
+// ClearComments clears all "comments" edges to the Comment entity.
+func (ruo *ReviewUpdateOne) ClearComments() *ReviewUpdateOne {
+	ruo.mutation.ClearComments()
+	return ruo
+}
+
+// RemoveCommentIDs removes the "comments" edge to Comment entities by IDs.
+func (ruo *ReviewUpdateOne) RemoveCommentIDs(ids ...int) *ReviewUpdateOne {
+	ruo.mutation.RemoveCommentIDs(ids...)
+	return ruo
+}
+
+// RemoveComments removes "comments" edges to Comment entities.
+func (ruo *ReviewUpdateOne) RemoveComments(c ...*Comment) *ReviewUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ruo.RemoveCommentIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -564,6 +691,60 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.CommentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.CommentsTable,
+			Columns: review.CommentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: comment.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.RemovedCommentsIDs(); len(nodes) > 0 && !ruo.mutation.CommentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.CommentsTable,
+			Columns: review.CommentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: comment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.CommentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.CommentsTable,
+			Columns: review.CommentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: comment.FieldID,
 				},
 			},
 		}

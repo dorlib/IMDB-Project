@@ -76,6 +76,11 @@ type User {
     reviews: [Review!]
 }
 
+type Comment {
+    id: ID!
+
+}
+
 # These enums are matched the entgql annotations in the ent/schema.
 enum MovieOrderField {
     MOVIE_TITLE

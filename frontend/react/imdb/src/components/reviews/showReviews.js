@@ -1,10 +1,5 @@
 import {Link} from 'react-router-dom';
-
-import Card from "../ui/Card";
-import FavoritesContext from "../../favorites/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
-import {isIterableObject} from "graphql/jsutils/isIterableObject";
-
 import * as React from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -14,8 +9,11 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import UpdateRank from "./total-rank";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import AddCommentIcon from '@mui/icons-material/AddComment';
 
 import classes from "./showReviews.module.css";
+import Button from "@mui/material/Button";
 
 
 function ShowReviews(props) {
@@ -26,6 +24,11 @@ function ShowReviews(props) {
                 text
                 rank
                 id
+                user {
+                    nickname
+                    profile
+                    id
+                }
             }
         }
     `;
@@ -61,26 +64,43 @@ function ShowReviews(props) {
     let loaded
     let load
 
-    loaded = data.reviewsOfMovie.map(({text, rank, topic, id}) => (
+    loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
         text !== '' ? (
             <div key={id} className={classes.item}>
                 <List sx={{width: '100%',}} className={classes.rev}>
                     <ListItem alignItems="flex-start">
                         <ListItemAvatar>
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg"/>
+                            <Button>
+                                <img src={user["profile"]} style={{width: "1.8cm", height: "1.8cm", borderRadius: "200px", marginLeft: "-0.3cm", marginTop: "-0.4cm"}} onClick={() => window.location.replace("/userPage/" + user["id"])}/>
+                            </Button>
                         </ListItemAvatar>
-                        <ListItemText
-                            primary={topic}
+                        <ListItemText style={{marginLeft: "0.3cm"}}
+                            primary={
+                            <React.Fragment>
+                            <Typography style={{fontSize: "x-large"}}>
+                                {topic}
+                            </Typography>
+                                <Typography>
+                                    by: <Link to={"/userPage/" + user["id"]} style={{textDecoration: "none", color: "white"}}>{user["nickname"]}</Link>
+                                </Typography>
+                                <Typography className={classes.rank} style={{fontSize: "xx-large"}}>
+                                    {rank} / 100
+                                </Typography>
+                            </React.Fragment>
+
+                            }
                             secondary={
                                 <React.Fragment>
-                                    <Typography
-                                        sx={{display: 'inline'}}
-                                        component="span"
-                                        variant="body2"
-                                        color="text.primary"
-                                    >
+                                    <Typography style={{height: "0.3cm"}}>
+                                        &ensp;
                                     </Typography>
-                                    {text}: {rank}
+                                    <Typography
+
+                                    >
+                                        {text}
+                                    </Typography>
+                                    <Button><ThumbUpIcon className={classes.thumb}/></Button>
+                                    <Button><AddCommentIcon className={classes.comment}/></Button>
                                 </React.Fragment>
                             }
                         />

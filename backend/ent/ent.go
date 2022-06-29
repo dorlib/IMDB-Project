@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"imdbv2/ent/actor"
+	"imdbv2/ent/comment"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
@@ -35,6 +36,7 @@ type OrderFunc func(*sql.Selector)
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
 		actor.Table:    actor.ValidColumn,
+		comment.Table:  comment.ValidColumn,
 		director.Table: director.ValidColumn,
 		favorite.Table: favorite.ValidColumn,
 		movie.Table:    movie.ValidColumn,

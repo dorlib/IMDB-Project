@@ -9,6 +9,9 @@ import (
 // Actor is the predicate function for actor builders.
 type Actor func(*sql.Selector)
 
+// Comment is the predicate function for comment builders.
+type Comment func(*sql.Selector)
+
 // Director is the predicate function for director builders.
 type Director func(*sql.Selector)
 

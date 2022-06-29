@@ -17,6 +17,8 @@ const (
 	EdgeMovie = "movie"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
+	// EdgeComments holds the string denoting the comments edge name in mutations.
+	EdgeComments = "comments"
 	// Table holds the table name of the review in the database.
 	Table = "reviews"
 	// MovieTable is the table that holds the movie relation/edge.
@@ -33,6 +35,11 @@ const (
 	UserInverseTable = "users"
 	// UserColumn is the table column denoting the user relation/edge.
 	UserColumn = "user_reviews"
+	// CommentsTable is the table that holds the comments relation/edge. The primary key declared below.
+	CommentsTable = "comment_review"
+	// CommentsInverseTable is the table name for the Comment entity.
+	// It exists in this package in order to avoid circular dependency with the "comment" package.
+	CommentsInverseTable = "comments"
 )
 
 // Columns holds all SQL columns for review fields.
@@ -49,6 +56,12 @@ var ForeignKeys = []string{
 	"review_movie",
 	"user_reviews",
 }
+
+var (
+	// CommentsPrimaryKey and CommentsColumn2 are the table columns denoting the
+	// primary key for the comments relation (M2M).
+	CommentsPrimaryKey = []string{"comment_id", "review_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {

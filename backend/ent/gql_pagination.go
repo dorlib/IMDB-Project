@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"imdbv2/ent/actor"
+	"imdbv2/ent/comment"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
@@ -461,6 +462,233 @@ func (a *Actor) ToEdge(order *ActorOrder) *ActorEdge {
 	return &ActorEdge{
 		Node:   a,
 		Cursor: order.Field.toCursor(a),
+	}
+}
+
+// CommentEdge is the edge representation of Comment.
+type CommentEdge struct {
+	Node   *Comment `json:"node"`
+	Cursor Cursor   `json:"cursor"`
+}
+
+// CommentConnection is the connection containing edges to Comment.
+type CommentConnection struct {
+	Edges      []*CommentEdge `json:"edges"`
+	PageInfo   PageInfo       `json:"pageInfo"`
+	TotalCount int            `json:"totalCount"`
+}
+
+// CommentPaginateOption enables pagination customization.
+type CommentPaginateOption func(*commentPager) error
+
+// WithCommentOrder configures pagination ordering.
+func WithCommentOrder(order *CommentOrder) CommentPaginateOption {
+	if order == nil {
+		order = DefaultCommentOrder
+	}
+	o := *order
+	return func(pager *commentPager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultCommentOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithCommentFilter configures pagination filter.
+func WithCommentFilter(filter func(*CommentQuery) (*CommentQuery, error)) CommentPaginateOption {
+	return func(pager *commentPager) error {
+		if filter == nil {
+			return errors.New("CommentQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type commentPager struct {
+	order  *CommentOrder
+	filter func(*CommentQuery) (*CommentQuery, error)
+}
+
+func newCommentPager(opts []CommentPaginateOption) (*commentPager, error) {
+	pager := &commentPager{}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultCommentOrder
+	}
+	return pager, nil
+}
+
+func (p *commentPager) applyFilter(query *CommentQuery) (*CommentQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *commentPager) toCursor(c *Comment) Cursor {
+	return p.order.Field.toCursor(c)
+}
+
+func (p *commentPager) applyCursors(query *CommentQuery, after, before *Cursor) *CommentQuery {
+	for _, predicate := range cursorsToPredicates(
+		p.order.Direction, after, before,
+		p.order.Field.field, DefaultCommentOrder.Field.field,
+	) {
+		query = query.Where(predicate)
+	}
+	return query
+}
+
+func (p *commentPager) applyOrder(query *CommentQuery, reverse bool) *CommentQuery {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	query = query.Order(direction.orderFunc(p.order.Field.field))
+	if p.order.Field != DefaultCommentOrder.Field {
+		query = query.Order(direction.orderFunc(DefaultCommentOrder.Field.field))
+	}
+	return query
+}
+
+// Paginate executes the query and returns a relay based cursor connection to Comment.
+func (c *CommentQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...CommentPaginateOption,
+) (*CommentConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newCommentPager(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	if c, err = pager.applyFilter(c); err != nil {
+		return nil, err
+	}
+
+	conn := &CommentConnection{Edges: []*CommentEdge{}}
+	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
+		if hasCollectedField(ctx, totalCountField) ||
+			hasCollectedField(ctx, pageInfoField) {
+			count, err := c.Count(ctx)
+			if err != nil {
+				return nil, err
+			}
+			conn.TotalCount = count
+			conn.PageInfo.HasNextPage = first != nil && count > 0
+			conn.PageInfo.HasPreviousPage = last != nil && count > 0
+		}
+		return conn, nil
+	}
+
+	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
+		count, err := c.Clone().Count(ctx)
+		if err != nil {
+			return nil, err
+		}
+		conn.TotalCount = count
+	}
+
+	c = pager.applyCursors(c, after, before)
+	c = pager.applyOrder(c, last != nil)
+	var limit int
+	if first != nil {
+		limit = *first + 1
+	} else if last != nil {
+		limit = *last + 1
+	}
+	if limit > 0 {
+		c = c.Limit(limit)
+	}
+
+	if field := getCollectedField(ctx, edgesField, nodeField); field != nil {
+		c = c.collectField(graphql.GetOperationContext(ctx), *field)
+	}
+
+	nodes, err := c.All(ctx)
+	if err != nil || len(nodes) == 0 {
+		return conn, err
+	}
+
+	if len(nodes) == limit {
+		conn.PageInfo.HasNextPage = first != nil
+		conn.PageInfo.HasPreviousPage = last != nil
+		nodes = nodes[:len(nodes)-1]
+	}
+
+	var nodeAt func(int) *Comment
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *Comment {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *Comment {
+			return nodes[i]
+		}
+	}
+
+	conn.Edges = make([]*CommentEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		conn.Edges[i] = &CommentEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+
+	conn.PageInfo.StartCursor = &conn.Edges[0].Cursor
+	conn.PageInfo.EndCursor = &conn.Edges[len(conn.Edges)-1].Cursor
+	if conn.TotalCount == 0 {
+		conn.TotalCount = len(nodes)
+	}
+
+	return conn, nil
+}
+
+// CommentOrderField defines the ordering field of Comment.
+type CommentOrderField struct {
+	field    string
+	toCursor func(*Comment) Cursor
+}
+
+// CommentOrder defines the ordering of Comment.
+type CommentOrder struct {
+	Direction OrderDirection     `json:"direction"`
+	Field     *CommentOrderField `json:"field"`
+}
+
+// DefaultCommentOrder is the default ordering of Comment.
+var DefaultCommentOrder = &CommentOrder{
+	Direction: OrderDirectionAsc,
+	Field: &CommentOrderField{
+		field: comment.FieldID,
+		toCursor: func(c *Comment) Cursor {
+			return Cursor{ID: c.ID}
+		},
+	},
+}
+
+// ToEdge converts Comment into CommentEdge.
+func (c *Comment) ToEdge(order *CommentOrder) *CommentEdge {
+	if order == nil {
+		order = DefaultCommentOrder
+	}
+	return &CommentEdge{
+		Node:   c,
+		Cursor: order.Field.toCursor(c),
 	}
 }
 

@@ -23,7 +23,7 @@ import classes from "./userPage.module.css"
 import styled from "styled-components";
 
 
-function UserPage() {
+function UserPage(props) {
     const USER_DATA = gql`
         query UserByID($id : ID!) {
             userById(id: $id) {
@@ -79,6 +79,7 @@ function UserPage() {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :</p>;
 
+    let id = lastSegment
     let firstName = data["userById"]["0"]["firstname"]
     let lastName = data["userById"]["0"]["lastname"]
     let nickName = data["userById"]["0"]["nickname"]
@@ -115,7 +116,7 @@ function UserPage() {
             </div>
             <Stack direction="row" spacing={1} className={classes.changeProfile}>
                 <IconButton color="primary" aria-label="change image" style={{color: "yellow"}}>
-                    <SettingsSuggestIcon style={{fontSize: "xx-large"}}/>
+                    {props.LoggedInUser === id? <SettingsSuggestIcon style={{fontSize: "xx-large"}}/>: null}
                 </IconButton>
             </Stack>
 
@@ -131,12 +132,12 @@ function UserPage() {
 
             </div>
             <Stack direction="row" spacing={2} className={classes.edit}>
-                <Button variant="edit" className={classes.editBut}>Edit Profile</Button>
+                {props.LoggedInUser === id? <Button variant="edit" className={classes.editBut}>Edit Profile</Button> : null}
             </Stack>
             <React.Fragment>
                 <CardContent style={{backgroundColor: "darkslategray"}} className={classes.mainCard}>
                     <IconButton color="primary" aria-label="update details" className={classes.editDetails}>
-                        <EditIcon className={classes.editDetailsBut}/>
+                        {props.LoggedInUser === id ?<EditIcon className={classes.editDetailsBut}/>: null}
                         <Details>
                             <TextBox>
                                 <text>Click To Update Your Details</text>

@@ -247,8 +247,8 @@ function Last5Added() {
 
     return (
         <div>
-        <ArrowForwardIosIcon className={classes.forward} style={{fontSize:"xxx-large"}} id={"Forward"} onClick={forwardInput}/>
-        <ArrowBackIosNewIcon className={classes.backward} style={{fontSize:"xxx-large"}} id={"Backward"} onClick={backwardInput}/>
+        <Button><ArrowForwardIosIcon className={classes.forward} style={{fontSize:"xxx-large"}} id={"Forward"} onClick={forwardInput}/></Button>
+        <Button><ArrowBackIosNewIcon className={classes.backward} style={{fontSize:"xxx-large"}} id={"Backward"} onClick={backwardInput}/></Button>
         <Swapper/>
         </div>
         )

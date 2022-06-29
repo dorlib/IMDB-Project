@@ -25,6 +25,7 @@ type config struct {
 // hooks per client, for fast access.
 type hooks struct {
 	Actor    []ent.Hook
+	Comment  []ent.Hook
 	Director []ent.Hook
 	Favorite []ent.Hook
 	Movie    []ent.Hook

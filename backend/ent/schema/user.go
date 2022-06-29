@@ -33,5 +33,6 @@ func (User) Fields() []ent.Field {
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("reviews", Review.Type),
+		edge.To("comments", Comment.Type),
 	}
 }
