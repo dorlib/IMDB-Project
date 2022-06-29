@@ -1,10 +1,5 @@
 import {Link} from 'react-router-dom';
-
-import Card from "../ui/Card";
-import FavoritesContext from "../../favorites/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
-import {isIterableObject} from "graphql/jsutils/isIterableObject";
-
 import * as React from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -14,8 +9,11 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import UpdateRank from "./total-rank";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import AddCommentIcon from '@mui/icons-material/AddComment';
 
 import classes from "./showReviews.module.css";
+import Button from "@mui/material/Button";
 
 
 function ShowReviews(props) {
@@ -28,6 +26,7 @@ function ShowReviews(props) {
                 id
                 user {
                     nickname
+                    profile
                 }
             }
         }
@@ -70,9 +69,9 @@ function ShowReviews(props) {
                 <List sx={{width: '100%',}} className={classes.rev}>
                     <ListItem alignItems="flex-start">
                         <ListItemAvatar>
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg"/>
+                            <img src={user["profile"]} style={{width: "1.8cm", height: "1.8cm", borderRadius: "200px", marginLeft: "-0.1cm", marginTop: "-0.2cm"}}/>
                         </ListItemAvatar>
-                        <ListItemText
+                        <ListItemText style={{marginLeft: "0.3cm"}}
                             primary={
                             <React.Fragment>
                             <Typography style={{fontSize: "x-large"}}>
@@ -82,7 +81,7 @@ function ShowReviews(props) {
                                     by: {user["nickname"]}
                                 </Typography>
                                 <Typography className={classes.rank} style={{fontSize: "xx-large"}}>
-                                    {rank}
+                                    {rank} / 100
                                 </Typography>
                             </React.Fragment>
 
@@ -97,6 +96,8 @@ function ShowReviews(props) {
                                     >
                                         {text}
                                     </Typography>
+                                    <Button><ThumbUpIcon className={classes.thumb}/></Button>
+                                    <Button><AddCommentIcon className={classes.comment}/></Button>
                                 </React.Fragment>
                             }
                         />

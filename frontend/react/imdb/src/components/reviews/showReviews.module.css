@@ -6,7 +6,7 @@
     margin-left: 0.5rem;
     margin-bottom: 1.4rem;
     display: flex;
-    width: 20.3cm;
+    width: 21.3cm;
 }
 
 .item {
@@ -33,4 +33,22 @@
 
 .topic {
     font-size: x-large;
+}
+
+.thumb{
+    position: absolute;
+    display: flex;
+    left: 18.5cm;
+    font-size: large;
+    top: 2.6cm;
+    color: #fcb8d2;
+}
+
+.comment{
+    position: absolute;
+    display: flex;
+    left: 17.2cm;
+    font-size: x-large;
+    top: 2.6cm;
+    color: #fcb8d2;
 }

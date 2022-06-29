@@ -9,6 +9,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import {render} from "react-dom";
+import Button from "@mui/material/Button";
 
 function SearchBar(props) {
     let GET_DIRECTORS = gql`
@@ -182,9 +183,9 @@ function SearchBar(props) {
                         <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
                         <div className={classes.searchIcon}>
                             {wordEntered.length === 0 ? (
-                                <SearchIcon/>
+                                <Button><SearchIcon style={{marginLeft:"-0.8cm"}}/></Button>
                             ) : (
-                                <CloseIcon id={"ClearBtn"} onClick={clearInput}/>
+                                <Button><CloseIcon id={"ClearBtn"} onClick={clearInput} style={{marginLeft:"-0.8cm"}}/></Button>
                             )}
                         </div>
                     </div>
@@ -228,9 +229,9 @@ function SearchBar(props) {
                     <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
                     <div className={classes.loggedSearchIcon}>
                         {wordEntered.length === 0 ? (
-                            <SearchIcon/>
+                            <Button><SearchIcon style={{marginLeft:"-0.8cm"}}/></Button>
                         ) : (
-                            <CloseIcon id={"ClearBtn"} onClick={clearInput}/>
+                            <Button><CloseIcon id={"ClearBtn"} onClick={clearInput} style={{marginLeft:"-0.8cm"}}/></Button>
                         )}
                     </div>
                 </div>
