@@ -27,6 +27,7 @@ function ShowReviews(props) {
                 user {
                     nickname
                     profile
+                    id
                 }
             }
         }
@@ -69,7 +70,9 @@ function ShowReviews(props) {
                 <List sx={{width: '100%',}} className={classes.rev}>
                     <ListItem alignItems="flex-start">
                         <ListItemAvatar>
-                            <img src={user["profile"]} style={{width: "1.8cm", height: "1.8cm", borderRadius: "200px", marginLeft: "-0.1cm", marginTop: "-0.2cm"}}/>
+                            <Button>
+                                <img src={user["profile"]} style={{width: "1.8cm", height: "1.8cm", borderRadius: "200px", marginLeft: "-0.3cm", marginTop: "-0.4cm"}} onClick={() => window.location.replace("/userPage/" + user["id"])}/>
+                            </Button>
                         </ListItemAvatar>
                         <ListItemText style={{marginLeft: "0.3cm"}}
                             primary={
@@ -78,7 +81,7 @@ function ShowReviews(props) {
                                 {topic}
                             </Typography>
                                 <Typography>
-                                    by: {user["nickname"]}
+                                    by: <Link to={"/userPage/" + user["id"]} style={{textDecoration: "none", color: "white"}}>{user["nickname"]}</Link>
                                 </Typography>
                                 <Typography className={classes.rank} style={{fontSize: "xx-large"}}>
                                     {rank} / 100

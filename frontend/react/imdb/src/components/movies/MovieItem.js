@@ -163,10 +163,10 @@ function MovieItem(props) {
                     </h4>
                 </CardContent>
                     <div style={{fontSize: "xxx-large"}}>
-                        <Fav>
+                        {props.userID !== 0 ? <Fav>
                             <Button><FavoriteIcon fontSize={'large'} style={{color: favorites.includes(parseInt(movieID)) ? '#8B0000' : 'white'}} onClick={() => setToggle(true)} className={classes.heart} /></Button>
                             <TextBox><text >Click To Add To Favorites!</text></TextBox>
-                        </Fav>
+                        </Fav> : null}
                     </div>
             </div>
         </Card>

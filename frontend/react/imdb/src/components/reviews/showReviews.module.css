@@ -27,7 +27,7 @@
     position: absolute;
     display: flex;
     right: -1.2cm;
-    bottom: 2cm;
+    bottom: 2.4cm;
 
 }
 
@@ -38,17 +38,17 @@
 .thumb{
     position: absolute;
     display: flex;
-    left: 18.5cm;
+    left: 16cm;
     font-size: large;
-    top: 2.6cm;
+    top: 0cm;
     color: #fcb8d2;
 }
 
 .comment{
     position: absolute;
     display: flex;
-    left: 17.2cm;
+    left: 12.9cm;
     font-size: x-large;
-    top: 2.6cm;
+    top: 0.1cm;
     color: #fcb8d2;
 }
