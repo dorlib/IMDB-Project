@@ -23,6 +23,8 @@ type Review struct {
 	Text string `json:"text,omitempty"`
 	// Rank holds the value of the "rank" field.
 	Rank int `json:"rank,omitempty"`
+	// Likes holds the value of the "likes" field.
+	Likes int `json:"likes,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ReviewQuery when eager-loading is set.
 	Edges        ReviewEdges `json:"edges"`
@@ -85,7 +87,7 @@ func (*Review) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case review.FieldID, review.FieldRank:
+		case review.FieldID, review.FieldRank, review.FieldLikes:
 			values[i] = new(sql.NullInt64)
 		case review.FieldTopic, review.FieldText:
 			values[i] = new(sql.NullString)
@@ -131,6 +133,12 @@ func (r *Review) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field rank", values[i])
 			} else if value.Valid {
 				r.Rank = int(value.Int64)
+			}
+		case review.FieldLikes:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field likes", values[i])
+			} else if value.Valid {
+				r.Likes = int(value.Int64)
 			}
 		case review.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -195,6 +203,8 @@ func (r *Review) String() string {
 	builder.WriteString(r.Text)
 	builder.WriteString(", rank=")
 	builder.WriteString(fmt.Sprintf("%v", r.Rank))
+	builder.WriteString(", likes=")
+	builder.WriteString(fmt.Sprintf("%v", r.Likes))
 	builder.WriteByte(')')
 	return builder.String()
 }

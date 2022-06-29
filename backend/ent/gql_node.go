@@ -341,7 +341,7 @@ func (r *Review) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     r.ID,
 		Type:   "Review",
-		Fields: make([]*Field, 3),
+		Fields: make([]*Field, 4),
 		Edges:  make([]*Edge, 3),
 	}
 	var buf []byte
@@ -367,6 +367,14 @@ func (r *Review) Node(ctx context.Context) (node *Node, err error) {
 	node.Fields[2] = &Field{
 		Type:  "int",
 		Name:  "rank",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(r.Likes); err != nil {
+		return nil, err
+	}
+	node.Fields[3] = &Field{
+		Type:  "int",
+		Name:  "likes",
 		Value: string(buf),
 	}
 	node.Edges[0] = &Edge{

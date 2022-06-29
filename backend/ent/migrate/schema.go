@@ -92,6 +92,7 @@ var (
 		{Name: "topic", Type: field.TypeString},
 		{Name: "text", Type: field.TypeString},
 		{Name: "rank", Type: field.TypeInt},
+		{Name: "likes", Type: field.TypeInt},
 		{Name: "review_movie", Type: field.TypeInt, Nullable: true},
 		{Name: "user_reviews", Type: field.TypeInt, Nullable: true},
 	}
@@ -103,13 +104,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "reviews_movies_movie",
-				Columns:    []*schema.Column{ReviewsColumns[4]},
+				Columns:    []*schema.Column{ReviewsColumns[5]},
 				RefColumns: []*schema.Column{MoviesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "reviews_users_reviews",
-				Columns:    []*schema.Column{ReviewsColumns[5]},
+				Columns:    []*schema.Column{ReviewsColumns[6]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

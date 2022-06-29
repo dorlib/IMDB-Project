@@ -13,6 +13,8 @@ const (
 	FieldText = "text"
 	// FieldRank holds the string denoting the rank field in the database.
 	FieldRank = "rank"
+	// FieldLikes holds the string denoting the likes field in the database.
+	FieldLikes = "likes"
 	// EdgeMovie holds the string denoting the movie edge name in mutations.
 	EdgeMovie = "movie"
 	// EdgeUser holds the string denoting the user edge name in mutations.
@@ -48,6 +50,7 @@ var Columns = []string{
 	FieldTopic,
 	FieldText,
 	FieldRank,
+	FieldLikes,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "reviews"

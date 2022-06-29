@@ -55,6 +55,19 @@ func (ru *ReviewUpdate) AddRank(i int) *ReviewUpdate {
 	return ru
 }
 
+// SetLikes sets the "likes" field.
+func (ru *ReviewUpdate) SetLikes(i int) *ReviewUpdate {
+	ru.mutation.ResetLikes()
+	ru.mutation.SetLikes(i)
+	return ru
+}
+
+// AddLikes adds i to the "likes" field.
+func (ru *ReviewUpdate) AddLikes(i int) *ReviewUpdate {
+	ru.mutation.AddLikes(i)
+	return ru
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by ID.
 func (ru *ReviewUpdate) SetMovieID(id int) *ReviewUpdate {
 	ru.mutation.SetMovieID(id)
@@ -246,6 +259,20 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: review.FieldRank,
 		})
 	}
+	if value, ok := ru.mutation.Likes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldLikes,
+		})
+	}
+	if value, ok := ru.mutation.AddedLikes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldLikes,
+		})
+	}
 	if ru.mutation.MovieCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -411,6 +438,19 @@ func (ruo *ReviewUpdateOne) SetRank(i int) *ReviewUpdateOne {
 // AddRank adds i to the "rank" field.
 func (ruo *ReviewUpdateOne) AddRank(i int) *ReviewUpdateOne {
 	ruo.mutation.AddRank(i)
+	return ruo
+}
+
+// SetLikes sets the "likes" field.
+func (ruo *ReviewUpdateOne) SetLikes(i int) *ReviewUpdateOne {
+	ruo.mutation.ResetLikes()
+	ruo.mutation.SetLikes(i)
+	return ruo
+}
+
+// AddLikes adds i to the "likes" field.
+func (ruo *ReviewUpdateOne) AddLikes(i int) *ReviewUpdateOne {
+	ruo.mutation.AddLikes(i)
 	return ruo
 }
 
@@ -627,6 +667,20 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: review.FieldRank,
+		})
+	}
+	if value, ok := ruo.mutation.Likes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldLikes,
+		})
+	}
+	if value, ok := ruo.mutation.AddedLikes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldLikes,
 		})
 	}
 	if ruo.mutation.MovieCleared() {

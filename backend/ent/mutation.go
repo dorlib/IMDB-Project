@@ -3174,6 +3174,8 @@ type ReviewMutation struct {
 	text            *string
 	rank            *int
 	addrank         *int
+	likes           *int
+	addlikes        *int
 	clearedFields   map[string]struct{}
 	movie           *int
 	clearedmovie    bool
@@ -3413,6 +3415,62 @@ func (m *ReviewMutation) ResetRank() {
 	m.addrank = nil
 }
 
+// SetLikes sets the "likes" field.
+func (m *ReviewMutation) SetLikes(i int) {
+	m.likes = &i
+	m.addlikes = nil
+}
+
+// Likes returns the value of the "likes" field in the mutation.
+func (m *ReviewMutation) Likes() (r int, exists bool) {
+	v := m.likes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLikes returns the old "likes" field's value of the Review entity.
+// If the Review object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ReviewMutation) OldLikes(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLikes is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLikes requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLikes: %w", err)
+	}
+	return oldValue.Likes, nil
+}
+
+// AddLikes adds i to the "likes" field.
+func (m *ReviewMutation) AddLikes(i int) {
+	if m.addlikes != nil {
+		*m.addlikes += i
+	} else {
+		m.addlikes = &i
+	}
+}
+
+// AddedLikes returns the value that was added to the "likes" field in this mutation.
+func (m *ReviewMutation) AddedLikes() (r int, exists bool) {
+	v := m.addlikes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetLikes resets all changes to the "likes" field.
+func (m *ReviewMutation) ResetLikes() {
+	m.likes = nil
+	m.addlikes = nil
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by id.
 func (m *ReviewMutation) SetMovieID(id int) {
 	m.movie = &id
@@ -3564,7 +3622,7 @@ func (m *ReviewMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ReviewMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.topic != nil {
 		fields = append(fields, review.FieldTopic)
 	}
@@ -3573,6 +3631,9 @@ func (m *ReviewMutation) Fields() []string {
 	}
 	if m.rank != nil {
 		fields = append(fields, review.FieldRank)
+	}
+	if m.likes != nil {
+		fields = append(fields, review.FieldLikes)
 	}
 	return fields
 }
@@ -3588,6 +3649,8 @@ func (m *ReviewMutation) Field(name string) (ent.Value, bool) {
 		return m.Text()
 	case review.FieldRank:
 		return m.Rank()
+	case review.FieldLikes:
+		return m.Likes()
 	}
 	return nil, false
 }
@@ -3603,6 +3666,8 @@ func (m *ReviewMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldText(ctx)
 	case review.FieldRank:
 		return m.OldRank(ctx)
+	case review.FieldLikes:
+		return m.OldLikes(ctx)
 	}
 	return nil, fmt.Errorf("unknown Review field %s", name)
 }
@@ -3633,6 +3698,13 @@ func (m *ReviewMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetRank(v)
 		return nil
+	case review.FieldLikes:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLikes(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Review field %s", name)
 }
@@ -3644,6 +3716,9 @@ func (m *ReviewMutation) AddedFields() []string {
 	if m.addrank != nil {
 		fields = append(fields, review.FieldRank)
 	}
+	if m.addlikes != nil {
+		fields = append(fields, review.FieldLikes)
+	}
 	return fields
 }
 
@@ -3654,6 +3729,8 @@ func (m *ReviewMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case review.FieldRank:
 		return m.AddedRank()
+	case review.FieldLikes:
+		return m.AddedLikes()
 	}
 	return nil, false
 }
@@ -3669,6 +3746,13 @@ func (m *ReviewMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddRank(v)
+		return nil
+	case review.FieldLikes:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLikes(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Review numeric field %s", name)
@@ -3705,6 +3789,9 @@ func (m *ReviewMutation) ResetField(name string) error {
 		return nil
 	case review.FieldRank:
 		m.ResetRank()
+		return nil
+	case review.FieldLikes:
+		m.ResetLikes()
 		return nil
 	}
 	return fmt.Errorf("unknown Review field %s", name)

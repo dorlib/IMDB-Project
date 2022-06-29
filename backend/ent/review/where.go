@@ -113,6 +113,13 @@ func Rank(v int) predicate.Review {
 	})
 }
 
+// Likes applies equality check predicate on the "likes" field. It's identical to LikesEQ.
+func Likes(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLikes), v))
+	})
+}
+
 // TopicEQ applies the EQ predicate on the "topic" field.
 func TopicEQ(v string) predicate.Review {
 	return predicate.Review(func(s *sql.Selector) {
@@ -408,6 +415,82 @@ func RankLT(v int) predicate.Review {
 func RankLTE(v int) predicate.Review {
 	return predicate.Review(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldRank), v))
+	})
+}
+
+// LikesEQ applies the EQ predicate on the "likes" field.
+func LikesEQ(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLikes), v))
+	})
+}
+
+// LikesNEQ applies the NEQ predicate on the "likes" field.
+func LikesNEQ(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldLikes), v))
+	})
+}
+
+// LikesIn applies the In predicate on the "likes" field.
+func LikesIn(vs ...int) predicate.Review {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Review(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldLikes), v...))
+	})
+}
+
+// LikesNotIn applies the NotIn predicate on the "likes" field.
+func LikesNotIn(vs ...int) predicate.Review {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Review(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldLikes), v...))
+	})
+}
+
+// LikesGT applies the GT predicate on the "likes" field.
+func LikesGT(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldLikes), v))
+	})
+}
+
+// LikesGTE applies the GTE predicate on the "likes" field.
+func LikesGTE(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldLikes), v))
+	})
+}
+
+// LikesLT applies the LT predicate on the "likes" field.
+func LikesLT(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldLikes), v))
+	})
+}
+
+// LikesLTE applies the LTE predicate on the "likes" field.
+func LikesLTE(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldLikes), v))
 	})
 }
 
