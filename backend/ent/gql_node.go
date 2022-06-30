@@ -10,6 +10,7 @@ import (
 	"imdbv2/ent/comment"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
+	"imdbv2/ent/like"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -240,6 +241,53 @@ func (f *Favorite) Node(ctx context.Context) (node *Node, err error) {
 	return node, nil
 }
 
+func (l *Like) Node(ctx context.Context) (node *Node, err error) {
+	node = &Node{
+		ID:     l.ID,
+		Type:   "Like",
+		Fields: make([]*Field, 2),
+		Edges:  make([]*Edge, 2),
+	}
+	var buf []byte
+	if buf, err = json.Marshal(l.UserID); err != nil {
+		return nil, err
+	}
+	node.Fields[0] = &Field{
+		Type:  "int",
+		Name:  "user_id",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(l.ReviewID); err != nil {
+		return nil, err
+	}
+	node.Fields[1] = &Field{
+		Type:  "int",
+		Name:  "review_id",
+		Value: string(buf),
+	}
+	node.Edges[0] = &Edge{
+		Type: "User",
+		Name: "user",
+	}
+	err = l.QueryUser().
+		Select(user.FieldID).
+		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[1] = &Edge{
+		Type: "Review",
+		Name: "review",
+	}
+	err = l.QueryReview().
+		Select(review.FieldID).
+		Scan(ctx, &node.Edges[1].IDs)
+	if err != nil {
+		return nil, err
+	}
+	return node, nil
+}
+
 func (m *Movie) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     m.ID,
@@ -342,7 +390,7 @@ func (r *Review) Node(ctx context.Context) (node *Node, err error) {
 		ID:     r.ID,
 		Type:   "Review",
 		Fields: make([]*Field, 3),
-		Edges:  make([]*Edge, 3),
+		Edges:  make([]*Edge, 4),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(r.Topic); err != nil {
@@ -399,6 +447,16 @@ func (r *Review) Node(ctx context.Context) (node *Node, err error) {
 	if err != nil {
 		return nil, err
 	}
+	node.Edges[3] = &Edge{
+		Type: "Like",
+		Name: "likes",
+	}
+	err = r.QueryLikes().
+		Select(like.FieldID).
+		Scan(ctx, &node.Edges[3].IDs)
+	if err != nil {
+		return nil, err
+	}
 	return node, nil
 }
 
@@ -407,7 +465,7 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 		ID:     u.ID,
 		Type:   "User",
 		Fields: make([]*Field, 11),
-		Edges:  make([]*Edge, 2),
+		Edges:  make([]*Edge, 3),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(u.Firstname); err != nil {
@@ -518,6 +576,16 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 	if err != nil {
 		return nil, err
 	}
+	node.Edges[2] = &Edge{
+		Type: "Like",
+		Name: "likes",
+	}
+	err = u.QueryLikes().
+		Select(like.FieldID).
+		Scan(ctx, &node.Edges[2].IDs)
+	if err != nil {
+		return nil, err
+	}
 	return node, nil
 }
 
@@ -619,6 +687,15 @@ func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error)
 		n, err := c.Favorite.Query().
 			Where(favorite.ID(id)).
 			CollectFields(ctx, "Favorite").
+			Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
+	case like.Table:
+		n, err := c.Like.Query().
+			Where(like.ID(id)).
+			CollectFields(ctx, "Like").
 			Only(ctx)
 		if err != nil {
 			return nil, err
@@ -767,6 +844,19 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 		nodes, err := c.Favorite.Query().
 			Where(favorite.IDIn(ids...)).
 			CollectFields(ctx, "Favorite").
+			All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
+	case like.Table:
+		nodes, err := c.Like.Query().
+			Where(like.IDIn(ids...)).
+			CollectFields(ctx, "Like").
 			All(ctx)
 		if err != nil {
 			return nil, err

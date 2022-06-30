@@ -18,6 +18,9 @@ type Director func(*sql.Selector)
 // Favorite is the predicate function for favorite builders.
 type Favorite func(*sql.Selector)
 
+// Like is the predicate function for like builders.
+type Like func(*sql.Selector)
+
 // Movie is the predicate function for movie builders.
 type Movie func(*sql.Selector)
 

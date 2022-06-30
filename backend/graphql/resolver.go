@@ -11,6 +11,11 @@ import (
 
 type Resolver struct{ client *ent.Client }
 
+func (r *Resolver) Comment() CommentResolver {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (r *Resolver) Review() ReviewResolver {
 	//TODO implement me
 	panic("implement me")

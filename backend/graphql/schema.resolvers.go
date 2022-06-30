@@ -249,3 +249,47 @@ func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, nam
 
 	return newActor, nil
 }
+
+func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, topic string, text string) (*ent.Comment, error) {
+	userData := r.client.User.GetX(ctx, userID)
+	review := r.client.Review.GetX(ctx, reviewID)
+
+	return r.client.Comment.Create().
+		SetTopic(topic).
+		SetText(text).
+		AddUser(userData).
+		AddReview(review).
+		Save(ctx)
+}
+
+func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, userID int) (int, error) {
+	userIdOfComment := r.client.Comment.GetX(ctx, commentID).QueryUser().OnlyIDX(ctx)
+	if userIdOfComment == userID {
+		comment := r.client.Comment.GetX(ctx, commentID)
+		r.client.Comment.DeleteOne(comment).ExecX(ctx)
+	}
+
+	return userID, nil
+}
+
+func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error) {
+	userData := r.client.User.GetX(ctx, userID)
+	review := r.client.Review.GetX(ctx, reviewID)
+
+	return r.client.Like.Create().
+		SetUserID(userID).
+		SetReviewID(reviewID).
+		AddUser(userData).
+		AddReview(review).
+		Save(ctx)
+}
+
+func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID int) (int, error) {
+	userIdOfLike := r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
+	if userIdOfLike == userID {
+		like := r.client.Like.GetX(ctx, likeID)
+		r.client.Like.DeleteOne(like).ExecX(ctx)
+	}
+
+	return userID, nil
+}

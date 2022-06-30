@@ -36,6 +36,22 @@ func (d *Director) Movies(ctx context.Context) ([]*Movie, error) {
 	return result, err
 }
 
+func (l *Like) User(ctx context.Context) ([]*User, error) {
+	result, err := l.Edges.UserOrErr()
+	if IsNotLoaded(err) {
+		result, err = l.QueryUser().All(ctx)
+	}
+	return result, err
+}
+
+func (l *Like) Review(ctx context.Context) ([]*Review, error) {
+	result, err := l.Edges.ReviewOrErr()
+	if IsNotLoaded(err) {
+		result, err = l.QueryReview().All(ctx)
+	}
+	return result, err
+}
+
 func (m *Movie) Director(ctx context.Context) (*Director, error) {
 	result, err := m.Edges.DirectorOrErr()
 	if IsNotLoaded(err) {
@@ -84,6 +100,14 @@ func (r *Review) Comments(ctx context.Context) ([]*Comment, error) {
 	return result, err
 }
 
+func (r *Review) Likes(ctx context.Context) ([]*Like, error) {
+	result, err := r.Edges.LikesOrErr()
+	if IsNotLoaded(err) {
+		result, err = r.QueryLikes().All(ctx)
+	}
+	return result, err
+}
+
 func (u *User) Reviews(ctx context.Context) ([]*Review, error) {
 	result, err := u.Edges.ReviewsOrErr()
 	if IsNotLoaded(err) {
@@ -96,6 +120,14 @@ func (u *User) Comments(ctx context.Context) ([]*Comment, error) {
 	result, err := u.Edges.CommentsOrErr()
 	if IsNotLoaded(err) {
 		result, err = u.QueryComments().All(ctx)
+	}
+	return result, err
+}
+
+func (u *User) Likes(ctx context.Context) ([]*Like, error) {
+	result, err := u.Edges.LikesOrErr()
+	if IsNotLoaded(err) {
+		result, err = u.QueryLikes().All(ctx)
 	}
 	return result, err
 }

@@ -9,6 +9,7 @@ import (
 	"imdbv2/ent/comment"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
+	"imdbv2/ent/like"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -39,6 +40,7 @@ func columnChecker(table string) func(string) error {
 		comment.Table:  comment.ValidColumn,
 		director.Table: director.ValidColumn,
 		favorite.Table: favorite.ValidColumn,
+		like.Table:     like.ValidColumn,
 		movie.Table:    movie.ValidColumn,
 		review.Table:   review.ValidColumn,
 		user.Table:     user.ValidColumn,

@@ -29,5 +29,6 @@ func (Review) Edges() []ent.Edge {
 			Ref("reviews").
 			Unique(),
 		edge.From("comments", Comment.Type).Ref("review"),
+		edge.From("likes", Like.Type).Ref("review"),
 	}
 }

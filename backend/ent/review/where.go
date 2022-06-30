@@ -495,6 +495,34 @@ func HasCommentsWith(preds ...predicate.Comment) predicate.Review {
 	})
 }
 
+// HasLikes applies the HasEdge predicate on the "likes" edge.
+func HasLikes() predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(LikesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, LikesTable, LikesPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasLikesWith applies the HasEdge predicate on the "likes" edge with a given conditions (other predicates).
+func HasLikesWith(preds ...predicate.Like) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(LikesInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, LikesTable, LikesPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.Review) predicate.Review {
 	return predicate.Review(func(s *sql.Selector) {

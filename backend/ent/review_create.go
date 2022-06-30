@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/like"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -91,6 +92,21 @@ func (rc *ReviewCreate) AddComments(c ...*Comment) *ReviewCreate {
 		ids[i] = c[i].ID
 	}
 	return rc.AddCommentIDs(ids...)
+}
+
+// AddLikeIDs adds the "likes" edge to the Like entity by IDs.
+func (rc *ReviewCreate) AddLikeIDs(ids ...int) *ReviewCreate {
+	rc.mutation.AddLikeIDs(ids...)
+	return rc
+}
+
+// AddLikes adds the "likes" edges to the Like entity.
+func (rc *ReviewCreate) AddLikes(l ...*Like) *ReviewCreate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return rc.AddLikeIDs(ids...)
 }
 
 // Mutation returns the ReviewMutation object of the builder.
@@ -274,6 +290,25 @@ func (rc *ReviewCreate) createSpec() (*Review, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: comment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.LikesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   review.LikesTable,
+			Columns: review.LikesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: like.FieldID,
 				},
 			},
 		}

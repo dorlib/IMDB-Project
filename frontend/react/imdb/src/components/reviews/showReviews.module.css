@@ -26,8 +26,8 @@
 .rank {
     position: absolute;
     display: flex;
-    right: -1.2cm;
-    bottom: 2.4cm;
+    right: -1.77cm;
+    bottom: 2.78cm;
 
 }
 
@@ -38,17 +38,50 @@
 .thumb{
     position: absolute;
     display: flex;
-    left: 16cm;
-    font-size: large;
-    top: 0cm;
+    left: 15cm;
+    font-size: x-large;
+    top: 0.5cm;
     color: #fcb8d2;
 }
 
 .comment{
     position: absolute;
     display: flex;
-    left: 12.9cm;
+    left: 11.6cm;
     font-size: x-large;
-    top: 0.1cm;
+    top: 0.6cm;
     color: #fcb8d2;
+}
+
+.badgeLikes {
+    display: flex;
+    position: absolute;
+    background-color: #fcb8d2;
+    color: red;
+    border-radius: 10px;
+    padding: 0 0.4rem;
+    margin-left: 0.5rem;
+    top: 3.58cm;
+    left: 18.3cm;
+}
+
+
+.badgeComments {
+    display: flex;
+    position: absolute;
+    background-color: #fcb8d2;
+    color: red;
+    border-radius: 10px;
+    padding: 0 0.4rem;
+    margin-left: 0.5rem;
+    top: 3.58cm;
+    left: 16.58cm;
+}
+
+.showComments {
+    display: flex;
+    position: relative;
+    margin-top: -0.4cm;
+    left: 9.3cm;
+    top: 0.4cm;
 }

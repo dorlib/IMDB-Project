@@ -20,6 +20,8 @@ type Tx struct {
 	Director *DirectorClient
 	// Favorite is the client for interacting with the Favorite builders.
 	Favorite *FavoriteClient
+	// Like is the client for interacting with the Like builders.
+	Like *LikeClient
 	// Movie is the client for interacting with the Movie builders.
 	Movie *MovieClient
 	// Review is the client for interacting with the Review builders.
@@ -165,6 +167,7 @@ func (tx *Tx) init() {
 	tx.Comment = NewCommentClient(tx.config)
 	tx.Director = NewDirectorClient(tx.config)
 	tx.Favorite = NewFavoriteClient(tx.config)
+	tx.Like = NewLikeClient(tx.config)
 	tx.Movie = NewMovieClient(tx.config)
 	tx.Review = NewReviewClient(tx.config)
 	tx.User = NewUserClient(tx.config)

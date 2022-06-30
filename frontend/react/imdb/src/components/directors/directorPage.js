@@ -20,7 +20,7 @@ import IconButton from "@mui/material/IconButton";
 import styled from "styled-components";
 import {motion, transform} from "framer-motion";
 
-function DirectorPage() {
+function DirectorPage(props) {
     const Arrow = styled(motion.div)`
         position: absolute;
         display: flex;
@@ -281,7 +281,7 @@ function DirectorPage() {
             <h3>&ensp;</h3>
         </div>
     ))
-    return <>{d}{edit}{l}{loaded}</>
+    return <>{d}{props.userID !== 0 ? edit: null}{l}{loaded}</>
 }
 
 export default DirectorPage;
