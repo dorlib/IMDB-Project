@@ -61,6 +61,12 @@ type Comment {
     Review: Review!
 }
 
+type Like {
+    id: ID!
+    userID : ID!
+    reviewID : ID!
+}
+
 type Favorite {
     id: ID!
     movieID: Int!
@@ -174,6 +180,8 @@ type Mutation {
     addActorToMovie(movieId: ID!, name: String!) : Actor!
     addComment(userID: ID!, reviewID: ID!, topic: String!, text: String!) : Comment!
     deleteComment(commentID: ID!, userID: ID!) : ID!
+    addLike(userID: ID!, reviewID: ID!) : Like!
+    deleteLike(likeID: ID!, userID: ID!) : ID!
 }
 
 # Define a query for getting all movies.

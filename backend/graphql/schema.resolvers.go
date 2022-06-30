@@ -271,3 +271,25 @@ func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, use
 
 	return userID, nil
 }
+
+func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error) {
+	userData := r.client.User.GetX(ctx, userID)
+	review := r.client.Review.GetX(ctx, reviewID)
+
+	return r.client.Like.Create().
+		SetUserID(userID).
+		SetReviewID(reviewID).
+		AddUser(userData).
+		AddReview(review).
+		Save(ctx)
+}
+
+func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID int) (int, error) {
+	userIdOfLike := r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
+	if userIdOfLike == userID {
+		like := r.client.Like.GetX(ctx, likeID)
+		r.client.Like.DeleteOne(like).ExecX(ctx)
+	}
+	
+	return userID, nil
+}
