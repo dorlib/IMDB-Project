@@ -74,7 +74,7 @@ function App() {
         <Route path="/new-movie" element={<NewMovieForm />} />
         <Route path="/favorites" element={<FavoritesPage userID={userId}/>} />
         <Route path='/top10' element={<Top10Page userID={userId} />} />
-        <Route path='/directorPage/:id' element={<DirectorPage />} />
+        <Route path='/directorPage/:id' element={<DirectorPage userID={userId} />} />
         <Route path="/moviePage/:id" element={<><UpdateRank userID={userId}/><HoverRating/><ShowReviews /><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>} />
         <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
         <Route path='/register-sign-in' element={<AccountBox />} />

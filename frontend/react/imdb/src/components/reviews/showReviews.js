@@ -61,10 +61,7 @@ function ShowReviews(props) {
     if (error) return <div>Error!</div>
     if (loading) return <div>Loading...</div>
 
-    let loaded
-    let load
-
-    loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
+    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
         text !== '' ? (
             <div key={id} className={classes.item}>
                 <List sx={{width: '100%',}} className={classes.rev}>
@@ -94,16 +91,14 @@ function ShowReviews(props) {
                                     <Typography style={{height: "0.3cm"}}>
                                         &ensp;
                                     </Typography>
-                                    <Typography
-
-                                    >
+                                    <Typography>
                                         {text}
                                     </Typography>
                                     <Button><ThumbUpIcon className={classes.thumb}/></Button>
                                     <Button><AddCommentIcon className={classes.comment}/></Button>
                                     <span className={classes.badgeLikes}>{0}</span>
                                     <span className={classes.badgeComments}>{0}</span>
-                                    <Button style={{display: "flex", position: "relative", marginTop: "-0.4cm"}}>Show Comments</Button>
+                                    <Button className={classes.showComments}>Show Comments</Button>
                                 </React.Fragment>
                             }
                         />
@@ -113,6 +108,7 @@ function ShowReviews(props) {
             </div>
         ) : null
     ))
+    
     return loaded
 }
 
