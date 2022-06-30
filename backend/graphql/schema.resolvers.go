@@ -290,6 +290,6 @@ func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID in
 		like := r.client.Like.GetX(ctx, likeID)
 		r.client.Like.DeleteOne(like).ExecX(ctx)
 	}
-	
+
 	return userID, nil
 }

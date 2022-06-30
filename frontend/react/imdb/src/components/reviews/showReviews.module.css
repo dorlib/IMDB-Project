@@ -38,8 +38,8 @@
 .thumb{
     position: absolute;
     display: flex;
-    left: 16cm;
-    font-size: large;
+    left: 15cm;
+    font-size: x-large;
     top: 0cm;
     color: #fcb8d2;
 }
@@ -47,8 +47,33 @@
 .comment{
     position: absolute;
     display: flex;
-    left: 12.9cm;
+    left: 11.6cm;
     font-size: x-large;
     top: 0.1cm;
     color: #fcb8d2;
+}
+
+.badgeLikes {
+    display: flex;
+    position: absolute;
+    background-color: #fcb8d2;
+    color: red;
+    border-radius: 10px;
+    padding: 0 0.4rem;
+    margin-left: 0.5rem;
+    top: 3.08cm;
+    left: 18.3cm;
+}
+
+
+.badgeComments {
+    display: flex;
+    position: absolute;
+    background-color: #fcb8d2;
+    color: red;
+    border-radius: 10px;
+    padding: 0 0.4rem;
+    margin-left: 0.5rem;
+    top: 3.08cm;
+    left: 16.5cm;
 }

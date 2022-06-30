@@ -101,6 +101,9 @@ function ShowReviews(props) {
                                     </Typography>
                                     <Button><ThumbUpIcon className={classes.thumb}/></Button>
                                     <Button><AddCommentIcon className={classes.comment}/></Button>
+                                    <span className={classes.badgeLikes}>{0}</span>
+                                    <span className={classes.badgeComments}>{0}</span>
+                                    <Button style={{display: "flex", position: "relative", marginTop: "-0.4cm"}}>Show Comments</Button>
                                 </React.Fragment>
                             }
                         />
