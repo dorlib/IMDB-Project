@@ -1,8 +1,8 @@
-import { Route, Routes } from 'react-router-dom'
+import {Route, Routes} from 'react-router-dom'
 
 import "./App.css";
 import styled from "styled-components";
-import { AccountBox } from "./components/accounts";
+import {AccountBox} from "./components/accounts";
 
 import AllMoviesPage from './pages/AllMovies';
 import FavoritesPage from './pages/Favorites';
@@ -21,6 +21,8 @@ import Last5Added from "./components/movies/last5-added";
 import MoviesByGenre from "./components/movies/movies-by-genre";
 import UserPage from "./pages/userPage";
 
+import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
+
 const AppContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -32,56 +34,58 @@ const AppContainer = styled.div`
 
 function App() {
 
-  // this useEffect checks if the user is authenticated.
-  // from here this info can be delivered to any other components.
+    // this useEffect checks if the user is authenticated.
+    // from here this info can be delivered to any other components.
 
-  const [userFirstName, setUserFirstName] = useState('Guest')
-  const [userProfileImage, setUserProfileImage] = useState('https://hope.be/wp-content/uploads/2015/05/no-user-image.gif')
-  const [userId, setUserId] = useState(0)
-  const [userNickname, setUserNickname] = useState('')
+    const [userFirstName, setUserFirstName] = useState('Guest')
+    const [userProfileImage, setUserProfileImage] = useState('https://hope.be/wp-content/uploads/2015/05/no-user-image.gif')
+    const [userId, setUserId] = useState(0)
+    const [userNickname, setUserNickname] = useState('')
 
 
     useEffect(() => {
-    (
-        async () => {
-          await fetch("http://localhost:8081/user", {
-            method: 'get',
-            headers: {'Content-Type': 'application/json'},
-            credentials: 'include',
-          }).then(response => response.json())
-              .catch((err) => {
-                console.error('error:', err)
-              })
-              .then((data) => {
-                console.log(data)
-                setUserId(data["0"]["id"])
-                setUserFirstName(data["0"]["firstname"])
-                setUserNickname(data["0"]["nickname"])
-                if (data["0"]["profile"] !== '') {
-                    setUserProfileImage(data["0"]["profile"])
-                }
-              });
-        }
-    )();
-  });
+        (
+            async () => {
+                await fetch("http://localhost:8081/user", {
+                    method: 'get',
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include',
+                }).then(response => response.json())
+                    .catch((err) => {
+                        console.error('error:', err)
+                    })
+                    .then((data) => {
+                        console.log(data)
+                        setUserId(data["0"]["id"])
+                        setUserFirstName(data["0"]["firstname"])
+                        setUserNickname(data["0"]["nickname"])
+                        if (data["0"]["profile"] !== '') {
+                            setUserProfileImage(data["0"]["profile"])
+                        }
+                    });
+            }
+        )();
+    });
 
-  return (
-    <Layout username={userFirstName} userId={userId} profile={userProfileImage}>
-      <Routes>
-        <Route path="/" element={<><Welcome /><Last5Added/></>} />
-        <Route path="/movies" element={<AllMoviesPage userID={userId} />} />
-        <Route path="/directors" element={<AllDirectorsPage />} />
-        <Route path="/new-movie" element={<NewMovieForm />} />
-        <Route path="/favorites" element={<FavoritesPage userID={userId}/>} />
-        <Route path='/top10' element={<Top10Page userID={userId} />} />
-        <Route path='/directorPage/:id' element={<DirectorPage userID={userId} />} />
-        <Route path="/moviePage/:id" element={<><UpdateRank userID={userId}/><HoverRating/><ShowReviews /><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>} />
-        <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
-        <Route path='/register-sign-in' element={<AccountBox />} />
-        <Route path='/userPage/:id' element={<UserPage LoggedInUser={userId}/>} />
-      </Routes>
-    </Layout>
-  );
+    return (
+        <AnimateSharedLayout>
+            <Layout username={userFirstName} userId={userId} profile={userProfileImage}>
+                <Routes>
+                    <Route path="/" element={<><Welcome/><Last5Added/></>}/>
+                    <Route path="/movies" element={<AllMoviesPage userID={userId}/>}/>
+                    <Route path="/directors" element={<AllDirectorsPage/>}/>
+                    <Route path="/new-movie" element={<NewMovieForm/>}/>
+                    <Route path="/favorites" element={<FavoritesPage userID={userId}/>}/>
+                    <Route path='/top10' element={<Top10Page userID={userId}/>}/>
+                    <Route path='/directorPage/:id' element={<DirectorPage userID={userId}/>}/>
+                    <Route path="/moviePage/:id" element={<><UpdateRank userID={userId}/><HoverRating/><ShowReviews/><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>}/>
+                    <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
+                    <Route path='/register-sign-in' element={<AccountBox/>}/>
+                    <Route path='/userPage/:id' element={<UserPage LoggedInUser={userId}/>}/>
+                </Routes>
+            </Layout>
+        </AnimateSharedLayout>
+    );
 }
 
 export default App;

@@ -116,6 +116,7 @@ type ComplexityRoot struct {
 	Query struct {
 		ActorByID        func(childComplexity int, id int) int
 		ActorsOfMovie    func(childComplexity int, id int) int
+		CommentsOfReview func(childComplexity int, reviewID int) int
 		DirectorByID     func(childComplexity int, id int) int
 		DirectorIDByName func(childComplexity int, name string) int
 		Directors        func(childComplexity int) int
@@ -196,6 +197,7 @@ type QueryResolver interface {
 	ActorsOfMovie(ctx context.Context, id int) ([]*ent.Actor, error)
 	ActorByID(ctx context.Context, id int) ([]*ent.Actor, error)
 	ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error)
+	CommentsOfReview(ctx context.Context, reviewID int) ([]*ent.Comment, error)
 	FavoritesOfUser(ctx context.Context, userID int) ([]*ent.Favorite, error)
 	Users(ctx context.Context) ([]*ent.User, error)
 	Top10Movies(ctx context.Context) ([]*ent.Movie, error)
@@ -626,6 +628,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.ActorsOfMovie(childComplexity, args["id"].(int)), true
+
+	case "Query.commentsOfReview":
+		if e.complexity.Query.CommentsOfReview == nil {
+			break
+		}
+
+		args, err := ec.field_Query_commentsOfReview_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CommentsOfReview(childComplexity, args["reviewID"].(int)), true
 
 	case "Query.directorById":
 		if e.complexity.Query.DirectorByID == nil {
@@ -1188,6 +1202,7 @@ type Query {
     actorsOfMovie(id: ID!): [Actor]
     actorById(id: ID!): [Actor!]
     reviewsOfMovie(movieID: Int!) : [Review]
+    commentsOfReview(reviewID: ID!) : [Comment]
     favoritesOfUser(userID: ID!): [Favorite]
     users: [User!]
     top10Movies: [Movie!]
@@ -1699,6 +1714,21 @@ func (ec *executionContext) field_Query_actorsOfMovie_args(ctx context.Context, 
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_commentsOfReview_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["reviewID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reviewID"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["reviewID"] = arg0
 	return args, nil
 }
 
@@ -3967,6 +3997,45 @@ func (ec *executionContext) _Query_reviewsOfMovie(ctx context.Context, field gra
 	res := resTmp.([]*ent.Review)
 	fc.Result = res
 	return ec.marshalOReview2ᚕᚖimdbv2ᚋentᚐReview(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_commentsOfReview(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_commentsOfReview_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CommentsOfReview(rctx, args["reviewID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Comment)
+	fc.Result = res
+	return ec.marshalOComment2ᚕᚖimdbv2ᚋentᚐComment(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_favoritesOfUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7462,6 +7531,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "commentsOfReview":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_commentsOfReview(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "favoritesOfUser":
 			field := field
 
@@ -8936,6 +9025,54 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOComment2ᚕᚖimdbv2ᚋentᚐComment(ctx context.Context, sel ast.SelectionSet, v []*ent.Comment) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOComment2ᚖimdbv2ᚋentᚐComment(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOComment2ᚖimdbv2ᚋentᚐComment(ctx context.Context, sel ast.SelectionSet, v *ent.Comment) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Comment(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalODirector2ᚕᚖimdbv2ᚋentᚐDirectorᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Director) graphql.Marshaler {

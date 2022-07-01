@@ -11,6 +11,7 @@ import (
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
+	"imdbv2/ent/review"
 	"imdbv2/ent/user"
 )
 
@@ -270,6 +271,14 @@ func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, use
 	}
 
 	return userID, nil
+}
+
+func (r *queryResolver) CommentsOfReview(ctx context.Context, reviewID int) ([]*ent.Comment, error) {
+	data, error := r.client.Review.Query().Where(review.ID(reviewID)).QueryComments().All(ctx)
+	if error != nil {
+		return nil, ent.MaskNotFound(error)
+	}
+	return data, nil
 }
 
 func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error) {
