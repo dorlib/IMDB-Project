@@ -94,7 +94,7 @@ func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title str
 
 	fmt.Println("new director made", newDirector)
 
-	movie, error := r.client.Movie.Create().
+	movieData, err := r.client.Movie.Create().
 		SetTitle(title).
 		SetGenre(genre).
 		SetDescription(description).
@@ -103,18 +103,18 @@ func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title str
 		SetImage(image).
 		SetYear(year).
 		Save(ctx)
-	if error != nil {
+	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
 
-	review, e := r.client.Review.Create().SetTopic(topic).SetText(text).SetRank(rank).SetMovieID(movie.ID).Save(ctx)
+	review, e := r.client.Review.Create().SetTopic(topic).SetText(text).SetRank(rank).SetMovieID(movieData.ID).Save(ctx)
 	if e != nil {
 		return nil, ent.MaskNotFound(err)
 	}
 
 	fmt.Println("new review made", review)
 
-	return movie, error
+	return movieData, err
 }
 
 // Mutation returns imdbv2.MutationResolver implementation.
@@ -253,13 +253,13 @@ func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, nam
 
 func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, topic string, text string) (*ent.Comment, error) {
 	userData := r.client.User.GetX(ctx, userID)
-	review := r.client.Review.GetX(ctx, reviewID)
+	reviewData := r.client.Review.GetX(ctx, reviewID)
 
 	return r.client.Comment.Create().
 		SetTopic(topic).
 		SetText(text).
 		AddUser(userData).
-		AddReview(review).
+		AddReview(reviewData).
 		Save(ctx)
 }
 
@@ -274,22 +274,22 @@ func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, use
 }
 
 func (r *queryResolver) CommentsOfReview(ctx context.Context, reviewID int) ([]*ent.Comment, error) {
-	data, error := r.client.Review.Query().Where(review.ID(reviewID)).QueryComments().All(ctx)
-	if error != nil {
-		return nil, ent.MaskNotFound(error)
+	data, err := r.client.Review.Query().Where(review.ID(reviewID)).QueryComments().All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
 	}
 	return data, nil
 }
 
 func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error) {
 	userData := r.client.User.GetX(ctx, userID)
-	review := r.client.Review.GetX(ctx, reviewID)
+	reviewData := r.client.Review.GetX(ctx, reviewID)
 
 	return r.client.Like.Create().
 		SetUserID(userID).
 		SetReviewID(reviewID).
 		AddUser(userData).
-		AddReview(review).
+		AddReview(reviewData).
 		Save(ctx)
 }
 

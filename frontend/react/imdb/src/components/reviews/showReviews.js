@@ -121,6 +121,7 @@ function ShowReviews(props) {
                                               <span className={classes.badgeComments}>{0}</span>
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>
+                                              <ShowComments id={extend}/>
                                           </React.Fragment>
                                       }
                         />
@@ -131,26 +132,7 @@ function ShowReviews(props) {
         ) : null
     ))
 
-    {items.map(item => (
-        <motion.div layoutId={item.id} onClick={() => setExtend(item.id)}>
-            <motion.h5>{item.subtitle}</motion.h5>
-            <motion.h2>{item.title}</motion.h2>
-        </motion.div>
-    ))}
-
-    let showComments = (
-        <AnimatePresence>
-        {extend && (
-            <motion.div layoutId={selectedId}>
-                <motion.h5>{item.subtitle}</motion.h5>
-                <motion.h2>{item.title}</motion.h2>
-                <motion.button onClick={() => setExtend(0)} />
-            </motion.div>
-        )}
-    </AnimatePresence>
-    )
-
-    return <>{loaded}{extend !== 0 ? <showComments id={extend}/>: null}</>
+    return <>{loaded}</>
 }
 
 export default ShowReviews
