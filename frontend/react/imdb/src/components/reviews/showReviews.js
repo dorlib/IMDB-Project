@@ -16,6 +16,7 @@ import classes from "./showReviews.module.css";
 import Button from "@mui/material/Button";
 import { motion, AnimateSharedLayout, AnimatePresence } from "framer-motion";
 import {useState} from "react";
+import ShowComments from "./showComments";
 
 
 function ShowReviews(props) {
