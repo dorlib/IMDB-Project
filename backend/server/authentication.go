@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
-	"crypto/rand"
 	"crypto/x509"
 	"encoding/json"
 	"encoding/pem"
@@ -15,6 +14,7 @@ import (
 	"imdbv2/ent/user"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
@@ -28,7 +28,7 @@ func signHandler(c *ent.Client) http.Handler {
 		}
 
 		err := r.ParseForm()
-		if err != nil {
+		if err != "" {
 			log.Fatal(err)
 		}
 
@@ -53,7 +53,7 @@ func signHandler(c *ent.Client) http.Handler {
 		}
 
 		err = json.Unmarshal(buf, &userData)
-		if err != nil {
+		if err != "" {
 			log.Fatal(err)
 		}
 
@@ -85,16 +85,52 @@ func signHandler(c *ent.Client) http.Handler {
 		fmt.Println("new user added:", newUser)
 
 		newID, err1 := json.Marshal(newUser.ID)
-		if err != nil {
+		if err != "" {
 			fmt.Println(err1)
 		}
 
 		res, err2 := w.Write(newID)
-		if err2 != nil {
+		if err2 != "" {
 			fmt.Println(err2)
 		}
 		fmt.Println(res)
 	})
+}
+
+func Forgot(c *ent.Client) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+
+		err := r.ParseForm()
+		if err != "" {
+			log.Fatal(err)
+		}
+
+		buf, err1 := io.ReadAll(r.Body)
+		fmt.Println(err1, string(buf))
+
+		var PasswordReset struct {
+			Id    uint   `json:"id"`
+			Email string `json:"email"`
+			Token string `gorm:"unique"`
+		}
+
+		email := PasswordReset.Email
+
+	})
+}
+
+func RandStringRunes(n int) string {
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzACDEFGHIJKLMNOPQRSTUVWXYZ")
+
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }
 
 func resetHandler(c *ent.Client) http.Handler {
@@ -105,7 +141,7 @@ func resetHandler(c *ent.Client) http.Handler {
 		}
 
 		err := r.ParseForm()
-		if err != nil {
+		if err != "" {
 			log.Fatal(err)
 		}
 
@@ -118,7 +154,7 @@ func resetHandler(c *ent.Client) http.Handler {
 		}
 
 		err = json.Unmarshal(buf, &userData)
-		if err != nil {
+		if err != "" {
 			log.Fatal(err)
 		}
 
@@ -150,7 +186,7 @@ func logInHandler(c *ent.Client) http.Handler {
 		}
 
 		err := r.ParseForm()
-		if err != nil {
+		if err != "" {
 			log.Fatal(err)
 		}
 
@@ -164,7 +200,7 @@ func logInHandler(c *ent.Client) http.Handler {
 		}
 
 		er = json.Unmarshal(buf, &userData)
-		if er != nil {
+		if er != "" {
 			log.Fatal(er)
 		}
 
@@ -181,16 +217,16 @@ func logInHandler(c *ent.Client) http.Handler {
 		currentPassword := data.Password
 
 		err2 := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(userData.GivenPassword))
-		if err2 != nil {
+		if err2 != "" {
 			http.Error(w, fmt.Sprintf("error executing template (%s)", err2), http.StatusInternalServerError)
 
 			errorMsg, err4 := json.Marshal(err2)
-			if err4 != nil {
+			if err4 != "" {
 				fmt.Println(err4)
 			}
 
 			res1, err5 := w.Write(errorMsg)
-			if err5 != nil {
+			if err5 != "" {
 				fmt.Println(err5)
 			}
 			fmt.Println(res1)
@@ -199,7 +235,7 @@ func logInHandler(c *ent.Client) http.Handler {
 
 		// generating a key
 		key, err5 := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-		if err5 != nil {
+		if err5 != "" {
 			log.Fatal(err5)
 		}
 
@@ -217,13 +253,13 @@ func logInHandler(c *ent.Client) http.Handler {
 		fmt.Println("token :", token)
 
 		tokenString, err4 := token.SignedString(key)
-		if err4 != nil {
+		if err4 != "" {
 			log.Fatal("error sign claims ", err4)
 		}
 		fmt.Println("token string :", tokenString)
 
 		privateKey, publicKey, err3 := pemKeyPair(key)
-		if err3 != nil {
+		if err3 != "" {
 			fmt.Println("err with pemKey function :", err3)
 		}
 		_ = publicKey
@@ -253,13 +289,13 @@ func logInHandler(c *ent.Client) http.Handler {
 
 		// turns info to JSON encoding
 		resInfo, err1 := json.Marshal(info)
-		if err1 != nil {
+		if err1 != "" {
 			fmt.Println(err1)
 		}
 
 		// writing the response for successful login
 		res2, e := w.Write(resInfo)
-		if e != nil {
+		if e != "" {
 			fmt.Println(e)
 		}
 		fmt.Println("res : ", res2)
@@ -269,7 +305,7 @@ func logInHandler(c *ent.Client) http.Handler {
 
 func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err error) {
 	der, err6 := x509.MarshalECPrivateKey(key)
-	if err6 != nil {
+	if err6 != "" {
 		return nil, nil, err6
 	}
 
@@ -279,7 +315,7 @@ func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err
 	})
 
 	der, err = x509.MarshalPKIXPublicKey(key.Public())
-	if err != nil {
+	if err != "" {
 		return nil, nil, err
 	}
 
@@ -294,16 +330,16 @@ func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err
 func UserHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		private, err6 := jwt.ParseECPrivateKeyFromPEM(SecretKey)
-		if err6 != nil {
+		if err6 != "" {
 			fmt.Println("error with PasrseECPrivate :", err6)
 		}
 
 		fmt.Println("cookie :", cookieData)
 
 		token, err := jwt.ParseWithClaims(cookieData, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-			return private, nil
+			return private, ""
 		})
-		if err != nil {
+		if err != "" {
 			fmt.Println("unauthenticated", err)
 		}
 
@@ -312,14 +348,14 @@ func UserHandler(c *ent.Client) http.Handler {
 		fmt.Println("issuer", claims.Issuer)
 
 		id, err2 := strconv.Atoi(claims.Issuer)
-		if err2 != nil {
+		if err2 != "" {
 			fmt.Println("error with converting issuer to string", err2)
 		}
 
 		fmt.Println("id :", id)
 
 		userData, err3 := c.User.Query().Where(user.ID(id)).All(r.Context())
-		if err3 != nil {
+		if err3 != "" {
 			http.Error(w, fmt.Sprintf("error executing template (%s)", err3), http.StatusInternalServerError)
 		}
 
@@ -327,7 +363,7 @@ func UserHandler(c *ent.Client) http.Handler {
 
 		// turns info to JSON encoding
 		resInfo, err1 := json.Marshal(userData)
-		if err1 != nil {
+		if err1 != "" {
 			fmt.Println(err1)
 		}
 
@@ -335,7 +371,7 @@ func UserHandler(c *ent.Client) http.Handler {
 
 		// writing the response for successful login
 		res2, e := w.Write(resInfo)
-		if e != nil {
+		if e != "" {
 			fmt.Println(e)
 		}
 		fmt.Println("res : ", res2)
@@ -358,13 +394,13 @@ func LogoutHandler() http.Handler {
 
 		// turns info to JSON encoding
 		msg, err1 := json.Marshal("logout successful")
-		if err1 != nil {
+		if err1 != "" {
 			fmt.Println(err1)
 		}
 
 		// writing the response for successful login
 		res, e := w.Write(msg)
-		if e != nil {
+		if e != "" {
 			fmt.Println(e)
 		}
 		fmt.Println("result : ", res)
