@@ -9,7 +9,7 @@ import classes from "./SignupForm.module.css";
 import {styled} from "@mui/material/styles";
 
 
-export function ResetForm(props) {
+function ResetForm(props) {
     const [spinner, setSpinner] = useState(false);
     const [givenPassword, setPassword] = useState('')
     const [givenPasswordConfirm, setPasswordConfirm] = useState('')
@@ -17,13 +17,14 @@ export function ResetForm(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const userData = {
+            token: props.match.params.token,
             givenPassword,
             givenPasswordConfirm
         };
 
         setSpinner(true);
 
-        fetch('http://localhost:8081/signupForm', {
+        fetch('http://localhost:8081/resetForm', {
             method: 'post',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(userData)
@@ -35,7 +36,7 @@ export function ResetForm(props) {
             .then((data) => {
                 setSpinner(false);
                 console.log('new user added')
-                window.location.replace("/userPage/" + JSON.stringify(data))
+                window.location.replace("/register-sign-in/")
             })
     }
 
@@ -74,3 +75,5 @@ export function ResetForm(props) {
         </BoxContainer>
     );
 }
+
+export default ResetForm

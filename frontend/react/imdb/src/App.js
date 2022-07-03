@@ -19,6 +19,7 @@ import Top10Page from "./pages/Top10";
 import Welcome from "./pages/Welcome";
 import Last5Added from "./components/movies/last5-added";
 import MoviesByGenre from "./components/movies/movies-by-genre";
+import ResetForm from "./components/accounts/resetForm";
 import UserPage from "./pages/userPage";
 
 import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
@@ -81,6 +82,7 @@ function App() {
                     <Route path="/moviePage/:id" element={<><UpdateRank userID={userId}/><HoverRating/><ShowReviews/><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>}/>
                     <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
                     <Route path='/register-sign-in' element={<AccountBox/>}/>
+                    <Route path='/reset/:token' element={<ResetForm LoggedInUser={userId}/>}/>
                     <Route path='/userPage/:id' element={<UserPage LoggedInUser={userId}/>}/>
                 </Routes>
             </Layout>

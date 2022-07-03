@@ -13,7 +13,7 @@ import (
 	"net/smtp"
 )
 
-func Forgot() http.Handler {
+func Forgot(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -35,10 +35,16 @@ func Forgot() http.Handler {
 		}
 
 		email := PasswordReset.Email
+
+		// need to check if there is a user with this mail
+		userMail := c.User.Query().Where(user.Email(email))
+		if userMail != nil {
+			fmt.Println("email not found")
+			return
+		}
+
 		token := RandStringRunes(16)
-
 		from := "admin@IMDB_Clone.com"
-
 		to := []string{
 			email,
 		}
@@ -47,7 +53,7 @@ func Forgot() http.Handler {
 
 		message := []byte("click <a href=\"" + url + "\">here</a> to reset your password!")
 
-		err2 := smtp.SendMail("0.0.0.0:1025", nil, from, to, message)
+		err2 := smtp.SendMail(email, nil, from, to, message)
 
 		if err2 != nil {
 			log.Println(err2)
