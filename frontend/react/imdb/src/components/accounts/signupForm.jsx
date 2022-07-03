@@ -11,6 +11,8 @@ import {styled} from "@mui/material/styles";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import EditIcon from "@mui/icons-material/Edit";
+import CardContent from "@mui/material/CardContent";
 
 
 export function SignUpForm(props) {
@@ -20,6 +22,7 @@ export function SignUpForm(props) {
         setGender(event.target.value);
     };
 
+    const [ThankYou, setThankYou] = useState(false)
     const [spinner, setSpinner] = useState(false);
 
 
@@ -69,7 +72,8 @@ export function SignUpForm(props) {
             .then((data) => {
                 setSpinner(false);
                 console.log('new user added')
-                window.location.replace("/userPage/" + JSON.stringify(data))
+                setThankYou(true);
+                setTimeout(() => window.location.replace("/register-sign-in/"), 1500)
             })
     }
 
@@ -77,7 +81,18 @@ export function SignUpForm(props) {
         display: "none",
     });
 
-    return (
+    let ThankYouMassage = (
+        <div>
+            <CardContent className={classes.about}>
+                <EditIcon className={classes.editDetailsBut}/>
+                <Typography component="div">
+                    Thank You {givenFirstName} for signing up and welcome to IMDB !
+                </Typography>
+            </CardContent>
+        </div>
+    )
+
+    let form = (
         <BoxContainer>
             <Card>
                 <Typography variant="h6" align="center" color="#1c0907">
@@ -190,7 +205,7 @@ export function SignUpForm(props) {
                                autoComplete="new-password"/>
                     </div>
                     <Marginer direction="vertical" margin={10}/>
-                    <SubmitButton type="submit" value="submit" >{spinner? 'loading...' : 'Sign In!'}</SubmitButton>
+                    <SubmitButton type="submit" value="submit">{spinner ? 'loading...' : 'Sign In!'}</SubmitButton>
                 </form>
             </Card>
             <MutedLink href="#">Forget your password?</MutedLink>
@@ -204,4 +219,6 @@ export function SignUpForm(props) {
             </MutedLink>
         </BoxContainer>
     );
+
+    return <>{form}{ThankYou ? ThankYouMassage : null}</>
 }

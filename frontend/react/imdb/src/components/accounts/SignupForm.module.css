@@ -134,3 +134,17 @@
   font-weight: bolder;
   color: black;
 }
+
+.about {
+  margin-top: 1.6cm;
+  border-radius: 13px;
+  color: yellow;
+  background-color: #cc2062;
+  height: 5cm;
+}
+
+.editDetailsBut {
+  display: flex;
+  position: absolute;
+  right: 19cm;
+}

@@ -81,7 +81,7 @@ export function ForgotForm() {
             <MutedLink href="#">
                 Want to try again?{" "}
                 <BoldLink href="#" onClick={switchToSignin}>
-                    Sign Up
+                    Log In
                 </BoldLink>
             </MutedLink>
         </BoxContainer>
