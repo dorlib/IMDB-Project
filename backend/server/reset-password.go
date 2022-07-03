@@ -34,31 +34,47 @@ func Forgot(c *ent.Client) http.Handler {
 			Token string `gorm:"unique"`
 		}
 
+		er := json.Unmarshal(buf, &PasswordReset)
+		if er != nil {
+			log.Fatal(er)
+		}
+
 		email := PasswordReset.Email
 
+		fmt.Println("email", email)
+
 		// need to check if there is a user with this mail
-		userMail := c.User.Query().Where(user.Email(email))
-		if userMail != nil {
+		userMail := c.User.Query().Where(user.Email(email)).OnlyIDX(r.Context())
+		if userMail == 0 {
 			fmt.Println("email not found")
 			return
 		}
-
 		token := RandStringRunes(16)
 		from := "admin@IMDB_Clone.com"
 		to := []string{
 			email,
 		}
 
+		host := "smtp.gmail.com"
+		port := "587"
+
 		url := "http://localhost:3000/reset/" + token
 
 		message := []byte("click <a href=\"" + url + "\">here</a> to reset your password!")
 
-		err2 := smtp.SendMail(email, nil, from, to, message)
+		err2 := smtp.SendMail(host+":"+port, nil, from, to, message)
 
 		if err2 != nil {
 			log.Println(err2)
 			return
 		}
+
+		// writing the response for successful sending email process
+		res2, e := w.Write([]byte("Check your email"))
+		if e != nil {
+			fmt.Println(e)
+		}
+		fmt.Println("res : ", res2)
 
 	})
 }

@@ -20,7 +20,7 @@ export function ForgotForm() {
     const [success, setSuccess] = useState(false);
 
 
-    const handleReset = async (e) => {
+    const handleForgot = async (e) => {
         e.preventDefault();
 
         const userData = {
@@ -59,7 +59,7 @@ export function ForgotForm() {
 
     return (
         <BoxContainer>
-            <form className={classes.form} onSubmit={handleReset}>
+            <form className={classes.form} onSubmit={handleForgot}>
                 <Card>
                     <div className={classes.email}>
                         <label htmlFor="email" className={classes.enterMail}>Enter Your Email</label>
