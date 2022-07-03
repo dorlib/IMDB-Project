@@ -83,13 +83,19 @@ func resetHandler(c *ent.Client) http.Handler {
 		fmt.Println(err, string(buf))
 
 		var userData struct {
-			GivenPassword string `json:"GivenPassword"`
-			GivenID       int    `json:"GivenID"`
+			GivenPassword        string `json:"GivenPassword"`
+			GivenPasswordConfirm string `json:"GivenPasswordConfirm"`
+			GivenID              int    `json:"GivenID"`
 		}
 
 		err = json.Unmarshal(buf, &userData)
 		if err != nil {
 			log.Fatal(err)
+		}
+
+		if userData.GivenPassword != userData.GivenPasswordConfirm {
+			fmt.Println("Passwords do not match!")
+			return
 		}
 
 		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.GivenPassword), 14)
