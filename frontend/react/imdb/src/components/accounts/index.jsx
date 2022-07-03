@@ -4,7 +4,7 @@ import { LoginForm } from "./loginForm";
 import { motion } from "framer-motion";
 import { AccountContext } from "./accountContext";
 import { SignUpForm } from "./signupForm";
-import { ResetForm } from "./resetForm";
+import { ForgotForm } from "./forgotForm";
 
 const BoxContainer = styled.div`
   width: 600px;
@@ -168,7 +168,7 @@ export function AccountBox(props) {
         </TopContainer>
         <InnerContainer>
           {active === "signin" && <LoginForm />}
-          {active === "reset" && <ResetForm />}
+          {active === "reset" && <ForgotForm />}
           {active === "signup" && <SignUpForm />}
         </InnerContainer>
       </BoxContainer>

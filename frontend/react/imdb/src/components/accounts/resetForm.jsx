@@ -1,36 +1,28 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
+import {BoldLink, BoxContainer, FormContainer, Input, MutedLink, SubmitButton,} from "./common";
 import {Marginer} from "../marginer";
-import {AccountContext} from "./accountContext";
-import {useState} from "react";
+
+import {Typography} from "@mui/material";
+import {Button, Stack} from "@mui/material";
 import Card from "../ui/Card";
+import classes from "./SignupForm.module.css";
 import {styled} from "@mui/material/styles";
 
-import classes from "./resetForm.module.css"
-import {BoldLink, BoxContainer, FormContainer, MutedLink, SubmitButton,} from "./common";
-import {Typography} from "@mui/material";
-import styledComponentsBrowserEsm from "styled-components/dist/styled-components.browser.esm";
 
-
-export function ResetForm() {
-    const {switchToSignin} = useContext(AccountContext);
-
-    const [givenEmail, setEmail] = useState('')
-
+function ResetForm(props) {
     const [spinner, setSpinner] = useState(false);
-    const [loginError, setLoginError] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const [userName, setUserName] = useState('')
+    const [givenPassword, setPassword] = useState('')
+    const [givenPasswordConfirm, setPasswordConfirm] = useState('')
 
-
-    const handleReset = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const userData = {
-            givenEmail
+            token: props.match.params.token,
+            givenPassword,
+            givenPasswordConfirm
         };
 
         setSpinner(true);
-        setLoginError(false);
-        setSuccess(false);
 
         fetch('http://localhost:8081/resetForm', {
             method: 'post',
@@ -42,18 +34,9 @@ export function ResetForm() {
                 console.error('error:', err)
             })
             .then((data) => {
-                if (data) {
-                    console.log('login successfully')
-                    setUserName(data["FirstName"])
-                    setSpinner(false);
-                    setSuccess(true);
-                    return setTimeout( () => window.location.replace("/userPage/" + JSON.stringify(data["ID"])), 1000)
-                } else {
-                    console.log('login not successful')
-                    setSpinner(false);
-                    setLoginError(true)
-                    return setTimeout(() => window.location.reload(),2000);
-                }
+                setSpinner(false);
+                console.log('new user added')
+                window.location.replace("/register-sign-in/")
             })
     }
 
@@ -63,32 +46,34 @@ export function ResetForm() {
 
     return (
         <BoxContainer>
-            <form className={classes.form} onSubmit={handleReset}>
-                <Card>
-                    <div className={classes.email}>
-                        <label htmlFor="email" className={classes.enterMail}>Enter Your Email</label>
-                        <input type="text" id="email" name="email" required
-                               onChange={event => setEmail(event.target.value)} autoComplete="username"/>
+            <Card>
+                <Typography variant="h6" align="center" color="#1c0907">
+                    Reset Your Password!
+                </Typography>
+                <form className={classes.form} onSubmit={handleSubmit}>
+
+                    <div className={classes.ctrl}>
+                        <label htmlFor="password">Choose Your New Password (8 characters minimum)</label>
+                        <input type="password" id="password" name="password" minLength="8" value={givenPassword}
+                               onChange={event => setPassword(event.target.value)}
+                               autoComplete="new-password"/>
                     </div>
-                </Card>
-                <Typography className={classes.err}>{loginError? 'Login was not successful... please try again': null}</Typography>
-                <Typography className={classes.success}>{success? 'Its Nice Seeing You Again '+ userName + ' !': null}</Typography>
-                <Marginer direction="vertical" margin={45}/>
-                <SubmitButton type="submit" value="submit" style={{display: "flex", marginLeft: "1.9cm", marginRight: "1.9cm", marginTop: "0.3cm"}}>{spinner? 'loading...' : 'Reset!'}</SubmitButton>
-            </form>
-            <MutedLink href="#">Forget your password?
-                <BoldLink href="#" >
-                    click here to reset
-                </BoldLink>
-            </MutedLink>
+
+                    <div className={classes.ctrl}>
+                        <label htmlFor="passwordConfirm">Confirm your New Password </label>
+                        <input type="password" id="passwordConfirm" name="passwordConfirm" minLength="8" value={givenPasswordConfirm}
+                               onChange={event => setPasswordConfirm(event.target.value)}
+                               autoComplete="new-password"/>
+                    </div>
+
+                    <Marginer direction="vertical" margin={10}/>
+                    <SubmitButton type="submit" value="submit" >{spinner? 'loading...' : 'Sign In!'}</SubmitButton>
+                </form>
+            </Card>
             <Marginer direction="vertical" margin="0.3em"/>
             <Marginer direction="vertical" margin="1em"/>
-            <MutedLink href="#">
-                Want to try again?{" "}
-                <BoldLink href="#" onClick={switchToSignin}>
-                    Sign Up
-                </BoldLink>
-            </MutedLink>
         </BoxContainer>
     );
 }
+
+export default ResetForm

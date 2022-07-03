@@ -97,42 +97,6 @@ func signHandler(c *ent.Client) http.Handler {
 	})
 }
 
-func resetHandler(c *ent.Client) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "POST" {
-			http.Redirect(w, r, "/", http.StatusSeeOther)
-			return
-		}
-
-		err := r.ParseForm()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		buf, err := io.ReadAll(r.Body)
-		fmt.Println(err, string(buf))
-
-		var userData struct {
-			GivenPassword string `json:"GivenPassword"`
-			GivenID       int    `json:"GivenID"`
-		}
-
-		err = json.Unmarshal(buf, &userData)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.GivenPassword), 14)
-
-		newUser := c.User.
-			Update().Where(user.ID(userData.GivenID)).
-			SetPassword(string(bcrypedPassword)).
-			SaveX(r.Context())
-		fmt.Println("new user added:", newUser)
-
-	})
-}
-
 type loaded struct {
 	FirstName string
 	ID        int
@@ -378,4 +342,5 @@ func authentication(router *chi.Mux, client *ent.Client) {
 	router.Handle("/resetForm", resetHandler(client))
 	router.Handle("/user", UserHandler(client))
 	router.Handle("/logout", LogoutHandler())
+	router.Handle("/forgot", Forgot())
 }
