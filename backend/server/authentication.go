@@ -342,5 +342,5 @@ func authentication(router *chi.Mux, client *ent.Client) {
 	router.Handle("/resetForm", resetHandler(client))
 	router.Handle("/user", UserHandler(client))
 	router.Handle("/logout", LogoutHandler())
-	router.Handle("/forgot", Forgot())
+	router.Handle("/forgot", Forgot(client))
 }

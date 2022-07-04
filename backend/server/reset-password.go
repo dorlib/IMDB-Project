@@ -13,6 +13,12 @@ import (
 	"net/smtp"
 )
 
+var PasswordReset struct {
+	Id    uint   `json:"id"`
+	Email string `json:"email"`
+	Token string `gorm:"unique"`
+}
+
 func Forgot(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
@@ -28,37 +34,61 @@ func Forgot(c *ent.Client) http.Handler {
 		buf, err1 := io.ReadAll(r.Body)
 		fmt.Println(err1, string(buf))
 
-		var PasswordReset struct {
-			Id    uint   `json:"id"`
+		var Forgot struct {
 			Email string `json:"email"`
-			Token string `gorm:"unique"`
 		}
 
-		email := PasswordReset.Email
+		er := json.Unmarshal(buf, &Forgot)
+		if er != nil {
+			log.Fatal(er)
+		}
+
+		fmt.Println("email given", Forgot.Email)
 
 		// need to check if there is a user with this mail
-		userMail := c.User.Query().Where(user.Email(email))
-		if userMail != nil {
+		userMail, err2 := c.User.Query().Where(user.Email(Forgot.Email)).All(r.Context())
+		if err2 != nil {
+			log.Fatal("error while querying user by email", err2)
+		}
+
+		if userMail == nil {
 			fmt.Println("email not found")
 			return
 		}
 
 		token := RandStringRunes(16)
-		from := "admin@IMDB_Clone.com"
+
+		from := "Admin@imdb_clone.com"
+
+		user := "IMDB_ADMIN"
+		password := "123456789"
+
 		to := []string{
-			email,
+			Forgot.Email,
 		}
+
+		host := "smtp.gmail.com"
+		port := "587"
 
 		url := "http://localhost:3000/reset/" + token
 
 		message := []byte("click <a href=\"" + url + "\">here</a> to reset your password!")
 
-		err2 := smtp.SendMail(email, nil, from, to, message)
+		auth := smtp.PlainAuth("", user, password, host)
 
-		if err2 != nil {
-			log.Println(err2)
+		err3 := smtp.SendMail(host+":"+port, auth, from, to, message)
+
+		if err3 != nil {
+			log.Println(err3)
 			return
 		}
+
+		// writing the response for successful sending email process
+		res2, e := w.Write([]byte("Check your email"))
+		if e != nil {
+			fmt.Println(e)
+		}
+		fmt.Println("res : ", res2)
 
 	})
 }
