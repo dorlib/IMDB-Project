@@ -59,6 +59,8 @@ func Forgot(c *ent.Client) http.Handler {
 		token := RandStringRunes(16)
 
 		from := "Admin@imdb_clone.com"
+
+		user := "IMDB_ADMIN"
 		password := "123456789"
 
 		to := []string{
@@ -72,7 +74,9 @@ func Forgot(c *ent.Client) http.Handler {
 
 		message := []byte("click <a href=\"" + url + "\">here</a> to reset your password!")
 
-		err3 := smtp.SendMail(host+":"+port, password, from, to, message)
+		auth := smtp.PlainAuth("", user, password, host)
+
+		err3 := smtp.SendMail(host+":"+port, auth, from, to, message)
 
 		if err3 != nil {
 			log.Println(err3)
