@@ -155,7 +155,7 @@ function ShowReviews(props) {
                                               </Typography>
                                               <Button onClick={() => handleLike(id)}><ThumbUpIcon className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
-                                              <span className={classes.badgeLikes}>{0}</span>
+                                              <span className={classes.badgeLikes}>{sumOfLikes}</span>
                                               <span className={classes.badgeComments}>{0}</span>
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>

@@ -1,10 +1,10 @@
-import {gql, useQuery} from "@apollo/client";
+import {gql, useMutation, useQuery} from "@apollo/client";
 import * as React from 'react';
-import { motion, AnimateSharedLayout, AnimatePresence } from "framer-motion";
 import {useState} from "react";
-import Card from "@mui/material/Card";
 
 function ToggleLike(props) {
+    const [toggle, setToggle] = useState(true)
+
     const ADD_LIKE = gql`
         mutation AddLike ($reviewID: ID! ,$userID: ID!) {
             addLike (reviewID: $reviewID, userID: $userID){
@@ -21,32 +21,56 @@ function ToggleLike(props) {
         }
     `;
 
+    const LIKE_ID = gql`
+        query LikeByUserAndReview($userID: ID! ,$reviewID: ID!) {
+            likeByUserAndReview( userID: $userID, reviewID: $reviewID) {
+                id
+            }
+        }
+    `
 
-    const {data, loading, error} = useQuery(SHOW_COMMENTS,
+    let TOGGLE
+
+    if (props.remove) {
+        TOGGLE = REMOVE_LIKE
+    } else {
+        TOGGLE = ADD_LIKE
+    }
+
+    // in case we need the like's id in order to remove it
+    const {data, loading, error} = useQuery(LIKE_ID,
         {
             variables: {
-                reviewID: reviewID || 0,
+                userID : props.userID || 0,
+                reviewID: props.reviewID || 0,
             }
         })
 
     if (error) return <div>Error!</div>
     if (loading) return <div>Loading...</div>
 
-    console.log(data)
+    let likeID = data["likeByUserAndReview"]["0"]
 
-    return (
-        <Card>
-            {data.commentsOfReview.map(comment => (
-                <motion.div layoutId={comment.id} onClick={() => setReviewID(comment.id)}>
-                    <motion.h5>{comment.topic}</motion.h5>
-                    <motion.h2>{comment.text}</motion.h2>
-                </motion.div>
-            ))}
-        </Card>
-    )
+    const [toggleLike] = useMutation(TOGGLE,
+        {
+            variables: {
+                userID: props.userID,
+                reviewID: props.reviewID,
+                likeID: likeID,
+            }, onCompleted: function (data) {
+                window.location.reload();
+            },
+            onError: function (error) {
+                console.log("error:", error)
+            }
+        })
 
+    if (toggle) {
+        setToggle(false)
+        toggleLike().then(() => setToggle(false))
+    }
 
-
+    return null
 }
 
 export default ToggleLike
