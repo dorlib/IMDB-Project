@@ -48,7 +48,7 @@ type Review {
     topic: String!
     text: String!
     rank: Int!
-    likes: Int!
+    like : Like!
     movie: Movie!
     user: User!
 }
@@ -200,6 +200,9 @@ type Query {
     reviewsOfMovie(movieID: Int!) : [Review]
     commentsOfReview(reviewID: ID!) : [Comment]
     favoritesOfUser(userID: ID!): [Favorite]
+    likesOfUser(userID : ID!): [Like]
+    LikeByUserAndReview(userID: ID!, reviewID: ID!): Like
+    totalLikesOfReview(reviewID: ID!): [Like]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node

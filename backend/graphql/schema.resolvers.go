@@ -10,6 +10,7 @@ import (
 	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
+	"imdbv2/ent/like"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -278,6 +279,21 @@ func (r *queryResolver) CommentsOfReview(ctx context.Context, reviewID int) ([]*
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+	return data, nil
+}
+
+func (r *queryResolver) LikesOfUser(ctx context.Context, UserID int) ([]*ent.Like, error) {
+	data := r.client.Like.Query().Where(like.UserID(UserID)).AllX(ctx)
+	return data, nil
+}
+
+func (r *queryResolver) TotalLikesOfReview(ctx context.Context, reviewID int) ([]*ent.Like, error) {
+	data := r.client.Like.Query().Where(like.ReviewID(reviewID)).AllX(ctx)
+	return data, nil
+}
+
+func (r *queryResolver) LikeByUserAndReview(ctx context.Context, userID int, reviewID int) (*ent.Like, error) {
+	data := r.client.Like.Query().Where(like.UserID(userID)).Where(like.ReviewID(reviewID)).OnlyX(ctx)
 	return data, nil
 }
 
