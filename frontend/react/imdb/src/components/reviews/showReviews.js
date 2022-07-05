@@ -45,6 +45,7 @@ function ShowReviews(props) {
     const COMMENTS_USER_LIKES = gql`
         query LikesOfUser ($userID: Int!) {
             likesOfUser (userID: $userID) {
+                id                            #id of the like
                 reviewID
             }
         }

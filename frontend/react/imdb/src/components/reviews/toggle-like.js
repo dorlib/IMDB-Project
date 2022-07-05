@@ -5,26 +5,22 @@ import {useState} from "react";
 import Card from "@mui/material/Card";
 
 function ToggleLike(props) {
-    const [reviewID, setReviewID] = useState(0)
-
-    const SHOW_COMMENTS = gql`
-        query CommentsOfReview ($reviewID: ID!) {
-            commentsOfReview (reviewID: $reviewID){
-                topic
-                text
+    const ADD_LIKE = gql`
+        mutation AddLike ($reviewID: ID! ,$userID: ID!) {
+            addLike (reviewID: $reviewID, userID: $userID){
                 id
-                user {
-                    nickname
-                    profile
-                    id
-                }
             }
         }
     `;
 
-    if (props.id !== 0) {
-        setReviewID(props.id)
-    }
+    const REMOVE_LIKE = gql`
+        mutation DeleteLike ($likeID: ID! ,$userID: ID!) {
+            deleteLike (likeID: $likeID, userID: $userID){
+                id
+            }
+        }
+    `;
+
 
     const {data, loading, error} = useQuery(SHOW_COMMENTS,
         {
