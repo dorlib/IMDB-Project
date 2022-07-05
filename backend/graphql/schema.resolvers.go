@@ -287,6 +287,11 @@ func (r *queryResolver) LikesOfUser(ctx context.Context, UserID int) ([]*ent.Lik
 	return data, nil
 }
 
+func (r *queryResolver) TotalLikesOfReview(ctx context.Context, reviewID int) ([]*ent.Like, error) {
+	data := r.client.Like.Query().Where(like.ReviewID(reviewID)).AllX(ctx)
+	return data, nil
+}
+
 func (r *queryResolver) LikeByUserAndReview(ctx context.Context, userID int, reviewID int) (*ent.Like, error) {
 	data := r.client.Like.Query().Where(like.UserID(userID)).Where(like.ReviewID(reviewID)).OnlyX(ctx)
 	return data, nil

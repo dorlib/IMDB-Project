@@ -43,10 +43,18 @@ function ShowReviews(props) {
     `;
 
     const COMMENTS_USER_LIKES = gql`
-        query LikesOfUser ($userID: Int!) {
+        query LikesOfUser ($userID: ID!) {
             likesOfUser (userID: $userID) {
                 id                            #id of the like
                 reviewID
+            }
+        }
+    `
+
+    const TOTAL_LIKES_OF_REVIEW = gql`
+        query TotalLikesOfReview ($reviewID: ID!) {
+            totalLikesOfReview (reviewID: $reviewID) {
+                id
             }
         }
     `
@@ -76,6 +84,13 @@ function ShowReviews(props) {
             }
         })
 
+    const {data: data0, loading: loading0, error: error0} = useQuery(TOTAL_LIKES_OF_REVIEW,
+        {
+            variables: {
+                
+            }
+        })
+
     const {data: data1, loading: loading1, error: error1} = useQuery(COMMENTS_USER_LIKES,
         {
             variables: {
@@ -83,9 +98,13 @@ function ShowReviews(props) {
             }
         })
 
-    let sumOfLikes = data1["likesOfUser"].length
-    let reviewLikesIDS = [];
+    let sumOfLikes  // of user
+    if (data1) {
+        sumOfLikes = data1["likesOfUser"].length
+    }
 
+    // in order to find if user already like this review
+    let reviewLikesIDS = [];
     for (let i = 0; i < sumOfLikes; i++) {
         reviewLikesIDS.push(data1["likesOfUser"][i]["reviewID"])
     }
@@ -104,6 +123,9 @@ function ShowReviews(props) {
     }
 
     function handleLike(id) {
+        if (!props.userID) {
+            return <div>only users can give likes and comments</div>
+        }
         if (reviewLikesIDS.includes(parseInt(id))) {
             setRemoveLike(true)
         }
@@ -155,7 +177,7 @@ function ShowReviews(props) {
                                               </Typography>
                                               <Button onClick={() => handleLike(id)}><ThumbUpIcon className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
-                                              <span className={classes.badgeLikes}>{sumOfLikes}</span>
+                                              <span className={classes.badgeLikes}>{0}</span>
                                               <span className={classes.badgeComments}>{0}</span>
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>

@@ -46,9 +46,6 @@ function ToggleLike(props) {
             }
         })
 
-    if (error) return <div>Error!</div>
-    if (loading) return <div>Loading...</div>
-
     let likeID = data["likeByUserAndReview"]["0"]
 
     const [toggleLike] = useMutation(TOGGLE,
@@ -64,6 +61,10 @@ function ToggleLike(props) {
                 console.log("error:", error)
             }
         })
+
+    if (error) return <div>Error!</div>
+    if (loading) return <div>Loading...</div>
+
 
     if (toggle) {
         setToggle(false)
