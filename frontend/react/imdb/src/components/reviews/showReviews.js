@@ -51,14 +51,6 @@ function ShowReviews(props) {
         }
     `
 
-    const TOTAL_LIKES_OF_REVIEW = gql`
-        query TotalLikesOfReview ($reviewID: ID!) {
-            totalLikesOfReview (reviewID: $reviewID) {
-                id
-            }
-        }
-    `
-
     const ORIGINAL_RANK = gql`
         query MovieById ($movieID: ID!) {
             movieById (id: $movieID) {
@@ -81,13 +73,6 @@ function ShowReviews(props) {
         {
             variables: {
                 movieID: lastSegment || 0,
-            }
-        })
-
-    const {data: data0, loading: loading0, error: error0} = useQuery(TOTAL_LIKES_OF_REVIEW,
-        {
-            variables: {
-                
             }
         })
 
@@ -133,7 +118,7 @@ function ShowReviews(props) {
         setLikeClicked(true)
     }
 
-    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
+    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, like}) => (
         text !== '' ? (
             <div key={id} className={classes.item}>
                 <List sx={{width: '100%',}} className={classes.rev}>
@@ -177,7 +162,7 @@ function ShowReviews(props) {
                                               </Typography>
                                               <Button onClick={() => handleLike(id)}><ThumbUpIcon className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
-                                              <span className={classes.badgeLikes}>{0}</span>
+                                              <span className={classes.badgeLikes}>{() => console.log(like)}</span>
                                               <span className={classes.badgeComments}>{0}</span>
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>

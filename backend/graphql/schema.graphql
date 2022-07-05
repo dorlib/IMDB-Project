@@ -48,7 +48,7 @@ type Review {
     topic: String!
     text: String!
     rank: Int!
-    likes: Int!
+    like : Like!
     movie: Movie!
     user: User!
 }

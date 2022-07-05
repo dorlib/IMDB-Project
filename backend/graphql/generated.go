@@ -139,7 +139,7 @@ type ComplexityRoot struct {
 
 	Review struct {
 		ID      func(childComplexity int) int
-		Likes   func(childComplexity int) int
+		Like    func(childComplexity int) int
 		Movie   func(childComplexity int) int
 		MovieID func(childComplexity int) int
 		Rank    func(childComplexity int) int
@@ -213,7 +213,7 @@ type QueryResolver interface {
 type ReviewResolver interface {
 	MovieID(ctx context.Context, obj *ent.Review) (int, error)
 
-	Likes(ctx context.Context, obj *ent.Review) (int, error)
+	Like(ctx context.Context, obj *ent.Review) (*ent.Like, error)
 }
 
 type executableSchema struct {
@@ -840,12 +840,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Review.ID(childComplexity), true
 
-	case "Review.likes":
-		if e.complexity.Review.Likes == nil {
+	case "Review.like":
+		if e.complexity.Review.Like == nil {
 			break
 		}
 
-		return e.complexity.Review.Likes(childComplexity), true
+		return e.complexity.Review.Like(childComplexity), true
 
 	case "Review.movie":
 		if e.complexity.Review.Movie == nil {
@@ -1094,7 +1094,7 @@ type Review {
     topic: String!
     text: String!
     rank: Int!
-    likes: Int!
+    like : Like!
     movie: Movie!
     user: User!
 }
@@ -4684,7 +4684,7 @@ func (ec *executionContext) _Review_rank(ctx context.Context, field graphql.Coll
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Review_likes(ctx context.Context, field graphql.CollectedField, obj *ent.Review) (ret graphql.Marshaler) {
+func (ec *executionContext) _Review_like(ctx context.Context, field graphql.CollectedField, obj *ent.Review) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4702,7 +4702,7 @@ func (ec *executionContext) _Review_likes(ctx context.Context, field graphql.Col
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Review().Likes(rctx, obj)
+		return ec.resolvers.Review().Like(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4714,9 +4714,9 @@ func (ec *executionContext) _Review_likes(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(*ent.Like)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNLike2ᚖimdbv2ᚋentᚐLike(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Review_movie(ctx context.Context, field graphql.CollectedField, obj *ent.Review) (ret graphql.Marshaler) {
@@ -8025,7 +8025,7 @@ func (ec *executionContext) _Review(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "likes":
+		case "like":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -8034,7 +8034,7 @@ func (ec *executionContext) _Review(ctx context.Context, sel ast.SelectionSet, o
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Review_likes(ctx, field, obj)
+				res = ec._Review_like(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
