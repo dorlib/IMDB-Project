@@ -17,12 +17,14 @@ import Button from "@mui/material/Button";
 import { motion, AnimateSharedLayout, AnimatePresence } from "framer-motion";
 import {useState} from "react";
 import ShowComments from "./showComments";
-import AddLike from "./addLike";
+import ToggleLike from "./toggle-like";
 
 
 function ShowReviews(props) {
     const [extend, setExtend] = useState(0)
-    const [likeClicked, setLickClicked] = useState(false)
+    const [likeClicked, setLikeClicked] = useState(false)
+    const [likedReviewID, setLikedReviewID] = useState(0)
+    const [removeLike, setRemoveLike] = useState(false)
 
     const SHOW_REVIEWS = gql`
         query ReviewsOfMovie ($movieID: Int!) {
@@ -41,7 +43,11 @@ function ShowReviews(props) {
     `;
 
     const COMMENTS_USER_LIKES = gql`
-        
+        query LikesOfUser ($userID: Int!) {
+            likesOfUser (userID: $userID) {
+                reviewID
+            }
+        }
     `
 
     const ORIGINAL_RANK = gql`
@@ -69,8 +75,24 @@ function ShowReviews(props) {
             }
         })
 
-    if (error) return <div>Error!</div>
-    if (loading) return <div>Loading...</div>
+    const {data: data1, loading: loading1, error: error1} = useQuery(COMMENTS_USER_LIKES,
+        {
+            variables: {
+                userID: props.userID || 0
+            }
+        })
+
+    let sumOfLikes = data1["likesOfUser"].length
+    let reviewLikesIDS = [];
+
+    for (let i = 0; i < sumOfLikes; i++) {
+        reviewLikesIDS.push(data1["likesOfUser"][i]["reviewID"])
+    }
+
+    if (error) return <div>Error! ,{error}</div>
+    if (loading) return <div>Loading... </div>
+    if (error1) return <div>Error!, {error1}</div>
+    if (loading1) return <div>Loading...</div>
 
     function handleExtend(id) {
         if (extend !== id) {
@@ -81,7 +103,11 @@ function ShowReviews(props) {
     }
 
     function handleLike(id) {
-
+        if (reviewLikesIDS.includes(parseInt(id))) {
+            setRemoveLike(true)
+        }
+        setLikedReviewID(parseInt(id))
+        setLikeClicked(true)
     }
 
     let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
@@ -145,11 +171,12 @@ function ShowReviews(props) {
 
     let addLike = (
         <div>
-            <AddLike />
+            {() => setLikeClicked(false)}
+            <ToggleLike remove={removeLike} userID={props.userID} reviewID={likedReviewID}/>
         </div>
     )
 
-    return <>{loaded}{}</>
+    return <>{loaded}{likeClicked ? addLike: null}</>
 }
 
 export default ShowReviews

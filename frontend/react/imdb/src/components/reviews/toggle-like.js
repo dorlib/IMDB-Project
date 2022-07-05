@@ -4,7 +4,7 @@ import { motion, AnimateSharedLayout, AnimatePresence } from "framer-motion";
 import {useState} from "react";
 import Card from "@mui/material/Card";
 
-function AddLike(props) {
+function ToggleLike(props) {
     const [reviewID, setReviewID] = useState(0)
 
     const SHOW_COMMENTS = gql`
@@ -53,4 +53,4 @@ function AddLike(props) {
 
 }
 
-export default AddLike
+export default ToggleLike
