@@ -17,10 +17,12 @@ import Button from "@mui/material/Button";
 import { motion, AnimateSharedLayout, AnimatePresence } from "framer-motion";
 import {useState} from "react";
 import ShowComments from "./showComments";
+import AddLike from "./addLike";
 
 
 function ShowReviews(props) {
     const [extend, setExtend] = useState(0)
+    const [likeClicked, setLickClicked] = useState(false)
 
     const SHOW_REVIEWS = gql`
         query ReviewsOfMovie ($movieID: Int!) {
@@ -37,6 +39,10 @@ function ShowReviews(props) {
             }
         }
     `;
+
+    const COMMENTS_USER_LIKES = gql`
+        
+    `
 
     const ORIGINAL_RANK = gql`
         query MovieById ($movieID: ID!) {
@@ -72,6 +78,10 @@ function ShowReviews(props) {
         } else {
             setExtend(0)
         }
+    }
+
+    function handleLike(id) {
+
     }
 
     let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
@@ -116,7 +126,7 @@ function ShowReviews(props) {
                                               <Typography>
                                                   {text}
                                               </Typography>
-                                              <Button><ThumbUpIcon className={classes.thumb}/></Button>
+                                              <Button onClick={() => handleLike(id)}><ThumbUpIcon className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
                                               <span className={classes.badgeLikes}>{0}</span>
                                               <span className={classes.badgeComments}>{0}</span>
@@ -133,7 +143,13 @@ function ShowReviews(props) {
         ) : null
     ))
 
-    return <>{loaded}</>
+    let addLike = (
+        <div>
+            <AddLike />
+        </div>
+    )
+
+    return <>{loaded}{}</>
 }
 
 export default ShowReviews

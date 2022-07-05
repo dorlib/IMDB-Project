@@ -122,6 +122,7 @@ type ComplexityRoot struct {
 		Directors        func(childComplexity int) int
 		FavoritesOfUser  func(childComplexity int, userID int) int
 		Last5Added       func(childComplexity int) int
+		LikesOfUser      func(childComplexity int, userID int) int
 		MovieByID        func(childComplexity int, id int) int
 		Movies           func(childComplexity int) int
 		MoviesByGenre    func(childComplexity int, genre string) int
@@ -199,6 +200,7 @@ type QueryResolver interface {
 	ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error)
 	CommentsOfReview(ctx context.Context, reviewID int) ([]*ent.Comment, error)
 	FavoritesOfUser(ctx context.Context, userID int) ([]*ent.Favorite, error)
+	LikesOfUser(ctx context.Context, userID int) ([]*ent.Like, error)
 	Users(ctx context.Context) ([]*ent.User, error)
 	Top10Movies(ctx context.Context) ([]*ent.Movie, error)
 	Node(ctx context.Context, id int) (ent.Noder, error)
@@ -690,6 +692,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Last5Added(childComplexity), true
+
+	case "Query.likesOfUser":
+		if e.complexity.Query.LikesOfUser == nil {
+			break
+		}
+
+		args, err := ec.field_Query_likesOfUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.LikesOfUser(childComplexity, args["userID"].(int)), true
 
 	case "Query.movieById":
 		if e.complexity.Query.MovieByID == nil {
@@ -1204,6 +1218,7 @@ type Query {
     reviewsOfMovie(movieID: Int!) : [Review]
     commentsOfReview(reviewID: ID!) : [Comment]
     favoritesOfUser(userID: ID!): [Favorite]
+    likesOfUser(userID : ID!): [Like]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node
@@ -1763,6 +1778,21 @@ func (ec *executionContext) field_Query_directorIdByName_args(ctx context.Contex
 }
 
 func (ec *executionContext) field_Query_favoritesOfUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["userID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_likesOfUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
@@ -4075,6 +4105,45 @@ func (ec *executionContext) _Query_favoritesOfUser(ctx context.Context, field gr
 	res := resTmp.([]*ent.Favorite)
 	fc.Result = res
 	return ec.marshalOFavorite2ᚕᚖimdbv2ᚋentᚐFavorite(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_likesOfUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_likesOfUser_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().LikesOfUser(rctx, args["userID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Like)
+	fc.Result = res
+	return ec.marshalOLike2ᚕᚖimdbv2ᚋentᚐLike(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_users(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7571,6 +7640,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "likesOfUser":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_likesOfUser(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "users":
 			field := field
 
@@ -9184,6 +9273,54 @@ func (ec *executionContext) marshalOID2ᚖint(ctx context.Context, sel ast.Selec
 	}
 	res := graphql.MarshalIntID(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOLike2ᚕᚖimdbv2ᚋentᚐLike(ctx context.Context, sel ast.SelectionSet, v []*ent.Like) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOLike2ᚖimdbv2ᚋentᚐLike(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOLike2ᚖimdbv2ᚋentᚐLike(ctx context.Context, sel ast.SelectionSet, v *ent.Like) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Like(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovie(ctx context.Context, sel ast.SelectionSet, v []*ent.Movie) graphql.Marshaler {

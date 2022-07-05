@@ -200,6 +200,7 @@ type Query {
     reviewsOfMovie(movieID: Int!) : [Review]
     commentsOfReview(reviewID: ID!) : [Comment]
     favoritesOfUser(userID: ID!): [Favorite]
+    likesOfUser(userID : ID!): [Like]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node
