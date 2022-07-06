@@ -14,7 +14,7 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 
 import classes from "./showReviews.module.css";
 import Button from "@mui/material/Button";
-import { motion, AnimateSharedLayout, AnimatePresence } from "framer-motion";
+import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
 import {useState} from "react";
 import ShowComments from "./showComments";
 import ToggleLike from "./toggle-like";
@@ -118,6 +118,13 @@ function ShowReviews(props) {
         setLikeClicked(true)
     }
 
+    let addLike = (
+        <div>
+            <ToggleLike remove={removeLike} userID={parseInt(props.userID)} reviewID={likedReviewID}/>
+            {() => setLikeClicked(false)}
+        </div>
+    )
+
     let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, like}) => (
         text !== '' ? (
             <div key={id} className={classes.item}>
@@ -160,9 +167,10 @@ function ShowReviews(props) {
                                               <Typography>
                                                   {text}
                                               </Typography>
-                                              <Button onClick={() => handleLike(id)}><ThumbUpIcon className={classes.thumb}/></Button>
+                                              <Button onClick={() => handleLike(id)}><ThumbUpIcon
+                                                  className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
-                                              <span className={classes.badgeLikes}>{() => console.log(like)}</span>
+                                              <span className={classes.badgeLikes}>{like}</span>
                                               <span className={classes.badgeComments}>{0}</span>
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>
@@ -177,14 +185,7 @@ function ShowReviews(props) {
         ) : null
     ))
 
-    let addLike = (
-        <div>
-            {() => setLikeClicked(false)}
-            <ToggleLike remove={removeLike} userID={props.userID} reviewID={likedReviewID}/>
-        </div>
-    )
-
-    return <>{loaded}{likeClicked ? addLike: null}</>
+    return <>{loaded}{likeClicked ? addLike : null}</>
 }
 
 export default ShowReviews
