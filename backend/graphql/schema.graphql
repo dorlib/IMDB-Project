@@ -48,7 +48,7 @@ type Review {
     topic: String!
     text: String!
     rank: Int!
-    like : Like!
+    like : Like
     movie: Movie!
     user: User!
 }
@@ -181,7 +181,7 @@ type Mutation {
     addComment(userID: ID!, reviewID: ID!, topic: String!, text: String!) : Comment!
     deleteComment(commentID: ID!, userID: ID!) : ID!
     addLike(userID: ID!, reviewID: ID!) : Like!
-    deleteLike(likeID: ID!, userID: ID!) : ID!
+    deleteLike(likeID: ID!, userID: ID!) : [Like]
 }
 
 # Define a query for getting all movies.
@@ -202,7 +202,7 @@ type Query {
     favoritesOfUser(userID: ID!): [Favorite]
     likesOfUser(userID : ID!): [Like]
     LikeByUserAndReview(userID: ID!, reviewID: ID!): Like
-    totalLikesOfReview(reviewID: ID!): [Like]
+    totalLikesOfReviewsOfMovie(movieID: ID!): [Like]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node

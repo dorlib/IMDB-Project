@@ -18,7 +18,6 @@ import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
 import {useState} from "react";
 import ShowComments from "./showComments";
 import ToggleLike from "./toggle-like";
-import i from "styled-components/macro";
 
 function ShowReviews(props) {
     const [extend, setExtend] = useState(0)
@@ -60,6 +59,16 @@ function ShowReviews(props) {
         }
     `;
 
+    const LIKES_OF_REVIEWS = gql`
+        query TotalLikesOfReviewsOfMovie ($movieID: ID!) {
+            totalLikesOfReviewsOfMovie (id: $movieID) {
+                id
+            }
+        }
+    `;
+
+
+
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
 
@@ -71,6 +80,13 @@ function ShowReviews(props) {
         })
 
     const {data, loading, error} = useQuery(SHOW_REVIEWS,
+        {
+            variables: {
+                movieID: lastSegment || 0,
+            }
+        })
+
+    const {data: data0, loading: loading0, error: error0} = useQuery(LIKES_OF_REVIEWS,
         {
             variables: {
                 movieID: lastSegment || 0,
@@ -97,10 +113,10 @@ function ShowReviews(props) {
         likesIDS.push(data1["likesOfUser"][i]["id"])
     }
 
-    console.log(data1)
-
     if (error) return <div>Error! ,{error}</div>
     if (loading) return <div>Loading... </div>
+    if (error0) return <div>Error!, {error0}</div>
+    if (loading0) return <div>Loading...</div>
     if (error1) return <div>Error!, {error1}</div>
     if (loading1) return <div>Loading...</div>
 
@@ -132,7 +148,7 @@ function ShowReviews(props) {
         </div>
     )
 
-    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, like}) => (
+    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
         text !== '' ? (
             <div key={id} className={classes.item}>
                 <List sx={{width: '100%',}} className={classes.rev}>
@@ -177,8 +193,10 @@ function ShowReviews(props) {
                                               <Button onClick={() => handleLike(id)}><ThumbUpIcon
                                                   className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
-                                              <span className={classes.badgeLikes}>{like}</span>
-                                              <span className={classes.badgeComments}>{0}</span>
+                                              <span className={classes.badgeLikes}>{}</span>
+                                              {data0.totalLikesOfReviewsOfMovie.map(({id}) => (
+                                                  <span className={classes.badgeComments}>{0}</span>
+                                              ))}
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>
                                               <ShowComments id={extend}/>
