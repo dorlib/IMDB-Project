@@ -61,7 +61,7 @@ function ShowReviews(props) {
 
     const LIKES_OF_REVIEWS = gql`
         query TotalLikesOfReviewsOfMovie ($movieID: ID!) {
-            totalLikesOfReviewsOfMovie (id: $movieID) {
+            totalLikesOfReviewsOfMovie (movieID: $movieID) {
                 id
             }
         }
@@ -193,9 +193,9 @@ function ShowReviews(props) {
                                               <Button onClick={() => handleLike(id)}><ThumbUpIcon
                                                   className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
-                                              <span className={classes.badgeLikes}>{}</span>
+                                              <span className={classes.badgeComments}>{0}</span>
                                               {data0.totalLikesOfReviewsOfMovie.map(({id}) => (
-                                                  <span className={classes.badgeComments}>{0}</span>
+                                                  <span className={classes.badgeLikes}>{}</span>
                                               ))}
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>
