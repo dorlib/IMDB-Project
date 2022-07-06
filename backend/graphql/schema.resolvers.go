@@ -287,8 +287,8 @@ func (r *queryResolver) LikesOfUser(ctx context.Context, UserID int) ([]*ent.Lik
 	return data, nil
 }
 
-func (r *queryResolver) TotalLikesOfReview(ctx context.Context, reviewID int) ([]*ent.Like, error) {
-	data := r.client.Like.Query().Where(like.ReviewID(reviewID)).AllX(ctx)
+func (r *queryResolver) TotalLikesOfReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Like, error) {
+	data := r.client.Movie.Query().Where(movie.ID(movieID)).QueryReviews().QueryLikes().AllX(ctx)
 	return data, nil
 }
 
@@ -309,12 +309,16 @@ func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int
 		Save(ctx)
 }
 
-func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID int) (int, error) {
+func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID int) ([]*ent.Like, error) {
 	userIdOfLike := r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
 	if userIdOfLike == userID {
 		like := r.client.Like.GetX(ctx, likeID)
 		r.client.Like.DeleteOne(like).ExecX(ctx)
 	}
 
-	return userID, nil
+	data, err := r.client.Like.Query().Where(like.UserID(userID)).All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
 }

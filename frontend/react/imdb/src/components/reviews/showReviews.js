@@ -14,16 +14,16 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 
 import classes from "./showReviews.module.css";
 import Button from "@mui/material/Button";
-import { motion, AnimateSharedLayout, AnimatePresence } from "framer-motion";
+import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
 import {useState} from "react";
 import ShowComments from "./showComments";
 import ToggleLike from "./toggle-like";
-
 
 function ShowReviews(props) {
     const [extend, setExtend] = useState(0)
     const [likeClicked, setLikeClicked] = useState(false)
     const [likedReviewID, setLikedReviewID] = useState(0)
+    const [likeID, setLikeID] = useState(0)
     const [removeLike, setRemoveLike] = useState(false)
 
     const SHOW_REVIEWS = gql`
@@ -59,6 +59,16 @@ function ShowReviews(props) {
         }
     `;
 
+    const LIKES_OF_REVIEWS = gql`
+        query TotalLikesOfReviewsOfMovie ($movieID: ID!) {
+            totalLikesOfReviewsOfMovie (movieID: $movieID) {
+                id
+            }
+        }
+    `;
+
+
+
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
 
@@ -70,6 +80,13 @@ function ShowReviews(props) {
         })
 
     const {data, loading, error} = useQuery(SHOW_REVIEWS,
+        {
+            variables: {
+                movieID: lastSegment || 0,
+            }
+        })
+
+    const {data: data0, loading: loading0, error: error0} = useQuery(LIKES_OF_REVIEWS,
         {
             variables: {
                 movieID: lastSegment || 0,
@@ -90,12 +107,16 @@ function ShowReviews(props) {
 
     // in order to find if user already like this review
     let reviewLikesIDS = [];
+    let likesIDS = []
     for (let i = 0; i < sumOfLikes; i++) {
         reviewLikesIDS.push(data1["likesOfUser"][i]["reviewID"])
+        likesIDS.push(data1["likesOfUser"][i]["id"])
     }
 
     if (error) return <div>Error! ,{error}</div>
     if (loading) return <div>Loading... </div>
+    if (error0) return <div>Error!, {error0}</div>
+    if (loading0) return <div>Loading...</div>
     if (error1) return <div>Error!, {error1}</div>
     if (loading1) return <div>Loading...</div>
 
@@ -111,14 +132,23 @@ function ShowReviews(props) {
         if (!props.userID) {
             return <div>only users can give likes and comments</div>
         }
-        if (reviewLikesIDS.includes(parseInt(id))) {
+        if (reviewLikesIDS.includes(id)) {
+            let index = reviewLikesIDS.indexOf(id)
             setRemoveLike(true)
+            setLikeID(data1["likesOfUser"][index]["id"])
         }
         setLikedReviewID(parseInt(id))
         setLikeClicked(true)
     }
 
-    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, like}) => (
+    let addLike = (
+        <div>
+            <ToggleLike remove={removeLike} userID={parseInt(props.userID)} reviewID={likedReviewID} likeID={likeID}/>
+            {() => setLikeClicked(false)}
+        </div>
+    )
+
+    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
         text !== '' ? (
             <div key={id} className={classes.item}>
                 <List sx={{width: '100%',}} className={classes.rev}>
@@ -160,10 +190,13 @@ function ShowReviews(props) {
                                               <Typography>
                                                   {text}
                                               </Typography>
-                                              <Button onClick={() => handleLike(id)}><ThumbUpIcon className={classes.thumb}/></Button>
+                                              <Button onClick={() => handleLike(id)}><ThumbUpIcon
+                                                  className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
-                                              <span className={classes.badgeLikes}>{() => console.log(like)}</span>
                                               <span className={classes.badgeComments}>{0}</span>
+                                              {data0.totalLikesOfReviewsOfMovie.map(({id}) => (
+                                                  <span className={classes.badgeLikes}>{}</span>
+                                              ))}
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>
                                               <ShowComments id={extend}/>
@@ -177,14 +210,7 @@ function ShowReviews(props) {
         ) : null
     ))
 
-    let addLike = (
-        <div>
-            {() => setLikeClicked(false)}
-            <ToggleLike remove={removeLike} userID={props.userID} reviewID={likedReviewID}/>
-        </div>
-    )
-
-    return <>{loaded}{likeClicked ? addLike: null}</>
+    return <>{loaded}{likeClicked ? addLike : null}</>
 }
 
 export default ShowReviews
