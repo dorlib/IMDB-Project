@@ -18,12 +18,13 @@ import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
 import {useState} from "react";
 import ShowComments from "./showComments";
 import ToggleLike from "./toggle-like";
-
+import i from "styled-components/macro";
 
 function ShowReviews(props) {
     const [extend, setExtend] = useState(0)
     const [likeClicked, setLikeClicked] = useState(false)
     const [likedReviewID, setLikedReviewID] = useState(0)
+    const [likeID, setLikeID] = useState(0)
     const [removeLike, setRemoveLike] = useState(false)
 
     const SHOW_REVIEWS = gql`
@@ -90,9 +91,13 @@ function ShowReviews(props) {
 
     // in order to find if user already like this review
     let reviewLikesIDS = [];
+    let likesIDS = []
     for (let i = 0; i < sumOfLikes; i++) {
         reviewLikesIDS.push(data1["likesOfUser"][i]["reviewID"])
+        likesIDS.push(data1["likesOfUser"][i]["id"])
     }
+
+    console.log(data1)
 
     if (error) return <div>Error! ,{error}</div>
     if (loading) return <div>Loading... </div>
@@ -111,8 +116,10 @@ function ShowReviews(props) {
         if (!props.userID) {
             return <div>only users can give likes and comments</div>
         }
-        if (reviewLikesIDS.includes(parseInt(id))) {
+        if (reviewLikesIDS.includes(id)) {
+            let index = reviewLikesIDS.indexOf(id)
             setRemoveLike(true)
+            setLikeID(data1["likesOfUser"][index]["id"])
         }
         setLikedReviewID(parseInt(id))
         setLikeClicked(true)
@@ -120,7 +127,7 @@ function ShowReviews(props) {
 
     let addLike = (
         <div>
-            <ToggleLike remove={removeLike} userID={parseInt(props.userID)} reviewID={likedReviewID}/>
+            <ToggleLike remove={removeLike} userID={parseInt(props.userID)} reviewID={likedReviewID} likeID={likeID}/>
             {() => setLikeClicked(false)}
         </div>
     )

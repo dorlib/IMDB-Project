@@ -21,34 +21,15 @@ function ToggleLike(props) {
         }
     `;
 
-    const LIKE_ID = gql`
-        query LikeByUserAndReview($userID: ID! ,$reviewID: ID!) {
-            LikeByUserAndReview( userID: $userID, reviewID: $reviewID) {
-                id
-            }
-        }
-    `
-
-    let TOGGLE
-
-    // in case we need the like's id in order to remove it
-    const {data, loading, error} = useQuery(LIKE_ID,
-        {
-            variables: {
-                userID : props.userID || 0,
-                reviewID: props.reviewID || 0,
-            }
-        })
-
     let userID = props.userID
     let reviewID = props.reviewID
     let likeID
 
+    let TOGGLE = ADD_LIKE
+
     if (props.remove) {
         TOGGLE = REMOVE_LIKE
-        likeID = data["likeByUserAndReview"]["0"]
-    } else {
-        TOGGLE = ADD_LIKE
+        likeID = props.likeID
     }
 
     const [toggleLike] = useMutation(TOGGLE,
@@ -59,20 +40,18 @@ function ToggleLike(props) {
                 likeID: likeID || 0
             }, onCompleted: function (data) {
                 window.location.reload();
-                console.log("yay")
             },
             onError: function (error) {
                 console.log("error:", error)
             }
         })
 
-    if (error) return <div>Error!</div>
-    if (loading) return <div>Loading...</div>
-
     if (toggle) {
         setToggle(false)
         toggleLike().then(() => setToggle(false))
     }
+
+    return null
 }
 
 export default ToggleLike
