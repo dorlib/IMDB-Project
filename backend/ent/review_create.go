@@ -41,6 +41,20 @@ func (rc *ReviewCreate) SetRank(i int) *ReviewCreate {
 	return rc
 }
 
+// SetNumOfLikes sets the "num_of_likes" field.
+func (rc *ReviewCreate) SetNumOfLikes(i int) *ReviewCreate {
+	rc.mutation.SetNumOfLikes(i)
+	return rc
+}
+
+// SetNillableNumOfLikes sets the "num_of_likes" field if the given value is not nil.
+func (rc *ReviewCreate) SetNillableNumOfLikes(i *int) *ReviewCreate {
+	if i != nil {
+		rc.SetNumOfLikes(*i)
+	}
+	return rc
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by ID.
 func (rc *ReviewCreate) SetMovieID(id int) *ReviewCreate {
 	rc.mutation.SetMovieID(id)
@@ -120,6 +134,7 @@ func (rc *ReviewCreate) Save(ctx context.Context) (*Review, error) {
 		err  error
 		node *Review
 	)
+	rc.defaults()
 	if len(rc.hooks) == 0 {
 		if err = rc.check(); err != nil {
 			return nil, err
@@ -177,6 +192,14 @@ func (rc *ReviewCreate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (rc *ReviewCreate) defaults() {
+	if _, ok := rc.mutation.NumOfLikes(); !ok {
+		v := review.DefaultNumOfLikes
+		rc.mutation.SetNumOfLikes(v)
+	}
+}
+
 // check runs all checks and user-defined validators on the builder.
 func (rc *ReviewCreate) check() error {
 	if _, ok := rc.mutation.Topic(); !ok {
@@ -187,6 +210,14 @@ func (rc *ReviewCreate) check() error {
 	}
 	if _, ok := rc.mutation.Rank(); !ok {
 		return &ValidationError{Name: "rank", err: errors.New(`ent: missing required field "Review.rank"`)}
+	}
+	if _, ok := rc.mutation.NumOfLikes(); !ok {
+		return &ValidationError{Name: "num_of_likes", err: errors.New(`ent: missing required field "Review.num_of_likes"`)}
+	}
+	if v, ok := rc.mutation.NumOfLikes(); ok {
+		if err := review.NumOfLikesValidator(v); err != nil {
+			return &ValidationError{Name: "num_of_likes", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_likes": %w`, err)}
+		}
 	}
 	return nil
 }
@@ -238,6 +269,14 @@ func (rc *ReviewCreate) createSpec() (*Review, *sqlgraph.CreateSpec) {
 			Column: review.FieldRank,
 		})
 		_node.Rank = value
+	}
+	if value, ok := rc.mutation.NumOfLikes(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfLikes,
+		})
+		_node.NumOfLikes = value
 	}
 	if nodes := rc.mutation.MovieIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -334,6 +373,7 @@ func (rcb *ReviewCreateBulk) Save(ctx context.Context) ([]*Review, error) {
 	for i := range rcb.builders {
 		func(i int, root context.Context) {
 			builder := rcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*ReviewMutation)
 				if !ok {

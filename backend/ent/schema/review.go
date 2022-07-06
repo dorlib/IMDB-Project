@@ -17,6 +17,7 @@ func (Review) Fields() []ent.Field {
 		field.String("topic"),
 		field.String("text"),
 		field.Int("rank"),
+		field.Int("num_of_likes").Min(0).Default(0),
 	}
 }
 

@@ -107,7 +107,7 @@ type ComplexityRoot struct {
 		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string, image string, topic string, text string, profileImage string, bornAt string, year int) int
 		CreateReview           func(childComplexity int, text string, rank int, movieID int, userID int, topic string) int
 		DeleteComment          func(childComplexity int, commentID int, userID int) int
-		DeleteLike             func(childComplexity int, likeID int, userID int) int
+		DeleteLike             func(childComplexity int, likeID int, userID int, reviewID int) int
 		RemoveFromFavorites    func(childComplexity int, movieID int, userID int) int
 		UpdateDirectorDetails  func(childComplexity int, id int, bornAt string, profileImage string, description string) int
 		UpdateRank             func(childComplexity int, id int, rank int) int
@@ -185,7 +185,7 @@ type MutationResolver interface {
 	AddComment(ctx context.Context, userID int, reviewID int, topic string, text string) (*ent.Comment, error)
 	DeleteComment(ctx context.Context, commentID int, userID int) (int, error)
 	AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error)
-	DeleteLike(ctx context.Context, likeID int, userID int) ([]*ent.Like, error)
+	DeleteLike(ctx context.Context, likeID int, userID int, reviewID int) ([]*ent.Like, error)
 }
 type QueryResolver interface {
 	Reviews(ctx context.Context) ([]*ent.Review, error)
@@ -573,7 +573,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteLike(childComplexity, args["likeID"].(int), args["userID"].(int)), true
+		return e.complexity.Mutation.DeleteLike(childComplexity, args["likeID"].(int), args["userID"].(int), args["reviewID"].(int)), true
 
 	case "Mutation.removeFromFavorites":
 		if e.complexity.Mutation.RemoveFromFavorites == nil {
@@ -1227,7 +1227,7 @@ type Mutation {
     addComment(userID: ID!, reviewID: ID!, topic: String!, text: String!) : Comment!
     deleteComment(commentID: ID!, userID: ID!) : ID!
     addLike(userID: ID!, reviewID: ID!) : Like!
-    deleteLike(likeID: ID!, userID: ID!) : [Like]
+    deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
 }
 
 # Define a query for getting all movies.
@@ -1624,6 +1624,15 @@ func (ec *executionContext) field_Mutation_deleteLike_args(ctx context.Context, 
 		}
 	}
 	args["userID"] = arg1
+	var arg2 int
+	if tmp, ok := rawArgs["reviewID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reviewID"))
+		arg2, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["reviewID"] = arg2
 	return args, nil
 }
 
@@ -3641,7 +3650,7 @@ func (ec *executionContext) _Mutation_deleteLike(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteLike(rctx, args["likeID"].(int), args["userID"].(int))
+		return ec.resolvers.Mutation().DeleteLike(rctx, args["likeID"].(int), args["userID"].(int), args["reviewID"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

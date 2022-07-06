@@ -59,14 +59,13 @@ function ShowReviews(props) {
         }
     `;
 
-    const LIKES_OF_REVIEWS = gql`
-        query TotalLikesOfReviewsOfMovie ($movieID: ID!) {
-            totalLikesOfReviewsOfMovie (movieID: $movieID) {
-                id
-            }
-        }
-    `;
-
+    // const LIKES_OF_REVIEWS = gql`
+    //     query TotalLikesOfReviewsOfMovie ($movieID: ID!) {
+    //         totalLikesOfReviewsOfMovie (movieID: $movieID) {
+    //             id
+    //         }
+    //     }
+    // `;
 
 
     let url = JSON.stringify(window.location.href);
@@ -86,12 +85,12 @@ function ShowReviews(props) {
             }
         })
 
-    const {data: data0, loading: loading0, error: error0} = useQuery(LIKES_OF_REVIEWS,
-        {
-            variables: {
-                movieID: lastSegment || 0,
-            }
-        })
+    // const {data: data0, loading: loading0, error: error0} = useQuery(LIKES_OF_REVIEWS,
+    //     {
+    //         variables: {
+    //             movieID: lastSegment || 0,
+    //         }
+    //     })
 
     const {data: data1, loading: loading1, error: error1} = useQuery(COMMENTS_USER_LIKES,
         {
@@ -115,8 +114,8 @@ function ShowReviews(props) {
 
     if (error) return <div>Error! ,{error}</div>
     if (loading) return <div>Loading... </div>
-    if (error0) return <div>Error!, {error0}</div>
-    if (loading0) return <div>Loading...</div>
+    // if (error0) return <div>Error!, {error0}</div>
+    // if (loading0) return <div>Loading...</div>
     if (error1) return <div>Error!, {error1}</div>
     if (loading1) return <div>Loading...</div>
 
@@ -194,9 +193,7 @@ function ShowReviews(props) {
                                                   className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
                                               <span className={classes.badgeComments}>{0}</span>
-                                              {data0.totalLikesOfReviewsOfMovie.map(({id}) => (
-                                                  <span className={classes.badgeLikes}>{}</span>
-                                              ))}
+                                              <span className={classes.badgeLikes}>{}</span>
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>
                                               <ShowComments id={extend}/>
