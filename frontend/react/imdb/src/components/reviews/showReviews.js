@@ -33,6 +33,7 @@ function ShowReviews(props) {
                 text
                 rank
                 id
+                numOfLikes
                 user {
                     nickname
                     profile
@@ -147,7 +148,7 @@ function ShowReviews(props) {
         </div>
     )
 
-    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
+    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, numOfLikes}) => (
         text !== '' ? (
             <div key={id} className={classes.item}>
                 <List sx={{width: '100%',}} className={classes.rev}>
@@ -193,7 +194,7 @@ function ShowReviews(props) {
                                                   className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
                                               <span className={classes.badgeComments}>{0}</span>
-                                              <span className={classes.badgeLikes}>{}</span>
+                                              <span className={classes.badgeLikes}>{numOfLikes}</span>
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>
                                               <ShowComments id={extend}/>
