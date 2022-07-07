@@ -60,15 +60,6 @@ function ShowReviews(props) {
         }
     `;
 
-    // const LIKES_OF_REVIEWS = gql`
-    //     query TotalLikesOfReviewsOfMovie ($movieID: ID!) {
-    //         totalLikesOfReviewsOfMovie (movieID: $movieID) {
-    //             id
-    //         }
-    //     }
-    // `;
-
-
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
 
@@ -85,13 +76,6 @@ function ShowReviews(props) {
                 movieID: lastSegment || 0,
             }
         })
-
-    // const {data: data0, loading: loading0, error: error0} = useQuery(LIKES_OF_REVIEWS,
-    //     {
-    //         variables: {
-    //             movieID: lastSegment || 0,
-    //         }
-    //     })
 
     const {data: data1, loading: loading1, error: error1} = useQuery(COMMENTS_USER_LIKES,
         {
@@ -115,8 +99,6 @@ function ShowReviews(props) {
 
     if (error) return <div>Error! ,{error}</div>
     if (loading) return <div>Loading... </div>
-    // if (error0) return <div>Error!, {error0}</div>
-    // if (loading0) return <div>Loading...</div>
     if (error1) return <div>Error!, {error1}</div>
     if (loading1) return <div>Loading...</div>
 
@@ -143,8 +125,8 @@ function ShowReviews(props) {
 
     let addLike = (
         <div>
-            <ToggleLike remove={removeLike} userID={parseInt(props.userID)} reviewID={likedReviewID} likeID={likeID}/>
             {() => setLikeClicked(false)}
+            <ToggleLike remove={removeLike} userID={parseInt(props.userID)} reviewID={likedReviewID} likeID={likeID}/>
         </div>
     )
 

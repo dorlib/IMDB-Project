@@ -317,9 +317,8 @@ func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID in
 	reviewData := r.client.Review.GetX(ctx, reviewID)
 	numOfLikesBefore := reviewData.NumOfLikes
 	r.client.Review.UpdateOne(reviewData).SetNumOfLikes(numOfLikesBefore - 1).SaveX(ctx)
-	r.client.Review.UpdateOne(reviewData).
 
-	userIdOfLike := r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
+	var userIdOfLike = r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
 	if userIdOfLike == userID {
 		like := r.client.Like.GetX(ctx, likeID)
 		r.client.Like.DeleteOne(like).ExecX(ctx)
