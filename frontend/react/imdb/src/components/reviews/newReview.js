@@ -64,7 +64,7 @@ function NewReviewForm(props) {
     if (props.username === '' || props.username === 'Guest') {
         return (
             <div style={{color: "yellow"}}>
-                <p htmlFor="review" style={{color: "yellow"}} className={classes.main}>Add Your Review!</p>
+                <p htmlFor="review" style={{color: "yellow", marginTop: "1.6cm"}} className={classes.main}>Add Your Review!</p>
                 <CardContent className={classes.oops}>
                     <Typography className={classes.oopsMsg} style={{fontSize: "x-large"}}>
                         Oops! it seems that you are not logged In!
