@@ -14,8 +14,8 @@ function ToggleLike(props) {
     `;
 
     const REMOVE_LIKE = gql`
-        mutation DeleteLike ($likeID: ID! ,$userID: ID!) {
-            deleteLike (likeID: $likeID, userID: $userID){
+        mutation DeleteLike ($likeID: ID! ,$userID: ID!, $reviewID: ID!) {
+            deleteLike (likeID: $likeID, userID: $userID, reviewID: $reviewID){
                 id
             }
         }
@@ -25,11 +25,13 @@ function ToggleLike(props) {
     let reviewID = props.reviewID
     let likeID
 
-    let TOGGLE = ADD_LIKE
+    let TOGGLE
 
     if (props.remove) {
         TOGGLE = REMOVE_LIKE
-        likeID = props.likeID
+        likeID = parseInt(props.likeID)
+    } else {
+        TOGGLE = ADD_LIKE
     }
 
     const [toggleLike] = useMutation(TOGGLE,

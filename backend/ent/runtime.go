@@ -4,6 +4,7 @@ package ent
 
 import (
 	"imdbv2/ent/director"
+	"imdbv2/ent/review"
 	"imdbv2/ent/schema"
 	"imdbv2/ent/user"
 )
@@ -22,6 +23,12 @@ func init() {
 	directorDescDescription := directorFields[3].Descriptor()
 	// director.DefaultDescription holds the default value on creation for the description field.
 	director.DefaultDescription = directorDescDescription.Default.(string)
+	reviewFields := schema.Review{}.Fields()
+	_ = reviewFields
+	// reviewDescNumOfLikes is the schema descriptor for num_of_likes field.
+	reviewDescNumOfLikes := reviewFields[3].Descriptor()
+	// review.NumOfLikesValidator is a validator for the "num_of_likes" field. It is called by the builders before save.
+	review.NumOfLikesValidator = reviewDescNumOfLikes.Validators[0].(func(int) error)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescFirstname is the schema descriptor for firstname field.

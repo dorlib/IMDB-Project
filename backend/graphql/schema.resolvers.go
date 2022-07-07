@@ -48,6 +48,7 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 		SetMovieID(movieID).
 		SetUserID(userID).
 		SetUser(user).
+		SetNumOfLikes(0).
 		Save(ctx)
 }
 
@@ -300,6 +301,9 @@ func (r *queryResolver) LikeByUserAndReview(ctx context.Context, userID int, rev
 func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error) {
 	userData := r.client.User.GetX(ctx, userID)
 	reviewData := r.client.Review.GetX(ctx, reviewID)
+	numOfLikesBefore := reviewData.NumOfLikes
+
+	r.client.Review.UpdateOne(reviewData).SetNumOfLikes(numOfLikesBefore + 1).SaveX(ctx)
 
 	return r.client.Like.Create().
 		SetUserID(userID).
@@ -309,8 +313,12 @@ func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int
 		Save(ctx)
 }
 
-func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID int) ([]*ent.Like, error) {
-	userIdOfLike := r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
+func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID int, reviewID int) ([]*ent.Like, error) {
+	reviewData := r.client.Review.GetX(ctx, reviewID)
+	numOfLikesBefore := reviewData.NumOfLikes
+	r.client.Review.UpdateOne(reviewData).SetNumOfLikes(numOfLikesBefore - 1).SaveX(ctx)
+
+	var userIdOfLike = r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
 	if userIdOfLike == userID {
 		like := r.client.Like.GetX(ctx, likeID)
 		r.client.Like.DeleteOne(like).ExecX(ctx)

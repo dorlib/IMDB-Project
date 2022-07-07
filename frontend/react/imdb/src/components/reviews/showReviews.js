@@ -33,6 +33,7 @@ function ShowReviews(props) {
                 text
                 rank
                 id
+                numOfLikes
                 user {
                     nickname
                     profile
@@ -59,16 +60,6 @@ function ShowReviews(props) {
         }
     `;
 
-    const LIKES_OF_REVIEWS = gql`
-        query TotalLikesOfReviewsOfMovie ($movieID: ID!) {
-            totalLikesOfReviewsOfMovie (movieID: $movieID) {
-                id
-            }
-        }
-    `;
-
-
-
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
 
@@ -80,13 +71,6 @@ function ShowReviews(props) {
         })
 
     const {data, loading, error} = useQuery(SHOW_REVIEWS,
-        {
-            variables: {
-                movieID: lastSegment || 0,
-            }
-        })
-
-    const {data: data0, loading: loading0, error: error0} = useQuery(LIKES_OF_REVIEWS,
         {
             variables: {
                 movieID: lastSegment || 0,
@@ -115,8 +99,6 @@ function ShowReviews(props) {
 
     if (error) return <div>Error! ,{error}</div>
     if (loading) return <div>Loading... </div>
-    if (error0) return <div>Error!, {error0}</div>
-    if (loading0) return <div>Loading...</div>
     if (error1) return <div>Error!, {error1}</div>
     if (loading1) return <div>Loading...</div>
 
@@ -143,12 +125,12 @@ function ShowReviews(props) {
 
     let addLike = (
         <div>
-            <ToggleLike remove={removeLike} userID={parseInt(props.userID)} reviewID={likedReviewID} likeID={likeID}/>
             {() => setLikeClicked(false)}
+            <ToggleLike remove={removeLike} userID={parseInt(props.userID)} reviewID={likedReviewID} likeID={likeID}/>
         </div>
     )
 
-    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user}) => (
+    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, numOfLikes}) => (
         text !== '' ? (
             <div key={id} className={classes.item}>
                 <List sx={{width: '100%',}} className={classes.rev}>
@@ -194,9 +176,7 @@ function ShowReviews(props) {
                                                   className={classes.thumb}/></Button>
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
                                               <span className={classes.badgeComments}>{0}</span>
-                                              {data0.totalLikesOfReviewsOfMovie.map(({id}) => (
-                                                  <span className={classes.badgeLikes}>{}</span>
-                                              ))}
+                                              <span className={classes.badgeLikes}>{numOfLikes}</span>
                                               <Button className={classes.showComments}
                                                       onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>
                                               <ShowComments id={extend}/>

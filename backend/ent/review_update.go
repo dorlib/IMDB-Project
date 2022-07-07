@@ -56,6 +56,19 @@ func (ru *ReviewUpdate) AddRank(i int) *ReviewUpdate {
 	return ru
 }
 
+// SetNumOfLikes sets the "num_of_likes" field.
+func (ru *ReviewUpdate) SetNumOfLikes(i int) *ReviewUpdate {
+	ru.mutation.ResetNumOfLikes()
+	ru.mutation.SetNumOfLikes(i)
+	return ru
+}
+
+// AddNumOfLikes adds i to the "num_of_likes" field.
+func (ru *ReviewUpdate) AddNumOfLikes(i int) *ReviewUpdate {
+	ru.mutation.AddNumOfLikes(i)
+	return ru
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by ID.
 func (ru *ReviewUpdate) SetMovieID(id int) *ReviewUpdate {
 	ru.mutation.SetMovieID(id)
@@ -190,12 +203,18 @@ func (ru *ReviewUpdate) Save(ctx context.Context) (int, error) {
 		affected int
 	)
 	if len(ru.hooks) == 0 {
+		if err = ru.check(); err != nil {
+			return 0, err
+		}
 		affected, err = ru.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*ReviewMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = ru.check(); err != nil {
+				return 0, err
 			}
 			ru.mutation = mutation
 			affected, err = ru.sqlSave(ctx)
@@ -235,6 +254,16 @@ func (ru *ReviewUpdate) ExecX(ctx context.Context) {
 	if err := ru.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (ru *ReviewUpdate) check() error {
+	if v, ok := ru.mutation.NumOfLikes(); ok {
+		if err := review.NumOfLikesValidator(v); err != nil {
+			return &ValidationError{Name: "num_of_likes", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_likes": %w`, err)}
+		}
+	}
+	return nil
 }
 
 func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -281,6 +310,20 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: review.FieldRank,
+		})
+	}
+	if value, ok := ru.mutation.NumOfLikes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfLikes,
+		})
+	}
+	if value, ok := ru.mutation.AddedNumOfLikes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfLikes,
 		})
 	}
 	if ru.mutation.MovieCleared() {
@@ -505,6 +548,19 @@ func (ruo *ReviewUpdateOne) AddRank(i int) *ReviewUpdateOne {
 	return ruo
 }
 
+// SetNumOfLikes sets the "num_of_likes" field.
+func (ruo *ReviewUpdateOne) SetNumOfLikes(i int) *ReviewUpdateOne {
+	ruo.mutation.ResetNumOfLikes()
+	ruo.mutation.SetNumOfLikes(i)
+	return ruo
+}
+
+// AddNumOfLikes adds i to the "num_of_likes" field.
+func (ruo *ReviewUpdateOne) AddNumOfLikes(i int) *ReviewUpdateOne {
+	ruo.mutation.AddNumOfLikes(i)
+	return ruo
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by ID.
 func (ruo *ReviewUpdateOne) SetMovieID(id int) *ReviewUpdateOne {
 	ruo.mutation.SetMovieID(id)
@@ -646,12 +702,18 @@ func (ruo *ReviewUpdateOne) Save(ctx context.Context) (*Review, error) {
 		node *Review
 	)
 	if len(ruo.hooks) == 0 {
+		if err = ruo.check(); err != nil {
+			return nil, err
+		}
 		node, err = ruo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*ReviewMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = ruo.check(); err != nil {
+				return nil, err
 			}
 			ruo.mutation = mutation
 			node, err = ruo.sqlSave(ctx)
@@ -691,6 +753,16 @@ func (ruo *ReviewUpdateOne) ExecX(ctx context.Context) {
 	if err := ruo.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (ruo *ReviewUpdateOne) check() error {
+	if v, ok := ruo.mutation.NumOfLikes(); ok {
+		if err := review.NumOfLikesValidator(v); err != nil {
+			return &ValidationError{Name: "num_of_likes", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_likes": %w`, err)}
+		}
+	}
+	return nil
 }
 
 func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err error) {
@@ -754,6 +826,20 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: review.FieldRank,
+		})
+	}
+	if value, ok := ruo.mutation.NumOfLikes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfLikes,
+		})
+	}
+	if value, ok := ruo.mutation.AddedNumOfLikes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfLikes,
 		})
 	}
 	if ruo.mutation.MovieCleared() {
