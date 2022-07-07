@@ -92,8 +92,6 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// DefaultNumOfLikes holds the default value on creation for the "num_of_likes" field.
-	DefaultNumOfLikes int
 	// NumOfLikesValidator is a validator for the "num_of_likes" field. It is called by the builders before save.
 	NumOfLikesValidator func(int) error
 )

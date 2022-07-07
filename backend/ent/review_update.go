@@ -63,14 +63,6 @@ func (ru *ReviewUpdate) SetNumOfLikes(i int) *ReviewUpdate {
 	return ru
 }
 
-// SetNillableNumOfLikes sets the "num_of_likes" field if the given value is not nil.
-func (ru *ReviewUpdate) SetNillableNumOfLikes(i *int) *ReviewUpdate {
-	if i != nil {
-		ru.SetNumOfLikes(*i)
-	}
-	return ru
-}
-
 // AddNumOfLikes adds i to the "num_of_likes" field.
 func (ru *ReviewUpdate) AddNumOfLikes(i int) *ReviewUpdate {
 	ru.mutation.AddNumOfLikes(i)
@@ -560,14 +552,6 @@ func (ruo *ReviewUpdateOne) AddRank(i int) *ReviewUpdateOne {
 func (ruo *ReviewUpdateOne) SetNumOfLikes(i int) *ReviewUpdateOne {
 	ruo.mutation.ResetNumOfLikes()
 	ruo.mutation.SetNumOfLikes(i)
-	return ruo
-}
-
-// SetNillableNumOfLikes sets the "num_of_likes" field if the given value is not nil.
-func (ruo *ReviewUpdateOne) SetNillableNumOfLikes(i *int) *ReviewUpdateOne {
-	if i != nil {
-		ruo.SetNumOfLikes(*i)
-	}
 	return ruo
 }
 

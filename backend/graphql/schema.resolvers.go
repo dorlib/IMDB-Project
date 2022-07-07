@@ -48,6 +48,7 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 		SetMovieID(movieID).
 		SetUserID(userID).
 		SetUser(user).
+		SetNumOfLikes(0).
 		Save(ctx)
 }
 
@@ -302,7 +303,7 @@ func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int
 	reviewData := r.client.Review.GetX(ctx, reviewID)
 	numOfLikesBefore := reviewData.NumOfLikes
 
-	r.client.Review.UpdateOne(reviewData).AddNumOfLikes(numOfLikesBefore + 1)
+	r.client.Review.UpdateOne(reviewData).SetNumOfLikes(numOfLikesBefore + 1).SaveX(ctx)
 
 	return r.client.Like.Create().
 		SetUserID(userID).
@@ -315,7 +316,8 @@ func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int
 func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID int, reviewID int) ([]*ent.Like, error) {
 	reviewData := r.client.Review.GetX(ctx, reviewID)
 	numOfLikesBefore := reviewData.NumOfLikes
-	r.client.Review.UpdateOne(reviewData).AddNumOfLikes(numOfLikesBefore - 1)
+	r.client.Review.UpdateOne(reviewData).SetNumOfLikes(numOfLikesBefore - 1).SaveX(ctx)
+	r.client.Review.UpdateOne(reviewData).
 
 	userIdOfLike := r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
 	if userIdOfLike == userID {

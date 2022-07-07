@@ -27,8 +27,6 @@ func init() {
 	_ = reviewFields
 	// reviewDescNumOfLikes is the schema descriptor for num_of_likes field.
 	reviewDescNumOfLikes := reviewFields[3].Descriptor()
-	// review.DefaultNumOfLikes holds the default value on creation for the num_of_likes field.
-	review.DefaultNumOfLikes = reviewDescNumOfLikes.Default.(int)
 	// review.NumOfLikesValidator is a validator for the "num_of_likes" field. It is called by the builders before save.
 	review.NumOfLikesValidator = reviewDescNumOfLikes.Validators[0].(func(int) error)
 	userFields := schema.User{}.Fields()

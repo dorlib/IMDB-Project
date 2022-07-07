@@ -104,7 +104,7 @@ var (
 		{Name: "topic", Type: field.TypeString},
 		{Name: "text", Type: field.TypeString},
 		{Name: "rank", Type: field.TypeInt},
-		{Name: "num_of_likes", Type: field.TypeInt, Default: 0},
+		{Name: "num_of_likes", Type: field.TypeInt},
 		{Name: "review_movie", Type: field.TypeInt, Nullable: true},
 		{Name: "user_reviews", Type: field.TypeInt, Nullable: true},
 	}
