@@ -6,18 +6,17 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import UpdateRank from "./total-rank";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import AddCommentIcon from '@mui/icons-material/AddComment';
+import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 
 import classes from "./showReviews.module.css";
 import Button from "@mui/material/Button";
-import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
 import {useState} from "react";
 import ShowComments from "./showComments";
 import ToggleLike from "./toggle-like";
+import CardContent from "@mui/material/CardContent";
 
 function ShowReviews(props) {
     const [extend, setExtend] = useState(0)
@@ -25,6 +24,7 @@ function ShowReviews(props) {
     const [likedReviewID, setLikedReviewID] = useState(0)
     const [likeID, setLikeID] = useState(0)
     const [removeLike, setRemoveLike] = useState(false)
+    const [showError, setShowError] = useState(0)
 
     const SHOW_REVIEWS = gql`
         query ReviewsOfMovie ($movieID: Int!) {
@@ -112,7 +112,12 @@ function ShowReviews(props) {
 
     function handleLike(id) {
         if (!props.userID) {
-            return <div>only users can give likes and comments</div>
+            if (showError === 0) {
+                setShowError(id)
+            } else {
+                setShowError(0)
+            }
+            return
         }
         if (reviewLikesIDS.includes(id)) {
             let index = reviewLikesIDS.indexOf(id)
@@ -143,7 +148,7 @@ function ShowReviews(props) {
                                     borderRadius: "200px",
                                     marginLeft: "-0.3cm",
                                     marginTop: "-0.4cm"
-                                }} onClick={() => window.location.replace("/userPage/" + user["id"])}/>
+                                }} onClick={() => window.location.replace("/userPage/" + user["id"])} alt={""}/>
                             </Button>
                         </ListItemAvatar>
                         <ListItemText style={{marginLeft: "0.3cm"}}
@@ -172,9 +177,14 @@ function ShowReviews(props) {
                                               <Typography>
                                                   {text}
                                               </Typography>
-                                              <Button onClick={() => handleLike(id)}><ThumbUpIcon
-                                                  className={classes.thumb}/></Button>
-                                              <Button><AddCommentIcon className={classes.comment}/></Button>
+                                              <Button onClick={() => handleLike(id)} className={classes.thumb}><ThumbUpIcon/></Button>
+                                              {showError === id? <CardContent className={classes.msg}>
+                                                  <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm", marginRight: "-1cm"}}>
+                                                      Guests cant make likes and comments
+                                                  </Typography>
+                                                  <Button onClick={() => setShowError(0)} className={classes.close}><CancelPresentationIcon /></Button>
+                                              </CardContent> : null}
+                                              <Button className={classes.comment}><AddCommentIcon/></Button>
                                               <span className={classes.badgeComments}>{0}</span>
                                               <span className={classes.badgeLikes}>{numOfLikes}</span>
                                               <Button className={classes.showComments}
@@ -189,8 +199,6 @@ function ShowReviews(props) {
             </div>
         ) : null
     ))
-
     return <>{loaded}{likeClicked ? addLike : null}</>
 }
-
 export default ShowReviews
