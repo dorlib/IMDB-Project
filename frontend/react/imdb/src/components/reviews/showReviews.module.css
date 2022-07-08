@@ -38,18 +38,18 @@
 .thumb{
     position: absolute;
     display: flex;
-    left: 15.3cm;
+    left: 14.76cm;
     font-size: x-large;
-    top: 0.4cm;
+    top: 0.55cm;
     color: #fcb8d2;
 }
 
 .comment{
     position: absolute;
     display: flex;
-    left: 11.9cm;
+    left: 11.2cm;
     font-size: x-large;
-    top: 0.5cm;
+    top: 0.59cm;
     color: #fcb8d2;
 }
 
@@ -62,7 +62,7 @@
     padding: 0 0.4rem;
     margin-left: 0.5rem;
     top: 3.68cm;
-    left: 18.6cm;
+    left: 18.7cm;
 }
 
 
@@ -82,7 +82,7 @@
     display: flex;
     position: relative;
     margin-top: -0.4cm;
-    left: 6.2cm;
+    left: 5.9cm;
     top: 0.6cm;
 }
 

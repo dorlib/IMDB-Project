@@ -112,7 +112,11 @@ function ShowReviews(props) {
 
     function handleLike(id) {
         if (!props.userID) {
-            setShowError(id)
+            if (showError === 0) {
+                setShowError(id)
+            } else {
+                setShowError(0)
+            }
             return
         }
         if (reviewLikesIDS.includes(id)) {
@@ -173,15 +177,14 @@ function ShowReviews(props) {
                                               <Typography>
                                                   {text}
                                               </Typography>
-                                              <Button onClick={() => handleLike(id)}><ThumbUpIcon
-                                                  className={classes.thumb}/></Button>
+                                              <Button onClick={() => handleLike(id)} className={classes.thumb}><ThumbUpIcon/></Button>
                                               {showError === id? <CardContent className={classes.msg}>
                                                   <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm", marginRight: "-1cm"}}>
                                                       Guests cant make likes and comments
                                                   </Typography>
                                                   <Button onClick={() => setShowError(0)} className={classes.close}><CancelPresentationIcon /></Button>
                                               </CardContent> : null}
-                                              <Button><AddCommentIcon className={classes.comment}/></Button>
+                                              <Button className={classes.comment}><AddCommentIcon/></Button>
                                               <span className={classes.badgeComments}>{0}</span>
                                               <span className={classes.badgeLikes}>{numOfLikes}</span>
                                               <Button className={classes.showComments}
