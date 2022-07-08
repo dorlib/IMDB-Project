@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"entgo.io/contrib/entgql"
+	"flag"
+	"fmt"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
@@ -40,12 +42,19 @@ func main() {
 
 	ctx := context.Background()
 
+	var email = flag.String("emailAdd", "", "")
+	var password = flag.String("Pass", "", "")
+	flag.Parse()
+
+	fmt.Printf("My Email: \"%v\"\n", string(*email))
+	fmt.Printf("With Password: \"%v\"\n", string(*password))
+
 	// Run the automatic migration tool to create all schema resources.
 	if err := client.Schema.Create(ctx, migrate.WithGlobalUniqueID(true)); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
 
-	authentication(router, client)
+	authentication(router, client, string(*email), string(*password))
 	seeder(router, client)
 
 	srv := handler.NewDefaultServer(graphql.NewSchema(client))

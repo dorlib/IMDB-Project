@@ -336,11 +336,11 @@ func LogoutHandler() http.Handler {
 	})
 }
 
-func authentication(router *chi.Mux, client *ent.Client) {
+func authentication(router *chi.Mux, client *ent.Client, email string, password string) {
 	router.Handle("/signupForm", signHandler(client))
 	router.Handle("/loginForm", logInHandler(client))
 	router.Handle("/resetForm", resetHandler(client))
 	router.Handle("/user", UserHandler(client))
 	router.Handle("/logout", LogoutHandler())
-	router.Handle("/forgot", Forgot(client))
+	router.Handle("/forgot", Forgot(client, email, password))
 }

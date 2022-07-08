@@ -19,7 +19,7 @@ var PasswordReset struct {
 	Token string `gorm:"unique"`
 }
 
-func Forgot(c *ent.Client) http.Handler {
+func Forgot(c *ent.Client, email string, password string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -58,10 +58,9 @@ func Forgot(c *ent.Client) http.Handler {
 
 		token := RandStringRunes(16)
 
-		from := "Admin@imdb_clone.com"
-
+		from := email
+		password := password
 		user := "IMDB_ADMIN"
-		password := "123456789"
 
 		to := []string{
 			Forgot.Email,

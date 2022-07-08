@@ -70,8 +70,9 @@ Here's what you need to do to get this running locally on your computer.
 2. Install Go on your machine from [here](https://go.dev/doc/install)
 3. Install MySQL on your machine from [here](https://www.mysql.com/downloads/)
 4. On a command line inside of the application's folder, run `npm start`
-5. On another terminal run the server with `go run ./server`
-6. Open [http://localhost:3000](http://localhost:3000) to view it in the browser
+5. On another terminal run the server with `go run ./server -emailAdd <your mail> -Pass <your pass>`
+6. Provided email address and password will not be saved, and they are provided only to make reset password possible.
+7. Open [http://localhost:3000](http://localhost:3000) to view it in the browser
 
 ---
 
