@@ -9,6 +9,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Typography from '@mui/material/Typography';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import AddCommentIcon from '@mui/icons-material/AddComment';
+import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 
 import classes from "./showReviews.module.css";
 import Button from "@mui/material/Button";
@@ -175,9 +176,10 @@ function ShowReviews(props) {
                                               <Button onClick={() => handleLike(id)}><ThumbUpIcon
                                                   className={classes.thumb}/></Button>
                                               {showError === id? <CardContent className={classes.msg}>
-                                                  <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm"}}>
+                                                  <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm", marginRight: "-1cm"}}>
                                                       Guests cant make likes and comments
                                                   </Typography>
+                                                  <Button onClick={() => setShowError(0)} className={classes.close}><CancelPresentationIcon /></Button>
                                               </CardContent> : null}
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
                                               <span className={classes.badgeComments}>{0}</span>
