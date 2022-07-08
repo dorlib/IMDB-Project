@@ -49,6 +49,7 @@ function App() {
     const [userEmail, setUserEmail] = useState('')
     const [userBirthday, setUserBirthday] = useState('')
     const [userDescription, setUserDescription] = useState('')
+    const [userGender, setUserGender] = useState('')
 
 
     useEffect(() => {
@@ -94,7 +95,7 @@ function App() {
                     <Route path="/moviePage/:id" element={<><UpdateRank userID={userId}/><HoverRating/><ShowReviews userID={userId}/><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>}/>
                     <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
                     <Route path='/register-sign-in' element={<AccountBox/>}/>
-                    <Route path='/editUserDetails/:id' element={<EditDetails firstname={userFirstName} lastname={userLastName} nickname={userNickname} description={userDescription} birthday={userBirthday} email={userEmail} profile={userProfileImage} userID={userId} country={userCountry}/>}/>
+                    <Route path='/editUserDetails/:id' element={<EditDetails firstname={userFirstName} lastname={userLastName} nickname={userNickname} description={userDescription} birthday={userBirthday} email={userEmail} profile={userProfileImage} userID={userId} country={userCountry} gender={userGender}/>}/>
                     <Route path='/reset/:token' element={<ResetForm LoggedInUser={userId}/>}/>
                     <Route path='/userPage/:id' element={<UserPage LoggedInUser={userId}/>}/>
                 </Routes>

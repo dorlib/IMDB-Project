@@ -14,31 +14,22 @@ import Select from '@mui/material/Select';
 import EditIcon from "@mui/icons-material/Edit";
 import CardContent from "@mui/material/CardContent";
 
-
+// add are you sure at the end 
 export function EditDetails(props) {
-    const {switchToSignin} = useContext(AccountContext);
-
-    const handleChange = (event) => {
-        setGender(event.target.value);
-    };
 
     const [ThankYou, setThankYou] = useState(false)
     const [spinner, setSpinner] = useState(false);
 
-
-    const [givenFirstName, setFirstName] = useState('')
-    const [givenLastName, setLastName] = useState('')
-    const [givenNickName, setNickName] = useState('')
-    const [givenGender, setGender] = useState('')
-    const [givenDesc, setDesc] = useState('')
-    const [givenPassword, setPassword] = useState('')
-    const [givenTextProfile, setTextProfile] = useState('')
-    const [givenFileProfile, setFileProfile] = useState('')
-    const [givenEmail, setEmail] = useState('')
-    const [givenCountry, setCountry] = useState('')
-    const [givenDayOfBirth, setDayOfBirth] = useState('')
-    const [givenMonthOfBirth, setMonthOfBirth] = useState('')
-    const [givenYearOfBirth, setYearOfBirth] = useState('')
+    let firstname = props.firstname
+    let lastname = props.lastname
+    let nickname = props.nickname
+    let description = props.description
+    let country = props.country
+    let birthday = props.birthday
+    let email = props.email
+    let gender = props.gender
+    let profile = props.profile
+    let ID = props.userID
 
     const handleSubmit = (e) => {
         e.preventDefault();
