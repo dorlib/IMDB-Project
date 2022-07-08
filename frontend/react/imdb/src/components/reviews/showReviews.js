@@ -6,20 +6,16 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import UpdateRank from "./total-rank";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 
 import classes from "./showReviews.module.css";
 import Button from "@mui/material/Button";
-import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
 import {useState} from "react";
 import ShowComments from "./showComments";
 import ToggleLike from "./toggle-like";
 import CardContent from "@mui/material/CardContent";
-import EditIcon from "@mui/icons-material/Edit";
 
 function ShowReviews(props) {
     const [extend, setExtend] = useState(0)
@@ -27,7 +23,7 @@ function ShowReviews(props) {
     const [likedReviewID, setLikedReviewID] = useState(0)
     const [likeID, setLikeID] = useState(0)
     const [removeLike, setRemoveLike] = useState(false)
-    const [showError, setShowError] = useState(false)
+    const [showError, setShowError] = useState(0)
 
     const SHOW_REVIEWS = gql`
         query ReviewsOfMovie ($movieID: Int!) {
@@ -115,7 +111,7 @@ function ShowReviews(props) {
 
     function handleLike(id) {
         if (!props.userID) {
-            setShowError(true)
+            setShowError(id)
             return
         }
         if (reviewLikesIDS.includes(id)) {
@@ -132,14 +128,6 @@ function ShowReviews(props) {
             {() => setLikeClicked(false)}
             <ToggleLike remove={removeLike} userID={parseInt(props.userID)} reviewID={likedReviewID} likeID={likeID}/>
         </div>
-    )
-
-    let errorMSG = (
-    <CardContent className={classes.msg}>
-        <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm"}}>
-            Guests cant make likes and comments
-        </Typography>
-    </CardContent>
     )
 
     let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, numOfLikes}) => (
@@ -186,6 +174,11 @@ function ShowReviews(props) {
                                               </Typography>
                                               <Button onClick={() => handleLike(id)}><ThumbUpIcon
                                                   className={classes.thumb}/></Button>
+                                              {showError === id? <CardContent className={classes.msg}>
+                                                  <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm"}}>
+                                                      Guests cant make likes and comments
+                                                  </Typography>
+                                              </CardContent> : null}
                                               <Button><AddCommentIcon className={classes.comment}/></Button>
                                               <span className={classes.badgeComments}>{0}</span>
                                               <span className={classes.badgeLikes}>{numOfLikes}</span>
@@ -201,8 +194,6 @@ function ShowReviews(props) {
             </div>
         ) : null
     ))
-
-    return <>{loaded}{likeClicked ? addLike : null}{showError? errorMSG : null}</>
+    return <>{loaded}{likeClicked ? addLike : null}</>
 }
-
 export default ShowReviews
