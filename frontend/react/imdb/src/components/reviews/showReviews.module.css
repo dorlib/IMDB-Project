@@ -85,3 +85,16 @@
     left: 6.2cm;
     top: 0.6cm;
 }
+
+.msg {
+    display: flex;
+    position: absolute;
+    z-index: 999999;
+    color: darkred;
+    margin-top: -1cm;
+    background-color: snow;
+    border-radius: 20px;
+    width: 8cm;
+    height: 0.3cm;
+    margin-left: 10cm;
+}

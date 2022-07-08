@@ -18,6 +18,8 @@ import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
 import {useState} from "react";
 import ShowComments from "./showComments";
 import ToggleLike from "./toggle-like";
+import CardContent from "@mui/material/CardContent";
+import EditIcon from "@mui/icons-material/Edit";
 
 function ShowReviews(props) {
     const [extend, setExtend] = useState(0)
@@ -25,6 +27,7 @@ function ShowReviews(props) {
     const [likedReviewID, setLikedReviewID] = useState(0)
     const [likeID, setLikeID] = useState(0)
     const [removeLike, setRemoveLike] = useState(false)
+    const [showError, setShowError] = useState(false)
 
     const SHOW_REVIEWS = gql`
         query ReviewsOfMovie ($movieID: Int!) {
@@ -112,7 +115,8 @@ function ShowReviews(props) {
 
     function handleLike(id) {
         if (!props.userID) {
-            return <div>only users can give likes and comments</div>
+            setShowError(true)
+            return
         }
         if (reviewLikesIDS.includes(id)) {
             let index = reviewLikesIDS.indexOf(id)
@@ -130,6 +134,14 @@ function ShowReviews(props) {
         </div>
     )
 
+    let errorMSG = (
+    <CardContent className={classes.msg}>
+        <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm"}}>
+            Guests cant make likes and comments
+        </Typography>
+    </CardContent>
+    )
+
     let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, numOfLikes}) => (
         text !== '' ? (
             <div key={id} className={classes.item}>
@@ -143,7 +155,7 @@ function ShowReviews(props) {
                                     borderRadius: "200px",
                                     marginLeft: "-0.3cm",
                                     marginTop: "-0.4cm"
-                                }} onClick={() => window.location.replace("/userPage/" + user["id"])}/>
+                                }} onClick={() => window.location.replace("/userPage/" + user["id"])} alt={""}/>
                             </Button>
                         </ListItemAvatar>
                         <ListItemText style={{marginLeft: "0.3cm"}}
@@ -190,7 +202,7 @@ function ShowReviews(props) {
         ) : null
     ))
 
-    return <>{loaded}{likeClicked ? addLike : null}</>
+    return <>{loaded}{likeClicked ? addLike : null}{showError? errorMSG : null}</>
 }
 
 export default ShowReviews

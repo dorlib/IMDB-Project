@@ -60,22 +60,21 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 
 		from := email
 		password := password
-		user := "IMDB_ADMIN"
 
-		to := []string{
-			Forgot.Email,
-		}
+		toEmailAddress := Forgot.Email
+		to := []string{toEmailAddress}
 
 		host := "smtp.gmail.com"
 		port := "587"
+		address := host + ":" + port
 
 		url := "http://localhost:3000/reset/" + token
 
 		message := []byte("click <a href=\"" + url + "\">here</a> to reset your password!")
 
-		auth := smtp.PlainAuth("", user, password, host)
+		auth := smtp.PlainAuth("", from, password, host)
 
-		err3 := smtp.SendMail(host+":"+port, auth, from, to, message)
+		err3 := smtp.SendMail(address, auth, from, to, message)
 
 		if err3 != nil {
 			log.Println(err3)
