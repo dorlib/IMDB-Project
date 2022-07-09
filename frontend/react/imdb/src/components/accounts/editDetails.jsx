@@ -6,7 +6,7 @@ import {AccountContext} from "./accountContext";
 import {Typography} from "@mui/material";
 import {Button, Stack} from "@mui/material";
 import Card from "../ui/Card";
-import classes from "./SignupForm.module.css";
+import classes from "./editDetails.module.css"
 import {styled} from "@mui/material/styles";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -29,6 +29,7 @@ export function EditDetails(props) {
 
     const [ThankYou, setThankYou] = useState(false)
     const [errorEmail, setErrorEmail] = useState(false)
+    const [sure, setSure] = useState(false)
     const [spinner, setSpinner] = useState(false);
 
     const [givenFirstName, setFirstName] = useState('')
@@ -44,8 +45,10 @@ export function EditDetails(props) {
     const [givenDayOfBirth, setDayOfBirth] = useState('')
     const [givenMonthOfBirth, setMonthOfBirth] = useState('')
     const [givenYearOfBirth, setYearOfBirth] = useState('')
-    const [givenBirthday, setBirthday] = useState('1.1.2000')
 
+    const handleChange = (event) => {
+        setGender(event.target.value);
+    };
 
     let firstname = props.firstname
     let lastname = props.lastname
@@ -66,20 +69,14 @@ export function EditDetails(props) {
                 nickname: givenNickName,
                 description: givenDesc,
                 profile: givenFileProfile || givenTextProfile ||'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif',
-                birthday: givenBirthday,
+                birthday: givenDayOfBirth + givenMonthOfBirth + givenYearOfBirth,
                 email: givenEmail,
                 country: givenCountry,
                 gender: givenGender,
             },
             onCompleted: function (data, variant) {
-                console.log("data:", data)
-                if (exist === true) {
-                    unique = data["createMovie"]["id"]
-                } else {
-                    unique = data["createMovieAndDirector"]["id"]
-                }
-                enqueueSnackbar('Thank You For Contributing!', { variant })
-                return setTimeout(() => window.location.replace("/moviePage/" + unique),2000);
+                setSpinner(false)
+                return setTimeout(() => window.location.replace("/"),1000);
 
             },
             onError: function (error) {
@@ -88,23 +85,25 @@ export function EditDetails(props) {
         });
 
     const handleSubmit = (e) => {
-        setBirthday(givenDayOfBirth + givenMonthOfBirth + givenYearOfBirth)
         if (givenEmail !== givenEmailCheck) {
-
+            setErrorEmail(true)
+        } else{
+            setSure(true)
         }
-
     }
 
     const Input = styled("input")({
         display: "none",
     });
 
-    let ThankYouMassage = (
+    let SureMassage = (
         <div>
             <CardContent className={classes.about}>
                 <EditIcon className={classes.editDetailsBut}/>
                 <Typography component="div">
-                    Thank You {givenFirstName} for signing up and welcome to IMDB !
+                    Are you sure you want to update details? theres no turning back if you press "Yes"
+                    <Button onClick={() => setSure(false)}>Cancel</Button>
+                    <Button onClick={() => edit().then(() => (setSpinner(true)))}>Yes</Button>
                 </Typography>
             </CardContent>
         </div>
@@ -112,8 +111,11 @@ export function EditDetails(props) {
 
     let form = (
             <Card>
-                <Typography variant="h6" align="center" color="#1c0907">
-                    Hello Dear Future User! Thank You For Signing Up To My WebSite!
+                <Typography variant="h5" align="center" color="yellow">
+                    Hello {firstname}! Here You Can Update Your Details!
+                </Typography>
+                <Typography variant="h6" align="center" color="yellow" marginTop="0.4cm">
+                    If you are looking for changing password, please sign out and press on "forgot my password"
                 </Typography>
                 <form className={classes.form} onSubmit={handleSubmit}>
                     <div className={classes.control}>
@@ -151,9 +153,9 @@ export function EditDetails(props) {
 
                     {errorEmail? <CardContent className={classes.msg}>
                         <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm", marginRight: "-1cm"}}>
-                            Guests cant make likes and comments
+                            Email's inputs doesnt match
                         </Typography>
-                        <Button onClick={() => setShowError(0)} className={classes.close}><CancelPresentationIcon /></Button>
+                        <Button onClick={() => setErrorEmail(false)} className={classes.close}><CancelPresentationIcon /></Button>
                     </CardContent> : null}
 
                     <div className={classes.control}>
@@ -228,19 +230,13 @@ export function EditDetails(props) {
                         ></textarea>
                     </div>
 
-                    <div className={classes.ctrl}>
-                        <label htmlFor="password">Choose Your password (8 characters minimum)</label>
-                        <input type="password" id="password" name="password" minLength="8" value={givenPassword}
-                               onChange={event => setPassword(event.target.value)}
-                               autoComplete="new-password"/>
-                    </div>
                     <Marginer direction="vertical" margin={10}/>
-                    <SubmitButton type="submit" value="submit">{spinner ? 'loading...' : 'Sign In!'}</SubmitButton>
+                    <SubmitButton type="submit" value="submit">{spinner ? 'loading...' : 'Update!'}</SubmitButton>
                 </form>
             </Card>
     );
 
-    return <>{form}{ThankYou ? ThankYouMassage : null}</>
+    return <>{form}{sure ? SureMassage : null}</>
 }
 
 export default EditDetails
