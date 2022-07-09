@@ -1,0 +1,19 @@
+.msg {
+    display: flex;
+    position: absolute;
+    z-index: 999999;
+    color: darkred;
+    margin-top: -1.2cm;
+    background-color: snow;
+    border-radius: 20px;
+    width: 8cm;
+    height: 0.3cm;
+    margin-left: 9cm;
+
+}
+
+.close {
+    position: relative;
+    left: 1cm;
+    bottom: 0.14cm;
+}

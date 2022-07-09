@@ -13,12 +13,39 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import EditIcon from "@mui/icons-material/Edit";
 import CardContent from "@mui/material/CardContent";
+import {gql, useMutation} from "@apollo/client";
+import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 
 // add are you sure at the end 
 export function EditDetails(props) {
 
+    let EDIT_DETAILS = gql`
+        mutation UpdateUserDetails ($firstnme: String!, $lastname: String!, $nickname: String!, $description: String!, $profile: String!, $birthday: String!, $email: String!, $country: String!, $gender: Int!) {
+            updateUserDetails (user: {firstname: $firstname , lastname: $lastname, nickname: $nickname , description: $description, profile: $profile, birthday: $birthday, email: $email, country: $country, gender: $gender}) {
+                id
+            }
+        }
+    `;
+
     const [ThankYou, setThankYou] = useState(false)
+    const [errorEmail, setErrorEmail] = useState(false)
     const [spinner, setSpinner] = useState(false);
+
+    const [givenFirstName, setFirstName] = useState('')
+    const [givenLastName, setLastName] = useState('')
+    const [givenNickName, setNickName] = useState('')
+    const [givenGender, setGender] = useState('')
+    const [givenDesc, setDesc] = useState('')
+    const [givenTextProfile, setTextProfile] = useState('')
+    const [givenFileProfile, setFileProfile] = useState('')
+    const [givenEmail, setEmail] = useState('')
+    const [givenEmailCheck, setEmailCheck] = useState('')
+    const [givenCountry, setCountry] = useState('')
+    const [givenDayOfBirth, setDayOfBirth] = useState('')
+    const [givenMonthOfBirth, setMonthOfBirth] = useState('')
+    const [givenYearOfBirth, setYearOfBirth] = useState('')
+    const [givenBirthday, setBirthday] = useState('1.1.2000')
+
 
     let firstname = props.firstname
     let lastname = props.lastname
@@ -31,7 +58,40 @@ export function EditDetails(props) {
     let profile = props.profile
     let ID = props.userID
 
+    const [edit] = useMutation(EDIT_DETAILS,
+        {
+            variables: {
+                firstname: givenFirstName,
+                lastname: givenLastName,
+                nickname: givenNickName,
+                description: givenDesc,
+                profile: givenFileProfile || givenTextProfile ||'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif',
+                birthday: givenBirthday,
+                email: givenEmail,
+                country: givenCountry,
+                gender: givenGender,
+            },
+            onCompleted: function (data, variant) {
+                console.log("data:", data)
+                if (exist === true) {
+                    unique = data["createMovie"]["id"]
+                } else {
+                    unique = data["createMovieAndDirector"]["id"]
+                }
+                enqueueSnackbar('Thank You For Contributing!', { variant })
+                return setTimeout(() => window.location.replace("/moviePage/" + unique),2000);
+
+            },
+            onError: function (error) {
+                console.log("error:",error)
+            }
+        });
+
     const handleSubmit = (e) => {
+        setBirthday(givenDayOfBirth + givenMonthOfBirth + givenYearOfBirth)
+        if (givenEmail !== givenEmailCheck) {
+
+        }
 
     }
 
@@ -89,10 +149,23 @@ export function EditDetails(props) {
                         <MenuItem value={'other'}>Other</MenuItem>
                     </Select>
 
+                    {errorEmail? <CardContent className={classes.msg}>
+                        <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm", marginRight: "-1cm"}}>
+                            Guests cant make likes and comments
+                        </Typography>
+                        <Button onClick={() => setShowError(0)} className={classes.close}><CancelPresentationIcon /></Button>
+                    </CardContent> : null}
+
                     <div className={classes.control}>
                         <label htmlFor="email">Enter Your E-Mail</label>
                         <input type="text" required id="email" name="email" value={givenEmail}
                                onChange={event => setEmail(event.target.value)} autoComplete="on"/>
+                    </div>
+
+                    <div className={classes.control}>
+                        <label htmlFor="emailCheck">Enter Your E-Mail Again</label>
+                        <input type="text" required id="emailCheck" name="emailCheck" value={givenEmailCheck}
+                               onChange={event => setEmailCheck(event.target.value)} autoComplete="on"/>
                     </div>
 
                     <div className={classes.im}>
