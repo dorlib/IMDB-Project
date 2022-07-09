@@ -16,7 +16,6 @@ import CardContent from "@mui/material/CardContent";
 import {gql, useMutation} from "@apollo/client";
 import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 
-// add are you sure at the end 
 export function EditDetails(props) {
 
     let EDIT_DETAILS = gql`
@@ -120,37 +119,35 @@ export function EditDetails(props) {
                 <form className={classes.form} onSubmit={handleSubmit}>
                     <div className={classes.control}>
                         <label htmlFor="firstname">Enter Your First Name</label>
-                        <input type="text" required id="firstname" name="firstname" value={givenFirstName}
+                        <input type="text" required id="firstname" name="firstname" value={givenFirstName? givenFirstName: firstname}
                                onChange={event => setFirstName(event.target.value)}/>
                     </div>
 
                     <div className={classes.control}>
                         <label htmlFor="lastname">Enter Your Last Name</label>
-                        <input type="text" id="lastname" name="lastname" value={givenLastName}
+                        <input type="text" id="lastname" name="lastname" value={givenLastName? givenLastName: lastname}
                                onChange={event => setLastName(event.target.value)} required/>
                     </div>
 
                     <div className={classes.control}>
                         <label htmlFor="nickname">Choose Your Own Uniqe Nickname!</label>
-                        <input type="text" required id="nickname" name="nickname" value={givenNickName}
+                        <input type="text" required id="nickname" name="nickname" value={givenNickName? givenNickName: nickname}
                                onChange={event => setNickName(event.target.value)}/>
                     </div>
 
-                    <InputLabel id="demo-simple-select-label" className={classes.genderLabel}>Gender</InputLabel>
+                    <label id="demo-simple-select-label" className={classes.genderLabel}>Gender</label>
                     <Select
                         htmlFor="gender"
                         id="gender"
                         name="gender"
-                        value={givenGender}
-                        placeholder="gender"
+                        value={givenGender? givenGender : gender}
                         onChange={handleChange}
-                        style={{width: "4cm", height: "1cm", marginBottom: "0.3cm"}}
+                        style={{width: "4cm", height: "1cm", marginBottom: "0.3cm", backgroundColor: "white"}}
                     >
-                        <MenuItem value={'male'}>Male</MenuItem>
-                        <MenuItem value={'female'}>Female</MenuItem>
-                        <MenuItem value={'other'}>Other</MenuItem>
+                        <MenuItem value={'Male'} id="male" selected={'male' === JSON.stringify(gender)}>Male</MenuItem>
+                        <MenuItem value={'Female'} id="female" selected={'female' === JSON.stringify(gender)}>Female</MenuItem>
+                        <MenuItem value={'Other'} id="other" selected={'other' === JSON.stringify(gender)}>Other</MenuItem>
                     </Select>
-
                     {errorEmail? <CardContent className={classes.msg}>
                         <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm", marginRight: "-1cm"}}>
                             Email's inputs doesnt match
@@ -160,19 +157,19 @@ export function EditDetails(props) {
 
                     <div className={classes.control}>
                         <label htmlFor="email">Enter Your E-Mail</label>
-                        <input type="text" required id="email" name="email" value={givenEmail}
+                        <input type="text" required id="email" name="email" value={givenEmail? givenEmail: email}
                                onChange={event => setEmail(event.target.value)} autoComplete="on"/>
                     </div>
 
                     <div className={classes.control}>
                         <label htmlFor="emailCheck">Enter Your E-Mail Again</label>
-                        <input type="text" required id="emailCheck" name="emailCheck" value={givenEmailCheck}
+                        <input type="text" required id="emailCheck" name="emailCheck" value={givenEmailCheck? givenEmailCheck: email}
                                onChange={event => setEmailCheck(event.target.value)} autoComplete="on"/>
                     </div>
 
                     <div className={classes.im}>
                         <label htmlFor="textProfile">Profile Image</label>
-                        <input datatype="string" id="textProfile" name="textProfile" value={givenTextProfile}
+                        <input datatype="string" id="textProfile" name="textProfile" value={givenTextProfile? givenTextProfile: profile}
                                onChange={event => setTextProfile(event.target.value)}/>
                     </div>
 
@@ -190,9 +187,9 @@ export function EditDetails(props) {
                         </label>
                     </Stack>
 
-                    <div className={classes.ctrl2}>
+                    <div className={classes.ctrl2} style={{marginTop: "-0.8cm"}}>
                         <label htmlFor="country">Enter Your Country</label>
-                        <input type="text" required id="country" name="country" value={givenCountry}
+                        <input type="text" required id="country" name="country" value={givenCountry? givenCountry : country}
                                onChange={event => setCountry(event.target.value)} autoComplete="on"/>
                     </div>
 
@@ -226,7 +223,7 @@ export function EditDetails(props) {
                             id="description"
                             name="description"
                             rows="5"
-                            value={givenDesc} onChange={event => setDesc(event.target.value)}
+                            value={givenDesc? givenDesc : description} onChange={event => setDesc(event.target.value)}
                         ></textarea>
                     </div>
 

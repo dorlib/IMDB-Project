@@ -117,7 +117,7 @@ export function SignUpForm(props) {
                                onChange={event => setNickName(event.target.value)}/>
                     </div>
 
-                    <InputLabel id="demo-simple-select-label" className={classes.genderLabel}>Gender</InputLabel>
+                    <label id="demo-simple-select-label" className={classes.genderLabel}>Gender</label>
                     <Select
                         htmlFor="gender"
                         id="gender"
@@ -125,7 +125,7 @@ export function SignUpForm(props) {
                         value={givenGender}
                         placeholder="gender"
                         onChange={handleChange}
-                        style={{width: "4cm", height: "1cm", marginBottom: "0.3cm"}}
+                        style={{width: "4cm", height: "1cm", marginBottom: "0.3cm", backgroundColor: "white"}}
                     >
                         <MenuItem value={'male'}>Male</MenuItem>
                         <MenuItem value={'female'}>Female</MenuItem>
@@ -158,7 +158,7 @@ export function SignUpForm(props) {
                         </label>
                     </Stack>
 
-                    <div className={classes.ctrl2}>
+                    <div className={classes.ctrl2} style={{marginTop: "-0.8cm"}}>
                         <label htmlFor="country">Enter Your Country</label>
                         <input type="text" required id="country" name="country" value={givenCountry}
                                onChange={event => setCountry(event.target.value)} autoComplete="on"/>

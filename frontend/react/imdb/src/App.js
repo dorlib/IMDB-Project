@@ -66,6 +66,7 @@ function App() {
                     .then((data) => {
                         console.log(data)
                         setUserId(data["0"]["id"])
+                        setUserGender(data["0"]["gender"])
                         setUserFirstName(data["0"]["firstname"])
                         setUserNickname(data["0"]["nickname"])
                         setUserCountry(data["0"]["country"])
