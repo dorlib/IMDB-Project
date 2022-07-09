@@ -111,6 +111,7 @@ type ComplexityRoot struct {
 		RemoveFromFavorites    func(childComplexity int, movieID int, userID int) int
 		UpdateDirectorDetails  func(childComplexity int, id int, bornAt string, profileImage string, description string) int
 		UpdateRank             func(childComplexity int, id int, rank int) int
+		UpdateUserDetails      func(childComplexity int, userID int, userDetails UserInput) int
 	}
 
 	Query struct {
@@ -179,6 +180,7 @@ type MutationResolver interface {
 	CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error)
 	CreateReview(ctx context.Context, text string, rank int, movieID int, userID int, topic string) (*ent.Review, error)
 	UpdateRank(ctx context.Context, id int, rank int) (*ent.Movie, error)
+	UpdateUserDetails(ctx context.Context, userID int, userDetails UserInput) (*ent.User, error)
 	UpdateDirectorDetails(ctx context.Context, id int, bornAt string, profileImage string, description string) (*ent.Director, error)
 	AddToFavorites(ctx context.Context, movieID int, userID int, movieTitle string, movieImage string) (*ent.Favorite, error)
 	RemoveFromFavorites(ctx context.Context, movieID int, userID int) ([]*ent.Favorite, error)
@@ -611,6 +613,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateRank(childComplexity, args["id"].(int), args["rank"].(int)), true
+
+	case "Mutation.updateUserDetails":
+		if e.complexity.Mutation.UpdateUserDetails == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateUserDetails_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateUserDetails(childComplexity, args["userID"].(int), args["userDetails"].(UserInput)), true
 
 	case "Query.actorById":
 		if e.complexity.Query.ActorByID == nil {
@@ -1229,6 +1243,7 @@ type Mutation {
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, userID: Int!, topic: String!): Review!
     updateRank(id: ID!, rank: Int!) : Movie!
+    updateUserDetails(userID: ID!, userDetails : UserInput!): User!
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
     addToFavorites(movieID: ID!, userID: ID!, movieTitle: String!, movieImage: String!): Favorite!
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
@@ -1732,6 +1747,30 @@ func (ec *executionContext) field_Mutation_updateRank_args(ctx context.Context, 
 		}
 	}
 	args["rank"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateUserDetails_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["userID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg0
+	var arg1 UserInput
+	if tmp, ok := rawArgs["userDetails"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userDetails"))
+		arg1, err = ec.unmarshalNUserInput2imdbv2ᚋgraphqlᚐUserInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userDetails"] = arg1
 	return args, nil
 }
 
@@ -3341,6 +3380,48 @@ func (ec *executionContext) _Mutation_updateRank(ctx context.Context, field grap
 	res := resTmp.(*ent.Movie)
 	fc.Result = res
 	return ec.marshalNMovie2ᚖimdbv2ᚋentᚐMovie(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateUserDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateUserDetails_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateUserDetails(rctx, args["userID"].(int), args["userDetails"].(UserInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖimdbv2ᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateDirectorDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7447,6 +7528,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "updateUserDetails":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateUserDetails(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "updateDirectorDetails":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateDirectorDetails(ctx, field)
@@ -8978,6 +9069,11 @@ func (ec *executionContext) marshalNUser2ᚖimdbv2ᚋentᚐUser(ctx context.Cont
 		return graphql.Null
 	}
 	return ec._User(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNUserInput2imdbv2ᚋgraphqlᚐUserInput(ctx context.Context, v interface{}) (UserInput, error) {
+	res, err := ec.unmarshalInputUserInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

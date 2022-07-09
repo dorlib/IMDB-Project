@@ -32,40 +32,7 @@ export function EditDetails(props) {
     let ID = props.userID
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        const userData = {
-            givenFirstName,
-            givenLastName,
-            givenNickName,
-            givenGender,
-            givenDesc,
-            givenPassword,
-            givenTextProfile,
-            givenFileProfile,
-            givenEmail,
-            givenCountry,
-            givenDayOfBirth,
-            givenMonthOfBirth,
-            givenYearOfBirth,
-        };
 
-        setSpinner(true);
-
-        fetch('http://localhost:8081/signupForm', {
-            method: 'post',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(userData)
-        })
-            .then(response => response.json())
-            .catch((err) => {
-                console.error('error:', err)
-            })
-            .then((data) => {
-                setSpinner(false);
-                console.log('new user added')
-                setThankYou(true);
-                setTimeout(() => window.location.replace("/register-sign-in/"), 1500)
-            })
     }
 
     const Input = styled("input")({
@@ -84,7 +51,6 @@ export function EditDetails(props) {
     )
 
     let form = (
-        <BoxContainer>
             <Card>
                 <Typography variant="h6" align="center" color="#1c0907">
                     Hello Dear Future User! Thank You For Signing Up To My WebSite!
@@ -199,16 +165,6 @@ export function EditDetails(props) {
                     <SubmitButton type="submit" value="submit">{spinner ? 'loading...' : 'Sign In!'}</SubmitButton>
                 </form>
             </Card>
-            <MutedLink href="#">Forget your password?</MutedLink>
-            <Marginer direction="vertical" margin="0.3em"/>
-            <Marginer direction="vertical" margin="1em"/>
-            <MutedLink href="#">
-                Want to go back to login?{" "}
-                <BoldLink href="#" onClick={switchToSignin}>
-                    login
-                </BoldLink>
-            </MutedLink>
-        </BoxContainer>
     );
 
     return <>{form}{ThankYou ? ThankYouMassage : null}</>

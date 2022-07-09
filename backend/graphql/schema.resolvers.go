@@ -330,3 +330,19 @@ func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID in
 	}
 	return data, nil
 }
+
+func (r *mutationResolver) UpdateUserDetails(ctx context.Context, userID int, user UserInput) (*ent.User, error) {
+	updatedUser := r.client.User.UpdateOneID(userID).
+		SetFirstname(user.Firstname).
+		SetLastname(user.Lastname).
+		SetNickname(user.Nickname).
+		SetProfile(user.Profile).
+		SetGender(user.Gender).
+		SetDescription(user.Description).
+		SetCountry(user.Country).
+		SetEmail(user.Email).
+		SetBirthDay(user.Birthday).
+		SaveX(ctx)
+
+	return updatedUser, nil
+}
