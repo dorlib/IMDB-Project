@@ -131,8 +131,10 @@
 }
 
 .genderLabel {
-  font-weight: bolder;
+  display: block;
   color: black;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
 .about {

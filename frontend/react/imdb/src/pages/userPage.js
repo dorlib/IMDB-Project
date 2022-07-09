@@ -101,7 +101,7 @@ function UserPage(props) {
 
     const handleClick = () => {
         return (
-            window.location.replace("/editUserDetails" + JSON.stringify(id))
+            window.location.replace("/editUserDetails/" + JSON.stringify(id))
         )
     }
 
