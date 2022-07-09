@@ -111,7 +111,7 @@ type ComplexityRoot struct {
 		RemoveFromFavorites    func(childComplexity int, movieID int, userID int) int
 		UpdateDirectorDetails  func(childComplexity int, id int, bornAt string, profileImage string, description string) int
 		UpdateRank             func(childComplexity int, id int, rank int) int
-		UpdateUserDetails      func(childComplexity int, userID int, userDetails UserInput) int
+		UpdateUserDetails      func(childComplexity int, userID int, firstname string, lastname string, nickname string, description string, profile string, email string, birthday string, country string, gender string) int
 	}
 
 	Query struct {
@@ -180,7 +180,7 @@ type MutationResolver interface {
 	CreateDirector(ctx context.Context, director DirectorInput) (*ent.Director, error)
 	CreateReview(ctx context.Context, text string, rank int, movieID int, userID int, topic string) (*ent.Review, error)
 	UpdateRank(ctx context.Context, id int, rank int) (*ent.Movie, error)
-	UpdateUserDetails(ctx context.Context, userID int, userDetails UserInput) (*ent.User, error)
+	UpdateUserDetails(ctx context.Context, userID int, firstname string, lastname string, nickname string, description string, profile string, email string, birthday string, country string, gender string) (*ent.User, error)
 	UpdateDirectorDetails(ctx context.Context, id int, bornAt string, profileImage string, description string) (*ent.Director, error)
 	AddToFavorites(ctx context.Context, movieID int, userID int, movieTitle string, movieImage string) (*ent.Favorite, error)
 	RemoveFromFavorites(ctx context.Context, movieID int, userID int) ([]*ent.Favorite, error)
@@ -624,7 +624,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateUserDetails(childComplexity, args["userID"].(int), args["userDetails"].(UserInput)), true
+		return e.complexity.Mutation.UpdateUserDetails(childComplexity, args["userID"].(int), args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["profile"].(string), args["email"].(string), args["birthday"].(string), args["country"].(string), args["gender"].(string)), true
 
 	case "Query.actorById":
 		if e.complexity.Query.ActorByID == nil {
@@ -1243,7 +1243,7 @@ type Mutation {
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, userID: Int!, topic: String!): Review!
     updateRank(id: ID!, rank: Int!) : Movie!
-    updateUserDetails(userID: ID!, userDetails : UserInput!): User!
+    updateUserDetails(userID: ID!, firstname: String!, lastname: String!, nickname: String!, description: String!, profile: String!, email: String!, birthday: String!, country: String!, gender: String!): User!
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
     addToFavorites(movieID: ID!, userID: ID!, movieTitle: String!, movieImage: String!): Favorite!
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
@@ -1762,15 +1762,87 @@ func (ec *executionContext) field_Mutation_updateUserDetails_args(ctx context.Co
 		}
 	}
 	args["userID"] = arg0
-	var arg1 UserInput
-	if tmp, ok := rawArgs["userDetails"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userDetails"))
-		arg1, err = ec.unmarshalNUserInput2imdbv2ᚋgraphqlᚐUserInput(ctx, tmp)
+	var arg1 string
+	if tmp, ok := rawArgs["firstname"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("firstname"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["userDetails"] = arg1
+	args["firstname"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["lastname"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lastname"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["lastname"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["nickname"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nickname"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["nickname"] = arg3
+	var arg4 string
+	if tmp, ok := rawArgs["description"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+		arg4, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["description"] = arg4
+	var arg5 string
+	if tmp, ok := rawArgs["profile"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("profile"))
+		arg5, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["profile"] = arg5
+	var arg6 string
+	if tmp, ok := rawArgs["email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+		arg6, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["email"] = arg6
+	var arg7 string
+	if tmp, ok := rawArgs["birthday"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("birthday"))
+		arg7, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["birthday"] = arg7
+	var arg8 string
+	if tmp, ok := rawArgs["country"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("country"))
+		arg8, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["country"] = arg8
+	var arg9 string
+	if tmp, ok := rawArgs["gender"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("gender"))
+		arg9, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["gender"] = arg9
 	return args, nil
 }
 
@@ -3407,7 +3479,7 @@ func (ec *executionContext) _Mutation_updateUserDetails(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateUserDetails(rctx, args["userID"].(int), args["userDetails"].(UserInput))
+		return ec.resolvers.Mutation().UpdateUserDetails(rctx, args["userID"].(int), args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["profile"].(string), args["email"].(string), args["birthday"].(string), args["country"].(string), args["gender"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9069,11 +9141,6 @@ func (ec *executionContext) marshalNUser2ᚖimdbv2ᚋentᚐUser(ctx context.Cont
 		return graphql.Null
 	}
 	return ec._User(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNUserInput2imdbv2ᚋgraphqlᚐUserInput(ctx context.Context, v interface{}) (UserInput, error) {
-	res, err := ec.unmarshalInputUserInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

@@ -175,7 +175,7 @@ type Mutation {
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, userID: Int!, topic: String!): Review!
     updateRank(id: ID!, rank: Int!) : Movie!
-    updateUserDetails(userID: ID!, userDetails : UserInput!): User!
+    updateUserDetails(userID: ID!, firstname: String!, lastname: String!, nickname: String!, description: String!, profile: String!, email: String!, birthday: String!, country: String!, gender: String!): User!
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
     addToFavorites(movieID: ID!, userID: ID!, movieTitle: String!, movieImage: String!): Favorite!
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]

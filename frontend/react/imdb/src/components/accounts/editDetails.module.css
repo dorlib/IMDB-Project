@@ -157,16 +157,27 @@
     margin-bottom: 0.5rem;
 }
 
-.about {
-    margin-top: 1.6cm;
+.edit {
+    background-color: #000;
+    color: #fff;
+    opacity: .5;
+    margin-top: -1.5cm;
     border-radius: 13px;
-    color: yellow;
-    background-color: #cc2062;
-    height: 5cm;
+    height: 2cm;
 }
 
 .editDetailsBut {
     display: flex;
     position: absolute;
     right: 19cm;
+}
+
+.yes {
+    margin-left: 5.5cm;
+}
+
+.no {
+    margin-left: 5.5cm;
+    margin-right: -4.5cm;
+
 }
