@@ -60,6 +60,13 @@ export function EditDetails(props) {
     let profile = props.profile
     let ID = props.userID
 
+    let yearBirth = birthday.slice(4,8)
+    let monthBirth = birthday.slice(2,4)
+    let dayBirth = birthday.slice(0,2)
+
+    console.log(dayBirth, monthBirth, yearBirth)
+
+
     const [edit] = useMutation(EDIT_DETAILS,
         {
             variables: {
@@ -201,16 +208,16 @@ export function EditDetails(props) {
                             <tr>
                                 <td><input type="number" id="year" name="year" min="1920" max="2022" placeholder="Year"
                                            required
-                                           value={givenYearOfBirth}
+                                           value={givenYearOfBirth? givenYearOfBirth : yearBirth }
                                            onChange={event => setYearOfBirth(event.target.value)}
                                            className={classes.year}/></td>
                                 <td><input type="number" id="month" name="month" min="1" max="12" placeholder="Month"
                                            required
-                                           value={givenMonthOfBirth}
+                                           value={givenMonthOfBirth? givenMonthOfBirth: monthBirth}
                                            onChange={event => setMonthOfBirth(event.target.value)}
                                            className={classes.month}/></td>
                                 <td><input type="number" id="day" name="day" min="1" max="31" placeholder="Day" required
-                                           value={givenDayOfBirth} onChange={event => setDayOfBirth(event.target.value)}
+                                           value={givenDayOfBirth? givenDayOfBirth: dayBirth} onChange={event => setDayOfBirth(event.target.value)}
                                            className={classes.day}/></td>
                             </tr>
                             </tbody>

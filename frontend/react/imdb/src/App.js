@@ -71,7 +71,7 @@ function App() {
                         setUserNickname(data["0"]["nickname"])
                         setUserCountry(data["0"]["country"])
                         setUserEmail(data["0"]["email"])
-                        setUserBirthday(data["0"]["birthday"])
+                        setUserBirthday(data["0"]["birthDay"])
                         setUserDescription(data["0"]["description"])
                         setUserLastName(data["0"]["lastname"])
                         if (data["0"]["profile"] !== '') {
