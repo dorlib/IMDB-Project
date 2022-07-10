@@ -164,7 +164,7 @@ function ShowReviews(props) {
 
     let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, numOfLikes}) => (
         text !== '' ? (
-            <div key={id} className={classes.item}>
+            <div key={id} className={classes.item} style={{marginTop: "3cm"}}>
                 <List sx={{width: '100%',}} className={classes.rev}>
                     <ListItem alignItems="flex-start">
                         <ListItemAvatar>
@@ -222,12 +222,12 @@ function ShowReviews(props) {
                     <Divider variant="inset" component="li"/>
                 </List>
                 <Card style={{
-
-                    marginBottom: "2cm",
-                    position: "absolute",
+                    marginBottom: "4.2cm",
+                    position: "relative",
                     display: "flex",
-                    top: "5.67cm",
-                    width: "20cm",
+                    top: "5.8cm",
+                    right: "21cm",
+                    width: "40cm",
                     borderRadius: "0 0 15px 15px",
                     marginTop: "-2cm",
                 }}>

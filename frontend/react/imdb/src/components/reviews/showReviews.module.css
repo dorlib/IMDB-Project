@@ -10,13 +10,12 @@
 }
 
 .item {
-    top: 1cm;
+    top: -0.8cm;
     border-radius: 12px;
     display: flex;
     position: relative;
     right: 1.5cm;
-    margin-top: 3cm;
-    width: 20cm;
+    width: 40cm;
 }
 
 .text {
@@ -27,7 +26,7 @@
     position: absolute;
     display: flex;
     right: -1.5cm;
-    bottom: 2.88cm;
+    bottom: 2cm;
 
 }
 
@@ -104,4 +103,15 @@
     position: relative;
     left: 1cm;
     bottom: 0.14cm;
+}
+
+.actions button {
+    font: inherit;
+    cursor: pointer;
+    background-color: #77002e;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #77002e;
+    border-radius: 4px;
+    font-weight: bold;
 }
