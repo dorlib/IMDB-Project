@@ -23,8 +23,6 @@ import Card from "@mui/material/Card";
 import {Footer} from "../directors/styles";
 import CardActions from "@mui/material/CardActions";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import {Input, Stack} from "@mui/material";
-import UpdateDirectorInfo from "../directors/update-directors-info";
 
 function ShowReviews(props) {
     //from here to line 51 there are functions and variables for the show comments functionality
@@ -51,6 +49,10 @@ function ShowReviews(props) {
             setExpanded(0)
         }
     }
+
+    //from here to line __ there are function and variables for the add comments functionality
+    const [titleGiven, setTitleGiven] = useState('')
+    const [textGiven, setTextGiven] = useState('')
 
     useEffect(() => {
         setAccordionHeight(getHeight);
@@ -164,7 +166,7 @@ function ShowReviews(props) {
 
     let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, numOfLikes}) => (
         text !== '' ? (
-            <div key={id} className={classes.item} style={{marginTop: "3cm"}}>
+            <div key={id} className={classes.item} style={{marginTop: "2.4cm"}}>
                 <List sx={{width: '100%',}} className={classes.rev}>
                     <ListItem alignItems="flex-start">
                         <ListItemAvatar>
@@ -184,14 +186,14 @@ function ShowReviews(props) {
                                               <Typography style={{fontSize: "x-large"}}>
                                                   {topic}
                                               </Typography>
+                                              <Typography className={classes.rank} style={{fontSize: "xx-large"}}>
+                                                  {rank} / 100
+                                              </Typography>
                                               <Typography>
                                                   by: <Link to={"/userPage/" + user["id"]} style={{
                                                   textDecoration: "none",
                                                   color: "white"
                                               }}>{user["nickname"]}</Link>
-                                              </Typography>
-                                              <Typography className={classes.rank} style={{fontSize: "xx-large"}}>
-                                                  {rank} / 100
                                               </Typography>
                                           </React.Fragment>
 
@@ -225,8 +227,8 @@ function ShowReviews(props) {
                     marginBottom: "4.2cm",
                     position: "relative",
                     display: "flex",
-                    top: "5.8cm",
-                    right: "21cm",
+                    top: "5.7cm",
+                    right: "20cm",
                     width: "40cm",
                     borderRadius: "0 0 15px 15px",
                     marginTop: "-2cm",

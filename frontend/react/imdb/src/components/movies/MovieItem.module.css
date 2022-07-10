@@ -110,6 +110,9 @@
 }
 
 .image{
+  display: flex;
+  position: absolute;
+  margin-bottom: -2.6cm;
   max-height: 200%;
   max-width: 200%;
 }
@@ -117,7 +120,7 @@
 .heart {
   display: flex;
   position: absolute;
-  bottom: 0.85cm;
+  bottom: -1.55cm;
   right: 14.8cm;
 }
 
@@ -134,7 +137,7 @@
   position: absolute;
   color: yellow;
   font-size: 25px;
-  top: 17cm;
+  top: 19.3cm;
   left: 4.23cm;
 }
 
