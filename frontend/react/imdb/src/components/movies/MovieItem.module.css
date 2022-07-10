@@ -117,7 +117,7 @@
 .heart {
   display: flex;
   position: absolute;
-  bottom: -1.2cm;
+  bottom: 0.85cm;
   right: 14.8cm;
 }
 
@@ -134,7 +134,7 @@
   position: absolute;
   color: yellow;
   font-size: 25px;
-  top: 19cm;
+  top: 17cm;
   left: 4.23cm;
 }
 

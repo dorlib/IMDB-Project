@@ -13,12 +13,54 @@ import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 
 import classes from "./showReviews.module.css";
 import Button from "@mui/material/Button";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import ShowComments from "./showComments";
 import ToggleLike from "./toggle-like";
 import CardContent from "@mui/material/CardContent";
+import styled from "styled-components";
+import {motion} from "framer-motion";
+import Card from "@mui/material/Card";
+import {Footer} from "../directors/styles";
+import CardActions from "@mui/material/CardActions";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import {Input, Stack} from "@mui/material";
+import UpdateDirectorInfo from "../directors/update-directors-info";
 
 function ShowReviews(props) {
+    //from here to line 51 there are functions and variables for the show comments functionality
+    const Arrow = styled(motion.div)`
+        position: absolute;
+        display: flex;
+        right: -0.8cm;
+        transform: rotate(180deg);
+`;
+
+    const [visible, setVisible] = useState(false)
+    const [expanded, setExpanded] = useState(0);
+    const [accordionHeight, setAccordionHeight] = useState(0);
+    const ref = useRef("");
+    let getHeight = ref.current?.scrollHeight || null;
+
+    const open = (id) => {
+        if (expanded === 0) {
+            setExpanded(id)
+        } else if (expanded !== 0 && expanded !== id) {
+            setExpanded(id)
+        }
+        else {
+            setExpanded(0)
+        }
+    }
+
+    useEffect(() => {
+        setAccordionHeight(getHeight);
+    }, [expanded]);
+
+    const style = {
+        transform: expanded ? 'rotate(180deg)' : '',
+        transition: 'transform 150ms ease', // smooth transition
+    }
+
     const [extend, setExtend] = useState(0)
     const [likeClicked, setLikeClicked] = useState(false)
     const [likedReviewID, setLikedReviewID] = useState(0)
@@ -52,23 +94,8 @@ function ShowReviews(props) {
         }
     `
 
-    const ORIGINAL_RANK = gql`
-        query MovieById ($movieID: ID!) {
-            movieById (id: $movieID) {
-                rank
-            }
-        }
-    `;
-
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
-
-    const originalRank = useQuery(ORIGINAL_RANK,
-        {
-            variables: {
-                movieID: lastSegment || 0,
-            }
-        })
 
     const {data, loading, error} = useQuery(SHOW_REVIEWS,
         {
@@ -137,7 +164,7 @@ function ShowReviews(props) {
 
     let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, numOfLikes}) => (
         text !== '' ? (
-            <div key={id} className={classes.item}>
+            <div key={id} className={classes.item} style={{marginTop: "3cm"}}>
                 <List sx={{width: '100%',}} className={classes.rev}>
                     <ListItem alignItems="flex-start">
                         <ListItemAvatar>
@@ -177,28 +204,64 @@ function ShowReviews(props) {
                                               <Typography>
                                                   {text}
                                               </Typography>
-                                              <Button onClick={() => handleLike(id)} className={classes.thumb}><ThumbUpIcon/></Button>
-                                              {showError === id? <CardContent className={classes.msg}>
-                                                  <Typography component="div" style={{fontSize: "13px", marginTop: "-0.25cm", marginRight: "-1cm"}}>
+                                              {showError === id ? <CardContent className={classes.msg}>
+                                                  <Typography component="div" style={{
+                                                      fontSize: "13px",
+                                                      marginTop: "-0.25cm",
+                                                      marginRight: "-1cm"
+                                                  }}>
                                                       Guests cant make likes and comments
                                                   </Typography>
-                                                  <Button onClick={() => setShowError(0)} className={classes.close}><CancelPresentationIcon /></Button>
+                                                  <Button onClick={() => setShowError(0)}
+                                                          className={classes.close}><CancelPresentationIcon/></Button>
                                               </CardContent> : null}
-                                              <Button className={classes.comment}><AddCommentIcon/></Button>
-                                              <span className={classes.badgeComments}>{0}</span>
-                                              <span className={classes.badgeLikes}>{numOfLikes}</span>
-                                              <Button className={classes.showComments}
-                                                      onClick={() => handleExtend(parseInt(id))}>{extend === parseInt(id) ? "Hide Comments" : "Show Comments"}</Button>
-                                              <ShowComments id={extend}/>
                                           </React.Fragment>
                                       }
                         />
                     </ListItem>
                     <Divider variant="inset" component="li"/>
                 </List>
+                <Card style={{
+                    marginBottom: "4.2cm",
+                    position: "relative",
+                    display: "flex",
+                    top: "5.8cm",
+                    right: "21cm",
+                    width: "40cm",
+                    borderRadius: "0 0 15px 15px",
+                    marginTop: "-2cm",
+                }}>
+                    <Footer
+                        className={expanded === id? "show" : ""}
+                        setHeight={accordionHeight}
+                        ref={ref}
+                    >
+                        <CardActions>
+                            <span size="large" onClick={() => open(id)}>
+                        <Button style={{position: "absolute"}}>
+                            Show Comments!
+                            <Arrow>
+                                <KeyboardArrowUpIcon style={style}/>
+                            </Arrow>
+                        </Button>
+                                <Button className={classes.comment}><AddCommentIcon/></Button>
+                                <Button onClick={() => handleLike(id)}
+                                        className={classes.thumb}><ThumbUpIcon/></Button>
+                                              <span className={classes.badgeComments}>{0}</span>
+                                              <span className={classes.badgeLikes}>{numOfLikes}</span>
+                                              <ShowComments id={extend}/>
+                    </span>
+                        </CardActions>
+                        <div className={classes.actions}>
+                            this will show comments
+                        </div>
+                    </Footer>
+                </Card>
             </div>
         ) : null
     ))
+
     return <>{loaded}{likeClicked ? addLike : null}</>
 }
+
 export default ShowReviews
