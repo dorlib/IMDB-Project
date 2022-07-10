@@ -118,20 +118,20 @@ export function EditDetails(props) {
                 <div className={classes.control}>
                     <label htmlFor="firstname">Enter Your First Name</label>
                     <input type="text" required id="firstname" name="firstname"
-                           value={givenFirstName ? givenFirstName : firstname}
+                           defaultValue={givenFirstName ? givenFirstName : firstname}
                            onChange={event => setFirstName(event.target.value)}/>
                 </div>
 
                 <div className={classes.control}>
                     <label htmlFor="lastname">Enter Your Last Name</label>
-                    <input type="text" id="lastname" name="lastname" value={givenLastName ? givenLastName : lastname}
+                    <input type="text" id="lastname" name="lastname" defaultValue={givenLastName ? givenLastName : lastname}
                            onChange={event => setLastName(event.target.value)} required/>
                 </div>
 
                 <div className={classes.control}>
                     <label htmlFor="nickname">Choose Your Own Uniqe Nickname!</label>
                     <input type="text" required id="nickname" name="nickname"
-                           value={givenNickName ? givenNickName : nickname}
+                           defaultValue={givenNickName ? givenNickName : nickname}
                            onChange={event => setNickName(event.target.value)}/>
                 </div>
 
@@ -140,7 +140,7 @@ export function EditDetails(props) {
                     htmlFor="gender"
                     id="gender"
                     name="gender"
-                    value={givenGender ? givenGender : gender}
+                    defaultValue={givenGender ? givenGender : gender}
                     onChange={handleChange}
                     style={{width: "4cm", height: "1cm", marginBottom: "0.3cm", backgroundColor: "white"}}
                 >
@@ -159,21 +159,21 @@ export function EditDetails(props) {
 
                 <div className={classes.control}>
                     <label htmlFor="email">Enter Your E-Mail</label>
-                    <input type="text" required id="email" name="email" value={givenEmail ? givenEmail : email}
+                    <input type="text" required id="email" name="email" defaultValue={givenEmail ? givenEmail : email}
                            onChange={event => setEmail(event.target.value)} autoComplete="on"/>
                 </div>
 
                 <div className={classes.control}>
                     <label htmlFor="emailCheck">Enter Your E-Mail Again</label>
                     <input type="text" required id="emailCheck" name="emailCheck"
-                           value={givenEmailCheck ? givenEmailCheck : email}
+                           defaultValue={givenEmailCheck ? givenEmailCheck : email}
                            onChange={event => setEmailCheck(event.target.value)} autoComplete="on"/>
                 </div>
 
                 <div className={classes.im}>
                     <label htmlFor="textProfile">Profile Image</label>
                     <input datatype="string" id="textProfile" name="textProfile"
-                           value={givenTextProfile ? givenTextProfile : profile}
+                           defaultValue={givenTextProfile ? givenTextProfile : profile}
                            onChange={event => setTextProfile(event.target.value)}/>
                 </div>
 
@@ -185,7 +185,7 @@ export function EditDetails(props) {
                                 accept="image/*"
                                 id="fileProfile"
                                 name="fileProfile"
-                                value={givenFileProfile} onChange={event => setFileProfile(event.target.value)}
+                                defaultValue={givenFileProfile} onChange={event => setFileProfile(event.target.value)}
                             />
                         </Button>
                     </label>
@@ -206,16 +206,16 @@ export function EditDetails(props) {
                         <tr>
                             <td><input type="number" id="year" name="year" min="1920" max="2022" placeholder="Year"
                                        required
-                                       value={givenYearOfBirth ? givenYearOfBirth : yearBirth}
+                                       defaultValue={givenYearOfBirth ? givenYearOfBirth : yearBirth}
                                        onChange={event => setYearOfBirth(event.target.value)}
                                        className={classes.year}/></td>
                             <td><input type="number" id="month" name="month" min="1" max="12" placeholder="Month"
                                        required
-                                       value={givenMonthOfBirth ? givenMonthOfBirth : monthBirth}
+                                       defaultValue={givenMonthOfBirth ? givenMonthOfBirth : monthBirth}
                                        onChange={event => setMonthOfBirth(event.target.value)}
                                        className={classes.month}/></td>
                             <td><input type="number" id="day" name="day" min="1" max="31" placeholder="Day" required
-                                       value={givenDayOfBirth ? givenDayOfBirth : dayBirth}
+                                       defaultValue={givenDayOfBirth ? givenDayOfBirth : dayBirth}
                                        onChange={event => setDayOfBirth(event.target.value)}
                                        className={classes.day}/></td>
                         </tr>
@@ -229,13 +229,13 @@ export function EditDetails(props) {
                         id="description"
                         name="description"
                         rows="5"
-                        value={givenDesc ? givenDesc : description} onChange={event => setDesc(event.target.value)}
+                        defaultValue={givenDesc ? givenDesc : description} onChange={event => setDesc(event.target.value)}
                     ></textarea>
                 </div>
 
                 <Marginer direction="vertical" margin={10}/>
                 <SubmitButton type="button" onClick={sure ? handleSure : handleSubmit}
-                              value="submit">{sure ? 'Are You Sure?' : 'Update!'}</SubmitButton>
+                              value="submit">{sure? 'Are You Sure?' : spinner ? 'loading' :'Update!'}</SubmitButton>
             </form>
         </Card>
     );

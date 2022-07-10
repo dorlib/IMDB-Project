@@ -23,8 +23,6 @@ READ ABOUT ENVIROMENTAL VARIABLES
 
 # tab indexses
 
-# add option to edit user's details    ### TOP PRIORITY
-
 # after creating user, dont redirect to user page, redirect to login and thank you for signup massage, and after 1.5 seconds redirect to login    ### TOP PRIORITY
 
 # make the app match any screen size       ### TOP PRIORITY

@@ -13,12 +13,47 @@ import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 
 import classes from "./showReviews.module.css";
 import Button from "@mui/material/Button";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import ShowComments from "./showComments";
 import ToggleLike from "./toggle-like";
 import CardContent from "@mui/material/CardContent";
+import styled from "styled-components";
+import {motion} from "framer-motion";
+import Card from "@mui/material/Card";
+import {Footer} from "../directors/styles";
+import CardActions from "@mui/material/CardActions";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import {Input, Stack} from "@mui/material";
+import UpdateDirectorInfo from "../directors/update-directors-info";
 
 function ShowReviews(props) {
+    //from here to line 51 there are functions and variables for the show comments functionality
+    const Arrow = styled(motion.div)`
+        position: absolute;
+        display: flex;
+        right: -0.8cm;
+        transform: rotate(180deg);
+`;
+
+    const [visible, setVisible] = useState(false)
+    const [expanded, setExpanded] = useState(false);
+    const [accordionHeight, setAccordionHeight] = useState(0);
+    const ref = useRef("");
+    let getHeight = ref.current?.scrollHeight || null;
+
+    const open = () => {
+        setExpanded(!expanded)
+    }
+
+    useEffect(() => {
+        setAccordionHeight(getHeight);
+    }, [expanded]);
+
+    const style = {
+        transform: expanded ? 'rotate(180deg)' : '',
+        transition: 'transform 150ms ease', // smooth transition
+    }
+
     const [extend, setExtend] = useState(0)
     const [likeClicked, setLikeClicked] = useState(false)
     const [likedReviewID, setLikedReviewID] = useState(0)
@@ -52,23 +87,8 @@ function ShowReviews(props) {
         }
     `
 
-    const ORIGINAL_RANK = gql`
-        query MovieById ($movieID: ID!) {
-            movieById (id: $movieID) {
-                rank
-            }
-        }
-    `;
-
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
-
-    const originalRank = useQuery(ORIGINAL_RANK,
-        {
-            variables: {
-                movieID: lastSegment || 0,
-            }
-        })
 
     const {data, loading, error} = useQuery(SHOW_REVIEWS,
         {
@@ -196,9 +216,40 @@ function ShowReviews(props) {
                     </ListItem>
                     <Divider variant="inset" component="li"/>
                 </List>
+                <Card style={{
+                    marginBottom: "2cm",
+                    position: "absolute",
+                    display: "flex",
+                    right: "4.8cm",
+                    top: "0.3cm",
+                    width: "26.45cm",
+                    borderRadius: "15px"
+                }}>
+                    <Footer
+                        className={expanded ? "show" : ""}
+                        setHeight={accordionHeight}
+                        ref={ref}
+                    >
+                        <CardActions>
+                            <Button size="large">Share</Button>
+                            <span size="large" onClick={open}>
+                        <Button>
+                            Edit Director's Details!
+                            <Arrow>
+                                <KeyboardArrowUpIcon style={style}/>
+                            </Arrow>
+                        </Button>
+                    </span>
+                        </CardActions>
+                        <div className={classes.actions}>
+                            this will show comments
+                        </div>
+                    </Footer>
+                </Card>
             </div>
         ) : null
     ))
+
     return <>{loaded}{likeClicked ? addLike : null}</>
 }
 export default ShowReviews
