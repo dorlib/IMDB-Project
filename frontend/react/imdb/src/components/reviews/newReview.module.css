@@ -3,9 +3,10 @@
     text-align: right;
 }
 .form {
+    position: relative;
     padding: 0rem;
     position: relative;
-    bottom: -1cm;
+    bottom: -3cm;
 }
 
 .actions button {

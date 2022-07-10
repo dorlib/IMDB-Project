@@ -1,7 +1,7 @@
 .rev {
     background-color: #cc2062;
     color: white;
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0 ;
     padding: 0 1rem;
     margin-left: 0.5rem;
     margin-bottom: 1.4rem;
@@ -15,7 +15,7 @@
     display: flex;
     position: relative;
     right: 1.5cm;
-    margin-top: 0.3cm;
+    margin-top: 3cm;
     width: 20cm;
 }
 
@@ -38,18 +38,18 @@
 .thumb{
     position: absolute;
     display: flex;
-    left: 14.76cm;
+    left: 7cm;
     font-size: x-large;
-    top: 0.55cm;
+    top: -0.03cm;
     color: #fcb8d2;
 }
 
 .comment{
     position: absolute;
     display: flex;
-    left: 11.2cm;
+    left: 6cm;
     font-size: x-large;
-    top: 0.59cm;
+    top: 0.05cm;
     color: #fcb8d2;
 }
 
@@ -61,8 +61,8 @@
     border-radius: 10px;
     padding: 0 0.4rem;
     margin-left: 0.5rem;
-    top: 3.68cm;
-    left: 18.7cm;
+    top: 0.5cm;
+    left: 18.3cm;
 }
 
 
@@ -74,8 +74,8 @@
     border-radius: 10px;
     padding: 0 0.4rem;
     margin-left: 0.5rem;
-    top: 3.68cm;
-    left: 16.88cm;
+    top: 0.5cm;
+    left: 15.88cm;
 }
 
 .showComments {
