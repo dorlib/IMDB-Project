@@ -57,7 +57,6 @@ type ComplexityRoot struct {
 		ID     func(childComplexity int) int
 		Review func(childComplexity int) int
 		Text   func(childComplexity int) int
-		Topic  func(childComplexity int) int
 		User   func(childComplexity int) int
 	}
 
@@ -99,7 +98,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		AddActorToMovie        func(childComplexity int, movieID int, name string) int
-		AddComment             func(childComplexity int, userID int, reviewID int, topic string, text string) int
+		AddComment             func(childComplexity int, userID int, reviewID int, text string) int
 		AddLike                func(childComplexity int, userID int, reviewID int) int
 		AddToFavorites         func(childComplexity int, movieID int, userID int, movieTitle string, movieImage string) int
 		CreateDirector         func(childComplexity int, director DirectorInput) int
@@ -185,7 +184,7 @@ type MutationResolver interface {
 	AddToFavorites(ctx context.Context, movieID int, userID int, movieTitle string, movieImage string) (*ent.Favorite, error)
 	RemoveFromFavorites(ctx context.Context, movieID int, userID int) ([]*ent.Favorite, error)
 	AddActorToMovie(ctx context.Context, movieID int, name string) (*ent.Actor, error)
-	AddComment(ctx context.Context, userID int, reviewID int, topic string, text string) (*ent.Comment, error)
+	AddComment(ctx context.Context, userID int, reviewID int, text string) (*ent.Comment, error)
 	DeleteComment(ctx context.Context, commentID int, userID int) (int, error)
 	AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error)
 	DeleteLike(ctx context.Context, likeID int, userID int, reviewID int) ([]*ent.Like, error)
@@ -275,13 +274,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Comment.Text(childComplexity), true
-
-	case "Comment.topic":
-		if e.complexity.Comment.Topic == nil {
-			break
-		}
-
-		return e.complexity.Comment.Topic(childComplexity), true
 
 	case "Comment.user":
 		if e.complexity.Comment.User == nil {
@@ -480,7 +472,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.AddComment(childComplexity, args["userID"].(int), args["reviewID"].(int), args["topic"].(string), args["text"].(string)), true
+		return e.complexity.Mutation.AddComment(childComplexity, args["userID"].(int), args["reviewID"].(int), args["text"].(string)), true
 
 	case "Mutation.addLike":
 		if e.complexity.Mutation.AddLike == nil {
@@ -1124,7 +1116,6 @@ type Review {
 
 type Comment {
     id: ID!
-    topic: String!
     text: String!
     user: User!
     Review: Review!
@@ -1231,7 +1222,6 @@ input FavoriteInput {
 }
 
 input CommentInput {
-    topic: String!
     text: String!
 }
 
@@ -1248,7 +1238,7 @@ type Mutation {
     addToFavorites(movieID: ID!, userID: ID!, movieTitle: String!, movieImage: String!): Favorite!
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
     addActorToMovie(movieId: ID!, name: String!) : Actor!
-    addComment(userID: ID!, reviewID: ID!, topic: String!, text: String!) : Comment!
+    addComment(userID: ID!, reviewID: ID!, text: String!) : Comment!
     deleteComment(commentID: ID!, userID: ID!) : ID!
     addLike(userID: ID!, reviewID: ID!) : Like!
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
@@ -1331,23 +1321,14 @@ func (ec *executionContext) field_Mutation_addComment_args(ctx context.Context, 
 	}
 	args["reviewID"] = arg1
 	var arg2 string
-	if tmp, ok := rawArgs["topic"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("topic"))
+	if tmp, ok := rawArgs["text"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("text"))
 		arg2, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["topic"] = arg2
-	var arg3 string
-	if tmp, ok := rawArgs["text"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("text"))
-		arg3, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["text"] = arg3
+	args["text"] = arg2
 	return args, nil
 }
 
@@ -2271,41 +2252,6 @@ func (ec *executionContext) _Comment_id(ctx context.Context, field graphql.Colle
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNID2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Comment_topic(ctx context.Context, field graphql.CollectedField, obj *ent.Comment) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Comment",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Topic, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Comment_text(ctx context.Context, field graphql.CollectedField, obj *ent.Comment) (ret graphql.Marshaler) {
@@ -3686,7 +3632,7 @@ func (ec *executionContext) _Mutation_addComment(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AddComment(rctx, args["userID"].(int), args["reviewID"].(int), args["topic"].(string), args["text"].(string))
+		return ec.resolvers.Mutation().AddComment(rctx, args["userID"].(int), args["reviewID"].(int), args["text"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6667,14 +6613,6 @@ func (ec *executionContext) unmarshalInputCommentInput(ctx context.Context, obj 
 
 	for k, v := range asMap {
 		switch k {
-		case "topic":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("topic"))
-			it.Topic, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "text":
 			var err error
 
@@ -7098,16 +7036,6 @@ func (ec *executionContext) _Comment(ctx context.Context, sel ast.SelectionSet, 
 		case "id":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Comment_id(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "topic":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Comment_topic(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

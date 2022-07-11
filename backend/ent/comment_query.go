@@ -328,12 +328,12 @@ func (cq *CommentQuery) WithReview(opts ...func(*ReviewQuery)) *CommentQuery {
 // Example:
 //
 //	var v []struct {
-//		Topic string `json:"topic,omitempty"`
+//		Text string `json:"text,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Comment.Query().
-//		GroupBy(comment.FieldTopic).
+//		GroupBy(comment.FieldText).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -355,11 +355,11 @@ func (cq *CommentQuery) GroupBy(field string, fields ...string) *CommentGroupBy 
 // Example:
 //
 //	var v []struct {
-//		Topic string `json:"topic,omitempty"`
+//		Text string `json:"text,omitempty"`
 //	}
 //
 //	client.Comment.Query().
-//		Select(comment.FieldTopic).
+//		Select(comment.FieldText).
 //		Scan(ctx, &v)
 //
 func (cq *CommentQuery) Select(fields ...string) *CommentSelect {

@@ -557,7 +557,6 @@ type CommentMutation struct {
 	op            Op
 	typ           string
 	id            *int
-	topic         *string
 	text          *string
 	clearedFields map[string]struct{}
 	user          map[int]struct{}
@@ -667,42 +666,6 @@ func (m *CommentMutation) IDs(ctx context.Context) ([]int, error) {
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
-}
-
-// SetTopic sets the "topic" field.
-func (m *CommentMutation) SetTopic(s string) {
-	m.topic = &s
-}
-
-// Topic returns the value of the "topic" field in the mutation.
-func (m *CommentMutation) Topic() (r string, exists bool) {
-	v := m.topic
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTopic returns the old "topic" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldTopic(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTopic is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTopic requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTopic: %w", err)
-	}
-	return oldValue.Topic, nil
-}
-
-// ResetTopic resets all changes to the "topic" field.
-func (m *CommentMutation) ResetTopic() {
-	m.topic = nil
 }
 
 // SetText sets the "text" field.
@@ -868,10 +831,7 @@ func (m *CommentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CommentMutation) Fields() []string {
-	fields := make([]string, 0, 2)
-	if m.topic != nil {
-		fields = append(fields, comment.FieldTopic)
-	}
+	fields := make([]string, 0, 1)
 	if m.text != nil {
 		fields = append(fields, comment.FieldText)
 	}
@@ -883,8 +843,6 @@ func (m *CommentMutation) Fields() []string {
 // schema.
 func (m *CommentMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case comment.FieldTopic:
-		return m.Topic()
 	case comment.FieldText:
 		return m.Text()
 	}
@@ -896,8 +854,6 @@ func (m *CommentMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *CommentMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case comment.FieldTopic:
-		return m.OldTopic(ctx)
 	case comment.FieldText:
 		return m.OldText(ctx)
 	}
@@ -909,13 +865,6 @@ func (m *CommentMutation) OldField(ctx context.Context, name string) (ent.Value,
 // type.
 func (m *CommentMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case comment.FieldTopic:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetTopic(v)
-		return nil
 	case comment.FieldText:
 		v, ok := value.(string)
 		if !ok {
@@ -972,9 +921,6 @@ func (m *CommentMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *CommentMutation) ResetField(name string) error {
 	switch name {
-	case comment.FieldTopic:
-		m.ResetTopic()
-		return nil
 	case comment.FieldText:
 		m.ResetText()
 		return nil

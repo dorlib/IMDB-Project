@@ -14,7 +14,6 @@ type Comment struct {
 // Fields of the Comment.
 func (Comment) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("topic"),
 		field.String("text"),
 	}
 }

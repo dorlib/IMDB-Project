@@ -21,12 +21,6 @@ type CommentCreate struct {
 	hooks    []Hook
 }
 
-// SetTopic sets the "topic" field.
-func (cc *CommentCreate) SetTopic(s string) *CommentCreate {
-	cc.mutation.SetTopic(s)
-	return cc
-}
-
 // SetText sets the "text" field.
 func (cc *CommentCreate) SetText(s string) *CommentCreate {
 	cc.mutation.SetText(s)
@@ -133,9 +127,6 @@ func (cc *CommentCreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (cc *CommentCreate) check() error {
-	if _, ok := cc.mutation.Topic(); !ok {
-		return &ValidationError{Name: "topic", err: errors.New(`ent: missing required field "Comment.topic"`)}
-	}
 	if _, ok := cc.mutation.Text(); !ok {
 		return &ValidationError{Name: "text", err: errors.New(`ent: missing required field "Comment.text"`)}
 	}
@@ -166,14 +157,6 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := cc.mutation.Topic(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: comment.FieldTopic,
-		})
-		_node.Topic = value
-	}
 	if value, ok := cc.mutation.Text(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,

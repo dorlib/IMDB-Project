@@ -56,7 +56,6 @@ type Review {
 
 type Comment {
     id: ID!
-    topic: String!
     text: String!
     user: User!
     Review: Review!
@@ -163,7 +162,6 @@ input FavoriteInput {
 }
 
 input CommentInput {
-    topic: String!
     text: String!
 }
 
@@ -180,7 +178,7 @@ type Mutation {
     addToFavorites(movieID: ID!, userID: ID!, movieTitle: String!, movieImage: String!): Favorite!
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
     addActorToMovie(movieId: ID!, name: String!) : Actor!
-    addComment(userID: ID!, reviewID: ID!, topic: String!, text: String!) : Comment!
+    addComment(userID: ID!, reviewID: ID!, text: String!) : Comment!
     deleteComment(commentID: ID!, userID: ID!) : ID!
     addLike(userID: ID!, reviewID: ID!) : Like!
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]

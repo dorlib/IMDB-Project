@@ -1,18 +1,9 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {Link} from 'react-router-dom';
-
 import Card from "../ui/Card";
-import FavoritesContext from "../../favorites/favorites-context";
 import {gql, useMutation, useQuery} from "@apollo/client";
-import {Stack} from "@mui/material";
-import Button from "@mui/material/Button";
-import {isIterableObject} from "graphql/jsutils/isIterableObject";
-import MenuItem from "@mui/material/MenuItem";
-import UpdateRank from "./total-rank";
 
 import classes from "./newReview.module.css";
 import CardContent from "@mui/material/CardContent";
-import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 
 function NewReviewForm(props) {

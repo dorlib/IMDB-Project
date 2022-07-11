@@ -12,7 +12,6 @@ import (
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/like"
 	"imdbv2/ent/movie"
-	"imdbv2/ent/review"
 	"imdbv2/ent/user"
 )
 
@@ -253,12 +252,11 @@ func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, nam
 	return newActor, nil
 }
 
-func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, topic string, text string) (*ent.Comment, error) {
+func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, text string) (*ent.Comment, error) {
 	userData := r.client.User.GetX(ctx, userID)
 	reviewData := r.client.Review.GetX(ctx, reviewID)
 
 	return r.client.Comment.Create().
-		SetTopic(topic).
 		SetText(text).
 		AddUser(userData).
 		AddReview(reviewData).
@@ -276,7 +274,8 @@ func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, use
 }
 
 func (r *queryResolver) CommentsOfReview(ctx context.Context, reviewID int) ([]*ent.Comment, error) {
-	data, err := r.client.Review.Query().Where(review.ID(reviewID)).QueryComments().All(ctx)
+	rev := r.client.Review.GetX(ctx, reviewID)
+	data, err := r.client.Review.QueryComments(rev).WithReview().All(ctx)
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
