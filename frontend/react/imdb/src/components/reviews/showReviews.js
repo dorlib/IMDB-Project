@@ -23,6 +23,7 @@ import Card from "@mui/material/Card";
 import {Footer} from "../directors/styles";
 import CardActions from "@mui/material/CardActions";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import AddComments from "./addComments";
 
 function ShowReviews(props) {
     //from here to line 51 there are functions and variables for the show comments functionality
@@ -255,6 +256,7 @@ function ShowReviews(props) {
                         </CardActions>
                         <div className={classes.actions}>
                             <ShowComments reviewID={id}/>
+                            <AddComments userID={props.userID} reviewID={id}/>
                         </div>
                     </Footer>
                 </Card>
