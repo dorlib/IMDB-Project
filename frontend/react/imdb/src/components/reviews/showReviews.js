@@ -26,7 +26,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import AddComments from "./addComments";
 
 function ShowReviews(props) {
-    //from here to line 51 there are functions and variables for the show comments functionality
+    //from here to line 52 there are functions and variables for the show comments functionality
     const Arrow = styled(motion.div)`
         position: absolute;
         display: flex;
@@ -51,7 +51,7 @@ function ShowReviews(props) {
         }
     }
 
-    //from here to line __ there are function and variables for the add comments functionality
+    //from here to line 65 there are function and variables for the add comments functionality
     const [titleGiven, setTitleGiven] = useState('')
     const [textGiven, setTextGiven] = useState('')
 

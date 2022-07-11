@@ -1,43 +1,42 @@
 import {gql, useMutation, useQuery} from "@apollo/client";
 import * as React from 'react';
-import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
 import {useState} from "react";
-import Card from "@mui/material/Card";
-import classes from "./showReviews.module.css";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Button from "@mui/material/Button";
-import ListItemText from "@mui/material/ListItemText";
-import Typography from "@mui/material/Typography";
-import {Link} from "react-router-dom";
-import CardContent from "@mui/material/CardContent";
-import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
-import Divider from "@mui/material/Divider";
+import classes from "./addComment.module.css";
+import {Link} from "@mui/material";
 
 function AddComment(props) {
     const [text, setText] = useState('')
+
     const ADD_COMMENT = gql`
-        query AddComment ($userID: ID!, $reviewID: ID!, $text: String!) {
+        mutation AddComment ($userID: ID!, $reviewID: ID!, $text: String!) {
             addComment (userID: $userID, reviewID: $reviewID, text: $text){
                 id
             }
         }
     `;
 
-    const [addComment] = useMutation(ADD_COMMENT,
+    const [add] = useMutation(ADD_COMMENT,
         {
             variables: {
                 userID: props.userID,
                 reviewID: props.reviewID || 0,
                 text: text,
-            }
+            },
+            onCompleted: (
+                console.log("comment added")
+            )
         })
 
-    let loaded = (text !== '' ? (
-        <Card>
+    function handleSignClick() {
+        window.location.replace("/register-sign-in")
+    }
+
+    function handleRegClick() {
+        window.location.replace("/register-sign-in")
+    }
+
+    let loaded = (
             <form className={classes.form}>
-                <p htmlFor="review" style={{color: "yellow"}} className={classes.main}>Add Your Review!</p>
                 <div className={classes.control}>
                     <label htmlFor="topic" style={{color: "yellow"}}>Add Comment</label>
                     <textarea
@@ -50,12 +49,31 @@ function AddComment(props) {
                     ></textarea>
                 </div>
                 <div className={classes.actions}>
-                    <button onClick={addComment} className={classes.addReviewBut} type="button">Add Review</button>
+                    <button onClick={add} className={classes.addReviewBut} type="submit">Add Review</button>
                 </div>
             </form>
-        </Card>
-    ) : null)
-    return loaded
+    )
+
+    let notSignedIn = (
+        <div style={{color: "yellow"}}>
+                <div className={classes.actions}> &ensp; &ensp; Want To Share your thoughts about this comment?
+                    <Link type="button" onClick={handleSignClick} className={classes.signBut}>Sign in</Link>
+                    <h2 className={classes.or}>OR</h2>
+                    <Link type="button" onClick={handleRegClick} className={classes.regBut}>Register</Link>
+                </div>
+            <p> &ensp;</p>
+        </div>
+    )
+
+    let load
+    if (parseInt(props.userID) !== 0) {
+        load = loaded
+    } else {
+        load = notSignedIn
+    }
+
+
+    return load
 }
 
-export default ShowComments
+export default AddComment
