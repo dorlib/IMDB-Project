@@ -1,8 +1,5 @@
 import {gql, useQuery} from "@apollo/client";
 import * as React from 'react';
-import { motion, AnimateSharedLayout, AnimatePresence } from "framer-motion";
-import {useState} from "react";
-import Card from "@mui/material/Card";
 import classes from "./showReviews.module.css";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -11,9 +8,6 @@ import Button from "@mui/material/Button";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import {Link} from "react-router-dom";
-import CardContent from "@mui/material/CardContent";
-import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
-import Divider from "@mui/material/Divider";
 
 function ShowComments(props) {
     const SHOW_COMMENTS = gql`
@@ -33,7 +27,7 @@ function ShowComments(props) {
     const {data, loading, error} = useQuery(SHOW_COMMENTS,
         {
             variables: {
-                reviewID: props.reviewID || 0,
+                reviewID: parseInt(props.reviewID) || 0,
             }
         })
 
