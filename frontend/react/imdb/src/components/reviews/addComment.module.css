@@ -23,7 +23,7 @@
     padding: 0.25rem;
     width: 80%;
     margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
 
 
 }
@@ -47,6 +47,7 @@
     margin-bottom: 2cm;
     margin-top: 0.4cm;
     margin-right: 3.3cm;
+    bottom: -3cm;
 }
 
 .main{
@@ -60,14 +61,14 @@
     position: relative;
     width: 19cm;
     padding: 0rem;
-    bottom: -0.8cm;
+    bottom: -0.1cm;
     background-color: #cc2062;
 }
 
 .actions button {
     position: absolute;
     display: flex;
-    margin-top: -0.2cm;
+    margin-top: -0.1cm;
     font: inherit;
     width: 4.5cm;
     cursor: pointer;
