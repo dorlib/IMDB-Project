@@ -45,6 +45,7 @@
 }
   
   .image {
+    top: 7cm;
     width: 100%;
     height: 20rem;
     overflow: hidden;
@@ -120,8 +121,8 @@
 .heart {
   display: flex;
   position: absolute;
-  bottom: -1.55cm;
-  right: 14.8cm;
+  bottom: -1.5cm;
+  right: 14.95cm;
 }
 
 .title {
@@ -137,7 +138,7 @@
   position: absolute;
   color: yellow;
   font-size: 25px;
-  top: 19.3cm;
+  top: 19cm;
   left: 4.23cm;
 }
 
