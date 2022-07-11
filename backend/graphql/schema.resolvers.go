@@ -253,12 +253,11 @@ func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, nam
 	return newActor, nil
 }
 
-func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, topic string, text string) (*ent.Comment, error) {
+func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, text string) (*ent.Comment, error) {
 	userData := r.client.User.GetX(ctx, userID)
 	reviewData := r.client.Review.GetX(ctx, reviewID)
 
 	return r.client.Comment.Create().
-		SetTopic(topic).
 		SetText(text).
 		AddUser(userData).
 		AddReview(reviewData).

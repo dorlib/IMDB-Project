@@ -7,8 +7,6 @@ const (
 	Label = "comment"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldTopic holds the string denoting the topic field in the database.
-	FieldTopic = "topic"
 	// FieldText holds the string denoting the text field in the database.
 	FieldText = "text"
 	// EdgeUser holds the string denoting the user edge name in mutations.
@@ -32,7 +30,6 @@ const (
 // Columns holds all SQL columns for comment fields.
 var Columns = []string{
 	FieldID,
-	FieldTopic,
 	FieldText,
 }
 

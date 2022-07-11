@@ -24,7 +24,6 @@ var (
 	// CommentsColumns holds the columns for the "comments" table.
 	CommentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "topic", Type: field.TypeString},
 		{Name: "text", Type: field.TypeString},
 	}
 	// CommentsTable holds the schema information for the "comments" table.

@@ -15,8 +15,6 @@ type Comment struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Topic holds the value of the "topic" field.
-	Topic string `json:"topic,omitempty"`
 	// Text holds the value of the "text" field.
 	Text string `json:"text,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -60,7 +58,7 @@ func (*Comment) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case comment.FieldID:
 			values[i] = new(sql.NullInt64)
-		case comment.FieldTopic, comment.FieldText:
+		case comment.FieldText:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Comment", columns[i])
@@ -83,12 +81,6 @@ func (c *Comment) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			c.ID = int(value.Int64)
-		case comment.FieldTopic:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field topic", values[i])
-			} else if value.Valid {
-				c.Topic = value.String
-			}
 		case comment.FieldText:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field text", values[i])
@@ -133,8 +125,6 @@ func (c *Comment) String() string {
 	var builder strings.Builder
 	builder.WriteString("Comment(")
 	builder.WriteString(fmt.Sprintf("id=%v", c.ID))
-	builder.WriteString(", topic=")
-	builder.WriteString(c.Topic)
 	builder.WriteString(", text=")
 	builder.WriteString(c.Text)
 	builder.WriteByte(')')

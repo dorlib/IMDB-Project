@@ -5,8 +5,6 @@ import {useState} from "react";
 import Card from "@mui/material/Card";
 
 function ShowComments(props) {
-    const [reviewID, setReviewID] = useState(0)
-
     const SHOW_COMMENTS = gql`
         query CommentsOfReview ($reviewID: ID!) {
             commentsOfReview (reviewID: $reviewID){
@@ -22,14 +20,10 @@ function ShowComments(props) {
         }
     `;
 
-    if (props.id !== 0) {
-        setReviewID(props.id)
-    }
-
     const {data, loading, error} = useQuery(SHOW_COMMENTS,
         {
             variables: {
-                reviewID: reviewID || 0,
+                reviewID: props.reviewID || 0,
             }
         })
 
@@ -40,12 +34,9 @@ function ShowComments(props) {
 
     return (
     <Card>
-        {data.commentsOfReview.map(comment => (
-                <motion.div layoutId={comment.id} onClick={() => setReviewID(comment.id)}>
-                    <motion.h5>{comment.topic}</motion.h5>
-                    <motion.h2>{comment.text}</motion.h2>
-                </motion.div>
-            ))}
+        <div>
+            comment
+        </div>
     </Card>
     )
 

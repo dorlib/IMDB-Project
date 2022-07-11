@@ -251,11 +251,10 @@ function ShowReviews(props) {
                                         className={classes.thumb}><ThumbUpIcon/></Button>
                                               <span className={classes.badgeComments}>{0}</span>
                                               <span className={classes.badgeLikes}>{numOfLikes}</span>
-                                              <ShowComments id={extend}/>
                     </span>
                         </CardActions>
                         <div className={classes.actions}>
-                            this will show comments
+                            <ShowComments reviewID={id}/>
                         </div>
                     </Footer>
                 </Card>

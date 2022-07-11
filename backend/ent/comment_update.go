@@ -29,12 +29,6 @@ func (cu *CommentUpdate) Where(ps ...predicate.Comment) *CommentUpdate {
 	return cu
 }
 
-// SetTopic sets the "topic" field.
-func (cu *CommentUpdate) SetTopic(s string) *CommentUpdate {
-	cu.mutation.SetTopic(s)
-	return cu
-}
-
 // SetText sets the "text" field.
 func (cu *CommentUpdate) SetText(s string) *CommentUpdate {
 	cu.mutation.SetText(s)
@@ -190,13 +184,6 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := cu.mutation.Topic(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: comment.FieldTopic,
-		})
-	}
 	if value, ok := cu.mutation.Text(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -329,12 +316,6 @@ type CommentUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *CommentMutation
-}
-
-// SetTopic sets the "topic" field.
-func (cuo *CommentUpdateOne) SetTopic(s string) *CommentUpdateOne {
-	cuo.mutation.SetTopic(s)
-	return cuo
 }
 
 // SetText sets the "text" field.
@@ -515,13 +496,6 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := cuo.mutation.Topic(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: comment.FieldTopic,
-		})
 	}
 	if value, ok := cuo.mutation.Text(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{

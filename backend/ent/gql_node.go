@@ -102,22 +102,14 @@ func (c *Comment) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     c.ID,
 		Type:   "Comment",
-		Fields: make([]*Field, 2),
+		Fields: make([]*Field, 1),
 		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
-	if buf, err = json.Marshal(c.Topic); err != nil {
-		return nil, err
-	}
-	node.Fields[0] = &Field{
-		Type:  "string",
-		Name:  "topic",
-		Value: string(buf),
-	}
 	if buf, err = json.Marshal(c.Text); err != nil {
 		return nil, err
 	}
-	node.Fields[1] = &Field{
+	node.Fields[0] = &Field{
 		Type:  "string",
 		Name:  "text",
 		Value: string(buf),
