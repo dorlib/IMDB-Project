@@ -18,12 +18,12 @@ function AddComment(props) {
     const [add] = useMutation(ADD_COMMENT,
         {
             variables: {
-                userID: props.userID,
-                reviewID: props.reviewID || 0,
+                userID: parseInt(props.userID),
+                reviewID: parseInt(props.reviewID),
                 text: text,
             },
             onCompleted: (
-                console.log("comment added")
+                () => window.location.reload()
             )
         })
 
