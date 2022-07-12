@@ -1,6 +1,6 @@
 import {gql, useQuery} from "@apollo/client";
 import * as React from 'react';
-import classes from "./showReviews.module.css";
+import classes from "./showComments.module.css";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -39,16 +39,16 @@ function ShowComments(props) {
     let loaded = data.commentsOfReview.map(({text, id, user}) => (
         text !== '' ? (
             <div key={id} className={classes.item} style={{marginTop: "2.4cm"}}>
-                <List sx={{width: '100%',}} className={classes.rev}>
+                <List sx={{width: '100%',}} className={classes.comment}>
                     <ListItem alignItems="flex-start">
                         <ListItemAvatar>
                             <Button>
                                 <img src={user["profile"]} style={{
-                                    width: "1.8cm",
-                                    height: "1.8cm",
+                                    width: "1.4cm",
+                                    height: "1.4cm",
                                     borderRadius: "200px",
-                                    marginLeft: "-0.3cm",
-                                    marginTop: "-0.4cm"
+                                    marginLeft: "10cm",
+                                    marginTop: "0.1cm"
                                 }} onClick={() => window.location.replace("/userPage/" + user["id"])} alt={""}/>
                             </Button>
                         </ListItemAvatar>

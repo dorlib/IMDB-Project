@@ -1,0 +1,16 @@
+.item {
+    top: -1cm;
+    border-radius: 12px;
+    display: flex;
+    position: relative;
+    right: 5cm;
+    width: 10cm;
+    margin-left: 10cm;
+    margin-top: 1cm;
+}
+
+.comment {
+    position: relative;
+    display: flex;
+    left: 1cm;
+}
