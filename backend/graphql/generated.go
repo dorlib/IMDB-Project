@@ -36,7 +36,6 @@ type Config struct {
 }
 
 type ResolverRoot interface {
-	Comment() CommentResolver
 	Movie() MovieResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
@@ -166,10 +165,6 @@ type ComplexityRoot struct {
 	}
 }
 
-type CommentResolver interface {
-	User(ctx context.Context, obj *ent.Comment) (*ent.User, error)
-	Review(ctx context.Context, obj *ent.Comment) (*ent.Review, error)
-}
 type MovieResolver interface {
 	Actors(ctx context.Context, obj *ent.Movie) ([]*ent.Actor, error)
 }
@@ -2301,13 +2296,13 @@ func (ec *executionContext) _Comment_user(ctx context.Context, field graphql.Col
 		Field:      field,
 		Args:       nil,
 		IsMethod:   true,
-		IsResolver: true,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Comment().User(rctx, obj)
+		return obj.User(ctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2336,13 +2331,13 @@ func (ec *executionContext) _Comment_Review(ctx context.Context, field graphql.C
 		Field:      field,
 		Args:       nil,
 		IsMethod:   true,
-		IsResolver: true,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Comment().Review(rctx, obj)
+		return obj.Review(ctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)

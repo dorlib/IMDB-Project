@@ -4,7 +4,6 @@ package ent
 
 import (
 	"context"
-	"database/sql/driver"
 	"errors"
 	"fmt"
 	"imdbv2/ent/comment"
@@ -30,6 +29,7 @@ type CommentQuery struct {
 	// eager-loading edges.
 	withUser   *UserQuery
 	withReview *ReviewQuery
+	withFKs    bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -80,7 +80,7 @@ func (cq *CommentQuery) QueryUser() *UserQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(comment.Table, comment.FieldID, selector),
 			sqlgraph.To(user.Table, user.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, comment.UserTable, comment.UserPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2O, true, comment.UserTable, comment.UserColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
@@ -102,7 +102,7 @@ func (cq *CommentQuery) QueryReview() *ReviewQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(comment.Table, comment.FieldID, selector),
 			sqlgraph.To(review.Table, review.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, comment.ReviewTable, comment.ReviewPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2O, false, comment.ReviewTable, comment.ReviewColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
@@ -386,12 +386,19 @@ func (cq *CommentQuery) prepareQuery(ctx context.Context) error {
 func (cq *CommentQuery) sqlAll(ctx context.Context) ([]*Comment, error) {
 	var (
 		nodes       = []*Comment{}
+		withFKs     = cq.withFKs
 		_spec       = cq.querySpec()
 		loadedTypes = [2]bool{
 			cq.withUser != nil,
 			cq.withReview != nil,
 		}
 	)
+	if cq.withUser != nil || cq.withReview != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, comment.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		node := &Comment{config: cq.config}
 		nodes = append(nodes, node)
@@ -413,131 +420,59 @@ func (cq *CommentQuery) sqlAll(ctx context.Context) ([]*Comment, error) {
 	}
 
 	if query := cq.withUser; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		ids := make(map[int]*Comment, len(nodes))
-		for _, node := range nodes {
-			ids[node.ID] = node
-			fks = append(fks, node.ID)
-			node.Edges.User = []*User{}
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Comment)
+		for i := range nodes {
+			if nodes[i].user_comments == nil {
+				continue
+			}
+			fk := *nodes[i].user_comments
+			if _, ok := nodeids[fk]; !ok {
+				ids = append(ids, fk)
+			}
+			nodeids[fk] = append(nodeids[fk], nodes[i])
 		}
-		var (
-			edgeids []int
-			edges   = make(map[int][]*Comment)
-		)
-		_spec := &sqlgraph.EdgeQuerySpec{
-			Edge: &sqlgraph.EdgeSpec{
-				Inverse: true,
-				Table:   comment.UserTable,
-				Columns: comment.UserPrimaryKey,
-			},
-			Predicate: func(s *sql.Selector) {
-				s.Where(sql.InValues(comment.UserPrimaryKey[1], fks...))
-			},
-			ScanValues: func() [2]interface{} {
-				return [2]interface{}{new(sql.NullInt64), new(sql.NullInt64)}
-			},
-			Assign: func(out, in interface{}) error {
-				eout, ok := out.(*sql.NullInt64)
-				if !ok || eout == nil {
-					return fmt.Errorf("unexpected id value for edge-out")
-				}
-				ein, ok := in.(*sql.NullInt64)
-				if !ok || ein == nil {
-					return fmt.Errorf("unexpected id value for edge-in")
-				}
-				outValue := int(eout.Int64)
-				inValue := int(ein.Int64)
-				node, ok := ids[outValue]
-				if !ok {
-					return fmt.Errorf("unexpected node id in edges: %v", outValue)
-				}
-				if _, ok := edges[inValue]; !ok {
-					edgeids = append(edgeids, inValue)
-				}
-				edges[inValue] = append(edges[inValue], node)
-				return nil
-			},
-		}
-		if err := sqlgraph.QueryEdges(ctx, cq.driver, _spec); err != nil {
-			return nil, fmt.Errorf(`query edges "user": %w`, err)
-		}
-		query.Where(user.IDIn(edgeids...))
+		query.Where(user.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			nodes, ok := edges[n.ID]
+			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected "user" node returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "user_comments" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.User = append(nodes[i].Edges.User, n)
+				nodes[i].Edges.User = n
 			}
 		}
 	}
 
 	if query := cq.withReview; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		ids := make(map[int]*Comment, len(nodes))
-		for _, node := range nodes {
-			ids[node.ID] = node
-			fks = append(fks, node.ID)
-			node.Edges.Review = []*Review{}
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Comment)
+		for i := range nodes {
+			if nodes[i].comment_review == nil {
+				continue
+			}
+			fk := *nodes[i].comment_review
+			if _, ok := nodeids[fk]; !ok {
+				ids = append(ids, fk)
+			}
+			nodeids[fk] = append(nodeids[fk], nodes[i])
 		}
-		var (
-			edgeids []int
-			edges   = make(map[int][]*Comment)
-		)
-		_spec := &sqlgraph.EdgeQuerySpec{
-			Edge: &sqlgraph.EdgeSpec{
-				Inverse: false,
-				Table:   comment.ReviewTable,
-				Columns: comment.ReviewPrimaryKey,
-			},
-			Predicate: func(s *sql.Selector) {
-				s.Where(sql.InValues(comment.ReviewPrimaryKey[0], fks...))
-			},
-			ScanValues: func() [2]interface{} {
-				return [2]interface{}{new(sql.NullInt64), new(sql.NullInt64)}
-			},
-			Assign: func(out, in interface{}) error {
-				eout, ok := out.(*sql.NullInt64)
-				if !ok || eout == nil {
-					return fmt.Errorf("unexpected id value for edge-out")
-				}
-				ein, ok := in.(*sql.NullInt64)
-				if !ok || ein == nil {
-					return fmt.Errorf("unexpected id value for edge-in")
-				}
-				outValue := int(eout.Int64)
-				inValue := int(ein.Int64)
-				node, ok := ids[outValue]
-				if !ok {
-					return fmt.Errorf("unexpected node id in edges: %v", outValue)
-				}
-				if _, ok := edges[inValue]; !ok {
-					edgeids = append(edgeids, inValue)
-				}
-				edges[inValue] = append(edges[inValue], node)
-				return nil
-			},
-		}
-		if err := sqlgraph.QueryEdges(ctx, cq.driver, _spec); err != nil {
-			return nil, fmt.Errorf(`query edges "review": %w`, err)
-		}
-		query.Where(review.IDIn(edgeids...))
+		query.Where(review.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			nodes, ok := edges[n.ID]
+			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected "review" node returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "comment_review" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.Review = append(nodes[i].Edges.Review, n)
+				nodes[i].Edges.Review = n
 			}
 		}
 	}

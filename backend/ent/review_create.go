@@ -303,10 +303,10 @@ func (rc *ReviewCreate) createSpec() (*Review, *sqlgraph.CreateSpec) {
 	}
 	if nodes := rc.mutation.CommentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

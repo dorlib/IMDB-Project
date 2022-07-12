@@ -398,10 +398,10 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if ru.mutation.CommentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -414,10 +414,10 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := ru.mutation.RemovedCommentsIDs(); len(nodes) > 0 && !ru.mutation.CommentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -433,10 +433,10 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := ru.mutation.CommentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -914,10 +914,10 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 	}
 	if ruo.mutation.CommentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -930,10 +930,10 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 	}
 	if nodes := ruo.mutation.RemovedCommentsIDs(); len(nodes) > 0 && !ruo.mutation.CommentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -949,10 +949,10 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 	}
 	if nodes := ruo.mutation.CommentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

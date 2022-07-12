@@ -559,11 +559,9 @@ type CommentMutation struct {
 	id            *int
 	text          *string
 	clearedFields map[string]struct{}
-	user          map[int]struct{}
-	removeduser   map[int]struct{}
+	user          *int
 	cleareduser   bool
-	review        map[int]struct{}
-	removedreview map[int]struct{}
+	review        *int
 	clearedreview bool
 	done          bool
 	oldValue      func(context.Context) (*Comment, error)
@@ -704,14 +702,9 @@ func (m *CommentMutation) ResetText() {
 	m.text = nil
 }
 
-// AddUserIDs adds the "user" edge to the User entity by ids.
-func (m *CommentMutation) AddUserIDs(ids ...int) {
-	if m.user == nil {
-		m.user = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.user[ids[i]] = struct{}{}
-	}
+// SetUserID sets the "user" edge to the User entity by id.
+func (m *CommentMutation) SetUserID(id int) {
+	m.user = &id
 }
 
 // ClearUser clears the "user" edge to the User entity.
@@ -724,29 +717,20 @@ func (m *CommentMutation) UserCleared() bool {
 	return m.cleareduser
 }
 
-// RemoveUserIDs removes the "user" edge to the User entity by IDs.
-func (m *CommentMutation) RemoveUserIDs(ids ...int) {
-	if m.removeduser == nil {
-		m.removeduser = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.user, ids[i])
-		m.removeduser[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedUser returns the removed IDs of the "user" edge to the User entity.
-func (m *CommentMutation) RemovedUserIDs() (ids []int) {
-	for id := range m.removeduser {
-		ids = append(ids, id)
+// UserID returns the "user" edge ID in the mutation.
+func (m *CommentMutation) UserID() (id int, exists bool) {
+	if m.user != nil {
+		return *m.user, true
 	}
 	return
 }
 
 // UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
 func (m *CommentMutation) UserIDs() (ids []int) {
-	for id := range m.user {
-		ids = append(ids, id)
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
 	}
 	return
 }
@@ -755,17 +739,11 @@ func (m *CommentMutation) UserIDs() (ids []int) {
 func (m *CommentMutation) ResetUser() {
 	m.user = nil
 	m.cleareduser = false
-	m.removeduser = nil
 }
 
-// AddReviewIDs adds the "review" edge to the Review entity by ids.
-func (m *CommentMutation) AddReviewIDs(ids ...int) {
-	if m.review == nil {
-		m.review = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.review[ids[i]] = struct{}{}
-	}
+// SetReviewID sets the "review" edge to the Review entity by id.
+func (m *CommentMutation) SetReviewID(id int) {
+	m.review = &id
 }
 
 // ClearReview clears the "review" edge to the Review entity.
@@ -778,29 +756,20 @@ func (m *CommentMutation) ReviewCleared() bool {
 	return m.clearedreview
 }
 
-// RemoveReviewIDs removes the "review" edge to the Review entity by IDs.
-func (m *CommentMutation) RemoveReviewIDs(ids ...int) {
-	if m.removedreview == nil {
-		m.removedreview = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.review, ids[i])
-		m.removedreview[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedReview returns the removed IDs of the "review" edge to the Review entity.
-func (m *CommentMutation) RemovedReviewIDs() (ids []int) {
-	for id := range m.removedreview {
-		ids = append(ids, id)
+// ReviewID returns the "review" edge ID in the mutation.
+func (m *CommentMutation) ReviewID() (id int, exists bool) {
+	if m.review != nil {
+		return *m.review, true
 	}
 	return
 }
 
 // ReviewIDs returns the "review" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// ReviewID instead. It exists only for internal usage by the builders.
 func (m *CommentMutation) ReviewIDs() (ids []int) {
-	for id := range m.review {
-		ids = append(ids, id)
+	if id := m.review; id != nil {
+		ids = append(ids, *id)
 	}
 	return
 }
@@ -809,7 +778,6 @@ func (m *CommentMutation) ReviewIDs() (ids []int) {
 func (m *CommentMutation) ResetReview() {
 	m.review = nil
 	m.clearedreview = false
-	m.removedreview = nil
 }
 
 // Where appends a list predicates to the CommentMutation builder.
@@ -945,17 +913,13 @@ func (m *CommentMutation) AddedEdges() []string {
 func (m *CommentMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case comment.EdgeUser:
-		ids := make([]ent.Value, 0, len(m.user))
-		for id := range m.user {
-			ids = append(ids, id)
+		if id := m.user; id != nil {
+			return []ent.Value{*id}
 		}
-		return ids
 	case comment.EdgeReview:
-		ids := make([]ent.Value, 0, len(m.review))
-		for id := range m.review {
-			ids = append(ids, id)
+		if id := m.review; id != nil {
+			return []ent.Value{*id}
 		}
-		return ids
 	}
 	return nil
 }
@@ -963,12 +927,6 @@ func (m *CommentMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *CommentMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.removeduser != nil {
-		edges = append(edges, comment.EdgeUser)
-	}
-	if m.removedreview != nil {
-		edges = append(edges, comment.EdgeReview)
-	}
 	return edges
 }
 
@@ -976,18 +934,6 @@ func (m *CommentMutation) RemovedEdges() []string {
 // the given name in this mutation.
 func (m *CommentMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case comment.EdgeUser:
-		ids := make([]ent.Value, 0, len(m.removeduser))
-		for id := range m.removeduser {
-			ids = append(ids, id)
-		}
-		return ids
-	case comment.EdgeReview:
-		ids := make([]ent.Value, 0, len(m.removedreview))
-		for id := range m.removedreview {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
@@ -1020,6 +966,12 @@ func (m *CommentMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *CommentMutation) ClearEdge(name string) error {
 	switch name {
+	case comment.EdgeUser:
+		m.ClearUser()
+		return nil
+	case comment.EdgeReview:
+		m.ClearReview()
+		return nil
 	}
 	return fmt.Errorf("unknown Comment unique edge %s", name)
 }

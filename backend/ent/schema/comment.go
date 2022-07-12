@@ -22,7 +22,8 @@ func (Comment) Fields() []ent.Field {
 func (Comment) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("user", User.Type).
-			Ref("comments"),
-		edge.To("review", Review.Type),
+			Ref("comments").
+			Unique(),
+		edge.To("review", Review.Type).Unique(),
 	}
 }
