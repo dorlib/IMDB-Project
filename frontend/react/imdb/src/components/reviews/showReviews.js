@@ -236,13 +236,13 @@ function ShowReviews(props) {
                 }}>
                     <Footer
                         className={expanded === id? "show" : ""}
-                        setHeight={accordionHeight}
+                        setHeight={expanded === id? accordionHeight: 0}
                         ref={ref}
                     >
                         <CardActions>
                             <span size="large" onClick={() => open(id)}>
                         <Button style={{position: "absolute"}}>
-                            Show Comments!
+                            {expanded !== id? "Show Comments": "Hide Comments"}
                             <Arrow>
                                 <KeyboardArrowUpIcon style={style}/>
                             </Arrow>

@@ -1,5 +1,5 @@
 .item {
-    top: -1cm;
+    top: -2.5cm;
     border-radius: 12px;
     display: flex;
     position: relative;
@@ -7,10 +7,26 @@
     width: 10cm;
     margin-left: 10cm;
     margin-top: 1cm;
+    margin-bottom: 2.5cm;
+    height: 0.5cm;
 }
 
 .comment {
     position: relative;
     display: flex;
-    left: 1cm;
+    left: -5cm;
+}
+
+.by {
+    position: relative;
+    display: flex;
+    bottom: -0.9cm;
+    right: 3.3cm;
+}
+
+.text {
+    position: relative;
+    display: flex;
+    bottom: 0.7cm;
+    color: white;
 }

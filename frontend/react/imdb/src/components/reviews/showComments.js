@@ -47,21 +47,20 @@ function ShowComments(props) {
                                     width: "1.4cm",
                                     height: "1.4cm",
                                     borderRadius: "200px",
-                                    marginLeft: "10cm",
-                                    marginTop: "0.1cm"
+                                    marginTop: "-1cm",
                                 }} onClick={() => window.location.replace("/userPage/" + user["id"])} alt={""}/>
                             </Button>
                         </ListItemAvatar>
                         <ListItemText style={{marginLeft: "0.3cm"}}
                                       primary={
                                           <React.Fragment>
-                                              <Typography>
-                                                  by: <Link to={"/userPage/" + user["id"]} style={{
+                                              <Typography className={classes.by}>
+                                                  <Link to={"/userPage/" + user["id"]} style={{
                                                   textDecoration: "none",
                                                   color: "white"
                                               }}>{user["nickname"]}</Link>
                                               </Typography>
-                                              <Typography style={{fontSize: "x-large"}}>
+                                              <Typography style={{fontSize: "x-large"}} className={classes.text}>
                                                   {text}
                                               </Typography>
                                           </React.Fragment>} />

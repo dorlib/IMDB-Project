@@ -1,10 +1,10 @@
 .item {
-    top: -1cm;
-    border-radius: 12px;
     display: flex;
     position: relative;
     right: 1.5cm;
     width: 40cm;
+    top: -1cm;
+    border-radius: 12px;
 }
 
 .text {
@@ -22,7 +22,7 @@
     line-height: 0.8cm;
     padding: 0.25rem;
     width: 80%;
-    margin-top: 1rem;
+    margin-top: -3rem;
     margin-bottom: 3rem;
 
 
@@ -61,7 +61,7 @@
     position: relative;
     width: 19cm;
     padding: 0rem;
-    bottom: 1.3cm;
+    bottom: 1cm;
     left: 0.3cm;
     background-color: #cc2062;
 }
@@ -111,4 +111,10 @@
     top: 0.57cm;
     left: 5.5cm;
     border-radius: 30px;
+}
+
+.add {
+    display: flex;
+    position: relative;
+    bottom: 1.5cm;
 }
