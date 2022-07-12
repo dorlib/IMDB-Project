@@ -228,11 +228,10 @@ function ShowReviews(props) {
                     marginBottom: "4.2cm",
                     position: "relative",
                     display: "flex",
-                    top: "5.7cm",
-                    right: "20cm",
-                    width: "40cm",
+                    marginTop: "0cm",
+                    marginRight: "-22cm",
+                    width: "21cm",
                     borderRadius: "0 0 15px 15px",
-                    marginTop: "-2cm",
                 }}>
                     <Footer
                         className={expanded === id? "show" : ""}
