@@ -29,6 +29,10 @@ func init() {
 	reviewDescNumOfLikes := reviewFields[3].Descriptor()
 	// review.NumOfLikesValidator is a validator for the "num_of_likes" field. It is called by the builders before save.
 	review.NumOfLikesValidator = reviewDescNumOfLikes.Validators[0].(func(int) error)
+	// reviewDescNumOfComments is the schema descriptor for num_of_comments field.
+	reviewDescNumOfComments := reviewFields[4].Descriptor()
+	// review.NumOfCommentsValidator is a validator for the "num_of_comments" field. It is called by the builders before save.
+	review.NumOfCommentsValidator = reviewDescNumOfComments.Validators[0].(func(int) error)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescFirstname is the schema descriptor for firstname field.

@@ -69,6 +69,19 @@ func (ru *ReviewUpdate) AddNumOfLikes(i int) *ReviewUpdate {
 	return ru
 }
 
+// SetNumOfComments sets the "num_of_comments" field.
+func (ru *ReviewUpdate) SetNumOfComments(i int) *ReviewUpdate {
+	ru.mutation.ResetNumOfComments()
+	ru.mutation.SetNumOfComments(i)
+	return ru
+}
+
+// AddNumOfComments adds i to the "num_of_comments" field.
+func (ru *ReviewUpdate) AddNumOfComments(i int) *ReviewUpdate {
+	ru.mutation.AddNumOfComments(i)
+	return ru
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by ID.
 func (ru *ReviewUpdate) SetMovieID(id int) *ReviewUpdate {
 	ru.mutation.SetMovieID(id)
@@ -263,6 +276,11 @@ func (ru *ReviewUpdate) check() error {
 			return &ValidationError{Name: "num_of_likes", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_likes": %w`, err)}
 		}
 	}
+	if v, ok := ru.mutation.NumOfComments(); ok {
+		if err := review.NumOfCommentsValidator(v); err != nil {
+			return &ValidationError{Name: "num_of_comments", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_comments": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -324,6 +342,20 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: review.FieldNumOfLikes,
+		})
+	}
+	if value, ok := ru.mutation.NumOfComments(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfComments,
+		})
+	}
+	if value, ok := ru.mutation.AddedNumOfComments(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfComments,
 		})
 	}
 	if ru.mutation.MovieCleared() {
@@ -561,6 +593,19 @@ func (ruo *ReviewUpdateOne) AddNumOfLikes(i int) *ReviewUpdateOne {
 	return ruo
 }
 
+// SetNumOfComments sets the "num_of_comments" field.
+func (ruo *ReviewUpdateOne) SetNumOfComments(i int) *ReviewUpdateOne {
+	ruo.mutation.ResetNumOfComments()
+	ruo.mutation.SetNumOfComments(i)
+	return ruo
+}
+
+// AddNumOfComments adds i to the "num_of_comments" field.
+func (ruo *ReviewUpdateOne) AddNumOfComments(i int) *ReviewUpdateOne {
+	ruo.mutation.AddNumOfComments(i)
+	return ruo
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by ID.
 func (ruo *ReviewUpdateOne) SetMovieID(id int) *ReviewUpdateOne {
 	ruo.mutation.SetMovieID(id)
@@ -762,6 +807,11 @@ func (ruo *ReviewUpdateOne) check() error {
 			return &ValidationError{Name: "num_of_likes", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_likes": %w`, err)}
 		}
 	}
+	if v, ok := ruo.mutation.NumOfComments(); ok {
+		if err := review.NumOfCommentsValidator(v); err != nil {
+			return &ValidationError{Name: "num_of_comments", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_comments": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -840,6 +890,20 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: review.FieldNumOfLikes,
+		})
+	}
+	if value, ok := ruo.mutation.NumOfComments(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfComments,
+		})
+	}
+	if value, ok := ruo.mutation.AddedNumOfComments(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfComments,
 		})
 	}
 	if ruo.mutation.MovieCleared() {

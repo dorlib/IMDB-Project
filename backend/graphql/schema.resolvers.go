@@ -254,6 +254,11 @@ func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, nam
 }
 
 func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, text string) (*ent.Comment, error) {
+	reviewData := r.client.Review.GetX(ctx, reviewID)
+	numOfCommentsBefore := reviewData.NumOfComments
+
+	r.client.Review.UpdateOneID(reviewID).SetNumOfComments(numOfCommentsBefore + 1).SaveX(ctx)
+
 	return r.client.Comment.Create().
 		SetText(text).
 		SetReviewID(reviewID).
@@ -261,7 +266,12 @@ func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID 
 		Save(ctx)
 }
 
-func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, userID int) (int, error) {
+func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, reviewID int, userID int) (int, error) {
+	reviewData := r.client.Review.GetX(ctx, reviewID)
+	numOfCommentsBefore := reviewData.NumOfComments
+
+	r.client.Review.UpdateOneID(reviewID).SetNumOfComments(numOfCommentsBefore - 1).SaveX(ctx)
+
 	userIdOfComment := r.client.Comment.GetX(ctx, commentID).QueryUser().OnlyIDX(ctx)
 	if userIdOfComment == userID {
 		comment := r.client.Comment.GetX(ctx, commentID)

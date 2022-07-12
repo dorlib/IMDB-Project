@@ -15,6 +15,8 @@ const (
 	FieldRank = "rank"
 	// FieldNumOfLikes holds the string denoting the num_of_likes field in the database.
 	FieldNumOfLikes = "num_of_likes"
+	// FieldNumOfComments holds the string denoting the num_of_comments field in the database.
+	FieldNumOfComments = "num_of_comments"
 	// EdgeMovie holds the string denoting the movie edge name in mutations.
 	EdgeMovie = "movie"
 	// EdgeUser holds the string denoting the user edge name in mutations.
@@ -60,6 +62,7 @@ var Columns = []string{
 	FieldText,
 	FieldRank,
 	FieldNumOfLikes,
+	FieldNumOfComments,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "reviews"
@@ -93,4 +96,6 @@ func ValidColumn(column string) bool {
 var (
 	// NumOfLikesValidator is a validator for the "num_of_likes" field. It is called by the builders before save.
 	NumOfLikesValidator func(int) error
+	// NumOfCommentsValidator is a validator for the "num_of_comments" field. It is called by the builders before save.
+	NumOfCommentsValidator func(int) error
 )

@@ -120,6 +120,13 @@ func NumOfLikes(v int) predicate.Review {
 	})
 }
 
+// NumOfComments applies equality check predicate on the "num_of_comments" field. It's identical to NumOfCommentsEQ.
+func NumOfComments(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumOfComments), v))
+	})
+}
+
 // TopicEQ applies the EQ predicate on the "topic" field.
 func TopicEQ(v string) predicate.Review {
 	return predicate.Review(func(s *sql.Selector) {
@@ -491,6 +498,82 @@ func NumOfLikesLT(v int) predicate.Review {
 func NumOfLikesLTE(v int) predicate.Review {
 	return predicate.Review(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldNumOfLikes), v))
+	})
+}
+
+// NumOfCommentsEQ applies the EQ predicate on the "num_of_comments" field.
+func NumOfCommentsEQ(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumOfComments), v))
+	})
+}
+
+// NumOfCommentsNEQ applies the NEQ predicate on the "num_of_comments" field.
+func NumOfCommentsNEQ(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldNumOfComments), v))
+	})
+}
+
+// NumOfCommentsIn applies the In predicate on the "num_of_comments" field.
+func NumOfCommentsIn(vs ...int) predicate.Review {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Review(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldNumOfComments), v...))
+	})
+}
+
+// NumOfCommentsNotIn applies the NotIn predicate on the "num_of_comments" field.
+func NumOfCommentsNotIn(vs ...int) predicate.Review {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Review(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldNumOfComments), v...))
+	})
+}
+
+// NumOfCommentsGT applies the GT predicate on the "num_of_comments" field.
+func NumOfCommentsGT(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldNumOfComments), v))
+	})
+}
+
+// NumOfCommentsGTE applies the GTE predicate on the "num_of_comments" field.
+func NumOfCommentsGTE(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldNumOfComments), v))
+	})
+}
+
+// NumOfCommentsLT applies the LT predicate on the "num_of_comments" field.
+func NumOfCommentsLT(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldNumOfComments), v))
+	})
+}
+
+// NumOfCommentsLTE applies the LTE predicate on the "num_of_comments" field.
+func NumOfCommentsLTE(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldNumOfComments), v))
 	})
 }
 

@@ -49,6 +49,7 @@ type Review {
     text: String!
     rank: Int!
     numOfLikes: Int!
+    numOfComments: Int!
     like : Like
     movie: Movie!
     user: User!
@@ -179,7 +180,7 @@ type Mutation {
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
     addActorToMovie(movieId: ID!, name: String!) : Actor!
     addComment(userID: ID!, reviewID: ID!, text: String!) : Comment!
-    deleteComment(commentID: ID!, userID: ID!) : ID!
+    deleteComment(commentID: ID!, reviewID: ID! userID: ID!) : ID!
     addLike(userID: ID!, reviewID: ID!) : Like!
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
 }

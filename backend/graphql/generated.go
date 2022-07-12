@@ -104,7 +104,7 @@ type ComplexityRoot struct {
 		CreateMovie            func(childComplexity int, movie MovieInput) int
 		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string, image string, topic string, text string, profileImage string, bornAt string, year int) int
 		CreateReview           func(childComplexity int, text string, rank int, movieID int, userID int, topic string) int
-		DeleteComment          func(childComplexity int, commentID int, userID int) int
+		DeleteComment          func(childComplexity int, commentID int, reviewID int, userID int) int
 		DeleteLike             func(childComplexity int, likeID int, userID int, reviewID int) int
 		RemoveFromFavorites    func(childComplexity int, movieID int, userID int) int
 		UpdateDirectorDetails  func(childComplexity int, id int, bornAt string, profileImage string, description string) int
@@ -137,15 +137,16 @@ type ComplexityRoot struct {
 	}
 
 	Review struct {
-		ID         func(childComplexity int) int
-		Like       func(childComplexity int) int
-		Movie      func(childComplexity int) int
-		MovieID    func(childComplexity int) int
-		NumOfLikes func(childComplexity int) int
-		Rank       func(childComplexity int) int
-		Text       func(childComplexity int) int
-		Topic      func(childComplexity int) int
-		User       func(childComplexity int) int
+		ID            func(childComplexity int) int
+		Like          func(childComplexity int) int
+		Movie         func(childComplexity int) int
+		MovieID       func(childComplexity int) int
+		NumOfComments func(childComplexity int) int
+		NumOfLikes    func(childComplexity int) int
+		Rank          func(childComplexity int) int
+		Text          func(childComplexity int) int
+		Topic         func(childComplexity int) int
+		User          func(childComplexity int) int
 	}
 
 	User struct {
@@ -180,7 +181,7 @@ type MutationResolver interface {
 	RemoveFromFavorites(ctx context.Context, movieID int, userID int) ([]*ent.Favorite, error)
 	AddActorToMovie(ctx context.Context, movieID int, name string) (*ent.Actor, error)
 	AddComment(ctx context.Context, userID int, reviewID int, text string) (*ent.Comment, error)
-	DeleteComment(ctx context.Context, commentID int, userID int) (int, error)
+	DeleteComment(ctx context.Context, commentID int, reviewID int, userID int) (int, error)
 	AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error)
 	DeleteLike(ctx context.Context, likeID int, userID int, reviewID int) ([]*ent.Like, error)
 }
@@ -551,7 +552,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteComment(childComplexity, args["commentID"].(int), args["userID"].(int)), true
+		return e.complexity.Mutation.DeleteComment(childComplexity, args["commentID"].(int), args["reviewID"].(int), args["userID"].(int)), true
 
 	case "Mutation.deleteLike":
 		if e.complexity.Mutation.DeleteLike == nil {
@@ -863,6 +864,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Review.MovieID(childComplexity), true
 
+	case "Review.numOfComments":
+		if e.complexity.Review.NumOfComments == nil {
+			break
+		}
+
+		return e.complexity.Review.NumOfComments(childComplexity), true
+
 	case "Review.numOfLikes":
 		if e.complexity.Review.NumOfLikes == nil {
 			break
@@ -1104,6 +1112,7 @@ type Review {
     text: String!
     rank: Int!
     numOfLikes: Int!
+    numOfComments: Int!
     like : Like
     movie: Movie!
     user: User!
@@ -1234,7 +1243,7 @@ type Mutation {
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
     addActorToMovie(movieId: ID!, name: String!) : Actor!
     addComment(userID: ID!, reviewID: ID!, text: String!) : Comment!
-    deleteComment(commentID: ID!, userID: ID!) : ID!
+    deleteComment(commentID: ID!, reviewID: ID! userID: ID!) : ID!
     addLike(userID: ID!, reviewID: ID!) : Like!
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
 }
@@ -1592,14 +1601,23 @@ func (ec *executionContext) field_Mutation_deleteComment_args(ctx context.Contex
 	}
 	args["commentID"] = arg0
 	var arg1 int
-	if tmp, ok := rawArgs["userID"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+	if tmp, ok := rawArgs["reviewID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reviewID"))
 		arg1, err = ec.unmarshalNID2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["userID"] = arg1
+	args["reviewID"] = arg1
+	var arg2 int
+	if tmp, ok := rawArgs["userID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+		arg2, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg2
 	return args, nil
 }
 
@@ -3669,7 +3687,7 @@ func (ec *executionContext) _Mutation_deleteComment(ctx context.Context, field g
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteComment(rctx, args["commentID"].(int), args["userID"].(int))
+		return ec.resolvers.Mutation().DeleteComment(rctx, args["commentID"].(int), args["reviewID"].(int), args["userID"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4812,6 +4830,41 @@ func (ec *executionContext) _Review_numOfLikes(ctx context.Context, field graphq
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.NumOfLikes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Review_numOfComments(ctx context.Context, field graphql.CollectedField, obj *ent.Review) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Review",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NumOfComments, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8158,6 +8211,16 @@ func (ec *executionContext) _Review(ctx context.Context, sel ast.SelectionSet, o
 		case "numOfLikes":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Review_numOfLikes(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "numOfComments":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Review_numOfComments(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

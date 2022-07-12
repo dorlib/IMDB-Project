@@ -3677,29 +3677,31 @@ func (m *MovieMutation) ResetEdge(name string) error {
 // ReviewMutation represents an operation that mutates the Review nodes in the graph.
 type ReviewMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *int
-	topic           *string
-	text            *string
-	rank            *int
-	addrank         *int
-	num_of_likes    *int
-	addnum_of_likes *int
-	clearedFields   map[string]struct{}
-	movie           *int
-	clearedmovie    bool
-	user            *int
-	cleareduser     bool
-	comments        map[int]struct{}
-	removedcomments map[int]struct{}
-	clearedcomments bool
-	likes           map[int]struct{}
-	removedlikes    map[int]struct{}
-	clearedlikes    bool
-	done            bool
-	oldValue        func(context.Context) (*Review, error)
-	predicates      []predicate.Review
+	op                 Op
+	typ                string
+	id                 *int
+	topic              *string
+	text               *string
+	rank               *int
+	addrank            *int
+	num_of_likes       *int
+	addnum_of_likes    *int
+	num_of_comments    *int
+	addnum_of_comments *int
+	clearedFields      map[string]struct{}
+	movie              *int
+	clearedmovie       bool
+	user               *int
+	cleareduser        bool
+	comments           map[int]struct{}
+	removedcomments    map[int]struct{}
+	clearedcomments    bool
+	likes              map[int]struct{}
+	removedlikes       map[int]struct{}
+	clearedlikes       bool
+	done               bool
+	oldValue           func(context.Context) (*Review, error)
+	predicates         []predicate.Review
 }
 
 var _ ent.Mutation = (*ReviewMutation)(nil)
@@ -3984,6 +3986,62 @@ func (m *ReviewMutation) ResetNumOfLikes() {
 	m.addnum_of_likes = nil
 }
 
+// SetNumOfComments sets the "num_of_comments" field.
+func (m *ReviewMutation) SetNumOfComments(i int) {
+	m.num_of_comments = &i
+	m.addnum_of_comments = nil
+}
+
+// NumOfComments returns the value of the "num_of_comments" field in the mutation.
+func (m *ReviewMutation) NumOfComments() (r int, exists bool) {
+	v := m.num_of_comments
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNumOfComments returns the old "num_of_comments" field's value of the Review entity.
+// If the Review object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ReviewMutation) OldNumOfComments(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNumOfComments is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNumOfComments requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNumOfComments: %w", err)
+	}
+	return oldValue.NumOfComments, nil
+}
+
+// AddNumOfComments adds i to the "num_of_comments" field.
+func (m *ReviewMutation) AddNumOfComments(i int) {
+	if m.addnum_of_comments != nil {
+		*m.addnum_of_comments += i
+	} else {
+		m.addnum_of_comments = &i
+	}
+}
+
+// AddedNumOfComments returns the value that was added to the "num_of_comments" field in this mutation.
+func (m *ReviewMutation) AddedNumOfComments() (r int, exists bool) {
+	v := m.addnum_of_comments
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetNumOfComments resets all changes to the "num_of_comments" field.
+func (m *ReviewMutation) ResetNumOfComments() {
+	m.num_of_comments = nil
+	m.addnum_of_comments = nil
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by id.
 func (m *ReviewMutation) SetMovieID(id int) {
 	m.movie = &id
@@ -4189,7 +4247,7 @@ func (m *ReviewMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ReviewMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.topic != nil {
 		fields = append(fields, review.FieldTopic)
 	}
@@ -4201,6 +4259,9 @@ func (m *ReviewMutation) Fields() []string {
 	}
 	if m.num_of_likes != nil {
 		fields = append(fields, review.FieldNumOfLikes)
+	}
+	if m.num_of_comments != nil {
+		fields = append(fields, review.FieldNumOfComments)
 	}
 	return fields
 }
@@ -4218,6 +4279,8 @@ func (m *ReviewMutation) Field(name string) (ent.Value, bool) {
 		return m.Rank()
 	case review.FieldNumOfLikes:
 		return m.NumOfLikes()
+	case review.FieldNumOfComments:
+		return m.NumOfComments()
 	}
 	return nil, false
 }
@@ -4235,6 +4298,8 @@ func (m *ReviewMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldRank(ctx)
 	case review.FieldNumOfLikes:
 		return m.OldNumOfLikes(ctx)
+	case review.FieldNumOfComments:
+		return m.OldNumOfComments(ctx)
 	}
 	return nil, fmt.Errorf("unknown Review field %s", name)
 }
@@ -4272,6 +4337,13 @@ func (m *ReviewMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetNumOfLikes(v)
 		return nil
+	case review.FieldNumOfComments:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNumOfComments(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Review field %s", name)
 }
@@ -4286,6 +4358,9 @@ func (m *ReviewMutation) AddedFields() []string {
 	if m.addnum_of_likes != nil {
 		fields = append(fields, review.FieldNumOfLikes)
 	}
+	if m.addnum_of_comments != nil {
+		fields = append(fields, review.FieldNumOfComments)
+	}
 	return fields
 }
 
@@ -4298,6 +4373,8 @@ func (m *ReviewMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedRank()
 	case review.FieldNumOfLikes:
 		return m.AddedNumOfLikes()
+	case review.FieldNumOfComments:
+		return m.AddedNumOfComments()
 	}
 	return nil, false
 }
@@ -4320,6 +4397,13 @@ func (m *ReviewMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddNumOfLikes(v)
+		return nil
+	case review.FieldNumOfComments:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddNumOfComments(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Review numeric field %s", name)
@@ -4359,6 +4443,9 @@ func (m *ReviewMutation) ResetField(name string) error {
 		return nil
 	case review.FieldNumOfLikes:
 		m.ResetNumOfLikes()
+		return nil
+	case review.FieldNumOfComments:
+		m.ResetNumOfComments()
 		return nil
 	}
 	return fmt.Errorf("unknown Review field %s", name)

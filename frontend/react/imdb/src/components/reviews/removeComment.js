@@ -6,8 +6,8 @@ function RemoveComment(props) {
     const [remove, setRemove] = useState(true)
 
     const REMOVE_COMMENT = gql`
-        mutation DeleteComment ($commentID: ID!, $userID: ID!) {
-            deleteComment (commentID: $commentID, userID: $userID)
+        mutation DeleteComment ($commentID: ID!, $reviewID: ID!, $userID: ID!) {
+            deleteComment (commentID: $commentID, reviewID: $reviewID, userID: $userID)
         }
     `;
 
@@ -17,6 +17,7 @@ function RemoveComment(props) {
         {
             variables: {
                 userID: parseInt(props.userID),
+                reviewID: parseInt(props.reviewID),
                 commentID: parseInt(props.commentID),
             },
             onCompleted: (

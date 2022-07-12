@@ -45,7 +45,7 @@ function ShowComments(props) {
     function HandlerRemove (commentID)  {
         return (
             <div>
-                <RemoveComment userID={props.userID} commentID={commentID}/>
+                <RemoveComment userID={props.userID} commentID={commentID} reviewID={parseInt(props.reviewID)}/>
             </div>
         )
         setRemoveCommentID(0)
