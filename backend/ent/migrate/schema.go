@@ -25,12 +25,28 @@ var (
 	CommentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "text", Type: field.TypeString},
+		{Name: "comment_review", Type: field.TypeInt, Nullable: true},
+		{Name: "user_comments", Type: field.TypeInt, Nullable: true},
 	}
 	// CommentsTable holds the schema information for the "comments" table.
 	CommentsTable = &schema.Table{
 		Name:       "comments",
 		Columns:    CommentsColumns,
 		PrimaryKey: []*schema.Column{CommentsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "comments_reviews_review",
+				Columns:    []*schema.Column{CommentsColumns[2]},
+				RefColumns: []*schema.Column{ReviewsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "comments_users_comments",
+				Columns:    []*schema.Column{CommentsColumns[3]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// DirectorsColumns holds the columns for the "directors" table.
 	DirectorsColumns = []*schema.Column{
@@ -104,6 +120,7 @@ var (
 		{Name: "text", Type: field.TypeString},
 		{Name: "rank", Type: field.TypeInt},
 		{Name: "num_of_likes", Type: field.TypeInt},
+		{Name: "num_of_comments", Type: field.TypeInt},
 		{Name: "review_movie", Type: field.TypeInt, Nullable: true},
 		{Name: "user_reviews", Type: field.TypeInt, Nullable: true},
 	}
@@ -115,13 +132,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "reviews_movies_movie",
-				Columns:    []*schema.Column{ReviewsColumns[5]},
+				Columns:    []*schema.Column{ReviewsColumns[6]},
 				RefColumns: []*schema.Column{MoviesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "reviews_users_reviews",
-				Columns:    []*schema.Column{ReviewsColumns[6]},
+				Columns:    []*schema.Column{ReviewsColumns[7]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -173,31 +190,6 @@ var (
 			},
 		},
 	}
-	// CommentReviewColumns holds the columns for the "comment_review" table.
-	CommentReviewColumns = []*schema.Column{
-		{Name: "comment_id", Type: field.TypeInt},
-		{Name: "review_id", Type: field.TypeInt},
-	}
-	// CommentReviewTable holds the schema information for the "comment_review" table.
-	CommentReviewTable = &schema.Table{
-		Name:       "comment_review",
-		Columns:    CommentReviewColumns,
-		PrimaryKey: []*schema.Column{CommentReviewColumns[0], CommentReviewColumns[1]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "comment_review_comment_id",
-				Columns:    []*schema.Column{CommentReviewColumns[0]},
-				RefColumns: []*schema.Column{CommentsColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-			{
-				Symbol:     "comment_review_review_id",
-				Columns:    []*schema.Column{CommentReviewColumns[1]},
-				RefColumns: []*schema.Column{ReviewsColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-		},
-	}
 	// LikeReviewColumns holds the columns for the "like_review" table.
 	LikeReviewColumns = []*schema.Column{
 		{Name: "like_id", Type: field.TypeInt},
@@ -219,31 +211,6 @@ var (
 				Symbol:     "like_review_review_id",
 				Columns:    []*schema.Column{LikeReviewColumns[1]},
 				RefColumns: []*schema.Column{ReviewsColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-		},
-	}
-	// UserCommentsColumns holds the columns for the "user_comments" table.
-	UserCommentsColumns = []*schema.Column{
-		{Name: "user_id", Type: field.TypeInt},
-		{Name: "comment_id", Type: field.TypeInt},
-	}
-	// UserCommentsTable holds the schema information for the "user_comments" table.
-	UserCommentsTable = &schema.Table{
-		Name:       "user_comments",
-		Columns:    UserCommentsColumns,
-		PrimaryKey: []*schema.Column{UserCommentsColumns[0], UserCommentsColumns[1]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "user_comments_user_id",
-				Columns:    []*schema.Column{UserCommentsColumns[0]},
-				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-			{
-				Symbol:     "user_comments_comment_id",
-				Columns:    []*schema.Column{UserCommentsColumns[1]},
-				RefColumns: []*schema.Column{CommentsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 		},
@@ -284,25 +251,21 @@ var (
 		ReviewsTable,
 		UsersTable,
 		ActorActorsTable,
-		CommentReviewTable,
 		LikeReviewTable,
-		UserCommentsTable,
 		UserLikesTable,
 	}
 )
 
 func init() {
+	CommentsTable.ForeignKeys[0].RefTable = ReviewsTable
+	CommentsTable.ForeignKeys[1].RefTable = UsersTable
 	MoviesTable.ForeignKeys[0].RefTable = DirectorsTable
 	ReviewsTable.ForeignKeys[0].RefTable = MoviesTable
 	ReviewsTable.ForeignKeys[1].RefTable = UsersTable
 	ActorActorsTable.ForeignKeys[0].RefTable = ActorsTable
 	ActorActorsTable.ForeignKeys[1].RefTable = MoviesTable
-	CommentReviewTable.ForeignKeys[0].RefTable = CommentsTable
-	CommentReviewTable.ForeignKeys[1].RefTable = ReviewsTable
 	LikeReviewTable.ForeignKeys[0].RefTable = LikesTable
 	LikeReviewTable.ForeignKeys[1].RefTable = ReviewsTable
-	UserCommentsTable.ForeignKeys[0].RefTable = UsersTable
-	UserCommentsTable.ForeignKeys[1].RefTable = CommentsTable
 	UserLikesTable.ForeignKeys[0].RefTable = UsersTable
 	UserLikesTable.ForeignKeys[1].RefTable = LikesTable
 }

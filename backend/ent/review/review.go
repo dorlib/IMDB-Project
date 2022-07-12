@@ -15,6 +15,8 @@ const (
 	FieldRank = "rank"
 	// FieldNumOfLikes holds the string denoting the num_of_likes field in the database.
 	FieldNumOfLikes = "num_of_likes"
+	// FieldNumOfComments holds the string denoting the num_of_comments field in the database.
+	FieldNumOfComments = "num_of_comments"
 	// EdgeMovie holds the string denoting the movie edge name in mutations.
 	EdgeMovie = "movie"
 	// EdgeUser holds the string denoting the user edge name in mutations.
@@ -39,11 +41,13 @@ const (
 	UserInverseTable = "users"
 	// UserColumn is the table column denoting the user relation/edge.
 	UserColumn = "user_reviews"
-	// CommentsTable is the table that holds the comments relation/edge. The primary key declared below.
-	CommentsTable = "comment_review"
+	// CommentsTable is the table that holds the comments relation/edge.
+	CommentsTable = "comments"
 	// CommentsInverseTable is the table name for the Comment entity.
 	// It exists in this package in order to avoid circular dependency with the "comment" package.
 	CommentsInverseTable = "comments"
+	// CommentsColumn is the table column denoting the comments relation/edge.
+	CommentsColumn = "comment_review"
 	// LikesTable is the table that holds the likes relation/edge. The primary key declared below.
 	LikesTable = "like_review"
 	// LikesInverseTable is the table name for the Like entity.
@@ -58,6 +62,7 @@ var Columns = []string{
 	FieldText,
 	FieldRank,
 	FieldNumOfLikes,
+	FieldNumOfComments,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "reviews"
@@ -68,9 +73,6 @@ var ForeignKeys = []string{
 }
 
 var (
-	// CommentsPrimaryKey and CommentsColumn2 are the table columns denoting the
-	// primary key for the comments relation (M2M).
-	CommentsPrimaryKey = []string{"comment_id", "review_id"}
 	// LikesPrimaryKey and LikesColumn2 are the table columns denoting the
 	// primary key for the likes relation (M2M).
 	LikesPrimaryKey = []string{"like_id", "review_id"}
@@ -94,4 +96,6 @@ func ValidColumn(column string) bool {
 var (
 	// NumOfLikesValidator is a validator for the "num_of_likes" field. It is called by the builders before save.
 	NumOfLikesValidator func(int) error
+	// NumOfCommentsValidator is a validator for the "num_of_comments" field. It is called by the builders before save.
+	NumOfCommentsValidator func(int) error
 )

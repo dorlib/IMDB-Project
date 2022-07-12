@@ -15,16 +15,20 @@ const (
 	EdgeReview = "review"
 	// Table holds the table name of the comment in the database.
 	Table = "comments"
-	// UserTable is the table that holds the user relation/edge. The primary key declared below.
-	UserTable = "user_comments"
+	// UserTable is the table that holds the user relation/edge.
+	UserTable = "comments"
 	// UserInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UserInverseTable = "users"
-	// ReviewTable is the table that holds the review relation/edge. The primary key declared below.
-	ReviewTable = "comment_review"
+	// UserColumn is the table column denoting the user relation/edge.
+	UserColumn = "user_comments"
+	// ReviewTable is the table that holds the review relation/edge.
+	ReviewTable = "comments"
 	// ReviewInverseTable is the table name for the Review entity.
 	// It exists in this package in order to avoid circular dependency with the "review" package.
 	ReviewInverseTable = "reviews"
+	// ReviewColumn is the table column denoting the review relation/edge.
+	ReviewColumn = "comment_review"
 )
 
 // Columns holds all SQL columns for comment fields.
@@ -33,19 +37,22 @@ var Columns = []string{
 	FieldText,
 }
 
-var (
-	// UserPrimaryKey and UserColumn2 are the table columns denoting the
-	// primary key for the user relation (M2M).
-	UserPrimaryKey = []string{"user_id", "comment_id"}
-	// ReviewPrimaryKey and ReviewColumn2 are the table columns denoting the
-	// primary key for the review relation (M2M).
-	ReviewPrimaryKey = []string{"comment_id", "review_id"}
-)
+// ForeignKeys holds the SQL foreign-keys that are owned by the "comments"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"comment_review",
+	"user_comments",
+}
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
+			return true
+		}
+	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
 			return true
 		}
 	}

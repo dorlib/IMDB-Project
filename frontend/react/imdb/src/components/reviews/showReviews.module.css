@@ -12,10 +12,10 @@
 .item {
     top: -1cm;
     border-radius: 12px;
-    display: flex;
     position: relative;
-    right: 1.5cm;
-    width: 40cm;
+    right: 2.5cm;
+    width: 21cm;
+    margin-bottom: -3cm;
 }
 
 .text {
@@ -60,7 +60,7 @@
     padding: 0 0.4rem;
     margin-left: 0.5rem;
     top: 0.5cm;
-    left: 18.3cm;
+    left: 19cm;
 }
 
 
@@ -73,7 +73,7 @@
     padding: 0 0.4rem;
     margin-left: 0.5rem;
     top: 0.5cm;
-    left: 15.88cm;
+    left: 16.38cm;
 }
 
 .showComments {

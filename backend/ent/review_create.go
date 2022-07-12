@@ -47,6 +47,12 @@ func (rc *ReviewCreate) SetNumOfLikes(i int) *ReviewCreate {
 	return rc
 }
 
+// SetNumOfComments sets the "num_of_comments" field.
+func (rc *ReviewCreate) SetNumOfComments(i int) *ReviewCreate {
+	rc.mutation.SetNumOfComments(i)
+	return rc
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by ID.
 func (rc *ReviewCreate) SetMovieID(id int) *ReviewCreate {
 	rc.mutation.SetMovieID(id)
@@ -202,6 +208,14 @@ func (rc *ReviewCreate) check() error {
 			return &ValidationError{Name: "num_of_likes", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_likes": %w`, err)}
 		}
 	}
+	if _, ok := rc.mutation.NumOfComments(); !ok {
+		return &ValidationError{Name: "num_of_comments", err: errors.New(`ent: missing required field "Review.num_of_comments"`)}
+	}
+	if v, ok := rc.mutation.NumOfComments(); ok {
+		if err := review.NumOfCommentsValidator(v); err != nil {
+			return &ValidationError{Name: "num_of_comments", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_comments": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -261,6 +275,14 @@ func (rc *ReviewCreate) createSpec() (*Review, *sqlgraph.CreateSpec) {
 		})
 		_node.NumOfLikes = value
 	}
+	if value, ok := rc.mutation.NumOfComments(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfComments,
+		})
+		_node.NumOfComments = value
+	}
 	if nodes := rc.mutation.MovieIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -303,10 +325,10 @@ func (rc *ReviewCreate) createSpec() (*Review, *sqlgraph.CreateSpec) {
 	}
 	if nodes := rc.mutation.CommentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

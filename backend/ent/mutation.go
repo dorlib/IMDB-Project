@@ -559,11 +559,9 @@ type CommentMutation struct {
 	id            *int
 	text          *string
 	clearedFields map[string]struct{}
-	user          map[int]struct{}
-	removeduser   map[int]struct{}
+	user          *int
 	cleareduser   bool
-	review        map[int]struct{}
-	removedreview map[int]struct{}
+	review        *int
 	clearedreview bool
 	done          bool
 	oldValue      func(context.Context) (*Comment, error)
@@ -704,14 +702,9 @@ func (m *CommentMutation) ResetText() {
 	m.text = nil
 }
 
-// AddUserIDs adds the "user" edge to the User entity by ids.
-func (m *CommentMutation) AddUserIDs(ids ...int) {
-	if m.user == nil {
-		m.user = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.user[ids[i]] = struct{}{}
-	}
+// SetUserID sets the "user" edge to the User entity by id.
+func (m *CommentMutation) SetUserID(id int) {
+	m.user = &id
 }
 
 // ClearUser clears the "user" edge to the User entity.
@@ -724,29 +717,20 @@ func (m *CommentMutation) UserCleared() bool {
 	return m.cleareduser
 }
 
-// RemoveUserIDs removes the "user" edge to the User entity by IDs.
-func (m *CommentMutation) RemoveUserIDs(ids ...int) {
-	if m.removeduser == nil {
-		m.removeduser = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.user, ids[i])
-		m.removeduser[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedUser returns the removed IDs of the "user" edge to the User entity.
-func (m *CommentMutation) RemovedUserIDs() (ids []int) {
-	for id := range m.removeduser {
-		ids = append(ids, id)
+// UserID returns the "user" edge ID in the mutation.
+func (m *CommentMutation) UserID() (id int, exists bool) {
+	if m.user != nil {
+		return *m.user, true
 	}
 	return
 }
 
 // UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
 func (m *CommentMutation) UserIDs() (ids []int) {
-	for id := range m.user {
-		ids = append(ids, id)
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
 	}
 	return
 }
@@ -755,17 +739,11 @@ func (m *CommentMutation) UserIDs() (ids []int) {
 func (m *CommentMutation) ResetUser() {
 	m.user = nil
 	m.cleareduser = false
-	m.removeduser = nil
 }
 
-// AddReviewIDs adds the "review" edge to the Review entity by ids.
-func (m *CommentMutation) AddReviewIDs(ids ...int) {
-	if m.review == nil {
-		m.review = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.review[ids[i]] = struct{}{}
-	}
+// SetReviewID sets the "review" edge to the Review entity by id.
+func (m *CommentMutation) SetReviewID(id int) {
+	m.review = &id
 }
 
 // ClearReview clears the "review" edge to the Review entity.
@@ -778,29 +756,20 @@ func (m *CommentMutation) ReviewCleared() bool {
 	return m.clearedreview
 }
 
-// RemoveReviewIDs removes the "review" edge to the Review entity by IDs.
-func (m *CommentMutation) RemoveReviewIDs(ids ...int) {
-	if m.removedreview == nil {
-		m.removedreview = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.review, ids[i])
-		m.removedreview[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedReview returns the removed IDs of the "review" edge to the Review entity.
-func (m *CommentMutation) RemovedReviewIDs() (ids []int) {
-	for id := range m.removedreview {
-		ids = append(ids, id)
+// ReviewID returns the "review" edge ID in the mutation.
+func (m *CommentMutation) ReviewID() (id int, exists bool) {
+	if m.review != nil {
+		return *m.review, true
 	}
 	return
 }
 
 // ReviewIDs returns the "review" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// ReviewID instead. It exists only for internal usage by the builders.
 func (m *CommentMutation) ReviewIDs() (ids []int) {
-	for id := range m.review {
-		ids = append(ids, id)
+	if id := m.review; id != nil {
+		ids = append(ids, *id)
 	}
 	return
 }
@@ -809,7 +778,6 @@ func (m *CommentMutation) ReviewIDs() (ids []int) {
 func (m *CommentMutation) ResetReview() {
 	m.review = nil
 	m.clearedreview = false
-	m.removedreview = nil
 }
 
 // Where appends a list predicates to the CommentMutation builder.
@@ -945,17 +913,13 @@ func (m *CommentMutation) AddedEdges() []string {
 func (m *CommentMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case comment.EdgeUser:
-		ids := make([]ent.Value, 0, len(m.user))
-		for id := range m.user {
-			ids = append(ids, id)
+		if id := m.user; id != nil {
+			return []ent.Value{*id}
 		}
-		return ids
 	case comment.EdgeReview:
-		ids := make([]ent.Value, 0, len(m.review))
-		for id := range m.review {
-			ids = append(ids, id)
+		if id := m.review; id != nil {
+			return []ent.Value{*id}
 		}
-		return ids
 	}
 	return nil
 }
@@ -963,12 +927,6 @@ func (m *CommentMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *CommentMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.removeduser != nil {
-		edges = append(edges, comment.EdgeUser)
-	}
-	if m.removedreview != nil {
-		edges = append(edges, comment.EdgeReview)
-	}
 	return edges
 }
 
@@ -976,18 +934,6 @@ func (m *CommentMutation) RemovedEdges() []string {
 // the given name in this mutation.
 func (m *CommentMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case comment.EdgeUser:
-		ids := make([]ent.Value, 0, len(m.removeduser))
-		for id := range m.removeduser {
-			ids = append(ids, id)
-		}
-		return ids
-	case comment.EdgeReview:
-		ids := make([]ent.Value, 0, len(m.removedreview))
-		for id := range m.removedreview {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
@@ -1020,6 +966,12 @@ func (m *CommentMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *CommentMutation) ClearEdge(name string) error {
 	switch name {
+	case comment.EdgeUser:
+		m.ClearUser()
+		return nil
+	case comment.EdgeReview:
+		m.ClearReview()
+		return nil
 	}
 	return fmt.Errorf("unknown Comment unique edge %s", name)
 }
@@ -3725,29 +3677,31 @@ func (m *MovieMutation) ResetEdge(name string) error {
 // ReviewMutation represents an operation that mutates the Review nodes in the graph.
 type ReviewMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *int
-	topic           *string
-	text            *string
-	rank            *int
-	addrank         *int
-	num_of_likes    *int
-	addnum_of_likes *int
-	clearedFields   map[string]struct{}
-	movie           *int
-	clearedmovie    bool
-	user            *int
-	cleareduser     bool
-	comments        map[int]struct{}
-	removedcomments map[int]struct{}
-	clearedcomments bool
-	likes           map[int]struct{}
-	removedlikes    map[int]struct{}
-	clearedlikes    bool
-	done            bool
-	oldValue        func(context.Context) (*Review, error)
-	predicates      []predicate.Review
+	op                 Op
+	typ                string
+	id                 *int
+	topic              *string
+	text               *string
+	rank               *int
+	addrank            *int
+	num_of_likes       *int
+	addnum_of_likes    *int
+	num_of_comments    *int
+	addnum_of_comments *int
+	clearedFields      map[string]struct{}
+	movie              *int
+	clearedmovie       bool
+	user               *int
+	cleareduser        bool
+	comments           map[int]struct{}
+	removedcomments    map[int]struct{}
+	clearedcomments    bool
+	likes              map[int]struct{}
+	removedlikes       map[int]struct{}
+	clearedlikes       bool
+	done               bool
+	oldValue           func(context.Context) (*Review, error)
+	predicates         []predicate.Review
 }
 
 var _ ent.Mutation = (*ReviewMutation)(nil)
@@ -4032,6 +3986,62 @@ func (m *ReviewMutation) ResetNumOfLikes() {
 	m.addnum_of_likes = nil
 }
 
+// SetNumOfComments sets the "num_of_comments" field.
+func (m *ReviewMutation) SetNumOfComments(i int) {
+	m.num_of_comments = &i
+	m.addnum_of_comments = nil
+}
+
+// NumOfComments returns the value of the "num_of_comments" field in the mutation.
+func (m *ReviewMutation) NumOfComments() (r int, exists bool) {
+	v := m.num_of_comments
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNumOfComments returns the old "num_of_comments" field's value of the Review entity.
+// If the Review object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ReviewMutation) OldNumOfComments(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNumOfComments is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNumOfComments requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNumOfComments: %w", err)
+	}
+	return oldValue.NumOfComments, nil
+}
+
+// AddNumOfComments adds i to the "num_of_comments" field.
+func (m *ReviewMutation) AddNumOfComments(i int) {
+	if m.addnum_of_comments != nil {
+		*m.addnum_of_comments += i
+	} else {
+		m.addnum_of_comments = &i
+	}
+}
+
+// AddedNumOfComments returns the value that was added to the "num_of_comments" field in this mutation.
+func (m *ReviewMutation) AddedNumOfComments() (r int, exists bool) {
+	v := m.addnum_of_comments
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetNumOfComments resets all changes to the "num_of_comments" field.
+func (m *ReviewMutation) ResetNumOfComments() {
+	m.num_of_comments = nil
+	m.addnum_of_comments = nil
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by id.
 func (m *ReviewMutation) SetMovieID(id int) {
 	m.movie = &id
@@ -4237,7 +4247,7 @@ func (m *ReviewMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ReviewMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.topic != nil {
 		fields = append(fields, review.FieldTopic)
 	}
@@ -4249,6 +4259,9 @@ func (m *ReviewMutation) Fields() []string {
 	}
 	if m.num_of_likes != nil {
 		fields = append(fields, review.FieldNumOfLikes)
+	}
+	if m.num_of_comments != nil {
+		fields = append(fields, review.FieldNumOfComments)
 	}
 	return fields
 }
@@ -4266,6 +4279,8 @@ func (m *ReviewMutation) Field(name string) (ent.Value, bool) {
 		return m.Rank()
 	case review.FieldNumOfLikes:
 		return m.NumOfLikes()
+	case review.FieldNumOfComments:
+		return m.NumOfComments()
 	}
 	return nil, false
 }
@@ -4283,6 +4298,8 @@ func (m *ReviewMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldRank(ctx)
 	case review.FieldNumOfLikes:
 		return m.OldNumOfLikes(ctx)
+	case review.FieldNumOfComments:
+		return m.OldNumOfComments(ctx)
 	}
 	return nil, fmt.Errorf("unknown Review field %s", name)
 }
@@ -4320,6 +4337,13 @@ func (m *ReviewMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetNumOfLikes(v)
 		return nil
+	case review.FieldNumOfComments:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNumOfComments(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Review field %s", name)
 }
@@ -4334,6 +4358,9 @@ func (m *ReviewMutation) AddedFields() []string {
 	if m.addnum_of_likes != nil {
 		fields = append(fields, review.FieldNumOfLikes)
 	}
+	if m.addnum_of_comments != nil {
+		fields = append(fields, review.FieldNumOfComments)
+	}
 	return fields
 }
 
@@ -4346,6 +4373,8 @@ func (m *ReviewMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedRank()
 	case review.FieldNumOfLikes:
 		return m.AddedNumOfLikes()
+	case review.FieldNumOfComments:
+		return m.AddedNumOfComments()
 	}
 	return nil, false
 }
@@ -4368,6 +4397,13 @@ func (m *ReviewMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddNumOfLikes(v)
+		return nil
+	case review.FieldNumOfComments:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddNumOfComments(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Review numeric field %s", name)
@@ -4407,6 +4443,9 @@ func (m *ReviewMutation) ResetField(name string) error {
 		return nil
 	case review.FieldNumOfLikes:
 		m.ResetNumOfLikes()
+		return nil
+	case review.FieldNumOfComments:
+		m.ResetNumOfComments()
 		return nil
 	}
 	return fmt.Errorf("unknown Review field %s", name)

@@ -38,7 +38,7 @@ function AddComment(props) {
     let loaded = (
             <form className={classes.form}>
                 <div className={classes.control}>
-                    <label htmlFor="topic" style={{color: "yellow"}}>Add Comment</label>
+                    <label htmlFor="topic" style={{color: "yellow"}} className={classes.add}>Add Comment</label>
                     <textarea
                         id="topic"
                         type="text"

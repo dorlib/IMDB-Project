@@ -79,6 +79,7 @@ function ShowReviews(props) {
                 rank
                 id
                 numOfLikes
+                numOfComments
                 user {
                     nickname
                     profile
@@ -165,7 +166,7 @@ function ShowReviews(props) {
         </div>
     )
 
-    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, numOfLikes}) => (
+    let loaded = data.reviewsOfMovie.map(({text, rank, topic, id, user, numOfLikes, numOfComments}) => (
         text !== '' ? (
             <div key={id} className={classes.item} style={{marginTop: "2.4cm"}}>
                 <List sx={{width: '100%',}} className={classes.rev}>
@@ -228,21 +229,20 @@ function ShowReviews(props) {
                     marginBottom: "4.2cm",
                     position: "relative",
                     display: "flex",
-                    top: "5.7cm",
-                    right: "20cm",
-                    width: "40cm",
+                    marginTop: "0cm",
+                    marginRight: "-22cm",
+                    width: "21cm",
                     borderRadius: "0 0 15px 15px",
-                    marginTop: "-2cm",
                 }}>
                     <Footer
                         className={expanded === id? "show" : ""}
-                        setHeight={accordionHeight}
+                        setHeight={expanded === id? accordionHeight: 0}
                         ref={ref}
                     >
                         <CardActions>
                             <span size="large" onClick={() => open(id)}>
                         <Button style={{position: "absolute"}}>
-                            Show Comments!
+                            {expanded !== id? "Show Comments": "Hide Comments"}
                             <Arrow>
                                 <KeyboardArrowUpIcon style={style}/>
                             </Arrow>
@@ -250,13 +250,13 @@ function ShowReviews(props) {
                                 <Button className={classes.comment}><AddCommentIcon/></Button>
                                 <Button onClick={() => handleLike(id)}
                                         className={classes.thumb}><ThumbUpIcon/></Button>
-                                              <span className={classes.badgeComments}>{0}</span>
+                                              <span className={classes.badgeComments}>{numOfComments}</span>
                                               <span className={classes.badgeLikes}>{numOfLikes}</span>
                     </span>
                         </CardActions>
                         <div className={classes.actions}>
-                            <ShowComments reviewID={id}/>
-                            <AddComments userID={props.userID} reviewID={id}/>
+                            <ShowComments reviewID={id} userID={parseInt(props.userID)}/>
+                            <AddComments userID={parseInt(props.userID)} reviewID={id}/>
                         </div>
                     </Footer>
                 </Card>

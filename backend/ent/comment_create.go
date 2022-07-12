@@ -27,34 +27,42 @@ func (cc *CommentCreate) SetText(s string) *CommentCreate {
 	return cc
 }
 
-// AddUserIDs adds the "user" edge to the User entity by IDs.
-func (cc *CommentCreate) AddUserIDs(ids ...int) *CommentCreate {
-	cc.mutation.AddUserIDs(ids...)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (cc *CommentCreate) SetUserID(id int) *CommentCreate {
+	cc.mutation.SetUserID(id)
 	return cc
 }
 
-// AddUser adds the "user" edges to the User entity.
-func (cc *CommentCreate) AddUser(u ...*User) *CommentCreate {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+// SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
+func (cc *CommentCreate) SetNillableUserID(id *int) *CommentCreate {
+	if id != nil {
+		cc = cc.SetUserID(*id)
 	}
-	return cc.AddUserIDs(ids...)
-}
-
-// AddReviewIDs adds the "review" edge to the Review entity by IDs.
-func (cc *CommentCreate) AddReviewIDs(ids ...int) *CommentCreate {
-	cc.mutation.AddReviewIDs(ids...)
 	return cc
 }
 
-// AddReview adds the "review" edges to the Review entity.
-func (cc *CommentCreate) AddReview(r ...*Review) *CommentCreate {
-	ids := make([]int, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+// SetUser sets the "user" edge to the User entity.
+func (cc *CommentCreate) SetUser(u *User) *CommentCreate {
+	return cc.SetUserID(u.ID)
+}
+
+// SetReviewID sets the "review" edge to the Review entity by ID.
+func (cc *CommentCreate) SetReviewID(id int) *CommentCreate {
+	cc.mutation.SetReviewID(id)
+	return cc
+}
+
+// SetNillableReviewID sets the "review" edge to the Review entity by ID if the given value is not nil.
+func (cc *CommentCreate) SetNillableReviewID(id *int) *CommentCreate {
+	if id != nil {
+		cc = cc.SetReviewID(*id)
 	}
-	return cc.AddReviewIDs(ids...)
+	return cc
+}
+
+// SetReview sets the "review" edge to the Review entity.
+func (cc *CommentCreate) SetReview(r *Review) *CommentCreate {
+	return cc.SetReviewID(r.ID)
 }
 
 // Mutation returns the CommentMutation object of the builder.
@@ -167,10 +175,10 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 	}
 	if nodes := cc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.M2O,
 			Inverse: true,
 			Table:   comment.UserTable,
-			Columns: comment.UserPrimaryKey,
+			Columns: []string{comment.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -182,14 +190,15 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_node.user_comments = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := cc.mutation.ReviewIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.M2O,
 			Inverse: false,
 			Table:   comment.ReviewTable,
-			Columns: comment.ReviewPrimaryKey,
+			Columns: []string{comment.ReviewColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -201,6 +210,7 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_node.comment_review = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
