@@ -255,7 +255,7 @@ function ShowReviews(props) {
                     </span>
                         </CardActions>
                         <div className={classes.actions}>
-                            <ShowComments reviewID={id}/>
+                            <ShowComments reviewID={id} userID={parseInt(props.userID)}/>
                             <AddComments userID={parseInt(props.userID)} reviewID={id}/>
                         </div>
                     </Footer>

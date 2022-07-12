@@ -8,8 +8,15 @@ import Button from "@mui/material/Button";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import {Link} from "react-router-dom";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 function ShowComments(props) {
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    
+
     const SHOW_COMMENTS = gql`
         query CommentsOfReview ($reviewID: ID!) {
             commentsOfReview (reviewID: $reviewID){
@@ -33,8 +40,6 @@ function ShowComments(props) {
 
     if (error) return <div>Error!</div>
     if (loading) return <div>Loading...</div>
-
-    console.log(data)
 
     let loaded = data.commentsOfReview.map(({text, id, user}) => (
         text !== '' ? (
@@ -63,6 +68,22 @@ function ShowComments(props) {
                                               <Typography style={{fontSize: "x-large"}} className={classes.text}>
                                                   {text}
                                               </Typography>
+                                              {
+                                                  props.userID === parseInt(user["id"])? <PopupState variant="popover" popupId="demo-popup-menu">
+                                                  {(popupState) => (
+                                                      <React.Fragment>
+                                                          <Button style={{backgroundColor: "#cc2062", color: "white", border: "none", left: "14cm", top: "-2cm"}} variant="contained" {...bindTrigger(popupState)}><MoreHorizIcon /></Button>
+                                                          <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "9cm"}}>
+                                                              <MenuItem><Link to={"/movies"} style={{textDecoration: "none"}}>Edit
+                                                                  </Link></MenuItem>
+                                                              <MenuItem><Link onClick={} style={{textDecoration: "none"}}>Delete
+                                                                  </Link></MenuItem>
+                                                              <MenuItem><Link to={"/top10"} style={{textDecoration: "none"}}>Share
+                                                                  </Link></MenuItem>
+                                                          </Menu>
+                                                      </React.Fragment>
+                                                  )}
+                                              </PopupState> : null}
                                           </React.Fragment>} />
                     </ListItem>
                 </List>
