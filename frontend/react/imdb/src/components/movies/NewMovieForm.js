@@ -18,7 +18,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 import {Link} from "react-router-dom";
 
-function NewMovieForm() {
+function NewMovieForm(props) {
     const { enqueueSnackbar } = useSnackbar();
 
     const handleChange = (event) => {
@@ -96,6 +96,7 @@ function NewMovieForm() {
     let exist
     let unique
 
+    // handle which graphql tag should be executed
     if (id && id["directorIdByName"]) {
         index = data.indexOf(":")
         int = parseInt(data.slice(index + 2, data.length - 2), 10)
@@ -150,7 +151,7 @@ function NewMovieForm() {
     }
 
     // this form will be returned to the client if authenticated
-    if (name !== '') {
+    if (parseInt(props.userId) !== 0) {
         return (
             <Card>
                 <form className={classes.form}>
@@ -285,7 +286,7 @@ function NewMovieForm() {
     }
 
     // this form will be returned to the client if NOT authenticated
-    if (name === '') {
+    if (parseInt(props.userId) === 0) {
         return (
             <div style={{color: "yellow"}}>
                 <CardContent className={classes.oops}>

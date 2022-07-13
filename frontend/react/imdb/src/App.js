@@ -89,7 +89,7 @@ function App() {
                     <Route path="/" element={<><Welcome/><Last5Added/></>}/>
                     <Route path="/movies" element={<AllMoviesPage userID={userId}/>}/>
                     <Route path="/directors" element={<AllDirectorsPage/>}/>
-                    <Route path="/new-movie" element={<NewMovieForm/>}/>
+                    <Route path="/new-movie" element={<NewMovieForm userId={userId}/>}/>
                     <Route path="/favorites" element={<FavoritesPage userID={userId}/>}/>
                     <Route path='/top10' element={<Top10Page userID={userId}/>}/>
                     <Route path='/directorPage/:id' element={<DirectorPage userID={userId}/>}/>
