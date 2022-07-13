@@ -19,6 +19,7 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import CardContent from "@mui/material/CardContent";
+import EditIcon from "@mui/icons-material/Edit";
 
 const grid = {
     xs: 24,
@@ -44,7 +45,9 @@ function MainNavigation(props) {
 
     const [searchBy, setSearchBy] = useState("GET_MOVIES");
     const [username, setUsername] = useState('Guest');
-    const [insert, setInsert] = useState(true)
+    const [sure, setSure] = useState(false);
+    const [insert, setInsert] = useState(false);
+    const [loading, setLoading] = useState(false)
     const [userId, setUserId] = useState(0);
 
 
@@ -81,8 +84,12 @@ function MainNavigation(props) {
             })
     }
 
+    const SureInsertHandler = () => {
+        setSure(true);
+    }
+
     const insertHandler = async () => {
-        if (insert) {
+        setLoading(true)
             await fetch('http://localhost:8081/insert', {
                 method: 'post',
                 credentials: 'include',
@@ -90,12 +97,12 @@ function MainNavigation(props) {
             })
                 .then(() => {
                     setInsert(false)
+                    setSure(false)
                     window.location.replace("/")
                 })
                 .catch((err) => {
                     console.error('error:', err)
                 })
-        }
     }
 
     // this main navigation will be returned if user is NOT logged in
@@ -182,6 +189,16 @@ function MainNavigation(props) {
         );
     }
 
+    let sureload = (
+        <CardContent className={classes.about}>
+        <Typography className={classes.textSure}>
+            Are you sure you want to insert pre-made data ? this cannot be undone!
+        </Typography>
+            {insert? null: <Button className={classes.yes} onClick={insertHandler}>{loading? "Loading..." : "Yes"}</Button>}
+            {insert? null: <Button className={classes.no} onClick={() => setSure(false)}>{loading? null: "No"}</Button>}
+    </CardContent>
+    )
+
     // this main navigation will be returned if user is logged in
     let loaded =  (
         <div>
@@ -247,7 +264,7 @@ function MainNavigation(props) {
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
                                                 <Typography textAlign="center"
-                                                            onClick={insertHandler}>insert data</Typography>
+                                                            onClick={SureInsertHandler}>insert data</Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleCloseUserMenu}>
                                                 <Typography textAlign="center"
@@ -296,10 +313,12 @@ function MainNavigation(props) {
                     </PopupState>
                 </Grid>
             </Grid>
+            {/*this makes the background darker when popup appear*/}
+            {sure? <div className={classes.pageMask}>&ensp;</div> : null}
         </div>
     );
 
-    return loaded
+    return <>{loaded}{sure? sureload : null}</>
 }
 
 export default MainNavigation;

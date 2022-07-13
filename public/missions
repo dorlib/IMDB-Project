@@ -9,7 +9,7 @@
 # forgot my password fitcher -- email process with nodemailer           ### TOP PRIORITY
 # about the mail servise - consider making variable for go run ./server with email and password and update readme
 # using the gsmp directly with real account and password
-READ ABOUT ENVIROMENTAL VARIABLES
+# READ ABOUT ENVIROMENTAL VARIABLES
 
 # make review system by users (comments for reviews (show guest that he cannot do likes and comments))     ### TOP PRIORITY
 
@@ -22,8 +22,6 @@ READ ABOUT ENVIROMENTAL VARIABLES
 ##########################
 
 # tab indexses
-
-# after creating user, dont redirect to user page, redirect to login and thank you for signup massage, and after 1.5 seconds redirect to login    ### TOP PRIORITY
 
 # make the app match any screen size       ### TOP PRIORITY
 

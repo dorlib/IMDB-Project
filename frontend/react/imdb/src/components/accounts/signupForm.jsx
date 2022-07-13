@@ -84,10 +84,10 @@ export function SignUpForm(props) {
     let ThankYouMassage = (
         <div>
             <CardContent className={classes.about}>
-                <EditIcon className={classes.editDetailsBut}/>
-                <Typography component="div">
-                    Thank You {givenFirstName} for signing up and welcome to IMDB !
+                <Typography component="div" style={{marginLeft: "1.7cm"}}>
+                    Thanks {givenFirstName} for signing up and welcome to IMDB !
                 </Typography>
+                <pre><Typography style={{marginTop: "0.6cm", position: "absolute", display: "flex", left: "6cm", fontSize: "15px"}}>Redirecting...</Typography></pre>
             </CardContent>
         </div>
     )
@@ -205,7 +205,9 @@ export function SignUpForm(props) {
                                autoComplete="new-password"/>
                     </div>
                     <Marginer direction="vertical" margin={10}/>
-                    <SubmitButton type="submit" value="submit">{spinner ? 'loading...' : 'Sign In!'}</SubmitButton>
+                    <SubmitButton type="submit" value="submit">
+                        {spinner ? 'loading...' : 'Sign In!'}
+                    </SubmitButton>
                 </form>
             </Card>
             <MutedLink href="#">Forget your password?</MutedLink>
