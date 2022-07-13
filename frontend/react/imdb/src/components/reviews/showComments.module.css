@@ -61,3 +61,69 @@
     font-weight: bold;
     margin-bottom: 0.5rem;
 }
+
+.controlEdit input,
+.controlEdit textarea {
+    display: flex;
+    position: absolute;
+    font: inherit;
+    border-radius: 10px;
+    border: 5px solid rgba(255, 255, 255, 0.87);
+    height: 2cm;
+    line-height: 0.8cm;
+    padding: 0.25rem;
+    width: 70%;
+    margin-top: -1rem;
+    top: -2.3cm;
+    margin-bottom: 1rem;
+    right: 2.4cm;
+}
+
+.controlEdit {
+    margin-bottom: 0.5rem;
+}
+
+.im label,
+.ctrl label,
+.controlEdit label {
+    display: block;
+    color: yellow;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+
+.formEdit {
+    position: relative;
+    width: 19cm;
+    top: -0.1cm;
+    left: 0.3cm;
+    background-color: #cc2062;
+}
+
+.actionsEdit button {
+    position: absolute;
+    display: flex;
+    margin-top: -0.9cm;
+    font: inherit;
+    width: 2.8cm;
+    left: 17cm;
+    top: -0.56cm;
+    cursor: pointer;
+    background-color: #77002e;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #77002e;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.cancel {
+    position: absolute;
+    display: flex;
+    left: 16cm;
+    bottom: 2.8cm;
+    background-color: white;
+    width: 0.01cm;
+    height: 0.01cm;
+}

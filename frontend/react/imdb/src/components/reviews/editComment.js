@@ -30,26 +30,7 @@ function EditComment(props) {
         editCom().then(() => setEdit(false))
     }
 
-    let editComment = (
-        <form className={classes.formEdit}>
-            <div className={classes.controlEdit}>
-                <textarea
-                    id="topic"
-                    type="text"
-                    datatype="String"
-                    required
-                    value={text} onChange={event => setText(event.target.value)}
-                    rows="1"
-                ></textarea>
-            </div>
-            <div className={classes.actionsEdit}>
-                <button onClick={editCom} className={classes.addReviewButEdit} type="submit">Save</button>
-            </div>
-            <button className={classes.cancel} style={{backgroundColor: "#cc2062", borderColor: "#cc2062"}}><CancelIcon style={{color: "black"}} /></button>
-        </form>
-    )
-
-    return editComment
+    return null
 }
 
 export default EditComment

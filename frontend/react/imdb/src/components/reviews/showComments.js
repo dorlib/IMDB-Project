@@ -15,10 +15,12 @@ import MenuItem from "@mui/material/MenuItem";
 import RemoveComment from "./removeComment";
 import {useState} from "react";
 import EditComment from "./editComment";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 function ShowComments(props) {
     const [removeCommentID, setRemoveCommentID] = useState(0);
     const [editCommentID, setEditCommentID] = useState(0);
+    const [editText, setEditText] = useState('');
 
     const SHOW_COMMENTS = gql`
         query CommentsOfReview ($reviewID: ID!) {
@@ -62,6 +64,14 @@ function ShowComments(props) {
         setEditCommentID(0)
     }
 
+    function HandleClickEdit(id) {
+        if (editCommentID !== id) {
+            setEditCommentID(id)
+        } else {
+            setEditCommentID(0)
+        }
+    }
+
     let loaded = data.commentsOfReview.map(({text, id, user}) => (
         text !== '' ? (
             <div key={id} className={classes.item} style={{marginTop: "2.4cm"}}>
@@ -94,7 +104,7 @@ function ShowComments(props) {
                                                       <React.Fragment>
                                                           <Button style={{backgroundColor: "#cc2062", color: "white", border: "none", left: "14cm", top: "-2cm"}} variant="contained" {...bindTrigger(popupState)}><MoreHorizIcon /></Button>
                                                           <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "9cm"}}>
-                                                              {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => setEditCommentID(id)}>Edit
+                                                              {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={HandleClickEdit(id)}>Edit
                                                                   </Button></MenuItem>: null}
                                                               {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => setRemoveCommentID(id)} style={{textDecoration: "none"}}>Delete
                                                                   </Button></MenuItem>: null}
@@ -107,6 +117,23 @@ function ShowComments(props) {
                                           </React.Fragment>} />
                     </ListItem>
                 </List>
+                {editCommentID === id?
+                    <form className={classes.formEdit}>
+                    <div className={classes.controlEdit}>
+                <textarea
+                    id="topic"
+                    type="text"
+                    datatype="String"
+                    required
+                    value={editText} onChange={event => setEditText(event.target.value)}
+                    rows="1"
+                ></textarea>
+                    </div>
+                    <div className={classes.actionsEdit}>
+                        <button onClick={HandleEdit} className={classes.addReviewButEdit} type="submit">Save</button>
+                    </div>
+                    <button className={classes.cancel} style={{backgroundColor: "#cc2062", borderColor: "#cc2062"}}><CancelIcon style={{color: "black"}} /></button>
+                </form>: null}
             </div>
         ): null ))
 
