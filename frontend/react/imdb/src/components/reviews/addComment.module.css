@@ -22,8 +22,8 @@
     line-height: 0.8cm;
     padding: 0.25rem;
     width: 80%;
-    margin-top: -3rem;
-    margin-bottom: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 
 
 }
@@ -43,6 +43,8 @@
 }
 
 .addReviewBut {
+    display: flex;
+    position: relative;
     width: 10cm;
     margin-bottom: 2cm;
     margin-top: 0.4cm;
@@ -60,8 +62,7 @@
 .form {
     position: relative;
     width: 19cm;
-    padding: 0rem;
-    bottom: 1cm;
+    top: 0.4cm;
     left: 0.3cm;
     background-color: #cc2062;
 }
@@ -91,7 +92,7 @@
     position: relative;
     width: 20cm;
     display: flex;
-    left: 3.8cm;
+    left: 3.7cm;
     bottom: 0.24cm;
     margin-bottom: -1cm;
     color: white;
@@ -99,8 +100,8 @@
 
 .regBut {
     display: flex;
-    position: absolute;
-    top: 2.7cm;
+    position: relative;
+    top: 0.4cm;
     left: 1cm;
     border-radius: 30px;
 }
@@ -116,5 +117,5 @@
 .add {
     display: flex;
     position: relative;
-    bottom: 1.5cm;
+    bottom: -0.4cm;
 }

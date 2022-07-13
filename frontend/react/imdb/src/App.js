@@ -95,7 +95,7 @@ function App() {
                     <Route path='/directorPage/:id' element={<DirectorPage userID={userId}/>}/>
                     <Route path="/moviePage/:id" element={<><UpdateRank userID={userId}/><HoverRating/><ShowReviews userID={userId}/><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>}/>
                     <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
-                    <Route path='/register-sign-in' element={<AccountBox/>}/>
+                    <Route path='/register-sign-in' element={<><AccountBox/><div>&ensp;</div></>}/>
                     <Route path='/editUserDetails/:id' element={<EditDetails firstname={userFirstName} lastname={userLastName} nickname={userNickname} description={userDescription} birthday={userBirthday} email={userEmail} profile={userProfileImage} userID={userId} country={userCountry} gender={userGender}/>}/>
                     <Route path='/reset/:token' element={<ResetForm LoggedInUser={userId}/>}/>
                     <Route path='/userPage/:id' element={<UserPage LoggedInUser={userId}/>}/>

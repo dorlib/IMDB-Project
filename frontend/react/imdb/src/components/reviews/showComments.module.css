@@ -7,7 +7,7 @@
     width: 10cm;
     margin-left: 10cm;
     margin-top: 1cm;
-    margin-bottom: 2.5cm;
+    margin-bottom: -0.3cm;
     height: 0.5cm;
 }
 
@@ -28,5 +28,5 @@
     position: relative;
     display: flex;
     bottom: 0.7cm;
-    color: white;
+    color: rgba(0, 0, 0, 0.8);
 }

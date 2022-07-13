@@ -38,15 +38,14 @@ function ShowReviews(props) {
     const [expanded, setExpanded] = useState(0);
     const [accordionHeight, setAccordionHeight] = useState(0);
     const ref = useRef("");
-    let getHeight = ref.current?.scrollHeight || null;
+    let getHeight = ref.current?.scrollHeight + 8 || null;
 
     const open = (id) => {
         if (expanded === 0) {
             setExpanded(id)
         } else if (expanded !== 0 && expanded !== id) {
             setExpanded(id)
-        }
-        else {
+        } else {
             setExpanded(0)
         }
     }
@@ -235,24 +234,24 @@ function ShowReviews(props) {
                     borderRadius: "0 0 15px 15px",
                 }}>
                     <Footer
-                        className={expanded === id? "show" : ""}
-                        setHeight={expanded === id? accordionHeight: 0}
+                        className={expanded === id ? "show" : ""}
+                        setHeight={expanded === id ? accordionHeight : 0}
                         ref={ref}
                     >
                         <CardActions>
                             <span size="large" onClick={() => open(id)}>
                         <Button style={{position: "absolute"}}>
-                            {expanded !== id? "Show Comments": "Hide Comments"}
+                            {expanded !== id ? "Show Comments" : "Hide Comments"}
                             <Arrow>
                                 <KeyboardArrowUpIcon style={style}/>
                             </Arrow>
                         </Button>
                                 <Button className={classes.comment}><AddCommentIcon/></Button>
-                                <Button onClick={() => handleLike(id)}
-                                        className={classes.thumb}><ThumbUpIcon/></Button>
-                                              <span className={classes.badgeComments}>{numOfComments}</span>
-                                              <span className={classes.badgeLikes}>{numOfLikes}</span>
-                    </span>
+                            </span>
+                            <Button onClick={() => handleLike(id)}
+                                    className={classes.thumb}><ThumbUpIcon/></Button>
+                            <span className={classes.badgeComments}>{numOfComments}</span>
+                            <span className={classes.badgeLikes}>{numOfLikes}</span>
                         </CardActions>
                         <div className={classes.actions}>
                             <ShowComments reviewID={id} userID={parseInt(props.userID)}/>

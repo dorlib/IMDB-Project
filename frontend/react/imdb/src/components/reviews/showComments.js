@@ -76,7 +76,7 @@ function ShowComments(props) {
                                                   color: "white"
                                               }}>{user["nickname"]}</Link>
                                               </Typography>
-                                              <Typography style={{fontSize: "x-large"}} className={classes.text}>
+                                              <Typography style={{fontSize: "large"}} className={classes.text}>
                                                   {text}
                                               </Typography>
                                               <PopupState variant="popover" popupId="demo-popup-menu">
