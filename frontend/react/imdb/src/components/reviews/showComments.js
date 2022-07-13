@@ -14,6 +14,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import RemoveComment from "./removeComment";
 import {useState} from "react";
+import EditComment from "./editComment";
 
 function ShowComments(props) {
     const [removeCommentID, setRemoveCommentID] = useState(0);
@@ -52,32 +53,14 @@ function ShowComments(props) {
         setRemoveCommentID(0)
     }
 
-    function HandleEdit (commentID, text)  {
+    function HandleEdit (commentID)  {
         return (
             <div>
-                <RemoveComment userID={props.userID} commentID={commentID} reviewID={parseInt(props.reviewID)}/>
+                <EditComment commentID={commentID}/>
             </div>
         )
-        setRemoveCommentID(0)
+        setEditCommentID(0)
     }
-
-    let editComment = (
-        <form className={classes.form}>
-            <div className={classes.control}>
-                <textarea
-                    id="topic"
-                    type="text"
-                    datatype="String"
-                    required
-                    value={text} onChange={event => setText(event.target.value)}
-                    rows="1"
-                ></textarea>
-            </div>
-            <div className={classes.actions}>
-                <button onClick={edit} className={classes.addReviewBut} type="submit">Save</button>
-            </div>
-        </form>
-    )
 
     let loaded = data.commentsOfReview.map(({text, id, user}) => (
         text !== '' ? (
@@ -127,6 +110,6 @@ function ShowComments(props) {
             </div>
         ): null ))
 
-    return <>{loaded}{removeCommentID !== 0 ? HandlerRemove(removeCommentID) : null}</>
+    return <>{loaded}{removeCommentID !== 0 ? HandlerRemove(removeCommentID) : null}{editCommentID !== 0 ? HandleEdit(removeCommentID):null}</>
 }
 export default ShowComments
