@@ -21,22 +21,6 @@ func insertHandler(c *ent.Client, seeded bool) http.Handler {
 		}
 
 		if !seeded {
-			pass1, _ := bcrypt.GenerateFromPassword([]byte("123456789"), 14)
-			user1 := c.User.Create().
-				SetFirstname("TEST").
-				SetLastname("TEST").
-				SetNickname("TEST").
-				SetPassword(string(pass1)).
-				SetGender("male").
-				SetCountry("Israel").
-				SetDescription("im the one who created this TEST").
-				SetEmail("TEST@TEST.com").
-				SetBirthDay("22011997").
-				SetSignupAt("2020-01-01").
-				SetProfile("https://upload.wikimedia.org/wikipedia/he/c/c2/Peter_Griffin.png").
-				SaveX(r.Context())
-			_ = user1
-
 			// creating users
 			pass1, _ := bcrypt.GenerateFromPassword([]byte("0508403898"), 14)
 			user1 := c.User.Create().
