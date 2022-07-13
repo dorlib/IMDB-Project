@@ -191,7 +191,7 @@ function MainNavigation(props) {
 
     let sureload = (
         <CardContent className={classes.about}>
-        <Typography>
+        <Typography className={classes.textSure}>
             Are you sure you want to insert pre-made data ? this cannot be undone!
         </Typography>
             {insert? null: <Button className={classes.yes} onClick={insertHandler}>{loading? "Loading..." : "Yes"}</Button>}
@@ -313,6 +313,8 @@ function MainNavigation(props) {
                     </PopupState>
                 </Grid>
             </Grid>
+            {/*this makes the background darker when popup appear*/}
+            {sure? <div className={classes.pageMask}>&ensp;</div> : null}
         </div>
     );
 

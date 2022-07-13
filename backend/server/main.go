@@ -54,8 +54,10 @@ func main() {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
 
+	seeded := false
+
 	authentication(router, client, string(*email), string(*password))
-	seeder(router, client)
+	seeder(router, client, seeded)
 
 	srv := handler.NewDefaultServer(graphql.NewSchema(client))
 	srv.Use(entgql.Transactioner{TxOpener: client})
