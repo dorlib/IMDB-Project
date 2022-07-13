@@ -106,6 +106,7 @@ type ComplexityRoot struct {
 		CreateReview           func(childComplexity int, text string, rank int, movieID int, userID int, topic string) int
 		DeleteComment          func(childComplexity int, commentID int, reviewID int, userID int) int
 		DeleteLike             func(childComplexity int, likeID int, userID int, reviewID int) int
+		EditComment            func(childComplexity int, commentID int, text string) int
 		RemoveFromFavorites    func(childComplexity int, movieID int, userID int) int
 		UpdateDirectorDetails  func(childComplexity int, id int, bornAt string, profileImage string, description string) int
 		UpdateRank             func(childComplexity int, id int, rank int) int
@@ -181,6 +182,7 @@ type MutationResolver interface {
 	RemoveFromFavorites(ctx context.Context, movieID int, userID int) ([]*ent.Favorite, error)
 	AddActorToMovie(ctx context.Context, movieID int, name string) (*ent.Actor, error)
 	AddComment(ctx context.Context, userID int, reviewID int, text string) (*ent.Comment, error)
+	EditComment(ctx context.Context, commentID int, text string) (*ent.Comment, error)
 	DeleteComment(ctx context.Context, commentID int, reviewID int, userID int) (int, error)
 	AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error)
 	DeleteLike(ctx context.Context, likeID int, userID int, reviewID int) ([]*ent.Like, error)
@@ -565,6 +567,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteLike(childComplexity, args["likeID"].(int), args["userID"].(int), args["reviewID"].(int)), true
+
+	case "Mutation.editComment":
+		if e.complexity.Mutation.EditComment == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_editComment_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.EditComment(childComplexity, args["commentID"].(int), args["text"].(string)), true
 
 	case "Mutation.removeFromFavorites":
 		if e.complexity.Mutation.RemoveFromFavorites == nil {
@@ -1243,6 +1257,7 @@ type Mutation {
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
     addActorToMovie(movieId: ID!, name: String!) : Actor!
     addComment(userID: ID!, reviewID: ID!, text: String!) : Comment!
+    editComment(commentID: ID!, text: String!) : Comment!
     deleteComment(commentID: ID!, reviewID: ID! userID: ID!) : ID!
     addLike(userID: ID!, reviewID: ID!) : Like!
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
@@ -1651,6 +1666,30 @@ func (ec *executionContext) field_Mutation_deleteLike_args(ctx context.Context, 
 		}
 	}
 	args["reviewID"] = arg2
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_editComment_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["commentID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commentID"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["commentID"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["text"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("text"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["text"] = arg1
 	return args, nil
 }
 
@@ -3646,6 +3685,48 @@ func (ec *executionContext) _Mutation_addComment(ctx context.Context, field grap
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().AddComment(rctx, args["userID"].(int), args["reviewID"].(int), args["text"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Comment)
+	fc.Result = res
+	return ec.marshalNComment2ᚖimdbv2ᚋentᚐComment(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_editComment(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_editComment_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().EditComment(rctx, args["commentID"].(int), args["text"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7626,6 +7707,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "addComment":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_addComment(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "editComment":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_editComment(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)

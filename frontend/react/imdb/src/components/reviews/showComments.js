@@ -17,6 +17,7 @@ import {useState} from "react";
 
 function ShowComments(props) {
     const [removeCommentID, setRemoveCommentID] = useState(0);
+    const [editCommentID, setEditCommentID] = useState(0);
 
     const SHOW_COMMENTS = gql`
         query CommentsOfReview ($reviewID: ID!) {
@@ -49,8 +50,34 @@ function ShowComments(props) {
             </div>
         )
         setRemoveCommentID(0)
-
     }
+
+    function HandleEdit (commentID, text)  {
+        return (
+            <div>
+                <RemoveComment userID={props.userID} commentID={commentID} reviewID={parseInt(props.reviewID)}/>
+            </div>
+        )
+        setRemoveCommentID(0)
+    }
+
+    let editComment = (
+        <form className={classes.form}>
+            <div className={classes.control}>
+                <textarea
+                    id="topic"
+                    type="text"
+                    datatype="String"
+                    required
+                    value={text} onChange={event => setText(event.target.value)}
+                    rows="1"
+                ></textarea>
+            </div>
+            <div className={classes.actions}>
+                <button onClick={edit} className={classes.addReviewBut} type="submit">Save</button>
+            </div>
+        </form>
+    )
 
     let loaded = data.commentsOfReview.map(({text, id, user}) => (
         text !== '' ? (
@@ -84,7 +111,7 @@ function ShowComments(props) {
                                                       <React.Fragment>
                                                           <Button style={{backgroundColor: "#cc2062", color: "white", border: "none", left: "14cm", top: "-2cm"}} variant="contained" {...bindTrigger(popupState)}><MoreHorizIcon /></Button>
                                                           <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "9cm"}}>
-                                                              {props.userID === parseInt(user["id"])? <MenuItem><Button style={{textDecoration: "none"}}>Edit
+                                                              {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => setEditCommentID(id)}>Edit
                                                                   </Button></MenuItem>: null}
                                                               {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => setRemoveCommentID(id)} style={{textDecoration: "none"}}>Delete
                                                                   </Button></MenuItem>: null}
@@ -99,7 +126,6 @@ function ShowComments(props) {
                 </List>
             </div>
         ): null ))
-
 
     return <>{loaded}{removeCommentID !== 0 ? HandlerRemove(removeCommentID) : null}</>
 }

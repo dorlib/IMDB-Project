@@ -266,6 +266,12 @@ func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID 
 		Save(ctx)
 }
 
+func (r *mutationResolver) EditComment(ctx context.Context, commentID int, text string) (*ent.Comment, error) {
+	return r.client.Comment.UpdateOneID(commentID).
+		SetText(text).
+		Save(ctx)
+}
+
 func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, reviewID int, userID int) (int, error) {
 	reviewData := r.client.Review.GetX(ctx, reviewID)
 	numOfCommentsBefore := reviewData.NumOfComments

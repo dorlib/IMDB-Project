@@ -30,3 +30,34 @@
     bottom: 0.7cm;
     color: rgba(0, 0, 0, 0.8);
 }
+
+.control input,
+.control textarea {
+    display: flex;
+    position: relative;
+    font: inherit;
+    border-radius: 10px;
+    border: 5px solid rgba(255, 255, 255, 0.87);
+    height: 2cm;
+    line-height: 0.8cm;
+    padding: 0.25rem;
+    width: 80%;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+
+
+}
+
+.control {
+    margin-bottom: 0.5rem;
+
+}
+
+.im label,
+.ctrl label,
+.control label {
+    display: block;
+    color: yellow;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}

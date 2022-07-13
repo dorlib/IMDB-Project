@@ -11,8 +11,6 @@ function RemoveComment(props) {
         }
     `;
 
-    console.log("ya")
-
     const [removeCom] = useMutation(REMOVE_COMMENT,
         {
             variables: {
