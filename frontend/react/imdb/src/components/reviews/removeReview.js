@@ -2,21 +2,20 @@ import {gql, useMutation} from "@apollo/client";
 import * as React from 'react';
 import {useState} from "react";
 
-function RemoveComment(props) {
+function RemoveReview(props) {
     const [remove, setRemove] = useState(true)
 
-    const REMOVE_COMMENT = gql`
-        mutation DeleteComment ($commentID: ID!, $reviewID: ID!, $userID: ID!) {
-            deleteComment (commentID: $commentID, reviewID: $reviewID, userID: $userID)
+    const REMOVE_REVIEW = gql`
+        mutation DeleteReview ($reviewID: ID!, $userID: ID!) {
+            deleteReview (reviewID: $reviewID, userID: $userID)
         }
     `;
 
-    const [removeCom] = useMutation(REMOVE_COMMENT,
+    const [removeRev] = useMutation(REMOVE_REVIEW,
         {
             variables: {
                 userID: parseInt(props.userID),
                 reviewID: parseInt(props.reviewID),
-                commentID: parseInt(props.commentID),
             },
             onCompleted: (
                 () => window.location.reload()
@@ -25,10 +24,10 @@ function RemoveComment(props) {
 
     if (remove) {
         setRemove(false)
-        removeCom().then(() => setRemove(false))
+        removeRev().then(() => setRemove(false))
     }
 
     return null
 }
 
-export default RemoveComment
+export default RemoveReview
