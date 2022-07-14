@@ -56,15 +56,13 @@ function ShowComments(props) {
         setRemoveCommentID(0)
     }
 
-    function HandleEdit () {
-        console.log("yay")
-        return (
+
+    let HandleEdit = (
             <div>
                 <EditComment commentID={editCommentID} text={JSON.stringify(editText)}/>
+                {() => setEditCommentID(0)}
             </div>
         )
-        setEditCommentID(0)
-    }
 
     function HandleClickEdit(id) {
         if (!props.expanded) {
