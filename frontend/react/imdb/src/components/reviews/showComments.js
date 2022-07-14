@@ -58,7 +58,7 @@ function ShowComments(props) {
     function HandleEdit (commentID)  {
         return (
             <div>
-                <EditComment commentID={commentID}/>
+                <EditComment commentID={parseInt(commentID)} text={editText}/>
             </div>
         )
         setEditCommentID(0)
@@ -104,7 +104,7 @@ function ShowComments(props) {
                                                       <React.Fragment>
                                                           <Button style={{backgroundColor: "#cc2062", color: "white", border: "none", left: "14cm", top: "-2cm"}} variant="contained" {...bindTrigger(popupState)}><MoreHorizIcon /></Button>
                                                           <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "9cm"}}>
-                                                              {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={HandleClickEdit(id)}>Edit
+                                                              {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => HandleClickEdit(id)}>Edit
                                                                   </Button></MenuItem>: null}
                                                               {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => setRemoveCommentID(id)} style={{textDecoration: "none"}}>Delete
                                                                   </Button></MenuItem>: null}
@@ -125,14 +125,14 @@ function ShowComments(props) {
                     type="text"
                     datatype="String"
                     required
-                    value={editText} onChange={event => setEditText(event.target.value)}
+                    defaultValue={text} onChange={event => setEditText(event.target.value)}
                     rows="1"
                 ></textarea>
                     </div>
                     <div className={classes.actionsEdit}>
-                        <button onClick={HandleEdit} className={classes.addReviewButEdit} type="submit">Save</button>
+                        <button onClick={HandleEdit(parseInt(id))} className={classes.addReviewButEdit} type="submit">Save</button>
                     </div>
-                    <button className={classes.cancel} style={{backgroundColor: "#cc2062", borderColor: "#cc2062"}}><CancelIcon style={{color: "black"}} /></button>
+                    <button className={classes.cancel} style={{backgroundColor: "#cc2062", borderColor: "#cc2062"}} onClick={() => HandleClickEdit(parseInt(id))}><CancelIcon style={{color: "black"}} /></button>
                 </form>: null}
             </div>
         ): null ))

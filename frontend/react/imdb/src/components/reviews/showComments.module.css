@@ -94,10 +94,10 @@
 
 
 .formEdit {
-    position: relative;
+    position: absolute;
     width: 19cm;
-    top: -0.1cm;
-    left: 0.3cm;
+    top: 2.8cm;
+    left: -4.5cm;
     background-color: #cc2062;
 }
 
@@ -121,8 +121,8 @@
 .cancel {
     position: absolute;
     display: flex;
-    left: 16cm;
-    bottom: 2.8cm;
+    left: 1.8cm;
+    bottom: 3cm;
     background-color: white;
     width: 0.01cm;
     height: 0.01cm;

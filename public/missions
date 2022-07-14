@@ -11,7 +11,7 @@
 # using the gsmp directly with real account and password
 # READ ABOUT ENVIROMENTAL VARIABLES
 
-# make review system by users (comments for reviews (show guest that he cannot do likes and comments))     ### TOP PRIORITY
+# make review system by users edit comment, edit review, delete review    ### TOP PRIORITY
 
 # add warning massage before insert data
 
