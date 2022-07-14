@@ -15,10 +15,13 @@ import MenuItem from "@mui/material/MenuItem";
 import RemoveComment from "./removeComment";
 import {useState} from "react";
 import EditComment from "./editComment";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 function ShowComments(props) {
     const [removeCommentID, setRemoveCommentID] = useState(0);
     const [editCommentID, setEditCommentID] = useState(0);
+    const [editConfirmed, setEditConfirmed] = useState(false);
+    const [editText, setEditText] = useState('');
 
     const SHOW_COMMENTS = gql`
         query CommentsOfReview ($reviewID: ID!) {
@@ -47,19 +50,29 @@ function ShowComments(props) {
     function HandlerRemove (commentID)  {
         return (
             <div>
-                <RemoveComment userID={props.userID} commentID={commentID} reviewID={parseInt(props.reviewID)}/>
+                <RemoveComment userID={props.userID} commentID={commentID} reviewID={parseInt(props.reviewID)} />
             </div>
         )
         setRemoveCommentID(0)
     }
 
-    function HandleEdit (commentID)  {
-        return (
+
+    let HandleEdit = (
             <div>
-                <EditComment commentID={commentID}/>
+                <EditComment commentID={editCommentID} text={JSON.stringify(editText)}/>
+                {() => setEditCommentID(0)}
             </div>
         )
-        setEditCommentID(0)
+
+    function HandleClickEdit(id) {
+        if (!props.expanded) {
+            setEditCommentID(0)
+        }
+        if (editCommentID !== id) {
+            setEditCommentID(parseInt(id))
+        } else {
+            setEditCommentID(0)
+        }
     }
 
     let loaded = data.commentsOfReview.map(({text, id, user}) => (
@@ -94,7 +107,7 @@ function ShowComments(props) {
                                                       <React.Fragment>
                                                           <Button style={{backgroundColor: "#cc2062", color: "white", border: "none", left: "14cm", top: "-2cm"}} variant="contained" {...bindTrigger(popupState)}><MoreHorizIcon /></Button>
                                                           <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "9cm"}}>
-                                                              {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => setEditCommentID(id)}>Edit
+                                                              {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => HandleClickEdit(parseInt(id))}>Edit
                                                                   </Button></MenuItem>: null}
                                                               {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => setRemoveCommentID(id)} style={{textDecoration: "none"}}>Delete
                                                                   </Button></MenuItem>: null}
@@ -107,9 +120,28 @@ function ShowComments(props) {
                                           </React.Fragment>} />
                     </ListItem>
                 </List>
+                {editCommentID === parseInt(id)?
+                    <form className={classes.formEdit}>
+                    <div className={classes.controlEdit}>
+                <textarea
+                    id="topic"
+                    type="text"
+                    datatype="String"
+                    required
+                    defaultValue={text} onChange={event => setEditText(event.target.value)}
+                    rows="1"
+                ></textarea>
+                    </div>
+                    <div className={classes.actionsEdit}>
+                        <Button onClick={() => setEditConfirmed(true)} className={classes.addReviewButEdit}>Save</Button>
+                    </div>
+                    <button className={classes.cancel} style={{backgroundColor: "#cc2062", borderColor: "#cc2062"}} onClick={() => HandleClickEdit(parseInt(id))}><CancelIcon style={{color: "black"}} /></button>
+                </form>: null}
             </div>
         ): null ))
 
-    return <>{loaded}{removeCommentID !== 0 ? HandlerRemove(removeCommentID) : null}{editCommentID !== 0 ? HandleEdit(removeCommentID):null}</>
+    console.log(editConfirmed)
+
+    return <>{loaded}{removeCommentID !== 0 ? HandlerRemove(removeCommentID) : null}{editConfirmed? HandleEdit: null}</>
 }
 export default ShowComments

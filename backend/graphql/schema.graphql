@@ -181,9 +181,11 @@ type Mutation {
     addActorToMovie(movieId: ID!, name: String!) : Actor!
     addComment(userID: ID!, reviewID: ID!, text: String!) : Comment!
     editComment(commentID: ID!, text: String!) : Comment!
-    deleteComment(commentID: ID!, reviewID: ID! userID: ID!) : ID!
+    deleteComment(commentID: ID!, reviewID: ID!, userID: ID!) : ID!
     addLike(userID: ID!, reviewID: ID!) : Like!
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
+    deleteReview(reviewID: ID!, userID: ID!) : ID!
+    editReview(reviewID: ID!, rank: Int!, text: String!, topic: String!) : Review!
 }
 
 # Define a query for getting all movies.

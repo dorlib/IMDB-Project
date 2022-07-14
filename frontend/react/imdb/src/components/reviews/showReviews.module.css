@@ -141,3 +141,98 @@
     font-weight: bold;
     margin-bottom: 0.5rem;
 }
+
+.controlEdit input,
+.controlEdit textarea {
+    display: flex;
+    position: absolute;
+    font: inherit;
+    border-radius: 10px;
+    border: 5px solid rgba(255, 255, 255, 0.87);
+    height: 1.7cm;
+    line-height: 0.5cm;
+    padding: 0.25rem;
+    width: 70%;
+    margin-top: -1rem;
+    top: -2.3cm;
+    margin-bottom: 1rem;
+    right: 2.4cm;
+}
+
+.controlEditTopic input,
+.controlEditTopic textarea {
+    display: flex;
+    position: absolute;
+    font: inherit;
+    border-radius: 10px;
+    border: 5px solid rgba(255, 255, 255, 0.87);
+    height: 1cm;
+    line-height: 0.5cm;
+    padding: 0.25rem;
+    width: 50%;
+    margin-top: -1rem;
+    top: -4.1cm;
+    margin-bottom: 1rem;
+    right: 6.1cm;
+}
+
+.ctrlEditRank input {
+    position: absolute;
+    display: block;
+    font: inherit;
+    border-radius: 14px;
+    border: 1px solid #ccc;
+    padding: 0.25rem;
+    height: 1.4cm;
+    width: 17%;
+    left: 15cm;
+}
+
+.controlEdit {
+    margin-bottom: 0.5rem;
+}
+
+.im label,
+.ctrl label,
+.controlEdit label {
+    display: block;
+    color: yellow;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+
+.formEdit {
+    position: absolute;
+    width: 19cm;
+    top: 5cm;
+    left: -0.9cm;
+}
+
+.actionsEdit button {
+    position: absolute;
+    display: flex;
+    margin-top: -0.9cm;
+    font: inherit;
+    width: 2.8cm;
+    left: 17cm;
+    top: -0.56cm;
+    cursor: pointer;
+    background-color: #77002e;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #77002e;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.cancel {
+    position: absolute;
+    display: flex;
+    left: 1.6cm;
+    bottom: 1cm;
+    background-color: white;
+    width: 1cm;
+    height: 0.8cm;
+    border-radius: 30px;
+}
