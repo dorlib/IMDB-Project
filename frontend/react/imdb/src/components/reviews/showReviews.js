@@ -327,6 +327,28 @@ function ShowReviews(props) {
                     rows="1"
                 ></textarea>
                         </div>
+                        <div className={classes.controlEditTopic}>
+                <textarea
+                    id="topic"
+                    type="text"
+                    datatype="String"
+                    required
+                    defaultValue={topic} onChange={event => setEditTopic(event.target.value)}
+                    rows="1"
+                ></textarea>
+                        </div>
+                        <div className={classes.ctrlEditRank}>
+                            <label htmlFor="rank" style={{color: "yellow"}}>Add Your Rank</label>
+                            <input
+                                type="number"
+                                name="ranking"
+                                id="ranking"
+                                min="1"
+                                max="100"
+                                value={rank} onChange={event => setEditRank(event.target.value)}
+                                datatype="Int"
+                            ></input>
+                        </div>
                         <div className={classes.actionsEdit}>
                             <Button onClick={() => setEditConfirmed(true)} className={classes.addReviewButEdit}>Save</Button>
                         </div>

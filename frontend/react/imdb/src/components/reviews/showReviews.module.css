@@ -149,14 +149,43 @@
     font: inherit;
     border-radius: 10px;
     border: 5px solid rgba(255, 255, 255, 0.87);
-    height: 2cm;
-    line-height: 0.8cm;
+    height: 1.7cm;
+    line-height: 0.5cm;
     padding: 0.25rem;
     width: 70%;
     margin-top: -1rem;
     top: -2.3cm;
     margin-bottom: 1rem;
     right: 2.4cm;
+}
+
+.controlEditTopic input,
+.controlEditTopic textarea {
+    display: flex;
+    position: absolute;
+    font: inherit;
+    border-radius: 10px;
+    border: 5px solid rgba(255, 255, 255, 0.87);
+    height: 1cm;
+    line-height: 0.5cm;
+    padding: 0.25rem;
+    width: 50%;
+    margin-top: -1rem;
+    top: -4.1cm;
+    margin-bottom: 1rem;
+    right: 6.1cm;
+}
+
+.ctrlEditRank input {
+    position: absolute;
+    display: block;
+    font: inherit;
+    border-radius: 14px;
+    border: 1px solid #ccc;
+    padding: 0.25rem;
+    height: 1.4cm;
+    width: 17%;
+    left: 15cm;
 }
 
 .controlEdit {
@@ -176,9 +205,8 @@
 .formEdit {
     position: absolute;
     width: 19cm;
-    top: 2.8cm;
-    left: -4.5cm;
-    background-color: #cc2062;
+    top: 5cm;
+    left: -0.9cm;
 }
 
 .actionsEdit button {
@@ -201,9 +229,10 @@
 .cancel {
     position: absolute;
     display: flex;
-    left: 1.8cm;
-    bottom: 3cm;
+    left: 1.6cm;
+    bottom: 1cm;
     background-color: white;
-    width: 0.01cm;
-    height: 0.01cm;
+    width: 1cm;
+    height: 0.8cm;
+    border-radius: 30px;
 }
