@@ -1,7 +1,6 @@
 import {gql, useMutation} from "@apollo/client";
 import * as React from 'react';
 import {useState} from "react";
-import CancelIcon from '@mui/icons-material/Cancel';
 
 function EditComment(props) {
     const [edit, setEdit] = useState(true)
@@ -14,7 +13,7 @@ function EditComment(props) {
         }
     `;
 
-    console.log(props.commentID, console.log(props.text))
+    console.log("yay")
 
     const [editCom] = useMutation(EDIT_COMMENT,
         {

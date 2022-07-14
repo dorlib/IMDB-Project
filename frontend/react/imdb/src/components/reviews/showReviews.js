@@ -254,7 +254,7 @@ function ShowReviews(props) {
                             <span className={classes.badgeLikes}>{numOfLikes}</span>
                         </CardActions>
                         <div className={classes.actions}>
-                            <ShowComments reviewID={id} userID={parseInt(props.userID)}/>
+                            <ShowComments reviewID={id} userID={parseInt(props.userID)} expanded={expanded}/>
                             <AddComments userID={parseInt(props.userID)} reviewID={id}/>
                         </div>
                     </Footer>
