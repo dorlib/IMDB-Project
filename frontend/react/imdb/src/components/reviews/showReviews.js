@@ -28,6 +28,9 @@ import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import CancelIcon from "@mui/icons-material/Cancel";
+import RemoveComment from "./removeComment";
+import EditComment from "./editComment";
 
 function ShowReviews(props) {
     //from here to line 52 there are functions and variables for the show comments functionality
@@ -73,6 +76,13 @@ function ShowReviews(props) {
     const [likeID, setLikeID] = useState(0)
     const [removeLike, setRemoveLike] = useState(false)
     const [showError, setShowError] = useState(0)
+
+    const [removeReviewID, setRemoveReviewID] = useState(0);
+    const [editReviewID, setEditReviewID] = useState(0);
+    const [editConfirmed, setEditConfirmed] = useState(false);
+    const [editText, setEditText] = useState('');
+    const [editTopic, setEditTopic] = useState('');
+    const [editRank, setEditRank] = useState(0);
 
     const SHOW_REVIEWS = gql`
         query ReviewsOfMovie ($movieID: Int!) {
@@ -162,10 +172,37 @@ function ShowReviews(props) {
         setLikeClicked(true)
     }
 
+    function HandleClickEdit(id) {
+        if (!props.expanded) {
+            setEditReviewID(0)
+        }
+        if (editReviewID !== id) {
+            setEditReviewID(parseInt(id))
+        } else {
+            setEditReviewID(0)
+        }
+    }
+
+    function HandlerRemove (commentID)  {
+        return (
+            <div>
+                <RemoveComment userID={props.userID} commentID={commentID} reviewID={parseInt(props.reviewID)} />
+            </div>
+        )
+        setRemoveReviewID(0)
+    }
+
     let addLike = (
         <div>
             {() => setLikeClicked(false)}
             <ToggleLike remove={removeLike} userID={parseInt(props.userID)} reviewID={likedReviewID} likeID={likeID}/>
+        </div>
+    )
+
+    let HandleEdit = (
+        <div>
+            <EditComment commentID={editReviewID} text={JSON.stringify(editText)}/>
+            {() => setEditReviewID(0)}
         </div>
     )
 
@@ -233,9 +270,9 @@ function ShowReviews(props) {
                         <React.Fragment>
                             <Button style={{position: "absolute",backgroundColor: "#cc2062", color: "white", border: "none", left: "0.4cm", top: "2.3cm"}} variant="contained" {...bindTrigger(popupState)}><MoreHorizIcon /></Button>
                             <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "9cm"}}>
-                                {props.userID === parseInt(user["id"])? <MenuItem><Button >Edit
+                                {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => HandleClickEdit(parseInt(id))}>Edit
                                 </Button></MenuItem>: null}
-                                {props.userID === parseInt(user["id"])? <MenuItem><Button style={{textDecoration: "none"}}>Delete
+                                {props.userID === parseInt(user["id"])? <MenuItem><Button onClick={() => setRemoveReviewID(id)} style={{textDecoration: "none"}}>Delete
                                 </Button></MenuItem>: null}
                                 <MenuItem><Button style={{textDecoration: "none"}}>Share
                                 </Button></MenuItem>
@@ -278,11 +315,28 @@ function ShowReviews(props) {
                         </div>
                     </Footer>
                 </Card>
+                {editReviewID === parseInt(id)?
+                    <form className={classes.formEdit}>
+                        <div className={classes.controlEdit}>
+                <textarea
+                    id="topic"
+                    type="text"
+                    datatype="String"
+                    required
+                    defaultValue={text} onChange={event => setEditText(event.target.value)}
+                    rows="1"
+                ></textarea>
+                        </div>
+                        <div className={classes.actionsEdit}>
+                            <Button onClick={() => setEditConfirmed(true)} className={classes.addReviewButEdit}>Save</Button>
+                        </div>
+                        <button className={classes.cancel} style={{backgroundColor: "#cc2062", borderColor: "#cc2062"}} onClick={() => HandleClickEdit(parseInt(id))}><CancelIcon style={{color: "black"}} /></button>
+                    </form>: null}
             </div>
         ) : null
     ))
 
-    return <>{loaded}{likeClicked ? addLike : null}</>
+    return <>{loaded}{likeClicked ? addLike : null}{removeReviewID !== 0 ? HandlerRemove(removeReviewID) : null}{editConfirmed? HandleEdit: null}</>
 }
 
 export default ShowReviews
