@@ -20,7 +20,7 @@ function EditComment(props) {
             variables: {
                 commentID: parseInt(props.commentID),
                 text: props.text.slice(1,props.text.length -1)
-            },
+            },  
             onCompleted: (
                 () => window.location.reload()
             )

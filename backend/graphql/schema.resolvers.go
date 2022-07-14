@@ -358,3 +358,30 @@ func (r *mutationResolver) UpdateUserDetails(ctx context.Context, userID int, fi
 
 	return updatedUser, nil
 }
+
+func (r *mutationResolver) EditReview(ctx context.Context, reviewID int, rank int, text string, topic string) (*ent.Review, error) {
+	return r.client.Review.UpdateOneID(reviewID).
+		SetText(text).
+		SetRank(rank).
+		SetTopic(topic).
+		Save(ctx)
+}
+
+func (r *mutationResolver) DeleteReview(ctx context.Context, reviewID int, userID int) (int, error) {
+	// when we delete a review we need to delete the comments of that review
+	userIdOfReview := r.client.Review.GetX(ctx, reviewID).QueryUser().OnlyIDX(ctx)
+	rev := r.client.Review.GetX(ctx, reviewID)
+
+	if userIdOfReview == userID {
+		// here we get an array of ids of comments that need to be deleted
+		commentsOfReview := r.client.Review.QueryComments(rev).IDsX(ctx)
+		// here we delete every comment from the list
+		for i := 0; i < len(commentsOfReview); i++ {
+			r.client.Comment.DeleteOneID(commentsOfReview[i])
+		}
+
+		r.client.Review.DeleteOne(rev).ExecX(ctx)
+	}
+
+	return userID, nil
+}

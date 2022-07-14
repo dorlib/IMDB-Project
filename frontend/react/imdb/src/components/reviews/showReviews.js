@@ -24,6 +24,10 @@ import {Footer} from "../directors/styles";
 import CardActions from "@mui/material/CardActions";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import AddComments from "./addComments";
+import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 function ShowReviews(props) {
     //from here to line 52 there are functions and variables for the show comments functionality
@@ -224,6 +228,21 @@ function ShowReviews(props) {
                     </ListItem>
                     <Divider variant="inset" component="li"/>
                 </List>
+                <PopupState variant="popover" popupId="demo-popup-menu">
+                    {(popupState) => (
+                        <React.Fragment>
+                            <Button style={{position: "absolute",backgroundColor: "#cc2062", color: "white", border: "none", left: "0.4cm", top: "2.3cm"}} variant="contained" {...bindTrigger(popupState)}><MoreHorizIcon /></Button>
+                            <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "9cm"}}>
+                                {props.userID === parseInt(user["id"])? <MenuItem><Button >Edit
+                                </Button></MenuItem>: null}
+                                {props.userID === parseInt(user["id"])? <MenuItem><Button style={{textDecoration: "none"}}>Delete
+                                </Button></MenuItem>: null}
+                                <MenuItem><Button style={{textDecoration: "none"}}>Share
+                                </Button></MenuItem>
+                            </Menu>
+                        </React.Fragment>
+                    )}
+                </PopupState>
                 <Card style={{
                     marginBottom: "4.2cm",
                     position: "relative",
