@@ -1,7 +1,6 @@
 import {gql, useMutation} from "@apollo/client";
 import * as React from 'react';
 import {useState} from "react";
-import {parse} from "graphql";
 
 function EditReview(props) {
     const [edit, setEdit] = useState(true)

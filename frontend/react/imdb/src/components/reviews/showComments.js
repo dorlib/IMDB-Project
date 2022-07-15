@@ -65,9 +65,6 @@ function ShowComments(props) {
         )
 
     function HandleClickEdit(id) {
-        if (!props.expanded) {
-            setEditCommentID(0)
-        }
         if (editCommentID !== id) {
             setEditCommentID(parseInt(id))
         } else {
@@ -120,7 +117,7 @@ function ShowComments(props) {
                                           </React.Fragment>} />
                     </ListItem>
                 </List>
-                {editCommentID === parseInt(id)?
+                {editCommentID === parseInt(id) && parseInt(props.expanded) === parseInt(props.reviewID)?
                     <form className={classes.formEdit}>
                     <div className={classes.controlEdit}>
                 <textarea
@@ -139,8 +136,6 @@ function ShowComments(props) {
                 </form>: null}
             </div>
         ): null ))
-
-    console.log(editConfirmed)
 
     return <>{loaded}{removeCommentID !== 0 ? HandlerRemove(removeCommentID) : null}{editConfirmed? HandleEdit: null}</>
 }

@@ -201,7 +201,7 @@ function ShowReviews(props) {
 
     let HandleEdit = (
         <div>
-            <EditComment commentID={editReviewID} text={JSON.stringify(editText)}/>
+            <EditComment commentID={editReviewID} text={JSON.stringify(editText)} topic={JSON.stringify(editTopic)} rank={JSON.stringify(editRank)}/>
             {() => setEditReviewID(0)}
         </div>
     )
@@ -338,19 +338,19 @@ function ShowReviews(props) {
                 ></textarea>
                         </div>
                         <div className={classes.ctrlEditRank}>
-                            <label htmlFor="rank" style={{color: "yellow"}}>Add Your Rank</label>
+                            <label htmlFor="rank" style={{color: "yellow"}}></label>
                             <input
                                 type="number"
                                 name="ranking"
                                 id="ranking"
                                 min="1"
                                 max="100"
-                                value={rank} onChange={event => setEditRank(event.target.value)}
+                                defaultValue={rank} onChange={event => setEditRank(event.target.value)}
                                 datatype="Int"
                             ></input>
                         </div>
                         <div className={classes.actionsEdit}>
-                            <Button onClick={() => setEditConfirmed(true)} className={classes.addReviewButEdit}>Save</Button>
+                            <Button onClick={() => setEditConfirmed(true)} className={classes.addReviewButEdit} style={{marginTop: "-1.85cm", borderRadius: "20px"}}>Save</Button>
                         </div>
                         <button className={classes.cancel} style={{backgroundColor: "#cc2062", borderColor: "#cc2062"}} onClick={() => HandleClickEdit(parseInt(id))}><CancelIcon style={{color: "black"}} /></button>
                     </form>: null}

@@ -49,6 +49,7 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 		SetUserID(userID).
 		SetUser(user).
 		SetNumOfLikes(0).
+		SetNumOfComments(0).
 		Save(ctx)
 }
 

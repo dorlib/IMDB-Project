@@ -180,12 +180,14 @@
     position: absolute;
     display: block;
     font: inherit;
+    font-size: 23px;
     border-radius: 14px;
     border: 1px solid #ccc;
     padding: 0.25rem;
     height: 1.4cm;
-    width: 17%;
-    left: 15cm;
+    width: 8%;
+    bottom: 3.55cm;
+    left: 17.8cm;
 }
 
 .controlEdit {
@@ -235,4 +237,9 @@
     width: 1cm;
     height: 0.8cm;
     border-radius: 30px;
+}
+
+.addReviewButEdit {
+    position: absolute;
+    display: flex;
 }
