@@ -68,11 +68,18 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 
 		url := "http://localhost:3000/reset/" + token
 
-		message := []byte("click <a href=\"" + url + "\">here</a> to reset your password!")
+		message := []byte("click \"" + url + "\" to reset your password!")
+
+		fromMsg := fmt.Sprintf("From: <%s>\r\n", from)
+		toMsg := fmt.Sprintf("To: <%s>\r\n", to)
+		subject := "Subject: Reset your password\r\n"
+		body := string(message)
+
+		msg := fromMsg + toMsg + subject + "\r\n" + body
 
 		auth := smtp.PlainAuth("", from, password, host)
 
-		err3 := smtp.SendMail(host+":"+port, auth, from, to, message)
+		err3 := smtp.SendMail(host+":"+port, auth, from, to, []byte(msg))
 
 		if err3 != nil {
 			log.Println(err3)
