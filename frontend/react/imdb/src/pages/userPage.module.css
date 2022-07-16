@@ -15,8 +15,8 @@
     display: flex;
     color: yellow;
     font-size: x-large;
-    bottom: 44%;
-    left: 29%;
+    bottom: 43%;
+    left: 29.5%;
 }
 
 .mainCard {
@@ -80,8 +80,8 @@
 .name {
     position: absolute;
     display: flex;
-    bottom:7cm;
-    left: 9cm;
+    bottom: 30%;
+    left: 16.9%;
     color: yellow;
     font-size: xxx-large;
 }
@@ -91,22 +91,22 @@
     display: flex;
     font-size: x-large;
     color: yellow;
-    bottom: 6.2cm;
-    left: 9.2cm;
+    bottom: 28%;
+    left: 16.9%;
 }
 
 .edit {
     background-color: #2c292b;
     display: flex;
     position: absolute;
-    bottom: 5.5cm;
-    left: 9.2cm;
+    bottom: 25%;
+    left: 16.9%;
     color: white;
 }
 
 .editBut {
     display: flex;
-    width: 7cm;
+    width: 17rem;
 }
 
 .followIcon {
@@ -114,16 +114,16 @@
     position: absolute;
     font-size: x-large;
     color: yellow;
-    bottom: 4.4cm;
-    left: 9.3cm;
+    bottom: 20%;
+    left: 16.9%;
 }
 
 .dot {
     display: flex;
     position: absolute;
     color: yellow;
-    left: 12.72cm;
-    bottom: 4.4cm;
+    bottom: 19.8%;
+    left: 23.3%;
 }
 
 .followers {
@@ -131,8 +131,8 @@
     position: absolute;
     font-size: large;
     color: yellow;
-    left: 10.5cm;
-    bottom: 4.4cm;
+    left: 19%;
+    bottom: 19.8%;
 }
 
 .follows {
@@ -140,33 +140,33 @@
     position: absolute;
     font-size: large;
     color: yellow;
-    left: 13.5cm;
-    bottom: 4.4cm;
+    left: 25.3%;
+    bottom: 19.8%;
 }
 
 .location {
     display: flex;
     position: absolute;
     color: yellow;
-    bottom: 3.1cm;
-    left: 9.25cm;
+    bottom: 16%;
+    left: 16.9%;
 }
 
 .country {
     display: flex;
     position: absolute;
     color: yellow;
-    bottom: 3.1cm;
+    bottom: 16%;
     font-size: large;
-    left: 10.6cm;
+    left: 19%;
 }
 
 .editDetailsBut {
     color: black;
     position: absolute;
     display: flex;
-    left: 26cm;
-    bottom: 8cm;
+    left: 61rem;
+    bottom: 19rem;
 }
 
 .editDetails {

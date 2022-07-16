@@ -1239,6 +1239,8 @@ input ReviewInput {
     topic: String!
     text: String!
     rank: Int!
+    numOfComments: Int!
+    numOfLikes: Int!
     movieID: Int!
 }
 
@@ -7147,6 +7149,22 @@ func (ec *executionContext) unmarshalInputReviewInput(ctx context.Context, obj i
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rank"))
 			it.Rank, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "numOfComments":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("numOfComments"))
+			it.NumOfComments, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "numOfLikes":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("numOfLikes"))
+			it.NumOfLikes, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
