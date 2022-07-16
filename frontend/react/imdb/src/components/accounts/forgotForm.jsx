@@ -34,7 +34,7 @@ export function ForgotForm() {
         await fetch('http://localhost:8081/forgot', {
             method: 'post',
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(userData)
+            body: JSON.stringify(givenEmail)
         })
             .catch((err) => {
                 console.error('error:', err)
@@ -63,10 +63,11 @@ export function ForgotForm() {
                     <div className={classes.email}>
                         <label htmlFor="email" className={classes.enterMail}>Enter Your Email</label>
                         <input type="text" id="email" name="email" required
-                               onChange={event => setEmail(event.target.value)} autoComplete="username"/>
+                               onChange={event => setEmail(event.target.value)} autoComplete="email"/>
                     </div>
                 </Card>
                 <Typography className={classes.err}>{loginError? 'submit was not successful... please try again': null}</Typography>
+                <h4 className={classes.err}>{success? 'Email sent, check Your Email': null}</h4>
                 <Marginer direction="vertical" margin={45}/>
                 <SubmitButton type="submit" value="submit" style={{display: "flex", marginLeft: "1.9cm", marginRight: "1.9cm", marginTop: "0.3cm"}}>{spinner? 'loading...' : 'Submit!'}</SubmitButton>
             </form>

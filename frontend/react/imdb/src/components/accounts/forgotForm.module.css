@@ -74,8 +74,9 @@
 .err {
     display: flex;
     position: absolute;
-    top: 10.8cm;
-    left: 3.5cm;
+    top: 12cm;
+    left: 5cm;
+    font-weight: bolder;
 }
 
 .success {

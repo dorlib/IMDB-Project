@@ -210,7 +210,6 @@ export function SignUpForm(props) {
                     </SubmitButton>
                 </form>
             </Card>
-            <MutedLink href="#">Forget your password?</MutedLink>
             <Marginer direction="vertical" margin="0.3em"/>
             <Marginer direction="vertical" margin="1em"/>
             <MutedLink href="#">

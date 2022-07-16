@@ -19,6 +19,8 @@ var PasswordReset struct {
 	Token string `gorm:"unique"`
 }
 
+var emailGiven string
+
 func Forgot(c *ent.Client, email string, password string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
@@ -34,23 +36,21 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 		buf, err1 := io.ReadAll(r.Body)
 		fmt.Println(err1, string(buf))
 
-		var Forgot struct {
-			Email string `json:"email"`
-		}
+		var ForgotEmail string
 
-		er := json.Unmarshal(buf, &Forgot)
+		er := json.Unmarshal(buf, &ForgotEmail)
 		if er != nil {
 			log.Fatal(er)
 		}
 
-		fmt.Println("email given", Forgot.Email)
+		fmt.Println("email given", ForgotEmail)
 
 		// need to check if there is a user with this mail
-		userMail, err2 := c.User.Query().Where(user.Email(Forgot.Email)).All(r.Context())
+		userMail, err2 := c.User.Query().Where(user.Email(ForgotEmail)).All(r.Context())
 		if err2 != nil {
 			log.Fatal("error while querying user by email", err2)
 		}
-		
+
 		if userMail == nil || email != Forgot.Email {
 			fmt.Println("email not found")
 			return
@@ -61,8 +61,9 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 		from := email
 		password := password
 
-		toEmailAddress := Forgot.Email
-		to := []string{toEmailAddress}
+		to := []string{
+			ForgotEmail,
+		}
 
 		host := "smtp.gmail.com"
 		port := "587"
@@ -70,11 +71,19 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 
 		url := "http://localhost:3000/reset/" + token
 
-		message := []byte("click <a href=\"" + url + "\">here</a> to reset your password!")
+		message := []byte("click \"" + url + "\" to reset your password!")
+
+		fromMsg := fmt.Sprintf("From: <%s>\r\n", from)
+		toMsg := fmt.Sprintf("To: <%s>\r\n", to)
+		subject := "Subject: Reset your password\r\n"
+		body := string(message)
+
+		msg := fromMsg + toMsg + subject + "\r\n" + body
 
 		auth := smtp.PlainAuth("", from, password, host)
 
-		err3 := smtp.SendMail(address, auth, from, to, message)
+		err3 := smtp.SendMail(host+":"+port, auth, from, to, []byte(msg))
+
 
 		if err3 != nil {
 			log.Println(err3)
@@ -87,6 +96,7 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 			fmt.Println(e)
 		}
 		fmt.Println("res : ", res2)
+		emailGiven = email
 
 	})
 }
@@ -119,7 +129,6 @@ func resetHandler(c *ent.Client) http.Handler {
 		var userData struct {
 			GivenPassword        string `json:"GivenPassword"`
 			GivenPasswordConfirm string `json:"GivenPasswordConfirm"`
-			GivenID              int    `json:"GivenID"`
 		}
 
 		err = json.Unmarshal(buf, &userData)
@@ -134,8 +143,7 @@ func resetHandler(c *ent.Client) http.Handler {
 
 		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.GivenPassword), 14)
 
-		newUser := c.User.
-			Update().Where(user.ID(userData.GivenID)).
+		newUser := c.User.Update().Where(user.Email(emailGiven)).
 			SetPassword(string(bcrypedPassword)).
 			SaveX(r.Context())
 		fmt.Println("new user added:", newUser)

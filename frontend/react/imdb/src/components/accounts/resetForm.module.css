@@ -33,7 +33,7 @@
     border-radius: 4px;
     border: 1px solid #ccc;
     padding: 0.25rem;
-    width: 30%
+    width: 100%
 }
 
 .ctrl2 input{
@@ -108,29 +108,9 @@
 .ctrl label,
 .control label {
     display: block;
-    color: #1c0907;
+    color: yellow;
     font-weight: bold;
     margin-bottom: 0.5rem;
 }
 
-.birthday {
-    color: #1c0907;
-    font-weight: bold;
-}
 
-.year {
-    width: 2cm;
-}
-
-.month {
-    width: 2cm;
-}
-
-.day {
-    width: 2cm;
-}
-
-.genderLabel {
-    font-weight: bolder;
-    color: black;
-}

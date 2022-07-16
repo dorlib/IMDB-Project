@@ -5,7 +5,7 @@ import {Marginer} from "../marginer";
 import {Typography} from "@mui/material";
 import {Button, Stack} from "@mui/material";
 import Card from "../ui/Card";
-import classes from "./SignupForm.module.css";
+import classes from "./resetForm.module.css";
 import {styled} from "@mui/material/styles";
 
 
@@ -17,7 +17,6 @@ function ResetForm(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const userData = {
-            token: props.match.params.token,
             givenPassword,
             givenPasswordConfirm
         };
@@ -35,7 +34,7 @@ function ResetForm(props) {
             })
             .then((data) => {
                 setSpinner(false);
-                console.log('new user added')
+                console.log('password updated')
                 window.location.replace("/register-sign-in/")
             })
     }
@@ -47,13 +46,13 @@ function ResetForm(props) {
     return (
         <BoxContainer>
             <Card>
-                <Typography variant="h6" align="center" color="#1c0907">
+                <Typography variant="h6" align="center" color="yellow">
                     Reset Your Password!
                 </Typography>
                 <form className={classes.form} onSubmit={handleSubmit}>
 
                     <div className={classes.ctrl}>
-                        <label htmlFor="password">Choose Your New Password (8 characters minimum)</label>
+                        <label htmlFor="password" >Choose Your New Password (8 characters minimum)</label>
                         <input type="password" id="password" name="password" minLength="8" value={givenPassword}
                                onChange={event => setPassword(event.target.value)}
                                autoComplete="new-password"/>
@@ -67,7 +66,7 @@ function ResetForm(props) {
                     </div>
 
                     <Marginer direction="vertical" margin={10}/>
-                    <SubmitButton type="submit" value="submit" >{spinner? 'loading...' : 'Sign In!'}</SubmitButton>
+                    <SubmitButton type="submit" value="submit" disabled={givenPassword !== givenPasswordConfirm}>{spinner? 'loading...' : 'Reset!'}</SubmitButton>
                 </form>
             </Card>
             <Marginer direction="vertical" margin="0.3em"/>
