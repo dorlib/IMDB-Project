@@ -67,6 +67,7 @@ export function ForgotForm() {
                     </div>
                 </Card>
                 <Typography className={classes.err}>{loginError? 'submit was not successful... please try again': null}</Typography>
+                <h4 className={classes.err}>{success? 'Email sent, check Your Email': null}</h4>
                 <Marginer direction="vertical" margin={45}/>
                 <SubmitButton type="submit" value="submit" style={{display: "flex", marginLeft: "1.9cm", marginRight: "1.9cm", marginTop: "0.3cm"}}>{spinner? 'loading...' : 'Submit!'}</SubmitButton>
             </form>

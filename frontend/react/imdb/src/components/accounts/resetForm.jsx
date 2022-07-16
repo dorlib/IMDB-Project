@@ -35,7 +35,7 @@ function ResetForm(props) {
             .then((data) => {
                 setSpinner(false);
                 console.log('password updated')
-                // window.location.replace("/register-sign-in/")
+                window.location.replace("/register-sign-in/")
             })
     }
 
