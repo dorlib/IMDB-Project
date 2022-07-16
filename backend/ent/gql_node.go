@@ -102,22 +102,14 @@ func (c *Comment) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     c.ID,
 		Type:   "Comment",
-		Fields: make([]*Field, 2),
+		Fields: make([]*Field, 1),
 		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
-	if buf, err = json.Marshal(c.Topic); err != nil {
-		return nil, err
-	}
-	node.Fields[0] = &Field{
-		Type:  "string",
-		Name:  "topic",
-		Value: string(buf),
-	}
 	if buf, err = json.Marshal(c.Text); err != nil {
 		return nil, err
 	}
-	node.Fields[1] = &Field{
+	node.Fields[0] = &Field{
 		Type:  "string",
 		Name:  "text",
 		Value: string(buf),
@@ -389,7 +381,7 @@ func (r *Review) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     r.ID,
 		Type:   "Review",
-		Fields: make([]*Field, 3),
+		Fields: make([]*Field, 5),
 		Edges:  make([]*Edge, 4),
 	}
 	var buf []byte
@@ -415,6 +407,22 @@ func (r *Review) Node(ctx context.Context) (node *Node, err error) {
 	node.Fields[2] = &Field{
 		Type:  "int",
 		Name:  "rank",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(r.NumOfLikes); err != nil {
+		return nil, err
+	}
+	node.Fields[3] = &Field{
+		Type:  "int",
+		Name:  "num_of_likes",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(r.NumOfComments); err != nil {
+		return nil, err
+	}
+	node.Fields[4] = &Field{
+		Type:  "int",
+		Name:  "num_of_comments",
 		Value: string(buf),
 	}
 	node.Edges[0] = &Edge{

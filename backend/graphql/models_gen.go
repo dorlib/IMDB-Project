@@ -8,8 +8,7 @@ type ActorInput struct {
 }
 
 type CommentInput struct {
-	Topic string `json:"topic"`
-	Text  string `json:"text"`
+	Text string `json:"text"`
 }
 
 type DirectorInput struct {

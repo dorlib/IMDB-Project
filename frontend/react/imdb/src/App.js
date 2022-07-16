@@ -21,6 +21,8 @@ import Last5Added from "./components/movies/last5-added";
 import MoviesByGenre from "./components/movies/movies-by-genre";
 import ResetForm from "./components/accounts/resetForm";
 import UserPage from "./pages/userPage";
+import EditDetails from "./components/accounts/editDetails";
+
 
 import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
 
@@ -42,6 +44,12 @@ function App() {
     const [userProfileImage, setUserProfileImage] = useState('https://hope.be/wp-content/uploads/2015/05/no-user-image.gif')
     const [userId, setUserId] = useState(0)
     const [userNickname, setUserNickname] = useState('')
+    const [userLastName, setUserLastName] = useState('')
+    const [userCountry, setUserCountry] = useState('')
+    const [userEmail, setUserEmail] = useState('')
+    const [userBirthday, setUserBirthday] = useState('')
+    const [userDescription, setUserDescription] = useState('')
+    const [userGender, setUserGender] = useState('')
 
 
     useEffect(() => {
@@ -58,8 +66,14 @@ function App() {
                     .then((data) => {
                         console.log(data)
                         setUserId(data["0"]["id"])
+                        setUserGender(data["0"]["gender"])
                         setUserFirstName(data["0"]["firstname"])
                         setUserNickname(data["0"]["nickname"])
+                        setUserCountry(data["0"]["country"])
+                        setUserEmail(data["0"]["email"])
+                        setUserBirthday(data["0"]["birthDay"])
+                        setUserDescription(data["0"]["description"])
+                        setUserLastName(data["0"]["lastname"])
                         if (data["0"]["profile"] !== '') {
                             setUserProfileImage(data["0"]["profile"])
                         }
@@ -75,13 +89,14 @@ function App() {
                     <Route path="/" element={<><Welcome/><Last5Added/></>}/>
                     <Route path="/movies" element={<AllMoviesPage userID={userId}/>}/>
                     <Route path="/directors" element={<AllDirectorsPage/>}/>
-                    <Route path="/new-movie" element={<NewMovieForm/>}/>
+                    <Route path="/new-movie" element={<NewMovieForm userId={userId}/>}/>
                     <Route path="/favorites" element={<FavoritesPage userID={userId}/>}/>
                     <Route path='/top10' element={<Top10Page userID={userId}/>}/>
                     <Route path='/directorPage/:id' element={<DirectorPage userID={userId}/>}/>
-                    <Route path="/moviePage/:id" element={<><UpdateRank userID={userId}/><HoverRating/><ShowReviews/><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>}/>
+                    <Route path="/moviePage/:id" element={<><UpdateRank userID={userId}/><HoverRating/><ShowReviews userID={userId}/><NewReviewForm username={userFirstName} userId={userId} nickname={userNickname} profile={userProfileImage}/></>}/>
                     <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
-                    <Route path='/register-sign-in' element={<AccountBox/>}/>
+                    <Route path='/register-sign-in' element={<><AccountBox/><div>&ensp;</div></>}/>
+                    <Route path='/editUserDetails/:id' element={<EditDetails firstname={userFirstName} lastname={userLastName} nickname={userNickname} description={userDescription} birthday={userBirthday} email={userEmail} profile={userProfileImage} userID={userId} country={userCountry} gender={userGender}/>}/>
                     <Route path='/reset/:token' element={<ResetForm LoggedInUser={userId}/>}/>
                     <Route path='/userPage/:id' element={<UserPage LoggedInUser={userId}/>}/>
                 </Routes>

@@ -14,7 +14,6 @@ type Comment struct {
 // Fields of the Comment.
 func (Comment) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("topic"),
 		field.String("text"),
 	}
 }
@@ -23,7 +22,8 @@ func (Comment) Fields() []ent.Field {
 func (Comment) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("user", User.Type).
-			Ref("comments"),
-		edge.To("review", Review.Type),
+			Ref("comments").
+			Unique(),
+		edge.To("review", Review.Type).Unique(),
 	}
 }

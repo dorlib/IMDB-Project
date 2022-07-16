@@ -1,0 +1,124 @@
+.item {
+    display: flex;
+    position: relative;
+    right: 1.5cm;
+    width: 40cm;
+    top: -1cm;
+    border-radius: 12px;
+}
+
+.text {
+    font-size: large;
+}
+
+.control input,
+.control textarea {
+    display: flex;
+    position: relative;
+    font: inherit;
+    border-radius: 10px;
+    border: 5px solid rgba(255, 255, 255, 0.87);
+    height: 2cm;
+    line-height: 0.8cm;
+    padding: 0.25rem;
+    width: 80%;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+
+
+}
+
+.control {
+    margin-bottom: 0.5rem;
+
+}
+
+.im label,
+.ctrl label,
+.control label {
+    display: block;
+    color: yellow;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.addReviewBut {
+    display: flex;
+    position: relative;
+    width: 10cm;
+    margin-bottom: 2cm;
+    margin-top: 0.4cm;
+    margin-right: 3.3cm;
+    bottom: -3.2cm;
+}
+
+.main{
+    position: relative;
+    display: flex;
+    left: 33%;
+    font-size: x-large;
+}
+
+.form {
+    position: relative;
+    width: 19cm;
+    top: 0.4cm;
+    left: 0.3cm;
+    background-color: #cc2062;
+}
+
+.actions button {
+    position: absolute;
+    display: flex;
+    top: 1.9cm;
+    margin-top: -0.1cm;
+    right: -2.7cm;
+    font: inherit;
+    width: 2.5cm;
+    height: 0.8cm;
+    cursor: pointer;
+    background-color: #77002e;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #77002e;
+    border-radius: 300px;
+    font-weight: bold;
+}
+
+.actions button:hover,
+.actions button:active {
+    background-color: #a50e48;
+    border-color: #a50e48;
+}
+
+.or {
+    position: relative;
+    width: 20cm;
+    display: flex;
+    left: 3.7cm;
+    bottom: 0.24cm;
+    margin-bottom: -1cm;
+    color: white;
+}
+
+.regBut {
+    display: flex;
+    position: relative;
+    top: 0.4cm;
+    left: 1cm;
+    border-radius: 30px;
+}
+
+.signBut {
+    display: flex;
+    position: relative;
+    top: 0.57cm;
+    left: 5.5cm;
+    border-radius: 30px;
+}
+
+.add {
+    display: flex;
+    position: relative;
+    bottom: -0.4cm;
+}

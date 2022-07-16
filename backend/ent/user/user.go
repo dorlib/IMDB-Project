@@ -44,11 +44,13 @@ const (
 	ReviewsInverseTable = "reviews"
 	// ReviewsColumn is the table column denoting the reviews relation/edge.
 	ReviewsColumn = "user_reviews"
-	// CommentsTable is the table that holds the comments relation/edge. The primary key declared below.
-	CommentsTable = "user_comments"
+	// CommentsTable is the table that holds the comments relation/edge.
+	CommentsTable = "comments"
 	// CommentsInverseTable is the table name for the Comment entity.
 	// It exists in this package in order to avoid circular dependency with the "comment" package.
 	CommentsInverseTable = "comments"
+	// CommentsColumn is the table column denoting the comments relation/edge.
+	CommentsColumn = "user_comments"
 	// LikesTable is the table that holds the likes relation/edge. The primary key declared below.
 	LikesTable = "user_likes"
 	// LikesInverseTable is the table name for the Like entity.
@@ -73,9 +75,6 @@ var Columns = []string{
 }
 
 var (
-	// CommentsPrimaryKey and CommentsColumn2 are the table columns denoting the
-	// primary key for the comments relation (M2M).
-	CommentsPrimaryKey = []string{"user_id", "comment_id"}
 	// LikesPrimaryKey and LikesColumn2 are the table columns denoting the
 	// primary key for the likes relation (M2M).
 	LikesPrimaryKey = []string{"user_id", "like_id"}

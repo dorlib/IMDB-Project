@@ -1,7 +1,7 @@
 .rev {
     background-color: #cc2062;
     color: white;
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0 ;
     padding: 0 1rem;
     margin-left: 0.5rem;
     margin-bottom: 1.4rem;
@@ -10,13 +10,12 @@
 }
 
 .item {
-    top: 1cm;
+    top: -1cm;
     border-radius: 12px;
-    display: flex;
     position: relative;
-    right: 1.5cm;
-    margin-top: 0.3cm;
-    width: 20cm;
+    right: 2.5cm;
+    width: 21cm;
+    margin-bottom: -3cm;
 }
 
 .text {
@@ -27,8 +26,7 @@
     position: absolute;
     display: flex;
     right: -1.5cm;
-    bottom: 2.88cm;
-
+    top: 0.1cm;
 }
 
 .topic {
@@ -38,18 +36,18 @@
 .thumb{
     position: absolute;
     display: flex;
-    left: 15.3cm;
+    left: 6.7cm;
     font-size: x-large;
-    top: 0.4cm;
+    top: -0.03cm;
     color: #fcb8d2;
 }
 
 .comment{
     position: absolute;
     display: flex;
-    left: 11.9cm;
+    left: 6cm;
     font-size: x-large;
-    top: 0.5cm;
+    top: 0.05cm;
     color: #fcb8d2;
 }
 
@@ -61,8 +59,8 @@
     border-radius: 10px;
     padding: 0 0.4rem;
     margin-left: 0.5rem;
-    top: 3.68cm;
-    left: 18.6cm;
+    top: 0.5cm;
+    left: 19cm;
 }
 
 
@@ -74,14 +72,174 @@
     border-radius: 10px;
     padding: 0 0.4rem;
     margin-left: 0.5rem;
-    top: 3.68cm;
-    left: 16.88cm;
+    top: 0.5cm;
+    left: 16.38cm;
 }
 
 .showComments {
     display: flex;
     position: relative;
     margin-top: -0.4cm;
-    left: 6.2cm;
+    left: 5.9cm;
     top: 0.6cm;
+}
+
+.msg {
+    display: flex;
+    position: absolute;
+    z-index: 999999;
+    color: darkred;
+    margin-top: -1.2cm;
+    background-color: snow;
+    border-radius: 20px;
+    width: 8cm;
+    height: 0.3cm;
+    margin-left: 9cm;
+
+}
+
+.close {
+    position: relative;
+    left: 1cm;
+    bottom: 0.14cm;
+}
+
+.actions button {
+    font: inherit;
+    cursor: pointer;
+    background-color: #77002e;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #77002e;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.control input,
+.control textarea {
+    display: flex;
+    position: relative;
+    font: inherit;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.87);
+    padding: 0.25rem;
+    width: 200%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+}
+
+.control {
+    margin-bottom: 0.5rem;
+}
+
+.im label,
+.ctrl label,
+.control label {
+    display: block;
+    color: yellow;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.controlEdit input,
+.controlEdit textarea {
+    display: flex;
+    position: absolute;
+    font: inherit;
+    border-radius: 10px;
+    border: 5px solid rgba(255, 255, 255, 0.87);
+    height: 1.7cm;
+    line-height: 0.5cm;
+    padding: 0.25rem;
+    width: 70%;
+    margin-top: -1rem;
+    top: -2.3cm;
+    margin-bottom: 1rem;
+    right: 2.4cm;
+}
+
+.controlEditTopic input,
+.controlEditTopic textarea {
+    display: flex;
+    position: absolute;
+    font: inherit;
+    border-radius: 10px;
+    border: 5px solid rgba(255, 255, 255, 0.87);
+    height: 1cm;
+    line-height: 0.5cm;
+    padding: 0.25rem;
+    width: 50%;
+    margin-top: -1rem;
+    top: -4.1cm;
+    margin-bottom: 1rem;
+    right: 6.1cm;
+}
+
+.ctrlEditRank input {
+    position: absolute;
+    display: block;
+    font: inherit;
+    font-size: 23px;
+    border-radius: 14px;
+    border: 1px solid #ccc;
+    padding: 0.25rem;
+    height: 1.4cm;
+    width: 8%;
+    bottom: 3.55cm;
+    left: 17.8cm;
+}
+
+.controlEdit {
+    margin-bottom: 0.5rem;
+}
+
+.im label,
+.ctrl label,
+.controlEdit label {
+    display: block;
+    color: yellow;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+
+.formEdit {
+    position: absolute;
+    width: 19cm;
+    top: 5cm;
+    left: -0.9cm;
+}
+
+.actionsEdit button {
+    position: absolute;
+    display: flex;
+    margin-top: -0.9cm;
+    font: inherit;
+    width: 2.8cm;
+    left: 17cm;
+    top: -0.56cm;
+    cursor: pointer;
+    background-color: #77002e;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #77002e;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.cancel {
+    position: absolute;
+    display: flex;
+    left: 1.6cm;
+    bottom: 1cm;
+    background-color: white;
+    width: 1cm;
+    height: 0.8cm;
+    border-radius: 30px;
+}
+
+.addReviewButEdit {
+    position: absolute;
+    display: flex;
 }

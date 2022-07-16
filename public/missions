@@ -7,8 +7,11 @@
 # add option to crop profile image  (include updateUserImage resolver)     ### TOP PRIORITY
 
 # forgot my password fitcher -- email process with nodemailer           ### TOP PRIORITY
+# about the mail servise - consider making variable for go run ./server with email and password and update readme
+# using the gsmp directly with real account and password
+# READ ABOUT ENVIROMENTAL VARIABLES
 
-# make review system by users (show their name and avatar)  -- likes and comments for reviews     ### TOP PRIORITY
+# make review system by users, edit review, delete review, show who made a like    ### TOP PRIORITY
 
 # add warning massage before insert data
 
@@ -20,11 +23,11 @@
 
 # tab indexses
 
-# after creating user, dont redirect to user page, redirect to login and thank you for signup massage, and after 1.5 seconds redirect to login    ### TOP PRIORITY
-
 # make the app match any screen size       ### TOP PRIORITY
 
 # add option to add actors (clip open in tab)
+
+# EMAIL INPUT TWISE AND CHECK IF THEY ARE THE SAME WHEN CREATING USER
 
 # add a connection between movies and users - we want to know who contributed each movie
 

@@ -10,6 +10,7 @@ import (
 	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
+	"imdbv2/ent/like"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -47,6 +48,8 @@ func (r *mutationResolver) CreateReview(ctx context.Context, text string, rank i
 		SetMovieID(movieID).
 		SetUserID(userID).
 		SetUser(user).
+		SetNumOfLikes(0).
+		SetNumOfComments(0).
 		Save(ctx)
 }
 
@@ -251,19 +254,31 @@ func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, nam
 	return newActor, nil
 }
 
-func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, topic string, text string) (*ent.Comment, error) {
-	userData := r.client.User.GetX(ctx, userID)
+func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, text string) (*ent.Comment, error) {
 	reviewData := r.client.Review.GetX(ctx, reviewID)
+	numOfCommentsBefore := reviewData.NumOfComments
+
+	r.client.Review.UpdateOneID(reviewID).SetNumOfComments(numOfCommentsBefore + 1).SaveX(ctx)
 
 	return r.client.Comment.Create().
-		SetTopic(topic).
 		SetText(text).
-		AddUser(userData).
-		AddReview(reviewData).
+		SetReviewID(reviewID).
+		SetUserID(userID).
 		Save(ctx)
 }
 
-func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, userID int) (int, error) {
+func (r *mutationResolver) EditComment(ctx context.Context, commentID int, text string) (*ent.Comment, error) {
+	return r.client.Comment.UpdateOneID(commentID).
+		SetText(text).
+		Save(ctx)
+}
+
+func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, reviewID int, userID int) (int, error) {
+	reviewData := r.client.Review.GetX(ctx, reviewID)
+	numOfCommentsBefore := reviewData.NumOfComments
+
+	r.client.Review.UpdateOneID(reviewID).SetNumOfComments(numOfCommentsBefore - 1).SaveX(ctx)
+
 	userIdOfComment := r.client.Comment.GetX(ctx, commentID).QueryUser().OnlyIDX(ctx)
 	if userIdOfComment == userID {
 		comment := r.client.Comment.GetX(ctx, commentID)
@@ -281,9 +296,27 @@ func (r *queryResolver) CommentsOfReview(ctx context.Context, reviewID int) ([]*
 	return data, nil
 }
 
+func (r *queryResolver) LikesOfUser(ctx context.Context, UserID int) ([]*ent.Like, error) {
+	data := r.client.Like.Query().Where(like.UserID(UserID)).AllX(ctx)
+	return data, nil
+}
+
+func (r *queryResolver) TotalLikesOfReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Like, error) {
+	data := r.client.Movie.Query().Where(movie.ID(movieID)).QueryReviews().QueryLikes().AllX(ctx)
+	return data, nil
+}
+
+func (r *queryResolver) LikeByUserAndReview(ctx context.Context, userID int, reviewID int) (*ent.Like, error) {
+	data := r.client.Like.Query().Where(like.UserID(userID)).Where(like.ReviewID(reviewID)).OnlyX(ctx)
+	return data, nil
+}
+
 func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error) {
 	userData := r.client.User.GetX(ctx, userID)
 	reviewData := r.client.Review.GetX(ctx, reviewID)
+	numOfLikesBefore := reviewData.NumOfLikes
+
+	r.client.Review.UpdateOne(reviewData).SetNumOfLikes(numOfLikesBefore + 1).SaveX(ctx)
 
 	return r.client.Like.Create().
 		SetUserID(userID).
@@ -293,11 +326,62 @@ func (r *mutationResolver) AddLike(ctx context.Context, userID int, reviewID int
 		Save(ctx)
 }
 
-func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID int) (int, error) {
-	userIdOfLike := r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
+func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID int, reviewID int) ([]*ent.Like, error) {
+	reviewData := r.client.Review.GetX(ctx, reviewID)
+	numOfLikesBefore := reviewData.NumOfLikes
+	r.client.Review.UpdateOne(reviewData).SetNumOfLikes(numOfLikesBefore - 1).SaveX(ctx)
+
+	var userIdOfLike = r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
 	if userIdOfLike == userID {
 		like := r.client.Like.GetX(ctx, likeID)
 		r.client.Like.DeleteOne(like).ExecX(ctx)
+	}
+
+	data, err := r.client.Like.Query().Where(like.UserID(userID)).All(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+	return data, nil
+}
+
+func (r *mutationResolver) UpdateUserDetails(ctx context.Context, userID int, firstname string, lastname string, nickname string, description string, profile string, email string, birthday string, country string, gender string) (*ent.User, error) {
+	updatedUser := r.client.User.UpdateOneID(userID).
+		SetFirstname(firstname).
+		SetLastname(lastname).
+		SetNickname(nickname).
+		SetProfile(profile).
+		SetGender(gender).
+		SetDescription(description).
+		SetCountry(country).
+		SetEmail(email).
+		SetBirthDay(birthday).
+		SaveX(ctx)
+
+	return updatedUser, nil
+}
+
+func (r *mutationResolver) EditReview(ctx context.Context, reviewID int, rank int, text string, topic string) (*ent.Review, error) {
+	return r.client.Review.UpdateOneID(reviewID).
+		SetText(text).
+		SetRank(rank).
+		SetTopic(topic).
+		Save(ctx)
+}
+
+func (r *mutationResolver) DeleteReview(ctx context.Context, reviewID int, userID int) (int, error) {
+	// when we delete a review we need to delete the comments of that review
+	userIdOfReview := r.client.Review.GetX(ctx, reviewID).QueryUser().OnlyIDX(ctx)
+	rev := r.client.Review.GetX(ctx, reviewID)
+
+	if userIdOfReview == userID {
+		// here we get an array of ids of comments that need to be deleted
+		commentsOfReview := r.client.Review.QueryComments(rev).IDsX(ctx)
+		// here we delete every comment from the list
+		for i := 0; i < len(commentsOfReview); i++ {
+			r.client.Comment.DeleteOneID(commentsOfReview[i])
+		}
+
+		r.client.Review.DeleteOne(rev).ExecX(ctx)
 	}
 
 	return userID, nil

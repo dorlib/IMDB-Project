@@ -84,10 +84,10 @@ export function SignUpForm(props) {
     let ThankYouMassage = (
         <div>
             <CardContent className={classes.about}>
-                <EditIcon className={classes.editDetailsBut}/>
-                <Typography component="div">
-                    Thank You {givenFirstName} for signing up and welcome to IMDB !
+                <Typography component="div" style={{marginLeft: "1.7cm"}}>
+                    Thanks {givenFirstName} for signing up and welcome to IMDB !
                 </Typography>
+                <pre><Typography style={{marginTop: "0.6cm", position: "absolute", display: "flex", left: "6cm", fontSize: "15px"}}>Redirecting...</Typography></pre>
             </CardContent>
         </div>
     )
@@ -117,7 +117,7 @@ export function SignUpForm(props) {
                                onChange={event => setNickName(event.target.value)}/>
                     </div>
 
-                    <InputLabel id="demo-simple-select-label" className={classes.genderLabel}>Gender</InputLabel>
+                    <label id="demo-simple-select-label" className={classes.genderLabel}>Gender</label>
                     <Select
                         htmlFor="gender"
                         id="gender"
@@ -125,7 +125,7 @@ export function SignUpForm(props) {
                         value={givenGender}
                         placeholder="gender"
                         onChange={handleChange}
-                        style={{width: "4cm", height: "1cm", marginBottom: "0.3cm"}}
+                        style={{width: "4cm", height: "1cm", marginBottom: "0.3cm", backgroundColor: "white"}}
                     >
                         <MenuItem value={'male'}>Male</MenuItem>
                         <MenuItem value={'female'}>Female</MenuItem>
@@ -158,7 +158,7 @@ export function SignUpForm(props) {
                         </label>
                     </Stack>
 
-                    <div className={classes.ctrl2}>
+                    <div className={classes.ctrl2} style={{marginTop: "-0.8cm"}}>
                         <label htmlFor="country">Enter Your Country</label>
                         <input type="text" required id="country" name="country" value={givenCountry}
                                onChange={event => setCountry(event.target.value)} autoComplete="on"/>
@@ -205,7 +205,9 @@ export function SignUpForm(props) {
                                autoComplete="new-password"/>
                     </div>
                     <Marginer direction="vertical" margin={10}/>
-                    <SubmitButton type="submit" value="submit">{spinner ? 'loading...' : 'Sign In!'}</SubmitButton>
+                    <SubmitButton type="submit" value="submit">
+                        {spinner ? 'loading...' : 'Sign In!'}
+                    </SubmitButton>
                 </form>
             </Card>
             <Marginer direction="vertical" margin="0.3em"/>

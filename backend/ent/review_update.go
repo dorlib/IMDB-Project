@@ -56,6 +56,32 @@ func (ru *ReviewUpdate) AddRank(i int) *ReviewUpdate {
 	return ru
 }
 
+// SetNumOfLikes sets the "num_of_likes" field.
+func (ru *ReviewUpdate) SetNumOfLikes(i int) *ReviewUpdate {
+	ru.mutation.ResetNumOfLikes()
+	ru.mutation.SetNumOfLikes(i)
+	return ru
+}
+
+// AddNumOfLikes adds i to the "num_of_likes" field.
+func (ru *ReviewUpdate) AddNumOfLikes(i int) *ReviewUpdate {
+	ru.mutation.AddNumOfLikes(i)
+	return ru
+}
+
+// SetNumOfComments sets the "num_of_comments" field.
+func (ru *ReviewUpdate) SetNumOfComments(i int) *ReviewUpdate {
+	ru.mutation.ResetNumOfComments()
+	ru.mutation.SetNumOfComments(i)
+	return ru
+}
+
+// AddNumOfComments adds i to the "num_of_comments" field.
+func (ru *ReviewUpdate) AddNumOfComments(i int) *ReviewUpdate {
+	ru.mutation.AddNumOfComments(i)
+	return ru
+}
+
 // SetMovieID sets the "movie" edge to the Movie entity by ID.
 func (ru *ReviewUpdate) SetMovieID(id int) *ReviewUpdate {
 	ru.mutation.SetMovieID(id)
@@ -190,12 +216,18 @@ func (ru *ReviewUpdate) Save(ctx context.Context) (int, error) {
 		affected int
 	)
 	if len(ru.hooks) == 0 {
+		if err = ru.check(); err != nil {
+			return 0, err
+		}
 		affected, err = ru.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*ReviewMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = ru.check(); err != nil {
+				return 0, err
 			}
 			ru.mutation = mutation
 			affected, err = ru.sqlSave(ctx)
@@ -235,6 +267,21 @@ func (ru *ReviewUpdate) ExecX(ctx context.Context) {
 	if err := ru.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (ru *ReviewUpdate) check() error {
+	if v, ok := ru.mutation.NumOfLikes(); ok {
+		if err := review.NumOfLikesValidator(v); err != nil {
+			return &ValidationError{Name: "num_of_likes", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_likes": %w`, err)}
+		}
+	}
+	if v, ok := ru.mutation.NumOfComments(); ok {
+		if err := review.NumOfCommentsValidator(v); err != nil {
+			return &ValidationError{Name: "num_of_comments", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_comments": %w`, err)}
+		}
+	}
+	return nil
 }
 
 func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -281,6 +328,34 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: review.FieldRank,
+		})
+	}
+	if value, ok := ru.mutation.NumOfLikes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfLikes,
+		})
+	}
+	if value, ok := ru.mutation.AddedNumOfLikes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfLikes,
+		})
+	}
+	if value, ok := ru.mutation.NumOfComments(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfComments,
+		})
+	}
+	if value, ok := ru.mutation.AddedNumOfComments(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfComments,
 		})
 	}
 	if ru.mutation.MovieCleared() {
@@ -355,10 +430,10 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if ru.mutation.CommentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -371,10 +446,10 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := ru.mutation.RemovedCommentsIDs(); len(nodes) > 0 && !ru.mutation.CommentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -390,10 +465,10 @@ func (ru *ReviewUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := ru.mutation.CommentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -502,6 +577,32 @@ func (ruo *ReviewUpdateOne) SetRank(i int) *ReviewUpdateOne {
 // AddRank adds i to the "rank" field.
 func (ruo *ReviewUpdateOne) AddRank(i int) *ReviewUpdateOne {
 	ruo.mutation.AddRank(i)
+	return ruo
+}
+
+// SetNumOfLikes sets the "num_of_likes" field.
+func (ruo *ReviewUpdateOne) SetNumOfLikes(i int) *ReviewUpdateOne {
+	ruo.mutation.ResetNumOfLikes()
+	ruo.mutation.SetNumOfLikes(i)
+	return ruo
+}
+
+// AddNumOfLikes adds i to the "num_of_likes" field.
+func (ruo *ReviewUpdateOne) AddNumOfLikes(i int) *ReviewUpdateOne {
+	ruo.mutation.AddNumOfLikes(i)
+	return ruo
+}
+
+// SetNumOfComments sets the "num_of_comments" field.
+func (ruo *ReviewUpdateOne) SetNumOfComments(i int) *ReviewUpdateOne {
+	ruo.mutation.ResetNumOfComments()
+	ruo.mutation.SetNumOfComments(i)
+	return ruo
+}
+
+// AddNumOfComments adds i to the "num_of_comments" field.
+func (ruo *ReviewUpdateOne) AddNumOfComments(i int) *ReviewUpdateOne {
+	ruo.mutation.AddNumOfComments(i)
 	return ruo
 }
 
@@ -646,12 +747,18 @@ func (ruo *ReviewUpdateOne) Save(ctx context.Context) (*Review, error) {
 		node *Review
 	)
 	if len(ruo.hooks) == 0 {
+		if err = ruo.check(); err != nil {
+			return nil, err
+		}
 		node, err = ruo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*ReviewMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = ruo.check(); err != nil {
+				return nil, err
 			}
 			ruo.mutation = mutation
 			node, err = ruo.sqlSave(ctx)
@@ -691,6 +798,21 @@ func (ruo *ReviewUpdateOne) ExecX(ctx context.Context) {
 	if err := ruo.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (ruo *ReviewUpdateOne) check() error {
+	if v, ok := ruo.mutation.NumOfLikes(); ok {
+		if err := review.NumOfLikesValidator(v); err != nil {
+			return &ValidationError{Name: "num_of_likes", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_likes": %w`, err)}
+		}
+	}
+	if v, ok := ruo.mutation.NumOfComments(); ok {
+		if err := review.NumOfCommentsValidator(v); err != nil {
+			return &ValidationError{Name: "num_of_comments", err: fmt.Errorf(`ent: validator failed for field "Review.num_of_comments": %w`, err)}
+		}
+	}
+	return nil
 }
 
 func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err error) {
@@ -754,6 +876,34 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: review.FieldRank,
+		})
+	}
+	if value, ok := ruo.mutation.NumOfLikes(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfLikes,
+		})
+	}
+	if value, ok := ruo.mutation.AddedNumOfLikes(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfLikes,
+		})
+	}
+	if value, ok := ruo.mutation.NumOfComments(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfComments,
+		})
+	}
+	if value, ok := ruo.mutation.AddedNumOfComments(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: review.FieldNumOfComments,
 		})
 	}
 	if ruo.mutation.MovieCleared() {
@@ -828,10 +978,10 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 	}
 	if ruo.mutation.CommentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -844,10 +994,10 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 	}
 	if nodes := ruo.mutation.RemovedCommentsIDs(); len(nodes) > 0 && !ruo.mutation.CommentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -863,10 +1013,10 @@ func (ruo *ReviewUpdateOne) sqlSave(ctx context.Context) (_node *Review, err err
 	}
 	if nodes := ruo.mutation.CommentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: true,
 			Table:   review.CommentsTable,
-			Columns: review.CommentsPrimaryKey,
+			Columns: []string{review.CommentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

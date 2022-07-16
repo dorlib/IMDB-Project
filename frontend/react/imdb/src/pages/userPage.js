@@ -17,6 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Box from '@mui/material/Box';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import EditDetails from "../components/accounts/editDetails";
 
 
 import classes from "./userPage.module.css"
@@ -98,6 +99,12 @@ function UserPage(props) {
         </Box>
     );
 
+    const handleClick = () => {
+        return (
+            window.location.replace("/editUserDetails/" + JSON.stringify(id))
+        )
+    }
+
     let Birth =  Birthday.slice(2,4) + '.' + Birthday.slice(0,2) + '.' + Birthday.slice(4,8)
     const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
 
@@ -132,7 +139,7 @@ function UserPage(props) {
 
             </div>
             <Stack direction="row" spacing={2} className={classes.edit}>
-                {props.LoggedInUser === id? <Button variant="edit" className={classes.editBut}>Edit Profile</Button> : null}
+                {props.LoggedInUser === id? <Button variant="edit" className={classes.editBut} onClick={handleClick}>Edit Profile</Button> : null}
             </Stack>
             <React.Fragment>
                 <CardContent style={{backgroundColor: "darkslategray"}} className={classes.mainCard}>

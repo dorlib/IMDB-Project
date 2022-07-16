@@ -1,0 +1,129 @@
+.item {
+    top: -2.5cm;
+    border-radius: 12px;
+    display: flex;
+    position: relative;
+    right: 5cm;
+    width: 10cm;
+    margin-left: 10cm;
+    margin-top: 1cm;
+    margin-bottom: -0.3cm;
+    height: 0.5cm;
+}
+
+.comment {
+    position: relative;
+    display: flex;
+    left: -5cm;
+}
+
+.by {
+    position: relative;
+    display: flex;
+    bottom: -0.9cm;
+    right: 3.3cm;
+}
+
+.text {
+    position: relative;
+    display: flex;
+    bottom: 0.7cm;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.control input,
+.control textarea {
+    display: flex;
+    position: relative;
+    font: inherit;
+    border-radius: 10px;
+    border: 5px solid rgba(255, 255, 255, 0.87);
+    height: 2cm;
+    line-height: 0.8cm;
+    padding: 0.25rem;
+    width: 80%;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+
+
+}
+
+.control {
+    margin-bottom: 0.5rem;
+
+}
+
+.im label,
+.ctrl label,
+.control label {
+    display: block;
+    color: yellow;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.controlEdit input,
+.controlEdit textarea {
+    display: flex;
+    position: absolute;
+    font: inherit;
+    border-radius: 10px;
+    border: 5px solid rgba(255, 255, 255, 0.87);
+    height: 2cm;
+    line-height: 0.8cm;
+    padding: 0.25rem;
+    width: 70%;
+    margin-top: -1rem;
+    top: -2.3cm;
+    margin-bottom: 1rem;
+    right: 2.4cm;
+}
+
+.controlEdit {
+    margin-bottom: 0.5rem;
+}
+
+.im label,
+.ctrl label,
+.controlEdit label {
+    display: block;
+    color: yellow;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+
+.formEdit {
+    position: absolute;
+    width: 19cm;
+    top: 2.8cm;
+    left: -4.5cm;
+    background-color: #cc2062;
+}
+
+.actionsEdit button {
+    position: absolute;
+    display: flex;
+    margin-top: -0.9cm;
+    font: inherit;
+    width: 2.8cm;
+    left: 17cm;
+    top: -0.56cm;
+    cursor: pointer;
+    background-color: #77002e;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #77002e;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.cancel {
+    position: absolute;
+    display: flex;
+    left: 1.8cm;
+    bottom: 3cm;
+    background-color: white;
+    width: 0.01cm;
+    height: 0.01cm;
+}

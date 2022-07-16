@@ -134,3 +134,45 @@ body {
   background-color: #77002e;
 }
 
+.about {
+  position: absolute;
+  display: flex;
+  z-index: 1000;
+  margin-top: 1.6cm;
+  border-radius: 13px;
+  color: yellow;
+  height: 3cm;
+  right: 18cm;
+  width: 22cm;
+  background-color: #cc2062;
+}
+
+.textSure {
+  font-size: x-large;
+}
+
+.no {
+  position: absolute;
+  display: flex;
+  top: 1.5cm;
+  left: 9cm;
+  font-size: large;
+}
+
+.yes {
+  position: absolute;
+  display: flex;
+  top: 1.5cm;
+  left: 11cm;
+  font-size: large;
+}
+
+.pageMask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0,0,0,0.6);
+}
+

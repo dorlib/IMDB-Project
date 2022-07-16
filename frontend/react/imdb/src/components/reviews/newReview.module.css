@@ -3,9 +3,9 @@
     text-align: right;
 }
 .form {
-    padding: 0rem;
     position: relative;
-    bottom: -1cm;
+    padding: 0rem;
+    bottom: 0.9cm;
 }
 
 .actions button {

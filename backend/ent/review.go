@@ -23,6 +23,10 @@ type Review struct {
 	Text string `json:"text,omitempty"`
 	// Rank holds the value of the "rank" field.
 	Rank int `json:"rank,omitempty"`
+	// NumOfLikes holds the value of the "num_of_likes" field.
+	NumOfLikes int `json:"num_of_likes,omitempty"`
+	// NumOfComments holds the value of the "num_of_comments" field.
+	NumOfComments int `json:"num_of_comments,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ReviewQuery when eager-loading is set.
 	Edges        ReviewEdges `json:"edges"`
@@ -96,7 +100,7 @@ func (*Review) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case review.FieldID, review.FieldRank:
+		case review.FieldID, review.FieldRank, review.FieldNumOfLikes, review.FieldNumOfComments:
 			values[i] = new(sql.NullInt64)
 		case review.FieldTopic, review.FieldText:
 			values[i] = new(sql.NullString)
@@ -142,6 +146,18 @@ func (r *Review) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field rank", values[i])
 			} else if value.Valid {
 				r.Rank = int(value.Int64)
+			}
+		case review.FieldNumOfLikes:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field num_of_likes", values[i])
+			} else if value.Valid {
+				r.NumOfLikes = int(value.Int64)
+			}
+		case review.FieldNumOfComments:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field num_of_comments", values[i])
+			} else if value.Valid {
+				r.NumOfComments = int(value.Int64)
 			}
 		case review.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -211,6 +227,10 @@ func (r *Review) String() string {
 	builder.WriteString(r.Text)
 	builder.WriteString(", rank=")
 	builder.WriteString(fmt.Sprintf("%v", r.Rank))
+	builder.WriteString(", num_of_likes=")
+	builder.WriteString(fmt.Sprintf("%v", r.NumOfLikes))
+	builder.WriteString(", num_of_comments=")
+	builder.WriteString(fmt.Sprintf("%v", r.NumOfComments))
 	builder.WriteByte(')')
 	return builder.String()
 }

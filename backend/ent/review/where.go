@@ -113,6 +113,20 @@ func Rank(v int) predicate.Review {
 	})
 }
 
+// NumOfLikes applies equality check predicate on the "num_of_likes" field. It's identical to NumOfLikesEQ.
+func NumOfLikes(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumOfLikes), v))
+	})
+}
+
+// NumOfComments applies equality check predicate on the "num_of_comments" field. It's identical to NumOfCommentsEQ.
+func NumOfComments(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumOfComments), v))
+	})
+}
+
 // TopicEQ applies the EQ predicate on the "topic" field.
 func TopicEQ(v string) predicate.Review {
 	return predicate.Review(func(s *sql.Selector) {
@@ -411,6 +425,158 @@ func RankLTE(v int) predicate.Review {
 	})
 }
 
+// NumOfLikesEQ applies the EQ predicate on the "num_of_likes" field.
+func NumOfLikesEQ(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumOfLikes), v))
+	})
+}
+
+// NumOfLikesNEQ applies the NEQ predicate on the "num_of_likes" field.
+func NumOfLikesNEQ(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldNumOfLikes), v))
+	})
+}
+
+// NumOfLikesIn applies the In predicate on the "num_of_likes" field.
+func NumOfLikesIn(vs ...int) predicate.Review {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Review(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldNumOfLikes), v...))
+	})
+}
+
+// NumOfLikesNotIn applies the NotIn predicate on the "num_of_likes" field.
+func NumOfLikesNotIn(vs ...int) predicate.Review {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Review(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldNumOfLikes), v...))
+	})
+}
+
+// NumOfLikesGT applies the GT predicate on the "num_of_likes" field.
+func NumOfLikesGT(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldNumOfLikes), v))
+	})
+}
+
+// NumOfLikesGTE applies the GTE predicate on the "num_of_likes" field.
+func NumOfLikesGTE(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldNumOfLikes), v))
+	})
+}
+
+// NumOfLikesLT applies the LT predicate on the "num_of_likes" field.
+func NumOfLikesLT(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldNumOfLikes), v))
+	})
+}
+
+// NumOfLikesLTE applies the LTE predicate on the "num_of_likes" field.
+func NumOfLikesLTE(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldNumOfLikes), v))
+	})
+}
+
+// NumOfCommentsEQ applies the EQ predicate on the "num_of_comments" field.
+func NumOfCommentsEQ(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumOfComments), v))
+	})
+}
+
+// NumOfCommentsNEQ applies the NEQ predicate on the "num_of_comments" field.
+func NumOfCommentsNEQ(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldNumOfComments), v))
+	})
+}
+
+// NumOfCommentsIn applies the In predicate on the "num_of_comments" field.
+func NumOfCommentsIn(vs ...int) predicate.Review {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Review(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldNumOfComments), v...))
+	})
+}
+
+// NumOfCommentsNotIn applies the NotIn predicate on the "num_of_comments" field.
+func NumOfCommentsNotIn(vs ...int) predicate.Review {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Review(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldNumOfComments), v...))
+	})
+}
+
+// NumOfCommentsGT applies the GT predicate on the "num_of_comments" field.
+func NumOfCommentsGT(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldNumOfComments), v))
+	})
+}
+
+// NumOfCommentsGTE applies the GTE predicate on the "num_of_comments" field.
+func NumOfCommentsGTE(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldNumOfComments), v))
+	})
+}
+
+// NumOfCommentsLT applies the LT predicate on the "num_of_comments" field.
+func NumOfCommentsLT(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldNumOfComments), v))
+	})
+}
+
+// NumOfCommentsLTE applies the LTE predicate on the "num_of_comments" field.
+func NumOfCommentsLTE(v int) predicate.Review {
+	return predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldNumOfComments), v))
+	})
+}
+
 // HasMovie applies the HasEdge predicate on the "movie" edge.
 func HasMovie() predicate.Review {
 	return predicate.Review(func(s *sql.Selector) {
@@ -473,7 +639,7 @@ func HasComments() predicate.Review {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(CommentsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, CommentsTable, CommentsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.O2M, true, CommentsTable, CommentsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -485,7 +651,7 @@ func HasCommentsWith(preds ...predicate.Comment) predicate.Review {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(CommentsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, CommentsTable, CommentsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.O2M, true, CommentsTable, CommentsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

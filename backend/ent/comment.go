@@ -5,6 +5,8 @@ package ent
 import (
 	"fmt"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/review"
+	"imdbv2/ent/user"
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
@@ -15,39 +17,49 @@ type Comment struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Topic holds the value of the "topic" field.
-	Topic string `json:"topic,omitempty"`
 	// Text holds the value of the "text" field.
 	Text string `json:"text,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the CommentQuery when eager-loading is set.
-	Edges CommentEdges `json:"edges"`
+	Edges          CommentEdges `json:"edges"`
+	comment_review *int
+	user_comments  *int
 }
 
 // CommentEdges holds the relations/edges for other nodes in the graph.
 type CommentEdges struct {
 	// User holds the value of the user edge.
-	User []*User `json:"user,omitempty"`
+	User *User `json:"user,omitempty"`
 	// Review holds the value of the review edge.
-	Review []*Review `json:"review,omitempty"`
+	Review *Review `json:"review,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
 }
 
 // UserOrErr returns the User value or an error if the edge
-// was not loaded in eager-loading.
-func (e CommentEdges) UserOrErr() ([]*User, error) {
+// was not loaded in eager-loading, or loaded but was not found.
+func (e CommentEdges) UserOrErr() (*User, error) {
 	if e.loadedTypes[0] {
+		if e.User == nil {
+			// The edge user was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: user.Label}
+		}
 		return e.User, nil
 	}
 	return nil, &NotLoadedError{edge: "user"}
 }
 
 // ReviewOrErr returns the Review value or an error if the edge
-// was not loaded in eager-loading.
-func (e CommentEdges) ReviewOrErr() ([]*Review, error) {
+// was not loaded in eager-loading, or loaded but was not found.
+func (e CommentEdges) ReviewOrErr() (*Review, error) {
 	if e.loadedTypes[1] {
+		if e.Review == nil {
+			// The edge review was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: review.Label}
+		}
 		return e.Review, nil
 	}
 	return nil, &NotLoadedError{edge: "review"}
@@ -60,8 +72,12 @@ func (*Comment) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case comment.FieldID:
 			values[i] = new(sql.NullInt64)
-		case comment.FieldTopic, comment.FieldText:
+		case comment.FieldText:
 			values[i] = new(sql.NullString)
+		case comment.ForeignKeys[0]: // comment_review
+			values[i] = new(sql.NullInt64)
+		case comment.ForeignKeys[1]: // user_comments
+			values[i] = new(sql.NullInt64)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Comment", columns[i])
 		}
@@ -83,17 +99,25 @@ func (c *Comment) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			c.ID = int(value.Int64)
-		case comment.FieldTopic:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field topic", values[i])
-			} else if value.Valid {
-				c.Topic = value.String
-			}
 		case comment.FieldText:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field text", values[i])
 			} else if value.Valid {
 				c.Text = value.String
+			}
+		case comment.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field comment_review", value)
+			} else if value.Valid {
+				c.comment_review = new(int)
+				*c.comment_review = int(value.Int64)
+			}
+		case comment.ForeignKeys[1]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field user_comments", value)
+			} else if value.Valid {
+				c.user_comments = new(int)
+				*c.user_comments = int(value.Int64)
 			}
 		}
 	}
@@ -133,8 +157,6 @@ func (c *Comment) String() string {
 	var builder strings.Builder
 	builder.WriteString("Comment(")
 	builder.WriteString(fmt.Sprintf("id=%v", c.ID))
-	builder.WriteString(", topic=")
-	builder.WriteString(c.Topic)
 	builder.WriteString(", text=")
 	builder.WriteString(c.Text)
 	builder.WriteByte(')')
