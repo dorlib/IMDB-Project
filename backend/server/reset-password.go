@@ -19,6 +19,8 @@ var PasswordReset struct {
 	Token string `gorm:"unique"`
 }
 
+var emailGiven string
+
 func Forgot(c *ent.Client, email string, password string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
@@ -92,6 +94,7 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 			fmt.Println(e)
 		}
 		fmt.Println("res : ", res2)
+		emailGiven = email
 
 	})
 }
@@ -124,7 +127,6 @@ func resetHandler(c *ent.Client) http.Handler {
 		var userData struct {
 			GivenPassword        string `json:"GivenPassword"`
 			GivenPasswordConfirm string `json:"GivenPasswordConfirm"`
-			GivenID              int    `json:"GivenID"`
 		}
 
 		err = json.Unmarshal(buf, &userData)
@@ -139,8 +141,7 @@ func resetHandler(c *ent.Client) http.Handler {
 
 		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.GivenPassword), 14)
 
-		newUser := c.User.
-			Update().Where(user.ID(userData.GivenID)).
+		newUser := c.User.Update().Where(user.Email(emailGiven)).
 			SetPassword(string(bcrypedPassword)).
 			SaveX(r.Context())
 		fmt.Println("new user added:", newUser)
