@@ -6,8 +6,8 @@
     border-radius: 200px;
     max-height: 40%;
     max-width: 18%;
-    top: 4.5cm;
-    left: 7.5cm;
+    top: 17%;
+    left: 15%;
 }
 
 .changeProfile {
@@ -15,66 +15,66 @@
     display: flex;
     color: yellow;
     font-size: x-large;
-    bottom: 10.9cm;
-    left: 15.9cm;
+    bottom: 44%;
+    left: 29%;
 }
 
 .mainCard {
     position: absolute;
     display: flex;
-    left: 19.8cm;
+    left: 36.5%;
     top: 5cm;
     border-radius: 20px;
-    width: 28cm;
-    height: 10cm;
+    width: 51.5%;
+    height: 38%;
 }
 
 .pined {
     position: absolute;
     display: flex;
-    left: 19.8cm;
-    top: 17cm;
+    left: 36.6%;
+    top: 66.7%;
     border-radius: 20px;
-    width: 13cm;
-    height: 6cm;
+    width: 23%;
+    height: 23.52%;
 }
 
 .contrib {
     position: absolute;
     display: flex;
-    left: 34.8cm;
-    top: 17cm;
+    left: 64%;
+    top: 66.7%;
     border-radius: 20px;
-    width: 13cm;
-    height: 6cm;
+    width: 24%;
+    height: 23.52%;
 }
 
 .desc {
     position: absolute;
     display: flex;
-    left: 1cm;
+    left: 3.5%;
     top: 1.3cm;
 }
 
 .fav {
     position: absolute;
     display: flex;
-    left: 1cm;
-    top: 2.5cm;
+    left: 3.5%;
+    top: 26%;
 }
 
 .birth {
     position: absolute;
     display: flex;
     left: 1cm;
-    top: 3.8cm;
+    top: 39%;
 }
 
 .contact {
     position: absolute;
     display: flex;
-    left: 1cm;
-    top: 5.1cm;
+    left: 3.5%;
+    top: 52%;
 }
 
 .name {
