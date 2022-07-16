@@ -50,8 +50,8 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 		if err2 != nil {
 			log.Fatal("error while querying user by email", err2)
 		}
-
-		if userMail == nil {
+		
+		if userMail == nil || email != Forgot.Email {
 			fmt.Println("email not found")
 			return
 		}

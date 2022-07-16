@@ -49,7 +49,7 @@ function AddComment(props) {
                     ></textarea>
                 </div>
                 <div className={classes.actions}>
-                    {text !== ''? <button onClick={add} className={classes.addReviewBut} type="submit">Add</button>: null}
+                    <button disabled={text === ''} onClick={add} className={classes.addReviewBut}  type="submit">Add</button>
                 </div>
             </form>
     )
