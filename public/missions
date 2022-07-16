@@ -6,12 +6,7 @@
 
 # add option to crop profile image  (include updateUserImage resolver)     ### TOP PRIORITY
 
-# forgot my password fitcher -- email process with nodemailer           ### TOP PRIORITY
-# about the mail servise - consider making variable for go run ./server with email and password and update readme
-# using the gsmp directly with real account and password
-# READ ABOUT ENVIROMENTAL VARIABLES
-
-# make review system by users, edit review, delete review, show who made a like    ### TOP PRIORITY
+# make review system by users, set height properly    ### TOP PRIORITY
 
 # add warning massage before insert data
 

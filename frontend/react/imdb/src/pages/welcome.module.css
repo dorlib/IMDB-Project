@@ -22,16 +22,16 @@ html,body {
     font-size: xx-large;
     color : white;
     position: relative;
-    width: 20cm;
+    width: 100%;
     display: flex;
-    right: 12cm;
+    right: 70%;
 }
 
 .Title {
     position: relative;
-    width: 20cm;
+    width: 120%;
     display: flex;
-    right: 12cm;
+    right: 70%;
 }
 
 .actions {
@@ -50,9 +50,9 @@ html,body {
     border-radius: 60px;
     font-weight: bold;
     position: relative;
-    width: 4cm;
+    width: 23%;
     display: flex;
-    right: 12cm;
+    right: 70%;
 
 }
 
@@ -64,21 +64,20 @@ html,body {
 
 .or {
     position: relative;
-    width: 20cm;
     display: flex;
-    right: 7cm;
-    bottom: 1.7cm;
+    right: 40%;
+    bottom: 4rem;
     color: white;
 }
 
 .fresh {
     display: flex;
     position: absolute;
-    top: 4.2cm;
-    right: 5.8cm;
-    width: 14cm;
+    top: 18%;
+    right: 11%;
+    width: 25%;
     border-radius: 20px;
     color: white;
     background-color: #cc2062;
-    height: 1.4cm;
+    height: 6%;
 }

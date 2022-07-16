@@ -38,10 +38,12 @@ type MovieInput struct {
 }
 
 type ReviewInput struct {
-	Topic   string `json:"topic"`
-	Text    string `json:"text"`
-	Rank    int    `json:"rank"`
-	MovieID int    `json:"movieID"`
+	Topic         string `json:"topic"`
+	Text          string `json:"text"`
+	Rank          int    `json:"rank"`
+	NumOfComments int    `json:"numOfComments"`
+	NumOfLikes    int    `json:"numOfLikes"`
+	MovieID       int    `json:"movieID"`
 }
 
 type UserInput struct {

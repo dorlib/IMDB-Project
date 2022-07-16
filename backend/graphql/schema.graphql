@@ -134,6 +134,8 @@ input ReviewInput {
     topic: String!
     text: String!
     rank: Int!
+    numOfComments: Int!
+    numOfLikes: Int!
     movieID: Int!
 }
 
