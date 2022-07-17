@@ -53,6 +53,8 @@ function SearchBar(props) {
     let menuRef1 = useRef()
     let menuRef2 = useRef()
     let menuRef3 = useRef()
+    let menuRef4 = useRef()
+    let menuRef5 = useRef()
 
 
     const [userId, setUserId] = useState(0);
@@ -62,19 +64,24 @@ function SearchBar(props) {
             if (userId !== 0) {
                 if (menuRef2.current && !menuRef2.current.contains(event.target)) {
                     if (menuRef3.current && !menuRef3.current.contains(event.target)) {
-                        setFilteredData([]);
-                        setWordEntered("")
+                        if (menuRef4.current && !menuRef4.current.contains(event.target)) {
+                            setFilteredData([]);
+                            setWordEntered("")
+                        }
                     }
                 }
             } else {
                 if (menuRef.current && !menuRef.current.contains(event.target)) {
                     if (menuRef1.current && !menuRef1.current.contains(event.target)) {
-                        setFilteredData([]);
-                        setWordEntered("")
+                        if (menuRef5.current && !menuRef5.current.contains(event.target)) {
+                            setFilteredData([]);
+                            setWordEntered("")
+                        }
                     }
                 }
             }
         }
+
         document.addEventListener("mousedown", handler);
 
         return () => {
@@ -84,10 +91,6 @@ function SearchBar(props) {
 
     if (loading1 || loading2 || loading3) return <p>Loading...</p>;
     if (error1 || error2 || error3) return <p>Error :</p>;
-
-    console.log(data1)
-    console.log(data2)
-    console.log(data3)
 
     let loaded
 
@@ -134,7 +137,6 @@ function SearchBar(props) {
     const HandleChange = (event) => {
         let input
         input = event.target.value
-        console.log(input)
         if (input === "GET_MOVIES") {
             setSearchBy("movies")
             setPlaceholder("Enter Movie Name")
@@ -172,8 +174,6 @@ function SearchBar(props) {
         console.log(userId)
     }
 
-    console.log(userId)
-
     // this main navigation will be returned if user is NOT logged in
     if (!userId || userId === 0) {
         return (
@@ -183,9 +183,9 @@ function SearchBar(props) {
                         <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
                         <div className={classes.searchIcon}>
                             {wordEntered.length === 0 ? (
-                                <Button><SearchIcon style={{marginLeft:"-0.8cm"}}/></Button>
+                                <Button><SearchIcon style={{marginLeft:"-2rem"}}/></Button>
                             ) : (
-                                <Button><CloseIcon id={"ClearBtn"} onClick={clearInput} style={{marginLeft:"-0.8cm"}}/></Button>
+                                <Button><CloseIcon id={"ClearBtn"} onClick={clearInput} style={{marginLeft:"-2rem"}}/></Button>
                             )}
                         </div>
                     </div>
@@ -196,7 +196,7 @@ function SearchBar(props) {
                     )}
                 </div>
                 <FormControl>
-                    <RadioGroup className={classes.by} row>
+                    <RadioGroup className={classes.by} ref={menuRef5} row>
                         <FormControlLabel
                             value="GET_MOVIES"
                             control={<Radio/>}
@@ -229,9 +229,9 @@ function SearchBar(props) {
                     <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
                     <div className={classes.loggedSearchIcon}>
                         {wordEntered.length === 0 ? (
-                            <Button><SearchIcon style={{marginLeft:"-0.8cm"}}/></Button>
+                            <Button><SearchIcon style={{marginLeft:"-2rem"}}/></Button>
                         ) : (
-                            <Button><CloseIcon id={"ClearBtn"} onClick={clearInput} style={{marginLeft:"-0.8cm"}}/></Button>
+                            <Button><CloseIcon id={"ClearBtn"} onClick={clearInput} style={{marginLeft:"-2rem"}}/></Button>
                         )}
                     </div>
                 </div>
@@ -242,7 +242,7 @@ function SearchBar(props) {
                 )}
             </div>
             <FormControl>
-                <RadioGroup className={classes.loggedBy} row>
+                <RadioGroup className={classes.loggedBy} ref={menuRef4} row>
                     <FormControlLabel
                         value="GET_MOVIES"
                         control={<Radio/>}

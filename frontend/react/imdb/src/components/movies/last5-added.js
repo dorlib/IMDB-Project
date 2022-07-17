@@ -55,10 +55,10 @@ function Last5Added() {
         <div>
             <Card sx={{maxWidth: 600}} style={{
                 backgroundColor: "#cc2062",
-                marginRight: "-15cm",
-                marginLeft: "15cm",
-                marginTop: "-13cm",
-                marginBottom: "13cm",
+                marginRight: "-35.6rem",
+                marginLeft: "35.6rem",
+                marginTop: "-31rem",
+                marginBottom: "31rem",
                 borderRadius: "100px"
             }}>
                 <CardMedia component="img" alt="movie image" height="300" src={data.last5Added["0"]["image"]}
@@ -90,10 +90,10 @@ function Last5Added() {
         <div>
             <Card sx={{maxWidth: 600}} style={{
                 backgroundColor: "#cc2062",
-                marginRight: "-15cm",
-                marginLeft: "15cm",
-                marginTop: "-13cm",
-                marginBottom: "13cm",
+                marginRight: "-35.6rem",
+                marginLeft: "35.6rem",
+                marginTop: "-31rem",
+                marginBottom: "31rem",
                 borderRadius: "100px"
             }}>
                 <CardMedia component="img" alt="movie image" height="300" src={data.last5Added["1"]["image"]}
@@ -125,10 +125,10 @@ function Last5Added() {
         <div>
             <Card sx={{maxWidth: 600}} style={{
                 backgroundColor: "#cc2062",
-                marginRight: "-15cm",
-                marginLeft: "15cm",
-                marginTop: "-13cm",
-                marginBottom: "13cm",
+                marginRight: "-35.6rem",
+                marginLeft: "35.6rem",
+                marginTop: "-31rem",
+                marginBottom: "31rem",
                 borderRadius: "100px"
             }}>
                 <CardMedia component="img" alt="movie image" height="300" src={data.last5Added["2"]["image"]}
@@ -160,10 +160,10 @@ function Last5Added() {
         <div>
             <Card sx={{maxWidth: 600}} style={{
                 backgroundColor: "#cc2062",
-                marginRight: "-15cm",
-                marginLeft: "15cm",
-                marginTop: "-13cm",
-                marginBottom: "13cm",
+                marginRight: "-35.6rem",
+                marginLeft: "35.6rem",
+                marginTop: "-31rem",
+                marginBottom: "31rem",
                 borderRadius: "100px"
             }}>
                 <CardMedia component="img" alt="movie image" height="300" src={data.last5Added["3"]["image"]}
@@ -195,10 +195,10 @@ function Last5Added() {
         <div>
             <Card sx={{maxWidth: 600}} style={{
                 backgroundColor: "#cc2062",
-                marginRight: "-15cm",
-                marginLeft: "15cm",
-                marginTop: "-13cm",
-                marginBottom: "13cm",
+                marginRight: "-35.6rem",
+                marginLeft: "35.6rem",
+                marginTop: "-31rem",
+                marginBottom: "31rem",
                 borderRadius: "100px"
             }}>
                 <CardMedia component="img" alt="movie image" height="300" src={data.last5Added["4"]["image"]}

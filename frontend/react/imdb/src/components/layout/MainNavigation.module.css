@@ -11,18 +11,18 @@
 
 .logo {
   display: flex;
-  position: absolute;
+  position: relative;
   font-size: 2.5rem;
   color: white;
-  margin-right: 6cm;
+  margin-right: 6rem;
   font-weight: bold;
-  top: 0.6cm;
+  top: -0.35rem;
 }
 
 .menu {
-  position: absolute;
+  position: relative;
   display: flex;
-  top: -3.3cm;
+  top: -7.7rem;
   left: 47%;
   color: white;
   background-color: #cc2062;

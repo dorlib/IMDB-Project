@@ -1,7 +1,7 @@
 .searchInput {
     display: flex;
     position: absolute;
-    top: 0.9cm;
+    top: 2.15rem;
 }
 
 .search input {
@@ -12,8 +12,8 @@
     font-size: 18px;
     padding: 15px;
     height: 30px;
-    left: 11.5cm;
-    width: 400px;
+    left: 27.1rem;
+    width: 25rem;
     border: 3px solid #000000;
 
 }
@@ -22,8 +22,8 @@
     display: flex;
     position: absolute;
     height: 36px;
-    width: 40px;
-    left: 22.05cm;
+    width: 2.7rem;
+    left: 52.05rem;
     background-color: white;
     place-items: center;
     border-radius: 0px 10px 10px 0px;
@@ -44,10 +44,10 @@ input:focus {
     position: absolute;
     border: 3px solid #000000;
     border-radius: 15px;
-    left: 11.5cm;
-    bottom: 18.33cm;
+    left: 27rem;
+    bottom: 43.3rem;
     margin-top: 5px;
-    width: 432px;
+    width: 27.7rem;
     height: 200px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -131,11 +131,11 @@ Link:hover {
     position: absolute;
     border: 3px solid #000000;
     border-radius: 15px;
-    left: 11.5cm;
-    bottom: 18.33cm;
+    left: 27.2rem;
+    bottom: 43.3rem;
     margin-top: 5px;
-    width: 570px;
-    height: 200px;
+    width: 35.7rem;
+    height: 12.5rem;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     overflow: hidden;
@@ -146,17 +146,18 @@ Link:hover {
 .loggedBy{
     position: relative;
     display: flex;
-    bottom: 1.03cm;
+    bottom: 2.5rem;
     left: 100.5%;
 }
 
 .loggedDataResult .dataItem {
     width: 100%;
-    height: 50px;
+    height: 3rem;
     display: flex;
     position: relative;
     align-items: center;
     color: black;
+    left: 0.5rem;
 }
 
 .loggedDataResult::-webkit-scrollbar {
