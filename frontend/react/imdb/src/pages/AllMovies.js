@@ -98,9 +98,11 @@ function AllMoviesPage(props) {
                         />
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="div">
-                                <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>
-                                    <Link to={"/moviePage/" + id} style={{color: "yellow"}}> {title}: {rank} /
-                                        100 </Link>
+                                <p style={{color: "yellow", fontSize: "xx-large", textDecoration: "none"}} className={classes.movie}>
+                                    <Link to={"/moviePage/" + id} style={{color: "yellow"}}> {title}</Link>
+                                </p>
+                                <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.rank}>
+                                    {rank} / 100
                                 </p>
                             </Typography>
                             <Typography variant="body2" color="text.secondary"

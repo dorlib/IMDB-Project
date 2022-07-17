@@ -3,10 +3,18 @@
     color: white;
     border-radius: 12px;
     padding: 0 1rem;
-    margin-left: 0.5rem;
+    margin-left: -1rem;
     margin-bottom: 1.4rem;
     display: flex;
-    width: 16.3cm;
+    width: 40rem;
+    text-decoration: none;
+}
+
+.rank {
+    position: absolute;
+    display: flex;
+    margin-top: -6.2rem;
+    margin-left: 27.5rem;
 }
 
 .name {
