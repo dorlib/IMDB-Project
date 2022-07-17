@@ -23,3 +23,12 @@
     right: 27.6cm;
 }
 
+.list {
+    border: 5px solid none;
+    margin-left: -10cm;
+    width: 1400px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 600px);
+    grid-gap: 100px;
+    justify-content: center;
+}

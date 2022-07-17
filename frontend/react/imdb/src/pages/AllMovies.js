@@ -86,7 +86,7 @@ function AllMoviesPage(props) {
                 <div>
                     <Card sx={{maxWidth: 600}} style={{
                         backgroundColor: "#cc2062",
-                        marginBottom: "3cm",
+                        marginBottom: "4rem",
                         borderRadius: "15px",
                         display: "inline-block"
                     }} key={id}>

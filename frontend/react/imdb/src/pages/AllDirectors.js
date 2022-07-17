@@ -35,36 +35,39 @@ function AllDirectorsPage() {
     let loaded
 
     loaded = data.directors.map(({name, id, profileImage, movies}) => (
-        <div>
-            <Card sx={{maxWidth: 600}} style={{backgroundColor: "#cc2062", marginBottom: "3cm", borderRadius: "15px"}} key={id}>
-                <CardMedia
-                    component="img"
-                    alt="movie image"
-                    height="300"
-                    src={profileImage || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>
-                            {name}
-                        </p>
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        {movies.map(({title, id}) => (
-                            <li key={movies.id}>
-                                <Link to={"/moviePage/" + id}  style={{color: "yellow" }}  > {title}: </Link>
-                            </li>
-                        ))}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="large">Share</Button>
-                    <Link to={"/directorPage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Director's Page</Button></Link>
-                </CardActions>
-            </Card>
-        </div>
+        <ul className={classes.list}>
+            <div>
+                <Card sx={{maxWidth: 600}}
+                      style={{backgroundColor: "#cc2062", marginBottom: "4rem", borderRadius: "15px", display: "inherit-block"}} key={id}>
+                    <CardMedia
+                        component="img"
+                        alt="movie image"
+                        height="300"
+                        src={profileImage || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                            <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>
+                                {name}
+                            </p>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" style={{marginLeft: "0.7rem"}}>
+                            {movies.map(({title, id}) => (
+                                <li key={movies.id}>
+                                    <Link to={"/moviePage/" + id} style={{color: "yellow",display: "flex", position: "absolute", left: "26rem"}}> {title} </Link>
+                                </li>
+                            ))}
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
+                        <Button size="large">Share</Button>
+                        <Link to={"/directorPage/" + id} style={{textDecoration: "none"}}><Button size="large">Go To Director's Page</Button></Link>
+                    </CardActions>
+                </Card>
+            </div>
+        </ul>
 
-))
+    ))
 
     return loaded
 }

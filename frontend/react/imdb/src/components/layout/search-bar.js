@@ -53,6 +53,8 @@ function SearchBar(props) {
     let menuRef1 = useRef()
     let menuRef2 = useRef()
     let menuRef3 = useRef()
+    let menuRef4 = useRef()
+    let menuRef5 = useRef()
 
 
     const [userId, setUserId] = useState(0);
@@ -62,15 +64,19 @@ function SearchBar(props) {
             if (userId !== 0) {
                 if (menuRef2.current && !menuRef2.current.contains(event.target)) {
                     if (menuRef3.current && !menuRef3.current.contains(event.target)) {
-                        setFilteredData([]);
-                        setWordEntered("")
+                        if (menuRef4.current && !menuRef4.current.contains(event.target)) {
+                            setFilteredData([]);
+                            setWordEntered("")
+                        }
                     }
                 }
             } else {
                 if (menuRef.current && !menuRef.current.contains(event.target)) {
                     if (menuRef1.current && !menuRef1.current.contains(event.target)) {
-                        setFilteredData([]);
-                        setWordEntered("")
+                        if (menuRef5.current && !menuRef5.current.contains(event.target)) {
+                            setFilteredData([]);
+                            setWordEntered("")
+                        }
                     }
                 }
             }
@@ -196,7 +202,7 @@ function SearchBar(props) {
                     )}
                 </div>
                 <FormControl>
-                    <RadioGroup className={classes.by} row>
+                    <RadioGroup className={classes.by} ref5={menuRef5} row>
                         <FormControlLabel
                             value="GET_MOVIES"
                             control={<Radio/>}
@@ -242,7 +248,7 @@ function SearchBar(props) {
                 )}
             </div>
             <FormControl>
-                <RadioGroup className={classes.loggedBy} row>
+                <RadioGroup className={classes.loggedBy} ref={menuRef4} row>
                     <FormControlLabel
                         value="GET_MOVIES"
                         control={<Radio/>}
