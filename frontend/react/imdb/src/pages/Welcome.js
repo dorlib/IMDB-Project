@@ -29,7 +29,7 @@ function Welcome() {
                 </div>
             </div>
             <CardContent className={classes.fresh}>
-                <Typography component="div" style={{marginLeft: "2.8cm", fontSize: "large"}}>
+                <Typography component="div" style={{marginLeft: "5.5rem", fontSize: "large"}}>
                     Check Out Our Freshly Added Movies!
                 </Typography>
             </CardContent>

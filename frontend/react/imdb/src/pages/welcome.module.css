@@ -72,12 +72,12 @@ html,body {
 
 .fresh {
     display: flex;
-    position: absolute;
-    top: 18%;
-    right: 11%;
-    width: 25%;
+    position: relative;
+    top: -13.6rem;
+    right: -38.5rem;
+    width: 31rem;
     border-radius: 20px;
     color: white;
     background-color: #cc2062;
-    height: 6%;
+    height: 3.5rem;
 }
