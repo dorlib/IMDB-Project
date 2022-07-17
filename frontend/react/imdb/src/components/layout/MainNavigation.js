@@ -213,7 +213,7 @@ function MainNavigation(props) {
                                 <li>
                                     <Link to="/new-movie">Add New Movie</Link>
                                 </li>
-                                <li style={{marginLeft: "1.8cm"}}>
+                                <li style={{marginLeft: "3.5rem"}}>
                                     <Link to="/favorites">
                                         My Favorites
                                         <span className={classes.badge}>
@@ -227,7 +227,7 @@ function MainNavigation(props) {
                                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
                                                 <img
                                                         src={props.profile}
-                                                        style={{width: "2.1cm", height: "2.1cm", borderRadius: "200px", marginLeft: "-0.3cm"}}/>
+                                                        style={{width: "4.5rem", height: "4.5rem", borderRadius: "200px", marginLeft: "-0.3rem"}}/>
                                                 <div style={{
                                                     fontSize: "large",
                                                     color: "#fcb8d2"
@@ -237,7 +237,7 @@ function MainNavigation(props) {
                                             </IconButton>
                                         </Tooltip>
                                         <Menu
-                                            sx={{mt: "45px", top: "0.4cm"}}
+                                            sx={{mt: "45px", top: "2rem", left: "1.3rem"}}
                                             id="menu-appbar"
                                             anchorEl={anchorElUser}
                                             anchorOrigin={{
@@ -286,18 +286,18 @@ function MainNavigation(props) {
                                         style={{
                                             position: "relative",
                                             display: "flex",
-                                            marginLeft: "3.7cm",
+                                            marginLeft: "9rem",
                                             bottom: "50%",
                                             left: "44.8%",
                                             color: "white",
                                             backgroundColor: "#cc2062",
                                             borderRadius: "12px",
-                                            width: "3cm",
-                                            height: "1.2cm"
+                                            width: "7rem",
+                                            height: "2.8rem"
                                         }}>
                                     Menu
                                 </Button>
-                                <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "9cm"}}>
+                                <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "10rem"}}>
                                     <MenuItem style={{backgroundColor: "lightblue"}}><Link to={"/movies"}
                                                                                            style={{textDecoration: "none"}}>All
                                         Movies</Link></MenuItem>

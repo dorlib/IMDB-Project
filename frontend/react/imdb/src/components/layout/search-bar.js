@@ -81,6 +81,7 @@ function SearchBar(props) {
                 }
             }
         }
+
         document.addEventListener("mousedown", handler);
 
         return () => {
@@ -90,10 +91,6 @@ function SearchBar(props) {
 
     if (loading1 || loading2 || loading3) return <p>Loading...</p>;
     if (error1 || error2 || error3) return <p>Error :</p>;
-
-    console.log(data1)
-    console.log(data2)
-    console.log(data3)
 
     let loaded
 
@@ -140,7 +137,6 @@ function SearchBar(props) {
     const HandleChange = (event) => {
         let input
         input = event.target.value
-        console.log(input)
         if (input === "GET_MOVIES") {
             setSearchBy("movies")
             setPlaceholder("Enter Movie Name")
@@ -178,8 +174,6 @@ function SearchBar(props) {
         console.log(userId)
     }
 
-    console.log(userId)
-
     // this main navigation will be returned if user is NOT logged in
     if (!userId || userId === 0) {
         return (
@@ -189,9 +183,9 @@ function SearchBar(props) {
                         <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
                         <div className={classes.searchIcon}>
                             {wordEntered.length === 0 ? (
-                                <Button><SearchIcon style={{marginLeft:"-0.8cm"}}/></Button>
+                                <Button><SearchIcon style={{marginLeft:"-2rem"}}/></Button>
                             ) : (
-                                <Button><CloseIcon id={"ClearBtn"} onClick={clearInput} style={{marginLeft:"-0.8cm"}}/></Button>
+                                <Button><CloseIcon id={"ClearBtn"} onClick={clearInput} style={{marginLeft:"-2rem"}}/></Button>
                             )}
                         </div>
                     </div>
@@ -202,7 +196,7 @@ function SearchBar(props) {
                     )}
                 </div>
                 <FormControl>
-                    <RadioGroup className={classes.by} ref5={menuRef5} row>
+                    <RadioGroup className={classes.by} ref={menuRef5} row>
                         <FormControlLabel
                             value="GET_MOVIES"
                             control={<Radio/>}
@@ -235,9 +229,9 @@ function SearchBar(props) {
                     <input type={"text"} placeholder={placeholder} value={wordEntered} onChange={handleFilter}/>
                     <div className={classes.loggedSearchIcon}>
                         {wordEntered.length === 0 ? (
-                            <Button><SearchIcon style={{marginLeft:"-0.8cm"}}/></Button>
+                            <Button><SearchIcon style={{marginLeft:"-2rem"}}/></Button>
                         ) : (
-                            <Button><CloseIcon id={"ClearBtn"} onClick={clearInput} style={{marginLeft:"-0.8cm"}}/></Button>
+                            <Button><CloseIcon id={"ClearBtn"} onClick={clearInput} style={{marginLeft:"-2rem"}}/></Button>
                         )}
                     </div>
                 </div>
