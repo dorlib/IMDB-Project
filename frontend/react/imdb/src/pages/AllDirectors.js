@@ -34,8 +34,9 @@ function AllDirectorsPage() {
     if (error) return <p style={{color: "yellow"}}>Error :</p>;
     let loaded
 
-    loaded = data.directors.map(({name, id, profileImage, movies}) => (
+    loaded = (
         <ul className={classes.list}>
+            {data.directors.map(({name, id, profileImage, movies}) => (
             <div>
                 <Card sx={{maxWidth: 600}}
                       style={{backgroundColor: "#cc2062", marginBottom: "4rem", borderRadius: "15px", display: "inherit-block"}} key={id}>
@@ -54,7 +55,7 @@ function AllDirectorsPage() {
                         <Typography variant="body2" color="text.secondary" style={{marginLeft: "0.7rem"}}>
                             {movies.map(({title, id}) => (
                                 <li key={movies.id}>
-                                    <Link to={"/moviePage/" + id} style={{color: "yellow",display: "flex", position: "absolute", left: "26rem"}}> {title} </Link>
+                                    <Link to={"/moviePage/" + id} style={{color: "yellow",display: "flex", position: "relative", left: "2%"}}> {title} </Link>
                                 </li>
                             ))}
                         </Typography>
@@ -65,9 +66,10 @@ function AllDirectorsPage() {
                     </CardActions>
                 </Card>
             </div>
+            ))}
         </ul>
 
-    ))
+    )
 
     return loaded
 }
