@@ -41,13 +41,13 @@
   border-radius: 4px;
   border: 1px solid #ccc;
   padding: 0.25rem;
-  width: 30%;
+  width: 40%;
 }
   
   .image {
-    top: 7cm;
+    top: 26.6%;
     width: 100%;
-    height: 20rem;
+    height: 40%;
     overflow: hidden;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
@@ -105,15 +105,15 @@
   height: 420px;
   position: absolute;
   display: flex;
-  left: 3.4cm;
-  bottom: 7.4cm;
+  right: 67.8%;
+  bottom: 30%;
   border-radius: 50px;
 }
 
 .image{
   display: flex;
   position: absolute;
-  margin-bottom: -2.6cm;
+  margin-bottom: -20%;
   max-height: 200%;
   max-width: 200%;
 }
@@ -121,8 +121,8 @@
 .heart {
   display: flex;
   position: absolute;
-  bottom: -1.5cm;
-  right: 14.95cm;
+  bottom: -3.7rem;
+  right: 35.3rem;
 }
 
 .title {
@@ -130,7 +130,7 @@
   color: yellow;
   display: flex;
   position: absolute;
-  top: 3cm;
+  top: 8rem;
 }
 
 .year {
@@ -138,7 +138,7 @@
   position: absolute;
   color: yellow;
   font-size: 25px;
-  top: 19cm;
+  top: 75%;
   left: 4.23cm;
 }
 
@@ -190,4 +190,5 @@
   height: 9cm;
   top: 2cm;
   right: -0.1cm;
+  object-fit: cover;
 }

@@ -169,14 +169,14 @@ function MainNavigation(props) {
                                             }}>
                                         Menu
                                     </Button>
-                                    <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "9cm"}}>
-                                        <MenuItem style={{backgroundColor: "lightblue"}}><Link to={"/movies"}
+                                    <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "10rem", boxShadow: "5px 10px 20px rgba(0,0,0,0.5)"}}>
+                                        <MenuItem ><Link to={"/movies"}
                                                                                                style={{textDecoration: "none"}}>All
                                             Movies</Link></MenuItem>
-                                        <MenuItem style={{backgroundColor: "lightblue"}}><Link to={"/directors"}
+                                        <MenuItem ><Link to={"/directors"}
                                                                                                style={{textDecoration: "none"}}>All
                                             Directors</Link></MenuItem>
-                                        <MenuItem style={{backgroundColor: "lightblue"}}><Link to={"/top10"}
+                                        <MenuItem ><Link to={"/top10"}
                                                                                                style={{textDecoration: "none"}}>Top
                                             10</Link></MenuItem>
                                     </Menu>
@@ -297,14 +297,14 @@ function MainNavigation(props) {
                                         }}>
                                     Menu
                                 </Button>
-                                <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "10rem"}}>
-                                    <MenuItem style={{backgroundColor: "lightblue"}}><Link to={"/movies"}
+                                <Menu {...bindMenu(popupState)} style={{top: "0.2cm", width: "10rem", boxShadow: "5px 10px 20px rgba(0,0,0,0.5)"}}>
+                                    <MenuItem><Link to={"/movies"}
                                                                                            style={{textDecoration: "none"}}>All
                                         Movies</Link></MenuItem>
-                                    <MenuItem style={{backgroundColor: "lightblue"}}><Link to={"/directors"}
+                                    <MenuItem ><Link to={"/directors"}
                                                                                            style={{textDecoration: "none"}}>All
                                         Directors</Link></MenuItem>
-                                    <MenuItem style={{backgroundColor: "lightblue"}}><Link to={"/top10"}
+                                    <MenuItem ><Link to={"/top10"}
                                                                                            style={{textDecoration: "none"}}>Top
                                         10</Link></MenuItem>
                                 </Menu>
