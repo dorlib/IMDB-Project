@@ -44,15 +44,6 @@
   width: 40%;
 }
   
-  .image {
-    top: 26.6%;
-    width: 100%;
-    height: 40%;
-    overflow: hidden;
-    border-top-right-radius: 6px;
-    border-top-left-radius: 6px;
-  }
-  
   .image img {
     width: 100%;
     object-fit: cover;
@@ -101,21 +92,17 @@
 
 
 .image {
+  position: absolute;
   width: 500px;
   height: 420px;
-  position: absolute;
   display: flex;
-  right: 67.8%;
-  bottom: 30%;
+  top: 16rem;
+  left: 9rem;
   border-radius: 50px;
-}
-
-.image{
-  display: flex;
-  position: absolute;
   margin-bottom: -20%;
   max-height: 200%;
   max-width: 200%;
+  overflow: hidden;
 }
 
 .heart {
@@ -139,56 +126,58 @@
   color: yellow;
   font-size: 25px;
   top: 75%;
-  left: 4.23cm;
+  left: 8%;
 }
 
 .about {
-  margin-top: 1.6cm;
+  width: 40rem;
+  margin-top: 9.3%;
   border-radius: 13px;
   color: yellow;
   background-color: #cc2062;
-  height: 5cm;
+  height: 12rem;
 }
 
 .director {
   display: flex;
   position: absolute;
-  top: 6.9cm;
-  right: 4.2cm;
-  width: 13cm;
+  top: 16.3rem;
+  left: 69%;
+  width: 30rem;
   border-radius: 13px;
   color: yellow;
   background-color: #cc2062;
-  height: 1.4cm;
+  height: 3.4rem;
 }
 
 .editDetailsBut {
   display: flex;
   position: absolute;
-  right: 19cm;
+  right: 45rem;
 }
 
 .editDirectorPhotoBut {
   display: flex;
   position: absolute;
-  right: 0.6cm;
+  right: 2rem;
 }
 
 .actors {
-  margin-top: 0.7cm;
+  width: 100%;
+  margin-top: 4%;
   border-radius: 13px;
   color: yellow;
   background-color: #cc2062;
-  height: 5.35cm;
+  height: 12.5rem;
 }
 
 .directorImage {
   display: flex;
   position: absolute;
   border-radius: 40px;
-  width: 13cm;
-  height: 9cm;
-  top: 2cm;
-  right: -0.1cm;
+  width: 30.3rem;
+  height: 21.4rem;
+  top: 4.5rem;
+  right: -0.1rem;
   object-fit: cover;
 }
