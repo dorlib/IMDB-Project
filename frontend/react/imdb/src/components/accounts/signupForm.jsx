@@ -24,6 +24,9 @@ export function SignUpForm(props) {
 
     const [ThankYou, setThankYou] = useState(false)
     const [spinner, setSpinner] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [emailErrorValid, setEmailErrorValid] = useState(false);
+    const [PassError, setPassError] = useState(false);
 
 
     const [givenFirstName, setFirstName] = useState('')
@@ -35,6 +38,7 @@ export function SignUpForm(props) {
     const [givenTextProfile, setTextProfile] = useState('')
     const [givenFileProfile, setFileProfile] = useState('')
     const [givenEmail, setEmail] = useState('')
+    const [givenEmailVer, setEmailVer] = useState('')
     const [givenCountry, setCountry] = useState('')
     const [givenDayOfBirth, setDayOfBirth] = useState('')
     const [givenMonthOfBirth, setMonthOfBirth] = useState('')
@@ -58,23 +62,31 @@ export function SignUpForm(props) {
             givenYearOfBirth,
         };
 
-        setSpinner(true);
 
-        fetch('http://localhost:8081/signupForm', {
-            method: 'post',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(userData)
-        })
-            .then(response => response.json())
-            .catch((err) => {
-                console.error('error:', err)
+        if (givenEmail !== givenEmailVer) {
+            setEmailError(true);
+        } else if (givenEmail.indexOf("@")) {
+            setEmailErrorValid(true);
+        } else if (givenPassword.length < 8) {
+            setPassError(true);
+        } else {
+            setSpinner(true);
+            fetch('http://localhost:8081/signupForm', {
+                method: 'post',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(userData)
             })
-            .then((data) => {
-                setSpinner(false);
-                console.log('new user added')
-                setThankYou(true);
-                setTimeout(() => window.location.replace("/register-sign-in/"), 1500)
-            })
+                .then(response => response.json())
+                .catch((err) => {
+                    console.error('error:', err)
+                })
+                .then((data) => {
+                    setSpinner(false);
+                    console.log('new user added')
+                    setThankYou(true);
+                    setTimeout(() => window.location.replace("/register-sign-in/"), 1500)
+                })
+        }
     }
 
     const Input = styled("input")({
@@ -87,7 +99,13 @@ export function SignUpForm(props) {
                 <Typography component="div" style={{marginLeft: "1.7cm"}}>
                     Thanks {givenFirstName} for signing up and welcome to IMDB !
                 </Typography>
-                <pre><Typography style={{marginTop: "0.6cm", position: "absolute", display: "flex", left: "6cm", fontSize: "15px"}}>Redirecting...</Typography></pre>
+                <pre><Typography style={{
+                    marginTop: "0.6cm",
+                    position: "absolute",
+                    display: "flex",
+                    left: "6cm",
+                    fontSize: "15px"
+                }}>Redirecting...</Typography></pre>
             </CardContent>
         </div>
     )
@@ -133,9 +151,19 @@ export function SignUpForm(props) {
                     </Select>
 
                     <div className={classes.control}>
-                        <label htmlFor="email">Enter Your E-Mail</label>
+                        <label htmlFor="email">
+                            <span>Enter Your E-mail</span>
+                            <span style={{color: "red", marginLeft: "5cm"}}>{emailError? "address doesnt match": null}</span>
+                            <span style={{color: "red", marginLeft: "1cm"}}>{emailErrorValid? "address not valid": null}</span>
+                        </label>
                         <input type="text" required id="email" name="email" value={givenEmail}
                                onChange={event => setEmail(event.target.value)} autoComplete="on"/>
+                    </div>
+
+                    <div className={classes.control}>
+                        <label htmlFor="emailVer">Enter Your E-Mail Again</label>
+                        <input type="text" required id="email" name="email" value={givenEmailVer}
+                               onChange={event => setEmailVer(event.target.value)} autoComplete="on"/>
                     </div>
 
                     <div className={classes.im}>
@@ -199,7 +227,9 @@ export function SignUpForm(props) {
                     </div>
 
                     <div className={classes.ctrl}>
-                        <label htmlFor="password">Choose Your password (8 characters minimum)</label>
+                        <label htmlFor="password">Choose Your password (8 characters minimum)
+                            <span style={{color: "red", marginLeft: "5cm"}}>{PassError? "password has les then 8 characters": null}</span>
+                        </label>
                         <input type="password" id="password" name="password" minLength="8" value={givenPassword}
                                onChange={event => setPassword(event.target.value)}
                                autoComplete="new-password"/>
