@@ -11,7 +11,7 @@ _I am not associated with nor speak for IMDB site._
 
 _The main welcome page's photo Belong to NETFLIX inc._ 
 
-_Notice That Im currently working on the app, so NEW FITCHERS are been added on daily basics!_
+_Notice That Im currently working on the app, so NEW FEATURES are been added on daily basics!_
 
 
 <p align="center">
