@@ -39,8 +39,9 @@ function FavoritesPage(props) {
 
     let content
     if (data["favoritesOfUser"] === null) {
-        content = <p
-            style={{color: "yellow"}}>You got no favorites yet. Start adding some?</p>;
+        content = <p style={{color: "yellow"}}>You got no favorites yet. Start adding some?</p>;
+    } else if (userID === 0) {
+        content = <p style={{color: "yellow"}}>only signed in users have favorites</p>;
     } else if (props.userID === null) {
         content = (
             <div style={{color: "yellow"}}>

@@ -8,9 +8,11 @@
 
 # make review system by users, set height properly    ### TOP PRIORITY
 
-# add warning massage before insert data
+# make only the user who made the movie the one who can change details about it (need to connect the users and movies)   ### TOP PRIORITY
 
-# add option to edit movie's details
+# make actors (visible on movie page with pic and name, option for users to add actors or remove, make actor page)    ### TOP PRIORITY
+
+# add option to edit movie's details    ### TOP PRIORITY
 
 ##########################
 ###    UI missions     ###
