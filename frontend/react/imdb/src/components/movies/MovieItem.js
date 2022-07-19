@@ -122,8 +122,9 @@ function MovieItem(props) {
     `;
 
     const handleClick = () => {
+        let movieId = JSON.stringify(movieID)
         return (
-            window.location.replace("/editMovieDetails/" + JSON.stringify(movieID))
+            window.location.replace("/editMovieDetails/" + movieId.slice(1, movieId.length - 1))
         )
     }
 

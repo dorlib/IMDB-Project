@@ -44,9 +44,8 @@ func (r *mutationResolver) EditMovieDetails(ctx context.Context, movieID int, mo
 	return r.client.Movie.UpdateOneID(movieID).
 		SetTitle(movie.Title).
 		SetGenre(movie.Genre).
+		SetImage(movie.Image).
 		SetDescription(movie.Description).
-		SetRank(movie.Rank).
-		SetDirectorID(movie.DirectorID).
 		SetYear(movie.Year).
 		Save(ctx)
 }

@@ -210,7 +210,7 @@ function NewMovieForm(props) {
                     </div>
 
                     <div className={classes.control}>
-                        <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                        <InputLabel id="demo-simple-select-label">Genre</InputLabel>
                         <Select
                             id="genre"
                             name="genre"
