@@ -195,6 +195,8 @@ type Mutation {
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
     deleteReview(reviewID: ID!, userID: ID!) : ID!
     editReview(reviewID: ID!, rank: Int!, text: String!, topic: String!) : Review!
+    editMovieDetails(movieID: ID!, movie: MovieInput!): Movie!
+    editDirectorDetails(DirectorID: ID!, director: DirectorInput!): Director!
 }
 
 # Define a query for getting all movies.

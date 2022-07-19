@@ -112,6 +112,8 @@ type ComplexityRoot struct {
 		DeleteLike             func(childComplexity int, likeID int, userID int, reviewID int) int
 		DeleteReview           func(childComplexity int, reviewID int, userID int) int
 		EditComment            func(childComplexity int, commentID int, text string) int
+		EditDirectorDetails    func(childComplexity int, directorID int, director DirectorInput) int
+		EditMovieDetails       func(childComplexity int, movieID int, movie MovieInput) int
 		EditReview             func(childComplexity int, reviewID int, rank int, text string, topic string) int
 		RemoveFromFavorites    func(childComplexity int, movieID int, userID int) int
 		UpdateDirectorDetails  func(childComplexity int, id int, bornAt string, profileImage string, description string) int
@@ -196,6 +198,8 @@ type MutationResolver interface {
 	DeleteLike(ctx context.Context, likeID int, userID int, reviewID int) ([]*ent.Like, error)
 	DeleteReview(ctx context.Context, reviewID int, userID int) (int, error)
 	EditReview(ctx context.Context, reviewID int, rank int, text string, topic string) (*ent.Review, error)
+	EditMovieDetails(ctx context.Context, movieID int, movie MovieInput) (*ent.Movie, error)
+	EditDirectorDetails(ctx context.Context, directorID int, director DirectorInput) (*ent.Director, error)
 }
 type QueryResolver interface {
 	Reviews(ctx context.Context) ([]*ent.Review, error)
@@ -629,6 +633,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.EditComment(childComplexity, args["commentID"].(int), args["text"].(string)), true
+
+	case "Mutation.editDirectorDetails":
+		if e.complexity.Mutation.EditDirectorDetails == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_editDirectorDetails_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.EditDirectorDetails(childComplexity, args["DirectorID"].(int), args["director"].(DirectorInput)), true
+
+	case "Mutation.editMovieDetails":
+		if e.complexity.Mutation.EditMovieDetails == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_editMovieDetails_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.EditMovieDetails(childComplexity, args["movieID"].(int), args["movie"].(MovieInput)), true
 
 	case "Mutation.editReview":
 		if e.complexity.Mutation.EditReview == nil {
@@ -1348,6 +1376,8 @@ type Mutation {
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
     deleteReview(reviewID: ID!, userID: ID!) : ID!
     editReview(reviewID: ID!, rank: Int!, text: String!, topic: String!) : Review!
+    editMovieDetails(movieID: ID!, movie: MovieInput!): Movie!
+    editDirectorDetails(DirectorID: ID!, director: DirectorInput!): Director!
 }
 
 # Define a query for getting all movies.
@@ -1810,6 +1840,54 @@ func (ec *executionContext) field_Mutation_editComment_args(ctx context.Context,
 		}
 	}
 	args["text"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_editDirectorDetails_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["DirectorID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("DirectorID"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["DirectorID"] = arg0
+	var arg1 DirectorInput
+	if tmp, ok := rawArgs["director"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("director"))
+		arg1, err = ec.unmarshalNDirectorInput2imdbv2ᚋgraphqlᚐDirectorInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["director"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_editMovieDetails_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["movieID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movieID"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["movieID"] = arg0
+	var arg1 MovieInput
+	if tmp, ok := rawArgs["movie"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movie"))
+		arg1, err = ec.unmarshalNMovieInput2imdbv2ᚋgraphqlᚐMovieInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["movie"] = arg1
 	return args, nil
 }
 
@@ -4250,6 +4328,90 @@ func (ec *executionContext) _Mutation_editReview(ctx context.Context, field grap
 	res := resTmp.(*ent.Review)
 	fc.Result = res
 	return ec.marshalNReview2ᚖimdbv2ᚋentᚐReview(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_editMovieDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_editMovieDetails_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().EditMovieDetails(rctx, args["movieID"].(int), args["movie"].(MovieInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Movie)
+	fc.Result = res
+	return ec.marshalNMovie2ᚖimdbv2ᚋentᚐMovie(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_editDirectorDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_editDirectorDetails_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().EditDirectorDetails(rctx, args["DirectorID"].(int), args["director"].(DirectorInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Director)
+	fc.Result = res
+	return ec.marshalNDirector2ᚖimdbv2ᚋentᚐDirector(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_reviews(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8298,6 +8460,26 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "editReview":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_editReview(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "editMovieDetails":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_editMovieDetails(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "editDirectorDetails":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_editDirectorDetails(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)

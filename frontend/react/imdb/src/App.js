@@ -22,6 +22,7 @@ import MoviesByGenre from "./components/movies/movies-by-genre";
 import ResetForm from "./components/accounts/resetForm";
 import UserPage from "./pages/userPage";
 import EditDetails from "./components/accounts/editDetails";
+import EditMovieDetails from "./components/movies/editMovieDetails";
 
 
 import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
@@ -97,6 +98,7 @@ function App() {
                     <Route path='/moviesByGenre/:genre' element={<MoviesByGenre/>}/>
                     <Route path='/register-sign-in' element={<><AccountBox/><div>&ensp;</div></>}/>
                     <Route path='/editUserDetails/:id' element={<EditDetails firstname={userFirstName} lastname={userLastName} nickname={userNickname} description={userDescription} birthday={userBirthday} email={userEmail} profile={userProfileImage} userID={userId} country={userCountry} gender={userGender}/>}/>
+                    <Route path='/editMovieDetails/:id' element={<EditMovieDetails firstname={userFirstName} lastname={userLastName} nickname={userNickname} description={userDescription} birthday={userBirthday} email={userEmail} profile={userProfileImage} userID={userId} country={userCountry} gender={userGender}/>}/>
                     <Route path='/reset/:token' element={<ResetForm LoggedInUser={userId}/>}/>
                     <Route path='/userPage/:id' element={<UserPage LoggedInUser={userId}/>}/>
                 </Routes>
