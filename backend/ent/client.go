@@ -821,6 +821,22 @@ func (c *MovieClient) QueryDirector(m *Movie) *DirectorQuery {
 	return query
 }
 
+// QueryUser queries the user edge of a Movie.
+func (c *MovieClient) QueryUser(m *Movie) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(movie.Table, movie.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, movie.UserTable, movie.UserColumn),
+		)
+		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryReviews queries the reviews edge of a Movie.
 func (c *MovieClient) QueryReviews(m *Movie) *ReviewQuery {
 	query := &ReviewQuery{config: c.config}
@@ -1138,6 +1154,22 @@ func (c *UserClient) QueryLikes(u *User) *LikeQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(like.Table, like.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.LikesTable, user.LikesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryMovies queries the movies edge of a User.
+func (c *UserClient) QueryMovies(u *User) *MovieQuery {
+	query := &MovieQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(movie.Table, movie.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.MoviesTable, user.MoviesColumn),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil

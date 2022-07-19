@@ -60,6 +60,14 @@ func (m *Movie) Director(ctx context.Context) (*Director, error) {
 	return result, MaskNotFound(err)
 }
 
+func (m *Movie) User(ctx context.Context) (*User, error) {
+	result, err := m.Edges.UserOrErr()
+	if IsNotLoaded(err) {
+		result, err = m.QueryUser().Only(ctx)
+	}
+	return result, MaskNotFound(err)
+}
+
 func (m *Movie) Reviews(ctx context.Context) ([]*Review, error) {
 	result, err := m.Edges.ReviewsOrErr()
 	if IsNotLoaded(err) {
@@ -128,6 +136,14 @@ func (u *User) Likes(ctx context.Context) ([]*Like, error) {
 	result, err := u.Edges.LikesOrErr()
 	if IsNotLoaded(err) {
 		result, err = u.QueryLikes().All(ctx)
+	}
+	return result, err
+}
+
+func (u *User) Movies(ctx context.Context) ([]*Movie, error) {
+	result, err := u.Edges.MoviesOrErr()
+	if IsNotLoaded(err) {
+		result, err = u.QueryMovies().All(ctx)
 	}
 	return result, err
 }

@@ -2725,6 +2725,8 @@ type MovieMutation struct {
 	clearedFields   map[string]struct{}
 	director        *int
 	cleareddirector bool
+	user            *int
+	cleareduser     bool
 	reviews         map[int]struct{}
 	removedreviews  map[int]struct{}
 	clearedreviews  bool
@@ -3103,6 +3105,55 @@ func (m *MovieMutation) ResetDirectorID() {
 	delete(m.clearedFields, movie.FieldDirectorID)
 }
 
+// SetUserID sets the "user_id" field.
+func (m *MovieMutation) SetUserID(i int) {
+	m.user = &i
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *MovieMutation) UserID() (r int, exists bool) {
+	v := m.user
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Movie entity.
+// If the Movie object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MovieMutation) OldUserID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (m *MovieMutation) ClearUserID() {
+	m.user = nil
+	m.clearedFields[movie.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *MovieMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[movie.FieldUserID]
+	return ok
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *MovieMutation) ResetUserID() {
+	m.user = nil
+	delete(m.clearedFields, movie.FieldUserID)
+}
+
 // SetImage sets the "image" field.
 func (m *MovieMutation) SetImage(s string) {
 	m.image = &s
@@ -3176,6 +3227,32 @@ func (m *MovieMutation) DirectorIDs() (ids []int) {
 func (m *MovieMutation) ResetDirector() {
 	m.director = nil
 	m.cleareddirector = false
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (m *MovieMutation) ClearUser() {
+	m.cleareduser = true
+}
+
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *MovieMutation) UserCleared() bool {
+	return m.UserIDCleared() || m.cleareduser
+}
+
+// UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
+func (m *MovieMutation) UserIDs() (ids []int) {
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUser resets all changes to the "user" edge.
+func (m *MovieMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
 }
 
 // AddReviewIDs adds the "reviews" edge to the Review entity by ids.
@@ -3305,7 +3382,7 @@ func (m *MovieMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *MovieMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.title != nil {
 		fields = append(fields, movie.FieldTitle)
 	}
@@ -3323,6 +3400,9 @@ func (m *MovieMutation) Fields() []string {
 	}
 	if m.director != nil {
 		fields = append(fields, movie.FieldDirectorID)
+	}
+	if m.user != nil {
+		fields = append(fields, movie.FieldUserID)
 	}
 	if m.image != nil {
 		fields = append(fields, movie.FieldImage)
@@ -3347,6 +3427,8 @@ func (m *MovieMutation) Field(name string) (ent.Value, bool) {
 		return m.Year()
 	case movie.FieldDirectorID:
 		return m.DirectorID()
+	case movie.FieldUserID:
+		return m.UserID()
 	case movie.FieldImage:
 		return m.Image()
 	}
@@ -3370,6 +3452,8 @@ func (m *MovieMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldYear(ctx)
 	case movie.FieldDirectorID:
 		return m.OldDirectorID(ctx)
+	case movie.FieldUserID:
+		return m.OldUserID(ctx)
 	case movie.FieldImage:
 		return m.OldImage(ctx)
 	}
@@ -3422,6 +3506,13 @@ func (m *MovieMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDirectorID(v)
+		return nil
+	case movie.FieldUserID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
 		return nil
 	case movie.FieldImage:
 		v, ok := value.(string)
@@ -3490,6 +3581,9 @@ func (m *MovieMutation) ClearedFields() []string {
 	if m.FieldCleared(movie.FieldDirectorID) {
 		fields = append(fields, movie.FieldDirectorID)
 	}
+	if m.FieldCleared(movie.FieldUserID) {
+		fields = append(fields, movie.FieldUserID)
+	}
 	if m.FieldCleared(movie.FieldImage) {
 		fields = append(fields, movie.FieldImage)
 	}
@@ -3509,6 +3603,9 @@ func (m *MovieMutation) ClearField(name string) error {
 	switch name {
 	case movie.FieldDirectorID:
 		m.ClearDirectorID()
+		return nil
+	case movie.FieldUserID:
+		m.ClearUserID()
 		return nil
 	case movie.FieldImage:
 		m.ClearImage()
@@ -3539,6 +3636,9 @@ func (m *MovieMutation) ResetField(name string) error {
 	case movie.FieldDirectorID:
 		m.ResetDirectorID()
 		return nil
+	case movie.FieldUserID:
+		m.ResetUserID()
+		return nil
 	case movie.FieldImage:
 		m.ResetImage()
 		return nil
@@ -3548,9 +3648,12 @@ func (m *MovieMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *MovieMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.director != nil {
 		edges = append(edges, movie.EdgeDirector)
+	}
+	if m.user != nil {
+		edges = append(edges, movie.EdgeUser)
 	}
 	if m.reviews != nil {
 		edges = append(edges, movie.EdgeReviews)
@@ -3567,6 +3670,10 @@ func (m *MovieMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case movie.EdgeDirector:
 		if id := m.director; id != nil {
+			return []ent.Value{*id}
+		}
+	case movie.EdgeUser:
+		if id := m.user; id != nil {
 			return []ent.Value{*id}
 		}
 	case movie.EdgeReviews:
@@ -3587,7 +3694,7 @@ func (m *MovieMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *MovieMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.removedreviews != nil {
 		edges = append(edges, movie.EdgeReviews)
 	}
@@ -3619,9 +3726,12 @@ func (m *MovieMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *MovieMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.cleareddirector {
 		edges = append(edges, movie.EdgeDirector)
+	}
+	if m.cleareduser {
+		edges = append(edges, movie.EdgeUser)
 	}
 	if m.clearedreviews {
 		edges = append(edges, movie.EdgeReviews)
@@ -3638,6 +3748,8 @@ func (m *MovieMutation) EdgeCleared(name string) bool {
 	switch name {
 	case movie.EdgeDirector:
 		return m.cleareddirector
+	case movie.EdgeUser:
+		return m.cleareduser
 	case movie.EdgeReviews:
 		return m.clearedreviews
 	case movie.EdgeActor:
@@ -3653,6 +3765,9 @@ func (m *MovieMutation) ClearEdge(name string) error {
 	case movie.EdgeDirector:
 		m.ClearDirector()
 		return nil
+	case movie.EdgeUser:
+		m.ClearUser()
+		return nil
 	}
 	return fmt.Errorf("unknown Movie unique edge %s", name)
 }
@@ -3663,6 +3778,9 @@ func (m *MovieMutation) ResetEdge(name string) error {
 	switch name {
 	case movie.EdgeDirector:
 		m.ResetDirector()
+		return nil
+	case movie.EdgeUser:
+		m.ResetUser()
 		return nil
 	case movie.EdgeReviews:
 		m.ResetReviews()
@@ -4624,6 +4742,9 @@ type UserMutation struct {
 	likes           map[int]struct{}
 	removedlikes    map[int]struct{}
 	clearedlikes    bool
+	movies          map[int]struct{}
+	removedmovies   map[int]struct{}
+	clearedmovies   bool
 	done            bool
 	oldValue        func(context.Context) (*User, error)
 	predicates      []predicate.User
@@ -5285,6 +5406,60 @@ func (m *UserMutation) ResetLikes() {
 	m.removedlikes = nil
 }
 
+// AddMovieIDs adds the "movies" edge to the Movie entity by ids.
+func (m *UserMutation) AddMovieIDs(ids ...int) {
+	if m.movies == nil {
+		m.movies = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.movies[ids[i]] = struct{}{}
+	}
+}
+
+// ClearMovies clears the "movies" edge to the Movie entity.
+func (m *UserMutation) ClearMovies() {
+	m.clearedmovies = true
+}
+
+// MoviesCleared reports if the "movies" edge to the Movie entity was cleared.
+func (m *UserMutation) MoviesCleared() bool {
+	return m.clearedmovies
+}
+
+// RemoveMovieIDs removes the "movies" edge to the Movie entity by IDs.
+func (m *UserMutation) RemoveMovieIDs(ids ...int) {
+	if m.removedmovies == nil {
+		m.removedmovies = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.movies, ids[i])
+		m.removedmovies[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedMovies returns the removed IDs of the "movies" edge to the Movie entity.
+func (m *UserMutation) RemovedMoviesIDs() (ids []int) {
+	for id := range m.removedmovies {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// MoviesIDs returns the "movies" edge IDs in the mutation.
+func (m *UserMutation) MoviesIDs() (ids []int) {
+	for id := range m.movies {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetMovies resets all changes to the "movies" edge.
+func (m *UserMutation) ResetMovies() {
+	m.movies = nil
+	m.clearedmovies = false
+	m.removedmovies = nil
+}
+
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -5573,7 +5748,7 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.reviews != nil {
 		edges = append(edges, user.EdgeReviews)
 	}
@@ -5582,6 +5757,9 @@ func (m *UserMutation) AddedEdges() []string {
 	}
 	if m.likes != nil {
 		edges = append(edges, user.EdgeLikes)
+	}
+	if m.movies != nil {
+		edges = append(edges, user.EdgeMovies)
 	}
 	return edges
 }
@@ -5608,13 +5786,19 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeMovies:
+		ids := make([]ent.Value, 0, len(m.movies))
+		for id := range m.movies {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.removedreviews != nil {
 		edges = append(edges, user.EdgeReviews)
 	}
@@ -5623,6 +5807,9 @@ func (m *UserMutation) RemovedEdges() []string {
 	}
 	if m.removedlikes != nil {
 		edges = append(edges, user.EdgeLikes)
+	}
+	if m.removedmovies != nil {
+		edges = append(edges, user.EdgeMovies)
 	}
 	return edges
 }
@@ -5649,13 +5836,19 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeMovies:
+		ids := make([]ent.Value, 0, len(m.removedmovies))
+		for id := range m.removedmovies {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.clearedreviews {
 		edges = append(edges, user.EdgeReviews)
 	}
@@ -5664,6 +5857,9 @@ func (m *UserMutation) ClearedEdges() []string {
 	}
 	if m.clearedlikes {
 		edges = append(edges, user.EdgeLikes)
+	}
+	if m.clearedmovies {
+		edges = append(edges, user.EdgeMovies)
 	}
 	return edges
 }
@@ -5678,6 +5874,8 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 		return m.clearedcomments
 	case user.EdgeLikes:
 		return m.clearedlikes
+	case user.EdgeMovies:
+		return m.clearedmovies
 	}
 	return false
 }
@@ -5702,6 +5900,9 @@ func (m *UserMutation) ResetEdge(name string) error {
 		return nil
 	case user.EdgeLikes:
 		m.ResetLikes()
+		return nil
+	case user.EdgeMovies:
+		m.ResetMovies()
 		return nil
 	}
 	return fmt.Errorf("unknown User edge %s", name)

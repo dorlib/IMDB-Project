@@ -98,6 +98,7 @@ var (
 		{Name: "year", Type: field.TypeInt},
 		{Name: "image", Type: field.TypeString, Nullable: true},
 		{Name: "director_id", Type: field.TypeInt, Nullable: true},
+		{Name: "user_id", Type: field.TypeInt, Nullable: true},
 	}
 	// MoviesTable holds the schema information for the "movies" table.
 	MoviesTable = &schema.Table{
@@ -109,6 +110,12 @@ var (
 				Symbol:     "movies_directors_movies",
 				Columns:    []*schema.Column{MoviesColumns[7]},
 				RefColumns: []*schema.Column{DirectorsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "movies_users_movies",
+				Columns:    []*schema.Column{MoviesColumns[8]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -260,6 +267,7 @@ func init() {
 	CommentsTable.ForeignKeys[0].RefTable = ReviewsTable
 	CommentsTable.ForeignKeys[1].RefTable = UsersTable
 	MoviesTable.ForeignKeys[0].RefTable = DirectorsTable
+	MoviesTable.ForeignKeys[1].RefTable = UsersTable
 	ReviewsTable.ForeignKeys[0].RefTable = MoviesTable
 	ReviewsTable.ForeignKeys[1].RefTable = UsersTable
 	ActorActorsTable.ForeignKeys[0].RefTable = ActorsTable

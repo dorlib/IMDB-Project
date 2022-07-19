@@ -12,6 +12,7 @@ import (
 	"imdbv2/ent/movie"
 	"imdbv2/ent/predicate"
 	"imdbv2/ent/review"
+	"imdbv2/ent/user"
 	"math"
 
 	"entgo.io/ent/dialect/sql"
@@ -30,6 +31,7 @@ type MovieQuery struct {
 	predicates []predicate.Movie
 	// eager-loading edges.
 	withDirector *DirectorQuery
+	withUser     *UserQuery
 	withReviews  *ReviewQuery
 	withActor    *ActorQuery
 	// intermediate query (i.e. traversal path).
@@ -83,6 +85,28 @@ func (mq *MovieQuery) QueryDirector() *DirectorQuery {
 			sqlgraph.From(movie.Table, movie.FieldID, selector),
 			sqlgraph.To(director.Table, director.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, movie.DirectorTable, movie.DirectorColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(mq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryUser chains the current query on the "user" edge.
+func (mq *MovieQuery) QueryUser() *UserQuery {
+	query := &UserQuery{config: mq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := mq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := mq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(movie.Table, movie.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, movie.UserTable, movie.UserColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(mq.driver.Dialect(), step)
 		return fromU, nil
@@ -316,6 +340,7 @@ func (mq *MovieQuery) Clone() *MovieQuery {
 		order:        append([]OrderFunc{}, mq.order...),
 		predicates:   append([]predicate.Movie{}, mq.predicates...),
 		withDirector: mq.withDirector.Clone(),
+		withUser:     mq.withUser.Clone(),
 		withReviews:  mq.withReviews.Clone(),
 		withActor:    mq.withActor.Clone(),
 		// clone intermediate query.
@@ -333,6 +358,17 @@ func (mq *MovieQuery) WithDirector(opts ...func(*DirectorQuery)) *MovieQuery {
 		opt(query)
 	}
 	mq.withDirector = query
+	return mq
+}
+
+// WithUser tells the query-builder to eager-load the nodes that are connected to
+// the "user" edge. The optional arguments are used to configure the query builder of the edge.
+func (mq *MovieQuery) WithUser(opts ...func(*UserQuery)) *MovieQuery {
+	query := &UserQuery{config: mq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	mq.withUser = query
 	return mq
 }
 
@@ -423,8 +459,9 @@ func (mq *MovieQuery) sqlAll(ctx context.Context) ([]*Movie, error) {
 	var (
 		nodes       = []*Movie{}
 		_spec       = mq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
 			mq.withDirector != nil,
+			mq.withUser != nil,
 			mq.withReviews != nil,
 			mq.withActor != nil,
 		}
@@ -471,6 +508,32 @@ func (mq *MovieQuery) sqlAll(ctx context.Context) ([]*Movie, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Director = n
+			}
+		}
+	}
+
+	if query := mq.withUser; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Movie)
+		for i := range nodes {
+			fk := nodes[i].UserID
+			if _, ok := nodeids[fk]; !ok {
+				ids = append(ids, fk)
+			}
+			nodeids[fk] = append(nodeids[fk], nodes[i])
+		}
+		query.Where(user.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "user_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.User = n
 			}
 		}
 	}

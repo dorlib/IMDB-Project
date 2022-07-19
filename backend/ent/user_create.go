@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"imdbv2/ent/comment"
 	"imdbv2/ent/like"
+	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
 
@@ -131,6 +132,21 @@ func (uc *UserCreate) AddLikes(l ...*Like) *UserCreate {
 		ids[i] = l[i].ID
 	}
 	return uc.AddLikeIDs(ids...)
+}
+
+// AddMovieIDs adds the "movies" edge to the Movie entity by IDs.
+func (uc *UserCreate) AddMovieIDs(ids ...int) *UserCreate {
+	uc.mutation.AddMovieIDs(ids...)
+	return uc
+}
+
+// AddMovies adds the "movies" edges to the Movie entity.
+func (uc *UserCreate) AddMovies(m ...*Movie) *UserCreate {
+	ids := make([]int, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
+	}
+	return uc.AddMovieIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -420,6 +436,25 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: like.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.MoviesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.MoviesTable,
+			Columns: []string{user.MoviesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: movie.FieldID,
 				},
 			},
 		}

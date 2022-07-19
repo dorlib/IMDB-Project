@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"imdbv2/ent/comment"
 	"imdbv2/ent/like"
+	"imdbv2/ent/movie"
 	"imdbv2/ent/predicate"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -32,6 +33,7 @@ type UserQuery struct {
 	withReviews  *ReviewQuery
 	withComments *CommentQuery
 	withLikes    *LikeQuery
+	withMovies   *MovieQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -127,6 +129,28 @@ func (uq *UserQuery) QueryLikes() *LikeQuery {
 			sqlgraph.From(user.Table, user.FieldID, selector),
 			sqlgraph.To(like.Table, like.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.LikesTable, user.LikesPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryMovies chains the current query on the "movies" edge.
+func (uq *UserQuery) QueryMovies() *MovieQuery {
+	query := &MovieQuery{config: uq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := uq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(movie.Table, movie.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.MoviesTable, user.MoviesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
@@ -318,6 +342,7 @@ func (uq *UserQuery) Clone() *UserQuery {
 		withReviews:  uq.withReviews.Clone(),
 		withComments: uq.withComments.Clone(),
 		withLikes:    uq.withLikes.Clone(),
+		withMovies:   uq.withMovies.Clone(),
 		// clone intermediate query.
 		sql:    uq.sql.Clone(),
 		path:   uq.path,
@@ -355,6 +380,17 @@ func (uq *UserQuery) WithLikes(opts ...func(*LikeQuery)) *UserQuery {
 		opt(query)
 	}
 	uq.withLikes = query
+	return uq
+}
+
+// WithMovies tells the query-builder to eager-load the nodes that are connected to
+// the "movies" edge. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithMovies(opts ...func(*MovieQuery)) *UserQuery {
+	query := &MovieQuery{config: uq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withMovies = query
 	return uq
 }
 
@@ -423,10 +459,11 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 	var (
 		nodes       = []*User{}
 		_spec       = uq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
 			uq.withReviews != nil,
 			uq.withComments != nil,
 			uq.withLikes != nil,
+			uq.withMovies != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
@@ -569,6 +606,31 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 			for i := range nodes {
 				nodes[i].Edges.Likes = append(nodes[i].Edges.Likes, n)
 			}
+		}
+	}
+
+	if query := uq.withMovies; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*User)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+			nodes[i].Edges.Movies = []*Movie{}
+		}
+		query.Where(predicate.Movie(func(s *sql.Selector) {
+			s.Where(sql.InValues(user.MoviesColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.UserID
+			node, ok := nodeids[fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "user_id" returned %v for node %v`, fk, n.ID)
+			}
+			node.Edges.Movies = append(node.Edges.Movies, n)
 		}
 	}
 
