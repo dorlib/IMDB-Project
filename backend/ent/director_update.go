@@ -9,6 +9,7 @@ import (
 	"imdbv2/ent/director"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/predicate"
+	"imdbv2/ent/user"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -68,6 +69,31 @@ func (du *DirectorUpdate) SetNillableDescription(s *string) *DirectorUpdate {
 	return du
 }
 
+// SetUserID sets the "user_id" field.
+func (du *DirectorUpdate) SetUserID(i int) *DirectorUpdate {
+	du.mutation.SetUserID(i)
+	return du
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (du *DirectorUpdate) SetNillableUserID(i *int) *DirectorUpdate {
+	if i != nil {
+		du.SetUserID(*i)
+	}
+	return du
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (du *DirectorUpdate) ClearUserID() *DirectorUpdate {
+	du.mutation.ClearUserID()
+	return du
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (du *DirectorUpdate) SetUser(u *User) *DirectorUpdate {
+	return du.SetUserID(u.ID)
+}
+
 // AddMovieIDs adds the "movies" edge to the Movie entity by IDs.
 func (du *DirectorUpdate) AddMovieIDs(ids ...int) *DirectorUpdate {
 	du.mutation.AddMovieIDs(ids...)
@@ -86,6 +112,12 @@ func (du *DirectorUpdate) AddMovies(m ...*Movie) *DirectorUpdate {
 // Mutation returns the DirectorMutation object of the builder.
 func (du *DirectorUpdate) Mutation() *DirectorMutation {
 	return du.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (du *DirectorUpdate) ClearUser() *DirectorUpdate {
+	du.mutation.ClearUser()
+	return du
 }
 
 // ClearMovies clears all "movies" edges to the Movie entity.
@@ -209,6 +241,41 @@ func (du *DirectorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: director.FieldDescription,
 		})
 	}
+	if du.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   director.UserTable,
+			Columns: []string{director.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   director.UserTable,
+			Columns: []string{director.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if du.mutation.MoviesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -322,6 +389,31 @@ func (duo *DirectorUpdateOne) SetNillableDescription(s *string) *DirectorUpdateO
 	return duo
 }
 
+// SetUserID sets the "user_id" field.
+func (duo *DirectorUpdateOne) SetUserID(i int) *DirectorUpdateOne {
+	duo.mutation.SetUserID(i)
+	return duo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (duo *DirectorUpdateOne) SetNillableUserID(i *int) *DirectorUpdateOne {
+	if i != nil {
+		duo.SetUserID(*i)
+	}
+	return duo
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (duo *DirectorUpdateOne) ClearUserID() *DirectorUpdateOne {
+	duo.mutation.ClearUserID()
+	return duo
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (duo *DirectorUpdateOne) SetUser(u *User) *DirectorUpdateOne {
+	return duo.SetUserID(u.ID)
+}
+
 // AddMovieIDs adds the "movies" edge to the Movie entity by IDs.
 func (duo *DirectorUpdateOne) AddMovieIDs(ids ...int) *DirectorUpdateOne {
 	duo.mutation.AddMovieIDs(ids...)
@@ -340,6 +432,12 @@ func (duo *DirectorUpdateOne) AddMovies(m ...*Movie) *DirectorUpdateOne {
 // Mutation returns the DirectorMutation object of the builder.
 func (duo *DirectorUpdateOne) Mutation() *DirectorMutation {
 	return duo.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (duo *DirectorUpdateOne) ClearUser() *DirectorUpdateOne {
+	duo.mutation.ClearUser()
+	return duo
 }
 
 // ClearMovies clears all "movies" edges to the Movie entity.
@@ -486,6 +584,41 @@ func (duo *DirectorUpdateOne) sqlSave(ctx context.Context) (_node *Director, err
 			Value:  value,
 			Column: director.FieldDescription,
 		})
+	}
+	if duo.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   director.UserTable,
+			Columns: []string{director.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   director.UserTable,
+			Columns: []string{director.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if duo.mutation.MoviesCleared() {
 		edge := &sqlgraph.EdgeSpec{

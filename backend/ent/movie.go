@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"imdbv2/ent/director"
 	"imdbv2/ent/movie"
+	"imdbv2/ent/user"
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
@@ -28,6 +29,8 @@ type Movie struct {
 	Year int `json:"year,omitempty"`
 	// DirectorID holds the value of the "director_id" field.
 	DirectorID int `json:"director_id,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID int `json:"user_id,omitempty"`
 	// Image holds the value of the "image" field.
 	Image string `json:"image,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -39,13 +42,15 @@ type Movie struct {
 type MovieEdges struct {
 	// Director holds the value of the director edge.
 	Director *Director `json:"director,omitempty"`
+	// User holds the value of the user edge.
+	User *User `json:"user,omitempty"`
 	// Reviews holds the value of the reviews edge.
 	Reviews []*Review `json:"reviews,omitempty"`
 	// Actor holds the value of the actor edge.
 	Actor []*Actor `json:"actor,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
 }
 
 // DirectorOrErr returns the Director value or an error if the edge
@@ -62,10 +67,24 @@ func (e MovieEdges) DirectorOrErr() (*Director, error) {
 	return nil, &NotLoadedError{edge: "director"}
 }
 
+// UserOrErr returns the User value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e MovieEdges) UserOrErr() (*User, error) {
+	if e.loadedTypes[1] {
+		if e.User == nil {
+			// The edge user was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: user.Label}
+		}
+		return e.User, nil
+	}
+	return nil, &NotLoadedError{edge: "user"}
+}
+
 // ReviewsOrErr returns the Reviews value or an error if the edge
 // was not loaded in eager-loading.
 func (e MovieEdges) ReviewsOrErr() ([]*Review, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.Reviews, nil
 	}
 	return nil, &NotLoadedError{edge: "reviews"}
@@ -74,7 +93,7 @@ func (e MovieEdges) ReviewsOrErr() ([]*Review, error) {
 // ActorOrErr returns the Actor value or an error if the edge
 // was not loaded in eager-loading.
 func (e MovieEdges) ActorOrErr() ([]*Actor, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		return e.Actor, nil
 	}
 	return nil, &NotLoadedError{edge: "actor"}
@@ -85,7 +104,7 @@ func (*Movie) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case movie.FieldID, movie.FieldRank, movie.FieldYear, movie.FieldDirectorID:
+		case movie.FieldID, movie.FieldRank, movie.FieldYear, movie.FieldDirectorID, movie.FieldUserID:
 			values[i] = new(sql.NullInt64)
 		case movie.FieldTitle, movie.FieldDescription, movie.FieldGenre, movie.FieldImage:
 			values[i] = new(sql.NullString)
@@ -146,6 +165,12 @@ func (m *Movie) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				m.DirectorID = int(value.Int64)
 			}
+		case movie.FieldUserID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field user_id", values[i])
+			} else if value.Valid {
+				m.UserID = int(value.Int64)
+			}
 		case movie.FieldImage:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field image", values[i])
@@ -160,6 +185,11 @@ func (m *Movie) assignValues(columns []string, values []interface{}) error {
 // QueryDirector queries the "director" edge of the Movie entity.
 func (m *Movie) QueryDirector() *DirectorQuery {
 	return (&MovieClient{config: m.config}).QueryDirector(m)
+}
+
+// QueryUser queries the "user" edge of the Movie entity.
+func (m *Movie) QueryUser() *UserQuery {
+	return (&MovieClient{config: m.config}).QueryUser(m)
 }
 
 // QueryReviews queries the "reviews" edge of the Movie entity.
@@ -207,6 +237,8 @@ func (m *Movie) String() string {
 	builder.WriteString(fmt.Sprintf("%v", m.Year))
 	builder.WriteString(", director_id=")
 	builder.WriteString(fmt.Sprintf("%v", m.DirectorID))
+	builder.WriteString(", user_id=")
+	builder.WriteString(fmt.Sprintf("%v", m.UserID))
 	builder.WriteString(", image=")
 	builder.WriteString(m.Image)
 	builder.WriteByte(')')

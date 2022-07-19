@@ -10,6 +10,7 @@ import (
 	"imdbv2/ent/director"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/predicate"
+	"imdbv2/ent/user"
 	"math"
 
 	"entgo.io/ent/dialect/sql"
@@ -27,6 +28,7 @@ type DirectorQuery struct {
 	fields     []string
 	predicates []predicate.Director
 	// eager-loading edges.
+	withUser   *UserQuery
 	withMovies *MovieQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -62,6 +64,28 @@ func (dq *DirectorQuery) Unique(unique bool) *DirectorQuery {
 func (dq *DirectorQuery) Order(o ...OrderFunc) *DirectorQuery {
 	dq.order = append(dq.order, o...)
 	return dq
+}
+
+// QueryUser chains the current query on the "user" edge.
+func (dq *DirectorQuery) QueryUser() *UserQuery {
+	query := &UserQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := dq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(director.Table, director.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, director.UserTable, director.UserColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QueryMovies chains the current query on the "movies" edge.
@@ -267,12 +291,24 @@ func (dq *DirectorQuery) Clone() *DirectorQuery {
 		offset:     dq.offset,
 		order:      append([]OrderFunc{}, dq.order...),
 		predicates: append([]predicate.Director{}, dq.predicates...),
+		withUser:   dq.withUser.Clone(),
 		withMovies: dq.withMovies.Clone(),
 		// clone intermediate query.
 		sql:    dq.sql.Clone(),
 		path:   dq.path,
 		unique: dq.unique,
 	}
+}
+
+// WithUser tells the query-builder to eager-load the nodes that are connected to
+// the "user" edge. The optional arguments are used to configure the query builder of the edge.
+func (dq *DirectorQuery) WithUser(opts ...func(*UserQuery)) *DirectorQuery {
+	query := &UserQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withUser = query
+	return dq
 }
 
 // WithMovies tells the query-builder to eager-load the nodes that are connected to
@@ -351,7 +387,8 @@ func (dq *DirectorQuery) sqlAll(ctx context.Context) ([]*Director, error) {
 	var (
 		nodes       = []*Director{}
 		_spec       = dq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
+			dq.withUser != nil,
 			dq.withMovies != nil,
 		}
 	)
@@ -373,6 +410,32 @@ func (dq *DirectorQuery) sqlAll(ctx context.Context) ([]*Director, error) {
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
+	}
+
+	if query := dq.withUser; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Director)
+		for i := range nodes {
+			fk := nodes[i].UserID
+			if _, ok := nodeids[fk]; !ok {
+				ids = append(ids, fk)
+			}
+			nodeids[fk] = append(nodeids[fk], nodes[i])
+		}
+		query.Where(user.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "user_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.User = n
+			}
+		}
 	}
 
 	if query := dq.withMovies; query != nil {

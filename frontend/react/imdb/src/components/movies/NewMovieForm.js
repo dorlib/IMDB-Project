@@ -28,8 +28,8 @@ function NewMovieForm(props) {
     let NEW
 
     let NEW_MOVIE = gql`
-        mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID!, $image: String!, $topic: String!, $text: String!, $year: Int!) {
-            createMovie(movie: {title: $title , description: $description, genre: $genre , rank: $rank, director_id: $director_id, image: $image, topic: $topic, text: $text, year: $year}) {
+        mutation CreateMovie ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_id: ID!, $image: String!, $topic: String!, $text: String!, $year: Int!, $userID: Int!) {
+            createMovie(movie: {title: $title , description: $description, genre: $genre , rank: $rank, director_id: $director_id, image: $image, topic: $topic, text: $text, year: $year, userID: $userID}) {
                 id
             }
         }
@@ -42,8 +42,8 @@ function NewMovieForm(props) {
     `;
 
     let NEW_MOVIE_AND_DIRECTOR = gql`
-        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!, $image: String!, $topic: String!, $text: String! $profileImage: String!, $bornAt: String!, $year: Int!){
-            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name, image: $image, topic: $topic, text: $text, profileImage: $profileImage, bornAt: $bornAt, year: $year) {
+        mutation CreateMovieAndDirector ($title: String!, $description: String!, $genre: String!, $rank: Int!, $director_name: String!, $image: String!, $topic: String!, $text: String! $profileImage: String!, $bornAt: String!, $year: Int!, $userID: Int!){
+            createMovieAndDirector(title: $title , description: $description, genre: $genre , rank: $rank, directorName: $director_name, image: $image, topic: $topic, text: $text, profileImage: $profileImage, bornAt: $bornAt, year: $year, userID: $userID) {
                 id
             }
         }
@@ -123,6 +123,7 @@ function NewMovieForm(props) {
                 topic :givenTopic,
                 text: givenText,
                 year: givenYear,
+                userID: parseInt(props.userId),
                 director_id: int,
                 director_name: givenDirector,
             },
@@ -209,7 +210,7 @@ function NewMovieForm(props) {
                     </div>
 
                     <div className={classes.control}>
-                        <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                        <InputLabel id="demo-simple-select-label">Genre</InputLabel>
                         <Select
                             id="genre"
                             name="genre"

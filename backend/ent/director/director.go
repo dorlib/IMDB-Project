@@ -15,10 +15,21 @@ const (
 	FieldBornAt = "born_at"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
+	// FieldUserID holds the string denoting the user_id field in the database.
+	FieldUserID = "user_id"
+	// EdgeUser holds the string denoting the user edge name in mutations.
+	EdgeUser = "user"
 	// EdgeMovies holds the string denoting the movies edge name in mutations.
 	EdgeMovies = "movies"
 	// Table holds the table name of the director in the database.
 	Table = "directors"
+	// UserTable is the table that holds the user relation/edge.
+	UserTable = "directors"
+	// UserInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UserInverseTable = "users"
+	// UserColumn is the table column denoting the user relation/edge.
+	UserColumn = "user_id"
 	// MoviesTable is the table that holds the movies relation/edge.
 	MoviesTable = "movies"
 	// MoviesInverseTable is the table name for the Movie entity.
@@ -35,6 +46,7 @@ var Columns = []string{
 	FieldProfileImage,
 	FieldBornAt,
 	FieldDescription,
+	FieldUserID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

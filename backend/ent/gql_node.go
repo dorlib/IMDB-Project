@@ -141,8 +141,8 @@ func (d *Director) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     d.ID,
 		Type:   "Director",
-		Fields: make([]*Field, 4),
-		Edges:  make([]*Edge, 1),
+		Fields: make([]*Field, 5),
+		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(d.Name); err != nil {
@@ -177,13 +177,31 @@ func (d *Director) Node(ctx context.Context) (node *Node, err error) {
 		Name:  "description",
 		Value: string(buf),
 	}
+	if buf, err = json.Marshal(d.UserID); err != nil {
+		return nil, err
+	}
+	node.Fields[4] = &Field{
+		Type:  "int",
+		Name:  "user_id",
+		Value: string(buf),
+	}
 	node.Edges[0] = &Edge{
+		Type: "User",
+		Name: "user",
+	}
+	err = d.QueryUser().
+		Select(user.FieldID).
+		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[1] = &Edge{
 		Type: "Movie",
 		Name: "movies",
 	}
 	err = d.QueryMovies().
 		Select(movie.FieldID).
-		Scan(ctx, &node.Edges[0].IDs)
+		Scan(ctx, &node.Edges[1].IDs)
 	if err != nil {
 		return nil, err
 	}
@@ -284,8 +302,8 @@ func (m *Movie) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     m.ID,
 		Type:   "Movie",
-		Fields: make([]*Field, 7),
-		Edges:  make([]*Edge, 3),
+		Fields: make([]*Field, 8),
+		Edges:  make([]*Edge, 4),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(m.Title); err != nil {
@@ -336,10 +354,18 @@ func (m *Movie) Node(ctx context.Context) (node *Node, err error) {
 		Name:  "director_id",
 		Value: string(buf),
 	}
-	if buf, err = json.Marshal(m.Image); err != nil {
+	if buf, err = json.Marshal(m.UserID); err != nil {
 		return nil, err
 	}
 	node.Fields[6] = &Field{
+		Type:  "int",
+		Name:  "user_id",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(m.Image); err != nil {
+		return nil, err
+	}
+	node.Fields[7] = &Field{
 		Type:  "string",
 		Name:  "image",
 		Value: string(buf),
@@ -355,22 +381,32 @@ func (m *Movie) Node(ctx context.Context) (node *Node, err error) {
 		return nil, err
 	}
 	node.Edges[1] = &Edge{
-		Type: "Review",
-		Name: "reviews",
+		Type: "User",
+		Name: "user",
 	}
-	err = m.QueryReviews().
-		Select(review.FieldID).
+	err = m.QueryUser().
+		Select(user.FieldID).
 		Scan(ctx, &node.Edges[1].IDs)
 	if err != nil {
 		return nil, err
 	}
 	node.Edges[2] = &Edge{
+		Type: "Review",
+		Name: "reviews",
+	}
+	err = m.QueryReviews().
+		Select(review.FieldID).
+		Scan(ctx, &node.Edges[2].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[3] = &Edge{
 		Type: "Actor",
 		Name: "actor",
 	}
 	err = m.QueryActor().
 		Select(actor.FieldID).
-		Scan(ctx, &node.Edges[2].IDs)
+		Scan(ctx, &node.Edges[3].IDs)
 	if err != nil {
 		return nil, err
 	}
@@ -473,7 +509,7 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 		ID:     u.ID,
 		Type:   "User",
 		Fields: make([]*Field, 11),
-		Edges:  make([]*Edge, 3),
+		Edges:  make([]*Edge, 5),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(u.Firstname); err != nil {
@@ -591,6 +627,26 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 	err = u.QueryLikes().
 		Select(like.FieldID).
 		Scan(ctx, &node.Edges[2].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[3] = &Edge{
+		Type: "Movie",
+		Name: "movies",
+	}
+	err = u.QueryMovies().
+		Select(movie.FieldID).
+		Scan(ctx, &node.Edges[3].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[4] = &Edge{
+		Type: "Director",
+		Name: "directors",
+	}
+	err = u.QueryDirectors().
+		Select(director.FieldID).
+		Scan(ctx, &node.Edges[4].IDs)
 	if err != nil {
 		return nil, err
 	}

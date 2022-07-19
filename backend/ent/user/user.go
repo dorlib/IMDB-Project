@@ -35,6 +35,10 @@ const (
 	EdgeComments = "comments"
 	// EdgeLikes holds the string denoting the likes edge name in mutations.
 	EdgeLikes = "likes"
+	// EdgeMovies holds the string denoting the movies edge name in mutations.
+	EdgeMovies = "movies"
+	// EdgeDirectors holds the string denoting the directors edge name in mutations.
+	EdgeDirectors = "directors"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// ReviewsTable is the table that holds the reviews relation/edge.
@@ -56,6 +60,20 @@ const (
 	// LikesInverseTable is the table name for the Like entity.
 	// It exists in this package in order to avoid circular dependency with the "like" package.
 	LikesInverseTable = "likes"
+	// MoviesTable is the table that holds the movies relation/edge.
+	MoviesTable = "movies"
+	// MoviesInverseTable is the table name for the Movie entity.
+	// It exists in this package in order to avoid circular dependency with the "movie" package.
+	MoviesInverseTable = "movies"
+	// MoviesColumn is the table column denoting the movies relation/edge.
+	MoviesColumn = "user_id"
+	// DirectorsTable is the table that holds the directors relation/edge.
+	DirectorsTable = "directors"
+	// DirectorsInverseTable is the table name for the Director entity.
+	// It exists in this package in order to avoid circular dependency with the "director" package.
+	DirectorsInverseTable = "directors"
+	// DirectorsColumn is the table column denoting the directors relation/edge.
+	DirectorsColumn = "user_id"
 )
 
 // Columns holds all SQL columns for user fields.

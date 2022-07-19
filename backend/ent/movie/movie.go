@@ -19,10 +19,14 @@ const (
 	FieldYear = "year"
 	// FieldDirectorID holds the string denoting the director_id field in the database.
 	FieldDirectorID = "director_id"
+	// FieldUserID holds the string denoting the user_id field in the database.
+	FieldUserID = "user_id"
 	// FieldImage holds the string denoting the image field in the database.
 	FieldImage = "image"
 	// EdgeDirector holds the string denoting the director edge name in mutations.
 	EdgeDirector = "director"
+	// EdgeUser holds the string denoting the user edge name in mutations.
+	EdgeUser = "user"
 	// EdgeReviews holds the string denoting the reviews edge name in mutations.
 	EdgeReviews = "reviews"
 	// EdgeActor holds the string denoting the actor edge name in mutations.
@@ -36,6 +40,13 @@ const (
 	DirectorInverseTable = "directors"
 	// DirectorColumn is the table column denoting the director relation/edge.
 	DirectorColumn = "director_id"
+	// UserTable is the table that holds the user relation/edge.
+	UserTable = "movies"
+	// UserInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UserInverseTable = "users"
+	// UserColumn is the table column denoting the user relation/edge.
+	UserColumn = "user_id"
 	// ReviewsTable is the table that holds the reviews relation/edge.
 	ReviewsTable = "reviews"
 	// ReviewsInverseTable is the table name for the Review entity.
@@ -59,6 +70,7 @@ var Columns = []string{
 	FieldGenre,
 	FieldYear,
 	FieldDirectorID,
+	FieldUserID,
 	FieldImage,
 }
 

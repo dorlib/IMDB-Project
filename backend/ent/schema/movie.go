@@ -21,6 +21,7 @@ func (Movie) Fields() []ent.Field {
 		field.String("genre").Annotations(entgql.OrderField("GENRE")),
 		field.Int("year").Annotations(entgql.OrderField("YEAR")),
 		field.Int("director_id").Optional(),
+		field.Int("user_id").Optional(),
 		field.String("image").Optional(),
 	}
 }
@@ -31,6 +32,10 @@ func (Movie) Edges() []ent.Edge {
 		edge.From("director", Director.Type).
 			Ref("movies").
 			Field("director_id").
+			Unique(),
+		edge.From("user", User.Type).
+			Ref("movies").
+			Field("user_id").
 			Unique(),
 		edge.From("reviews", Review.Type).Ref("movie"),
 		edge.From("actor", Actor.Type).Ref("actors"),

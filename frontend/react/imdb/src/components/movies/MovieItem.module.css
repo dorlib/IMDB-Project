@@ -108,7 +108,7 @@
 .heart {
   display: flex;
   position: absolute;
-  bottom: -3.7rem;
+  bottom: -6.7rem;
   right: 35.3rem;
 }
 
@@ -125,7 +125,7 @@
   position: absolute;
   color: yellow;
   font-size: 25px;
-  top: 75%;
+  top: 42.5rem;
   left: 8%;
 }
 
@@ -180,4 +180,33 @@
   top: 4.5rem;
   right: -0.1rem;
   object-fit: cover;
+}
+
+.edit {
+  background-color: #2c292b;
+  display: flex;
+  position: absolute;
+  bottom: 13%;
+  left: 7.8%;
+  color: white;
+  margin-top: 1cm;
+}
+
+.editBut {
+  display: flex;
+  width: 17rem;
+}
+
+.editDirec {
+  background-color: #2c292b;
+  display: flex;
+  position: absolute;
+  top: 44rem;
+  right: 16rem;
+  color: white;
+}
+
+.editButDirec {
+  display: flex;
+  width: 17rem;
 }

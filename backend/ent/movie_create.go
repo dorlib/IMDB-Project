@@ -10,6 +10,7 @@ import (
 	"imdbv2/ent/director"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
+	"imdbv2/ent/user"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -66,6 +67,20 @@ func (mc *MovieCreate) SetNillableDirectorID(i *int) *MovieCreate {
 	return mc
 }
 
+// SetUserID sets the "user_id" field.
+func (mc *MovieCreate) SetUserID(i int) *MovieCreate {
+	mc.mutation.SetUserID(i)
+	return mc
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (mc *MovieCreate) SetNillableUserID(i *int) *MovieCreate {
+	if i != nil {
+		mc.SetUserID(*i)
+	}
+	return mc
+}
+
 // SetImage sets the "image" field.
 func (mc *MovieCreate) SetImage(s string) *MovieCreate {
 	mc.mutation.SetImage(s)
@@ -83,6 +98,11 @@ func (mc *MovieCreate) SetNillableImage(s *string) *MovieCreate {
 // SetDirector sets the "director" edge to the Director entity.
 func (mc *MovieCreate) SetDirector(d *Director) *MovieCreate {
 	return mc.SetDirectorID(d.ID)
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (mc *MovieCreate) SetUser(u *User) *MovieCreate {
+	return mc.SetUserID(u.ID)
 }
 
 // AddReviewIDs adds the "reviews" edge to the Review entity by IDs.
@@ -293,6 +313,26 @@ func (mc *MovieCreate) createSpec() (*Movie, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.DirectorID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := mc.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   movie.UserTable,
+			Columns: []string{movie.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.UserID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := mc.mutation.ReviewsIDs(); len(nodes) > 0 {

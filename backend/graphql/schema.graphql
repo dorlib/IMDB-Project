@@ -22,9 +22,11 @@ type Movie implements Node   {
     genre: String!
     image: String!
     year: Int!
+    userID: Int!
     director: Director!
     reviews: [Review!]
     actors: [Actor]
+    user: User!
 }
 
 type Director {
@@ -33,7 +35,9 @@ type Director {
     profileImage: String!
     bornAt: String!
     description: String!
+    userID: Int!
     movies: [Movie!]
+    user: User!
 }
 
 type Actor {
@@ -90,6 +94,8 @@ type User {
     gender: String!
     signup_at: String!
     reviews: [Review!]
+    movies: [Movie]
+    directors: [Director]
 }
 
 # These enums are matched the entgql annotations in the ent/schema.
@@ -121,6 +127,7 @@ input MovieInput {
     topic: String!
     text: String!
     year: Int!
+    userID: Int!
 }
 
 input DirectorInput {
@@ -172,7 +179,7 @@ input CommentInput {
 # https://graphql.org/learn/queries/#mutations
 type Mutation {
     createMovie(movie: MovieInput!): Movie!
-    createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String!, directorName: String!, image: String!, topic: String!, text: String!, profileImage: String!, bornAt: String!, year: Int!): Movie!
+    createMovieAndDirector(title: String!, description: String!, rank: Int!, genre: String!, directorName: String!, image: String!, topic: String!, text: String!, profileImage: String!, bornAt: String!, year: Int!, userID: Int!): Movie!
     createDirector(director: DirectorInput!): Director!
     createReview(text: String!, rank: Int!, movieID: Int!, userID: Int!, topic: String!): Review!
     updateRank(id: ID!, rank: Int!) : Movie!
@@ -188,6 +195,8 @@ type Mutation {
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
     deleteReview(reviewID: ID!, userID: ID!) : ID!
     editReview(reviewID: ID!, rank: Int!, text: String!, topic: String!) : Review!
+    editMovieDetails(movieID: ID!, movie: MovieInput!): Movie!
+    editDirectorDetails(DirectorID: ID!, director: DirectorInput!): Director!
 }
 
 # Define a query for getting all movies.
