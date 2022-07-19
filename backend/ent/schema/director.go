@@ -19,12 +19,17 @@ func (Director) Fields() []ent.Field {
 		field.String("profileImage"),
 		field.String("bornAt").Default("00.00.0000"),
 		field.String("description").Default("not given"),
+		field.Int("user_id").Optional(),
 	}
 }
 
 // Edges of the Director.
 func (Director) Edges() []ent.Edge {
 	return []ent.Edge{
+		edge.From("user", User.Type).
+			Ref("directors").
+			Field("user_id").
+			Unique(),
 		edge.To("movies", Movie.Type),
 	}
 }
