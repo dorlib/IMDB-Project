@@ -11,6 +11,7 @@ import CardContent from "@mui/material/CardContent";
 import EditIcon from "@mui/icons-material/Edit";
 import ToggleFavorite from "../../favorites/toggle-favorite";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
 function MovieItem(props) {
     const [toggle, setToggle] = useState(false)
@@ -32,6 +33,12 @@ function MovieItem(props) {
                     id
                     name
                     profileImage
+                    user {
+                        id
+                    }
+                }
+                user {
+                    id 
                 }
             }
         }
@@ -75,7 +82,10 @@ function MovieItem(props) {
     let image = data["movieById"]["0"]["image"]
     let director = data["movieById"]["0"]["director"]["name"]
     let directorId = data["movieById"]["0"]["director"]["id"]
+    let userId = data["movieById"]["0"]["user"]["id"]
     let directorImage = data["movieById"]["0"]["director"]["profileImage"]
+    let userIdOfDirector = data["movieById"]["0"]["director"]["user"]["id"]
+
     // let actors = data["movieById"]["0"]["actors"]
 
     let numOfFavorites = data1["favoritesOfUser"].length
@@ -110,6 +120,12 @@ function MovieItem(props) {
             color: black;
         }    
     `;
+
+    const handleClick = () => {
+        return (
+            window.location.replace("/editMovieDetails/" + JSON.stringify(movieID))
+        )
+    }
 
     let load = (
         <div>
@@ -162,10 +178,16 @@ function MovieItem(props) {
                         {/*))}*/}
                     </h4>
                 </CardContent>
+                {props.userID === parseInt(userId)? <Stack direction="row" spacing={2} className={classes.edit}>
+                    {props.userID === parseInt(userId)? <Button variant="edit" className={classes.editBut} onClick={handleClick}>Edit Movie's Details</Button> : null}
+                </Stack> : null }
+                {props.userID === parseInt(userIdOfDirector)? <Stack direction="row" spacing={2} className={classes.editDirec}>
+                    {props.userID === parseInt(userIdOfDirector)? <Button variant="edit" className={classes.editButDirec} onClick={handleClick}>Edit Director's Details</Button> : null}
+                </Stack> : null }
                     <div style={{fontSize: "xxx-large"}}>
                         {props.userID !== 0 ? <Fav>
                             <Button><FavoriteIcon fontSize={'large'} style={{color: favorites.includes(parseInt(movieID)) ? '#8B0000' : 'white'}} onClick={() => setToggle(true)} className={classes.heart} /></Button>
-                            <TextBox><text >Click To Add To Favorites!</text></TextBox>
+                            <TextBox><text>Click To Add To Favorites!</text></TextBox>
                         </Fav> : null}
                     </div>
             </div>

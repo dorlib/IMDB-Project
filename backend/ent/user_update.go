@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/director"
 	"imdbv2/ent/like"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/predicate"
@@ -157,6 +158,21 @@ func (uu *UserUpdate) AddMovies(m ...*Movie) *UserUpdate {
 	return uu.AddMovieIDs(ids...)
 }
 
+// AddDirectorIDs adds the "directors" edge to the Director entity by IDs.
+func (uu *UserUpdate) AddDirectorIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddDirectorIDs(ids...)
+	return uu
+}
+
+// AddDirectors adds the "directors" edges to the Director entity.
+func (uu *UserUpdate) AddDirectors(d ...*Director) *UserUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return uu.AddDirectorIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -244,6 +260,27 @@ func (uu *UserUpdate) RemoveMovies(m ...*Movie) *UserUpdate {
 		ids[i] = m[i].ID
 	}
 	return uu.RemoveMovieIDs(ids...)
+}
+
+// ClearDirectors clears all "directors" edges to the Director entity.
+func (uu *UserUpdate) ClearDirectors() *UserUpdate {
+	uu.mutation.ClearDirectors()
+	return uu
+}
+
+// RemoveDirectorIDs removes the "directors" edge to Director entities by IDs.
+func (uu *UserUpdate) RemoveDirectorIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveDirectorIDs(ids...)
+	return uu
+}
+
+// RemoveDirectors removes "directors" edges to Director entities.
+func (uu *UserUpdate) RemoveDirectors(d ...*Director) *UserUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return uu.RemoveDirectorIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -642,6 +679,60 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if uu.mutation.DirectorsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.DirectorsTable,
+			Columns: []string{user.DirectorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: director.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedDirectorsIDs(); len(nodes) > 0 && !uu.mutation.DirectorsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.DirectorsTable,
+			Columns: []string{user.DirectorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: director.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.DirectorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.DirectorsTable,
+			Columns: []string{user.DirectorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: director.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -787,6 +878,21 @@ func (uuo *UserUpdateOne) AddMovies(m ...*Movie) *UserUpdateOne {
 	return uuo.AddMovieIDs(ids...)
 }
 
+// AddDirectorIDs adds the "directors" edge to the Director entity by IDs.
+func (uuo *UserUpdateOne) AddDirectorIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddDirectorIDs(ids...)
+	return uuo
+}
+
+// AddDirectors adds the "directors" edges to the Director entity.
+func (uuo *UserUpdateOne) AddDirectors(d ...*Director) *UserUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return uuo.AddDirectorIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
@@ -874,6 +980,27 @@ func (uuo *UserUpdateOne) RemoveMovies(m ...*Movie) *UserUpdateOne {
 		ids[i] = m[i].ID
 	}
 	return uuo.RemoveMovieIDs(ids...)
+}
+
+// ClearDirectors clears all "directors" edges to the Director entity.
+func (uuo *UserUpdateOne) ClearDirectors() *UserUpdateOne {
+	uuo.mutation.ClearDirectors()
+	return uuo
+}
+
+// RemoveDirectorIDs removes the "directors" edge to Director entities by IDs.
+func (uuo *UserUpdateOne) RemoveDirectorIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveDirectorIDs(ids...)
+	return uuo
+}
+
+// RemoveDirectors removes "directors" edges to Director entities.
+func (uuo *UserUpdateOne) RemoveDirectors(d ...*Director) *UserUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return uuo.RemoveDirectorIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -1288,6 +1415,60 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: movie.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.DirectorsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.DirectorsTable,
+			Columns: []string{user.DirectorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: director.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedDirectorsIDs(); len(nodes) > 0 && !uuo.mutation.DirectorsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.DirectorsTable,
+			Columns: []string{user.DirectorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: director.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.DirectorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.DirectorsTable,
+			Columns: []string{user.DirectorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: director.FieldID,
 				},
 			},
 		}

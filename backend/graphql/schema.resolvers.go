@@ -99,6 +99,8 @@ func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title str
 		SetName(directorName).
 		SetProfileImage(profileImage).
 		SetBornAt(bornAt).
+		SetUserID(userID).
+		SetUser(r.client.User.GetX(ctx, userID)).
 		Save(ctx)
 	if err != nil {
 		return nil, ent.MaskNotFound(err)

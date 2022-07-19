@@ -35,7 +35,9 @@ type Director {
     profileImage: String!
     bornAt: String!
     description: String!
+    userID: Int!
     movies: [Movie!]
+    user: User!
 }
 
 type Actor {
@@ -93,6 +95,7 @@ type User {
     signup_at: String!
     reviews: [Review!]
     movies: [Movie]
+    directors: [Director]
 }
 
 # These enums are matched the entgql annotations in the ent/schema.

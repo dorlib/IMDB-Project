@@ -66,6 +66,8 @@ type ComplexityRoot struct {
 		Movies       func(childComplexity int) int
 		Name         func(childComplexity int) int
 		ProfileImage func(childComplexity int) int
+		User         func(childComplexity int) int
+		UserID       func(childComplexity int) int
 	}
 
 	Favorite struct {
@@ -158,6 +160,7 @@ type ComplexityRoot struct {
 		BirthDay    func(childComplexity int) int
 		Country     func(childComplexity int) int
 		Description func(childComplexity int) int
+		Directors   func(childComplexity int) int
 		Email       func(childComplexity int) int
 		Firstname   func(childComplexity int) int
 		Gender      func(childComplexity int) int
@@ -328,6 +331,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Director.ProfileImage(childComplexity), true
+
+	case "Director.user":
+		if e.complexity.Director.User == nil {
+			break
+		}
+
+		return e.complexity.Director.User(childComplexity), true
+
+	case "Director.userID":
+		if e.complexity.Director.UserID == nil {
+			break
+		}
+
+		return e.complexity.Director.UserID(childComplexity), true
 
 	case "Favorite.id":
 		if e.complexity.Favorite.ID == nil {
@@ -986,6 +1003,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.Description(childComplexity), true
 
+	case "User.directors":
+		if e.complexity.User.Directors == nil {
+			break
+		}
+
+		return e.complexity.User.Directors(childComplexity), true
+
 	case "User.email":
 		if e.complexity.User.Email == nil {
 			break
@@ -1164,7 +1188,9 @@ type Director {
     profileImage: String!
     bornAt: String!
     description: String!
+    userID: Int!
     movies: [Movie!]
+    user: User!
 }
 
 type Actor {
@@ -1222,6 +1248,7 @@ type User {
     signup_at: String!
     reviews: [Review!]
     movies: [Movie]
+    directors: [Director]
 }
 
 # These enums are matched the entgql annotations in the ent/schema.
@@ -2721,6 +2748,41 @@ func (ec *executionContext) _Director_description(ctx context.Context, field gra
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Director_userID(ctx context.Context, field graphql.CollectedField, obj *ent.Director) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Director",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Director_movies(ctx context.Context, field graphql.CollectedField, obj *ent.Director) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2751,6 +2813,41 @@ func (ec *executionContext) _Director_movies(ctx context.Context, field graphql.
 	res := resTmp.([]*ent.Movie)
 	fc.Result = res
 	return ec.marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovieᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Director_user(ctx context.Context, field graphql.CollectedField, obj *ent.Director) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Director",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.User(ctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖimdbv2ᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Favorite_id(ctx context.Context, field graphql.CollectedField, obj *ent.Favorite) (ret graphql.Marshaler) {
@@ -5837,6 +5934,38 @@ func (ec *executionContext) _User_movies(ctx context.Context, field graphql.Coll
 	return ec.marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovie(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _User_directors(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Directors(ctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Director)
+	fc.Result = res
+	return ec.marshalODirector2ᚕᚖimdbv2ᚋentᚐDirector(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7638,6 +7767,16 @@ func (ec *executionContext) _Director(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "userID":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Director_userID(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "movies":
 			field := field
 
@@ -7648,6 +7787,26 @@ func (ec *executionContext) _Director(ctx context.Context, sel ast.SelectionSet,
 					}
 				}()
 				res = ec._Director_movies(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "user":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Director_user(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -8946,6 +9105,23 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 				return innerFunc(ctx)
 
 			})
+		case "directors":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._User_directors(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10054,6 +10230,47 @@ func (ec *executionContext) marshalOComment2ᚖimdbv2ᚋentᚐComment(ctx contex
 	return ec._Comment(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalODirector2ᚕᚖimdbv2ᚋentᚐDirector(ctx context.Context, sel ast.SelectionSet, v []*ent.Director) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalODirector2ᚖimdbv2ᚋentᚐDirector(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
 func (ec *executionContext) marshalODirector2ᚕᚖimdbv2ᚋentᚐDirectorᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Director) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -10099,6 +10316,13 @@ func (ec *executionContext) marshalODirector2ᚕᚖimdbv2ᚋentᚐDirectorᚄ(ct
 	}
 
 	return ret
+}
+
+func (ec *executionContext) marshalODirector2ᚖimdbv2ᚋentᚐDirector(ctx context.Context, sel ast.SelectionSet, v *ent.Director) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Director(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOFavorite2ᚕᚖimdbv2ᚋentᚐFavorite(ctx context.Context, sel ast.SelectionSet, v []*ent.Favorite) graphql.Marshaler {

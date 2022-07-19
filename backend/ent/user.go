@@ -52,9 +52,11 @@ type UserEdges struct {
 	Likes []*Like `json:"likes,omitempty"`
 	// Movies holds the value of the movies edge.
 	Movies []*Movie `json:"movies,omitempty"`
+	// Directors holds the value of the directors edge.
+	Directors []*Director `json:"directors,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // ReviewsOrErr returns the Reviews value or an error if the edge
@@ -91,6 +93,15 @@ func (e UserEdges) MoviesOrErr() ([]*Movie, error) {
 		return e.Movies, nil
 	}
 	return nil, &NotLoadedError{edge: "movies"}
+}
+
+// DirectorsOrErr returns the Directors value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) DirectorsOrErr() ([]*Director, error) {
+	if e.loadedTypes[4] {
+		return e.Directors, nil
+	}
+	return nil, &NotLoadedError{edge: "directors"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -212,6 +223,11 @@ func (u *User) QueryLikes() *LikeQuery {
 // QueryMovies queries the "movies" edge of the User entity.
 func (u *User) QueryMovies() *MovieQuery {
 	return (&UserClient{config: u.config}).QueryMovies(u)
+}
+
+// QueryDirectors queries the "directors" edge of the User entity.
+func (u *User) QueryDirectors() *DirectorQuery {
+	return (&UserClient{config: u.config}).QueryDirectors(u)
 }
 
 // Update returns a builder for updating this User.

@@ -1001,6 +1001,8 @@ type DirectorMutation struct {
 	bornAt        *string
 	description   *string
 	clearedFields map[string]struct{}
+	user          *int
+	cleareduser   bool
 	movies        map[int]struct{}
 	removedmovies map[int]struct{}
 	clearedmovies bool
@@ -1251,6 +1253,81 @@ func (m *DirectorMutation) ResetDescription() {
 	m.description = nil
 }
 
+// SetUserID sets the "user_id" field.
+func (m *DirectorMutation) SetUserID(i int) {
+	m.user = &i
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *DirectorMutation) UserID() (r int, exists bool) {
+	v := m.user
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Director entity.
+// If the Director object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DirectorMutation) OldUserID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (m *DirectorMutation) ClearUserID() {
+	m.user = nil
+	m.clearedFields[director.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *DirectorMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[director.FieldUserID]
+	return ok
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *DirectorMutation) ResetUserID() {
+	m.user = nil
+	delete(m.clearedFields, director.FieldUserID)
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (m *DirectorMutation) ClearUser() {
+	m.cleareduser = true
+}
+
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *DirectorMutation) UserCleared() bool {
+	return m.UserIDCleared() || m.cleareduser
+}
+
+// UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
+func (m *DirectorMutation) UserIDs() (ids []int) {
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUser resets all changes to the "user" edge.
+func (m *DirectorMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
+}
+
 // AddMovieIDs adds the "movies" edge to the Movie entity by ids.
 func (m *DirectorMutation) AddMovieIDs(ids ...int) {
 	if m.movies == nil {
@@ -1324,7 +1401,7 @@ func (m *DirectorMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *DirectorMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.name != nil {
 		fields = append(fields, director.FieldName)
 	}
@@ -1336,6 +1413,9 @@ func (m *DirectorMutation) Fields() []string {
 	}
 	if m.description != nil {
 		fields = append(fields, director.FieldDescription)
+	}
+	if m.user != nil {
+		fields = append(fields, director.FieldUserID)
 	}
 	return fields
 }
@@ -1353,6 +1433,8 @@ func (m *DirectorMutation) Field(name string) (ent.Value, bool) {
 		return m.BornAt()
 	case director.FieldDescription:
 		return m.Description()
+	case director.FieldUserID:
+		return m.UserID()
 	}
 	return nil, false
 }
@@ -1370,6 +1452,8 @@ func (m *DirectorMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldBornAt(ctx)
 	case director.FieldDescription:
 		return m.OldDescription(ctx)
+	case director.FieldUserID:
+		return m.OldUserID(ctx)
 	}
 	return nil, fmt.Errorf("unknown Director field %s", name)
 }
@@ -1407,6 +1491,13 @@ func (m *DirectorMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDescription(v)
 		return nil
+	case director.FieldUserID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Director field %s", name)
 }
@@ -1414,13 +1505,16 @@ func (m *DirectorMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *DirectorMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *DirectorMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	}
 	return nil, false
 }
 
@@ -1436,7 +1530,11 @@ func (m *DirectorMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *DirectorMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(director.FieldUserID) {
+		fields = append(fields, director.FieldUserID)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -1449,6 +1547,11 @@ func (m *DirectorMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *DirectorMutation) ClearField(name string) error {
+	switch name {
+	case director.FieldUserID:
+		m.ClearUserID()
+		return nil
+	}
 	return fmt.Errorf("unknown Director nullable field %s", name)
 }
 
@@ -1468,13 +1571,19 @@ func (m *DirectorMutation) ResetField(name string) error {
 	case director.FieldDescription:
 		m.ResetDescription()
 		return nil
+	case director.FieldUserID:
+		m.ResetUserID()
+		return nil
 	}
 	return fmt.Errorf("unknown Director field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *DirectorMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
+	if m.user != nil {
+		edges = append(edges, director.EdgeUser)
+	}
 	if m.movies != nil {
 		edges = append(edges, director.EdgeMovies)
 	}
@@ -1485,6 +1594,10 @@ func (m *DirectorMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *DirectorMutation) AddedIDs(name string) []ent.Value {
 	switch name {
+	case director.EdgeUser:
+		if id := m.user; id != nil {
+			return []ent.Value{*id}
+		}
 	case director.EdgeMovies:
 		ids := make([]ent.Value, 0, len(m.movies))
 		for id := range m.movies {
@@ -1497,7 +1610,7 @@ func (m *DirectorMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *DirectorMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.removedmovies != nil {
 		edges = append(edges, director.EdgeMovies)
 	}
@@ -1520,7 +1633,10 @@ func (m *DirectorMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *DirectorMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
+	if m.cleareduser {
+		edges = append(edges, director.EdgeUser)
+	}
 	if m.clearedmovies {
 		edges = append(edges, director.EdgeMovies)
 	}
@@ -1531,6 +1647,8 @@ func (m *DirectorMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *DirectorMutation) EdgeCleared(name string) bool {
 	switch name {
+	case director.EdgeUser:
+		return m.cleareduser
 	case director.EdgeMovies:
 		return m.clearedmovies
 	}
@@ -1541,6 +1659,9 @@ func (m *DirectorMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *DirectorMutation) ClearEdge(name string) error {
 	switch name {
+	case director.EdgeUser:
+		m.ClearUser()
+		return nil
 	}
 	return fmt.Errorf("unknown Director unique edge %s", name)
 }
@@ -1549,6 +1670,9 @@ func (m *DirectorMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *DirectorMutation) ResetEdge(name string) error {
 	switch name {
+	case director.EdgeUser:
+		m.ResetUser()
+		return nil
 	case director.EdgeMovies:
 		m.ResetMovies()
 		return nil
@@ -4718,36 +4842,39 @@ func (m *ReviewMutation) ResetEdge(name string) error {
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *int
-	firstname       *string
-	lastname        *string
-	nickname        *string
-	description     *string
-	password        *string
-	email           *string
-	birthDay        *string
-	profile         *string
-	country         *string
-	gender          *string
-	signup_at       *string
-	clearedFields   map[string]struct{}
-	reviews         map[int]struct{}
-	removedreviews  map[int]struct{}
-	clearedreviews  bool
-	comments        map[int]struct{}
-	removedcomments map[int]struct{}
-	clearedcomments bool
-	likes           map[int]struct{}
-	removedlikes    map[int]struct{}
-	clearedlikes    bool
-	movies          map[int]struct{}
-	removedmovies   map[int]struct{}
-	clearedmovies   bool
-	done            bool
-	oldValue        func(context.Context) (*User, error)
-	predicates      []predicate.User
+	op               Op
+	typ              string
+	id               *int
+	firstname        *string
+	lastname         *string
+	nickname         *string
+	description      *string
+	password         *string
+	email            *string
+	birthDay         *string
+	profile          *string
+	country          *string
+	gender           *string
+	signup_at        *string
+	clearedFields    map[string]struct{}
+	reviews          map[int]struct{}
+	removedreviews   map[int]struct{}
+	clearedreviews   bool
+	comments         map[int]struct{}
+	removedcomments  map[int]struct{}
+	clearedcomments  bool
+	likes            map[int]struct{}
+	removedlikes     map[int]struct{}
+	clearedlikes     bool
+	movies           map[int]struct{}
+	removedmovies    map[int]struct{}
+	clearedmovies    bool
+	directors        map[int]struct{}
+	removeddirectors map[int]struct{}
+	cleareddirectors bool
+	done             bool
+	oldValue         func(context.Context) (*User, error)
+	predicates       []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -5460,6 +5587,60 @@ func (m *UserMutation) ResetMovies() {
 	m.removedmovies = nil
 }
 
+// AddDirectorIDs adds the "directors" edge to the Director entity by ids.
+func (m *UserMutation) AddDirectorIDs(ids ...int) {
+	if m.directors == nil {
+		m.directors = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.directors[ids[i]] = struct{}{}
+	}
+}
+
+// ClearDirectors clears the "directors" edge to the Director entity.
+func (m *UserMutation) ClearDirectors() {
+	m.cleareddirectors = true
+}
+
+// DirectorsCleared reports if the "directors" edge to the Director entity was cleared.
+func (m *UserMutation) DirectorsCleared() bool {
+	return m.cleareddirectors
+}
+
+// RemoveDirectorIDs removes the "directors" edge to the Director entity by IDs.
+func (m *UserMutation) RemoveDirectorIDs(ids ...int) {
+	if m.removeddirectors == nil {
+		m.removeddirectors = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.directors, ids[i])
+		m.removeddirectors[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedDirectors returns the removed IDs of the "directors" edge to the Director entity.
+func (m *UserMutation) RemovedDirectorsIDs() (ids []int) {
+	for id := range m.removeddirectors {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// DirectorsIDs returns the "directors" edge IDs in the mutation.
+func (m *UserMutation) DirectorsIDs() (ids []int) {
+	for id := range m.directors {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetDirectors resets all changes to the "directors" edge.
+func (m *UserMutation) ResetDirectors() {
+	m.directors = nil
+	m.cleareddirectors = false
+	m.removeddirectors = nil
+}
+
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -5748,7 +5929,7 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.reviews != nil {
 		edges = append(edges, user.EdgeReviews)
 	}
@@ -5760,6 +5941,9 @@ func (m *UserMutation) AddedEdges() []string {
 	}
 	if m.movies != nil {
 		edges = append(edges, user.EdgeMovies)
+	}
+	if m.directors != nil {
+		edges = append(edges, user.EdgeDirectors)
 	}
 	return edges
 }
@@ -5792,13 +5976,19 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeDirectors:
+		ids := make([]ent.Value, 0, len(m.directors))
+		for id := range m.directors {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.removedreviews != nil {
 		edges = append(edges, user.EdgeReviews)
 	}
@@ -5810,6 +6000,9 @@ func (m *UserMutation) RemovedEdges() []string {
 	}
 	if m.removedmovies != nil {
 		edges = append(edges, user.EdgeMovies)
+	}
+	if m.removeddirectors != nil {
+		edges = append(edges, user.EdgeDirectors)
 	}
 	return edges
 }
@@ -5842,13 +6035,19 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case user.EdgeDirectors:
+		ids := make([]ent.Value, 0, len(m.removeddirectors))
+		for id := range m.removeddirectors {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.clearedreviews {
 		edges = append(edges, user.EdgeReviews)
 	}
@@ -5860,6 +6059,9 @@ func (m *UserMutation) ClearedEdges() []string {
 	}
 	if m.clearedmovies {
 		edges = append(edges, user.EdgeMovies)
+	}
+	if m.cleareddirectors {
+		edges = append(edges, user.EdgeDirectors)
 	}
 	return edges
 }
@@ -5876,6 +6078,8 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 		return m.clearedlikes
 	case user.EdgeMovies:
 		return m.clearedmovies
+	case user.EdgeDirectors:
+		return m.cleareddirectors
 	}
 	return false
 }
@@ -5903,6 +6107,9 @@ func (m *UserMutation) ResetEdge(name string) error {
 		return nil
 	case user.EdgeMovies:
 		m.ResetMovies()
+		return nil
+	case user.EdgeDirectors:
+		m.ResetDirectors()
 		return nil
 	}
 	return fmt.Errorf("unknown User edge %s", name)
