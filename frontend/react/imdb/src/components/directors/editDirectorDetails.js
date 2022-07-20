@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import {gql, useMutation, useQuery} from "@apollo/client";
 
-import classes from "./editMovieDetails.module.css"
+import classes from "./editDirectorDetails.module.css"
 
 
 export function EditDirectorDetails(props) {
@@ -28,12 +28,12 @@ export function EditDirectorDetails(props) {
 
     let EDIT_DIRECTOR = gql`
         mutation EditDirectorDetails ($directorID: ID!, $name: String!, $profileImage: String!, $bornAt: String!, $description: String!) {
-            editDirectorDetails (directorID: $directorID, name: $name , profileImage: $profileImage, bornAt: $bornAt , description: $description) {
+            editDirectorDetails (directorID: $directorID, director: {name: $name , profileImage: $profileImage, bornAt: $bornAt , description: $description}) {
                 id
             }
         }
     `;
-
+    
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
 
@@ -49,17 +49,20 @@ export function EditDirectorDetails(props) {
         })
 
     const [givenName, setName] = useState('')
-    const [givenProfileImage, setProfileImage] = useState('')
-    const [givenbornAt, setBornAt] = useState('')
+    const [givenProfileImage1, setProfileImage1] = useState('')
+    const [givenProfileImage2, setProfileImage2] = useState('')
+    const [givenBornAtDay, setBornAtDay] = useState('')
+    const [givenBornAtMonth, setBornAtMonth] = useState('')
+    const [givenBornAtYear, setBornAtYear] = useState('')
     const [givenDescription, setDescription] = useState('')
 
-    const [edit] = useMutation(EDIT_MOVIE,
+    const [edit] = useMutation(EDIT_DIRECTOR,
         {
             variables: {
                 directorID: lastSegment,
                 name: givenName,
-                profileImage: givenProfileImage,
-                bornAt: givenbornAt,
+                profileImage: givenProfileImage1 || givenProfileImage2,
+                bornAt: givenBornAtDay + givenBornAtMonth + givenBornAtYear,
                 description: givenDescription,
             },
 
@@ -76,21 +79,25 @@ export function EditDirectorDetails(props) {
     if (loading1) return <p>Loading...</p>;
     if (error1) return <p>Error :{error1}</p>;
 
-    let title = data1["movieById"]["0"]["title"]
-    let description = data1["movieById"]["0"]["description"]
-    let genre = data1["movieById"]["0"]["genre"]
-    let year = data1["movieById"]["0"]["year"]
-    let image = data1["movieById"]["0"]["image"]
+    let name = data1["directorById"]["0"]["name"]
+    let profileImage = data1["directorById"]["0"]["profileImage"]
+    let bornAt = data1["directorById"]["0"]["bornAt"]
+    let description = data1["directorById"]["0"]["description"]
+
+    let yearBirth = bornAt.slice(4, 8)
+    let monthBirth = bornAt.slice(2, 4)
+    let dayBirth = bornAt.slice(0, 2)
 
 
 
     function handleSubmit() {
-        console.log(givenTitle, givenGenre, givenYear, givenDescription, givenImage1)
-        if (givenGenre === "") {setGenre(genre)}
+        if (givenName === "") {setName(name)}
+        if (givenBornAtDay === "") {setBornAtDay(dayBirth)}
+        if (givenBornAtMonth === "") {setBornAtMonth(monthBirth)}
+        if (givenBornAtYear === "") {setBornAtYear(yearBirth)}
         if (givenDescription === "") {setDescription(description)}
-        if (givenYear === "") {setYear(year)}
-        if (givenImage1 === "") {setImage1(image)}
-        if (givenTitle === "") {setTitle(title)}
+        if (givenProfileImage1 === "") {setProfileImage1(profileImage)}
+
         setSure(true)
     }
 
@@ -104,40 +111,23 @@ export function EditDirectorDetails(props) {
         display: "none",
     });
 
-    const handleChange = (event) => {
-        setGenre(event.target.value);
-    };
-
     let form = (
         <Card>
             <Typography variant="h5" align="center" color="yellow" marginTop="-2cm">
-                Hello! Here You Can Update The Details Of {title}!
+                Hello! Here You Can Update The Details Of {name}!
             </Typography>
             <form className={classes.form}>
 
                 <div className={classes.control}>
-                    <label htmlFor="title">Movie Title</label>
-                    <input type="text" datatype="String" required id="title" defaultValue={title}
-                           onChange={event => setTitle(event.target.value)}/>
-                </div>
-
-                <div className={classes.ctrl}>
-                    <label htmlFor="year">Year Of Release</label>
-                    <input
-                        name="year"
-                        id="year"
-                        min="1890"
-                        max="2022"
-                        defaultValue={year} onChange={event => setYear(event.target.value)}
-                        datatype="Int"
-                        required
-                    ></input>
+                    <label htmlFor="title">Director's Name</label>
+                    <input type="text" datatype="String" required id="title" defaultValue={name}
+                           onChange={event => setName(event.target.value)}/>
                 </div>
 
                 <div className={classes.im}>
-                    <label htmlFor="image">Movie Image</label>
-                    <input type="url" datatype="string" id="image" defaultValue={image}
-                           onChange={event => setImage1(event.target.value)}/>
+                    <label htmlFor="image">Director's Image</label>
+                    <input type="url" datatype="string" id="image" defaultValue={profileImage}
+                           onChange={event => setProfileImage1(event.target.value)}/>
                 </div>
 
                 <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
@@ -146,8 +136,8 @@ export function EditDirectorDetails(props) {
                             accept="image/*"
                             type="file"
                             id="contained-button-file"
-                            value={givenImage2}
-                            onChange={event => setImage2(event.target.value)}
+                            value={givenProfileImage2}
+                            onChange={event => setProfileImage2(event.target.value)}
                         />
                         <Button variant="contained" component="span">
                             Upload
@@ -155,30 +145,31 @@ export function EditDirectorDetails(props) {
                     </label>
                 </Stack>
 
-                <div className={classes.control}>
-                    <InputLabel id="demo-simple-select-label">Genre</InputLabel>
-                    <Select
-                        id="genre"
-                        name="genre"
-                        className={classes.genreInput}
-                        defaultValue={genre}
-                        datatype="String"
-                        placeholder="genre"
-                        onChange={handleChange}
-                    >
-                        <MenuItem value="action">action</MenuItem>
-                        <MenuItem value="drama">drama</MenuItem>
-                        <MenuItem value="comedy">comedy</MenuItem>
-                        <MenuItem value="crime">crime</MenuItem>
-                        <MenuItem value="animation">animation</MenuItem>
-                        <MenuItem value="fantasy">fantasy</MenuItem>
-                        <MenuItem value="romance">romance</MenuItem>
-                        <MenuItem value="thriller">thriller</MenuItem>
-                        <MenuItem value="horror">horror</MenuItem>
-                        <MenuItem value="science fiction">science fiction</MenuItem>
-                        <MenuItem value="historical">historical</MenuItem>
-                        <MenuItem value="western">western</MenuItem>
-                    </Select>
+                <div>
+                    <label htmlFor="birthday" style={{
+                        color: "yellow",
+                        fontWeight: "bold",
+                        position: "relative",
+                        display: "flex",
+                        bottom: "1cm"
+                    }}>Enter Birthday</label>
+                    <table className={classes.tr}>
+                        <tbody>
+                        <tr>
+                            <td><input type="number" id="year" min="1920" max="2022" placeholder="Year"
+                                       defaultValue={yearBirth}
+                                       onChange={event => setBornAtYear(event.target.value)}
+                                       style={{width: "2cm"}}/></td>
+                            <td><input type="number" id="month" min="1" max="12" placeholder="Month"
+                                       defaultValue={monthBirth}
+                                       onChange={event => setBornAtMonth(event.target.value)}
+                                       style={{width: "2cm"}}/></td>
+                            <td><input type="number" id="day" min="1" max="31" placeholder="Day"
+                                       defaultValue={dayBirth} onChange={event => setBornAtDay(event.target.value)}
+                                       style={{width: "2cm"}}/></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div className={classes.control}>
@@ -203,4 +194,4 @@ export function EditDirectorDetails(props) {
     return <>{form}{sureClicked ? edit : null}</>
 }
 
-export default EditMovieDetails
+export default EditDirectorDetails
