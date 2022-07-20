@@ -44,6 +44,8 @@ function DirectorPage(props) {
     let prof = profileImageGiven || profileImageGiven2
     let birthday = dayOfBirthGiven + "." + monthOfBirthGiven + "." + yearOfBirthGiven
 
+    console.log(birthday)
+
     const [expanded, setExpanded] = useState(false);
     const [accordionHeight, setAccordionHeight] = useState(0);
     const ref = useRef("");
@@ -93,10 +95,14 @@ function DirectorPage(props) {
     if (error) return <p>Error :</p>;
     console.log(data)
 
+    // those variable store the current data - before change
     let name = data["directorById"]["0"]["name"]
     let profileImage = data["directorById"]["0"]["profileImage"] || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'
     let description = data["directorById"]["0"]["description"]
     let bornAt = data["directorById"]["0"]["bornAt"]
+    let yearBirth = bornAt.slice(6, 10)
+    let monthBirth = bornAt.slice(3, 5)
+    let dayBirth = bornAt.slice(0, 2)
     let id = data["directorById"]["0"]["id"]
     let userIdOfDirector = data["directorById"]["0"]["user"]["id"]
 
@@ -184,7 +190,7 @@ function DirectorPage(props) {
                             datatype="String"
                             required
                             rows="5"
-                            value={descriptionGiven} onChange={event => setDescription(event.target.value)}
+                            defaultValue={description} onChange={event => setDescription(event.target.value)}
                         ></textarea>
                     </div>
 
@@ -197,7 +203,7 @@ function DirectorPage(props) {
                             required
                             rows="1"
                             style={{width: "11.8cm", height: "0.7cm"}}
-                            value={profileImageGiven} onChange={event => setProfileImage(event.target.value)}
+                            defaultValue={profileImage} onChange={event => setProfileImage(event.target.value)}
                         ></textarea>
                     </div>
                     <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
@@ -228,15 +234,15 @@ function DirectorPage(props) {
                             <tbody>
                             <tr>
                                 <td><input type="number" id="year" min="1920" max="2022" placeholder="Year"
-                                           value={yearOfBirthGiven}
+                                           defaultValue={yearBirth}
                                            onChange={event => setYear(event.target.value)}
                                            style={{width: "2cm"}}/></td>
                                 <td><input type="number" id="month" min="1" max="12" placeholder="Month"
-                                           value={monthOfBirthGiven}
+                                           defaultValue={monthBirth}
                                            onChange={event => setMonth(event.target.value)}
                                            style={{width: "2cm"}}/></td>
                                 <td><input type="number" id="day" min="1" max="31" placeholder="Day"
-                                           value={dayOfBirthGiven} onChange={event => setDay(event.target.value)}
+                                           defaultValue={dayBirth} onChange={event => setDay(event.target.value)}
                                            style={{width: "2cm"}}/></td>
                             </tr>
                             </tbody>
@@ -244,7 +250,7 @@ function DirectorPage(props) {
                     </div>
                     <div className={classes.actions}>
                         <button onClick={() => setVisible(true)}>SUBMIT</button>
-                        {visible ? <UpdateDirectorInfo prof={prof} desc={desc} birthday={birthday} id={lastSegment}
+                        {visible ? <UpdateDirectorInfo prof={prof || profileImage} desc={desc || description} birthday={birthday || bornAt} id={lastSegment}
                                                        currentDesc={description} currentBornAt={bornAt}
                                                        currentProfile={profileImage}/> : console.log("none")}
                     </div>

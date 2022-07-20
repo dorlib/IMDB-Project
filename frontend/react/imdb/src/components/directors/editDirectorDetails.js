@@ -33,7 +33,7 @@ export function EditDirectorDetails(props) {
             }
         }
     `;
-    
+
     let url = JSON.stringify(window.location.href);
     let lastSegment = parseInt(url.split("/").pop(), 10);
 
@@ -62,7 +62,7 @@ export function EditDirectorDetails(props) {
                 directorID: lastSegment,
                 name: givenName,
                 profileImage: givenProfileImage1 || givenProfileImage2,
-                bornAt: givenBornAtDay + givenBornAtMonth + givenBornAtYear,
+                bornAt: givenBornAtDay + "." + givenBornAtMonth + "." + givenBornAtYear,
                 description: givenDescription,
             },
 
