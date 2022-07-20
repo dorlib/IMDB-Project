@@ -201,7 +201,6 @@ function MainNavigation(props) {
 
     // this main navigation will be returned if user is logged in
     let loaded =  (
-        <div>
             <Grid container spacing={12}>
                 <Grid item {...grid}>
                     <header className={classes.header}>
@@ -312,10 +311,9 @@ function MainNavigation(props) {
                         )}
                     </PopupState>
                 </Grid>
+                {/*this makes the background darker when popup appear*/}
+                {sure? <div className={classes.pageMask}>&ensp;</div> : null}
             </Grid>
-            {/*this makes the background darker when popup appear*/}
-            {sure? <div className={classes.pageMask}>&ensp;</div> : null}
-        </div>
     );
 
     return <>{loaded}{sure? sureload : null}</>

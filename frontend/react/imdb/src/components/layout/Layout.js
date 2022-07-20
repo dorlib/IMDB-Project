@@ -3,6 +3,8 @@ import MainNavigation from "./MainNavigation";
 import React, {useEffect, useState} from "react";
 import SearchBar from "./search-bar";
 import {gql, useQuery} from "@apollo/client";
+import {Footer} from "./style";
+import {Link} from "@mui/material";
 
 function Layout(props) {
     let userFirstName = props.username
@@ -31,10 +33,14 @@ function Layout(props) {
 
     return (
         <div>
-            <div>
-                <MainNavigation firstname={userFirstName} id={userId} profile={profile} sumOfFavorites={sumOfFavorites}/>
-                <main className={classes.main}>{props.children}</main>
-            </div>
+            <MainNavigation firstname={userFirstName} id={userId} profile={profile} sumOfFavorites={sumOfFavorites}/>
+            <main className={classes.main}>{props.children}</main>
+            <Footer>
+                <div>
+                    <Link>About</Link> &ensp; &ensp; * &ensp; &ensp; <Link>contact</Link> &ensp; &ensp; *  &ensp; &ensp;
+                    <Link to={"https://github.com/dorlib"}>Github</Link>
+                </div>
+            </Footer>
         </div>
     );
 }

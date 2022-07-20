@@ -53,8 +53,9 @@
     font-size: xxx-large;
     position: absolute;
     display: flex;
-    right: -28cm;
-    bottom: -0.3cm;
+    right: 5.9cm;
+    bottom: 6cm;
+    cursor: pointer;
 }
 
 .backward {
@@ -62,6 +63,7 @@
     font-size: xxx-large;
     position: absolute;
     display: flex;
-    bottom: -0.3cm;
-    right: -14.3cm;
+    bottom: 6cm;
+    right: 17.3cm;
+    cursor: pointer;
 }

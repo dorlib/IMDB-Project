@@ -16,7 +16,7 @@ function Welcome() {
 
 
     return (
-        <div className={classes.welcome}>
+        <div>
             <div style={{color: "yellow"}} className={classes.Title}>
                 <div>
                     <h1 className={classes.mainTitle}>
