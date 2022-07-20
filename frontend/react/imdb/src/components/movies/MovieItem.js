@@ -128,6 +128,13 @@ function MovieItem(props) {
         )
     }
 
+    const handleDirectorClick = () => {
+        let directorID = JSON.stringify(directorId)
+        return (
+            window.location.replace("/editDirectorDetails/" + directorID.slice(1, directorID.length - 1))
+        )
+    }
+
     let load = (
         <div>
             <ToggleFavorite userID={props.userID} movieID={movieID} movieTitle={title} movieImage={image} removeOrAdd={favorites.includes(parseInt(movieID)) && movieID !== 0} toggle={toggle}/>
@@ -183,7 +190,7 @@ function MovieItem(props) {
                     {props.userID === parseInt(userId)? <Button variant="edit" className={classes.editBut} onClick={handleClick}>Edit Movie's Details</Button> : null}
                 </Stack> : null }
                 {props.userID === parseInt(userIdOfDirector)? <Stack direction="row" spacing={2} className={classes.editDirec}>
-                    {props.userID === parseInt(userIdOfDirector)? <Button variant="edit" className={classes.editButDirec} onClick={handleClick}>Edit Director's Details</Button> : null}
+                    {props.userID === parseInt(userIdOfDirector)? <Button variant="edit" className={classes.editButDirec} onClick={handleDirectorClick}>Edit Director's Details</Button> : null}
                 </Stack> : null }
                     <div style={{fontSize: "xxx-large"}}>
                         {props.userID !== 0 ? <Fav>

@@ -40,13 +40,13 @@ func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*
 	return mov, err
 }
 
-func (r *mutationResolver) EditMovieDetails(ctx context.Context, movieID int, movie MovieInput) (*ent.Movie, error) {
+func (r *mutationResolver) EditMovieDetails(ctx context.Context, movieID int, title string, genre string, image string, description string, year int) (*ent.Movie, error) {
 	return r.client.Movie.UpdateOneID(movieID).
-		SetTitle(movie.Title).
-		SetGenre(movie.Genre).
-		SetImage(movie.Image).
-		SetDescription(movie.Description).
-		SetYear(movie.Year).
+		SetTitle(title).
+		SetGenre(genre).
+		SetImage(image).
+		SetDescription(description).
+		SetYear(year).
 		Save(ctx)
 }
 
@@ -61,8 +61,9 @@ func (r *mutationResolver) CreateDirector(ctx context.Context, director Director
 func (r *mutationResolver) EditDirectorDetails(ctx context.Context, directorID int, director DirectorInput) (*ent.Director, error) {
 	return r.client.Director.UpdateOneID(directorID).
 		SetName(director.Name).
-		SetProfileImage("https://hope.be/wp-content/uploads/2015/05/no-user-image.gif").
-		SetBornAt("1.1.1111").
+		SetProfileImage(director.ProfileImage).
+		SetBornAt(director.BornAt).
+		SetDescription(director.Description).
 		Save(ctx)
 }
 

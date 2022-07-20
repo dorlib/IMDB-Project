@@ -5,12 +5,14 @@ import {Marginer} from "../marginer";
 import {Typography} from "@mui/material";
 import {Button, Stack} from "@mui/material";
 import Card from "../ui/Card";
-import classes from "./MovieItem.module.css"
 import {styled} from "@mui/material/styles";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import {gql, useMutation, useQuery} from "@apollo/client";
+
+import classes from "./editMovieDetails.module.css"
+
 
 export function EditMovieDetails(props) {
     const MOVIE_DATA = gql`
@@ -27,8 +29,8 @@ export function EditMovieDetails(props) {
     `;
 
     let EDIT_MOVIE = gql`
-        mutation EditMovieDetails ($title: String!, $description: String!, $genre: String!, $image: String!, $year: Int!) {
-            editMovieDetails (movie: {title: $title , description: $description, genre: $genre , image: $image, year: $year}) {
+        mutation EditMovieDetails ($movieID: ID!, $title: String!, $description: String!, $genre: String!, $image: String!, $year: Int!) {
+            editMovieDetails (movieID: $movieID, title: $title , description: $description, genre: $genre , image: $image, year: $year) {
                 id
             }
         }
@@ -58,15 +60,16 @@ export function EditMovieDetails(props) {
     const [edit] = useMutation(EDIT_MOVIE,
         {
             variables: {
+                movieID: lastSegment,
                 title: givenTitle,
                 description: givenDescription,
                 genre: givenGenre,
                 year: givenYear,
-                image: givenImage1 | givenImage2
+                image: givenImage1 || givenImage2
             },
             onCompleted: function (data, variant) {
                 setSpinner(false)
-                return setTimeout(() => window.location.replace("/moviePage" + JSON.stringify(lastSegment)), 1000);
+                return setTimeout(() => window.location.replace("/moviePage/" + JSON.stringify(lastSegment)), 1000);
 
             },
             onError: function (error) {
@@ -84,14 +87,21 @@ export function EditMovieDetails(props) {
     let image = data1["movieById"]["0"]["image"]
 
 
+
     function handleSubmit() {
+        console.log(givenTitle, givenGenre, givenYear, givenDescription, givenImage1)
+        if (givenGenre === "") {setGenre(genre)}
+        if (givenDescription === "") {setDescription(description)}
+        if (givenYear === "") {setYear(year)}
+        if (givenImage1 === "") {setImage1(image)}
+        if (givenTitle === "") {setTitle(title)}
         setSure(true)
     }
 
     const handleSure = () => {
         setSpinner(true)
         setSureClicked(true)
-        return (edit())
+        edit()
     }
 
     const Input = styled("input")({
@@ -160,18 +170,18 @@ export function EditMovieDetails(props) {
                         placeholder="genre"
                         onChange={handleChange}
                     >
-                        <MenuItem value="action">Action</MenuItem>
-                        <MenuItem value="drama">Drama</MenuItem>
-                        <MenuItem value="comedy">Comedy</MenuItem>
-                        <MenuItem value="crime">Crime</MenuItem>
-                        <MenuItem value="animation">Animation</MenuItem>
-                        <MenuItem value="fantasy">Fantasy</MenuItem>
-                        <MenuItem value="romance">Romance</MenuItem>
-                        <MenuItem value="thriller">Thriller</MenuItem>
-                        <MenuItem value="horror">Horror</MenuItem>
-                        <MenuItem value="science fiction">Science Fiction</MenuItem>
-                        <MenuItem value="historical">Historical</MenuItem>
-                        <MenuItem value="western">Western</MenuItem>
+                        <MenuItem value="action">action</MenuItem>
+                        <MenuItem value="drama">drama</MenuItem>
+                        <MenuItem value="comedy">comedy</MenuItem>
+                        <MenuItem value="crime">crime</MenuItem>
+                        <MenuItem value="animation">animation</MenuItem>
+                        <MenuItem value="fantasy">fantasy</MenuItem>
+                        <MenuItem value="romance">romance</MenuItem>
+                        <MenuItem value="thriller">thriller</MenuItem>
+                        <MenuItem value="horror">horror</MenuItem>
+                        <MenuItem value="science fiction">science fiction</MenuItem>
+                        <MenuItem value="historical">historical</MenuItem>
+                        <MenuItem value="western">western</MenuItem>
                     </Select>
                 </div>
 
