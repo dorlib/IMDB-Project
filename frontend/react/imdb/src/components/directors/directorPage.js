@@ -76,6 +76,9 @@ function DirectorPage(props) {
                     rank
                     image
                 }
+                user {
+                    id
+                }
             }
         }
     `;
@@ -95,6 +98,7 @@ function DirectorPage(props) {
     let description = data["directorById"]["0"]["description"]
     let bornAt = data["directorById"]["0"]["bornAt"]
     let id = data["directorById"]["0"]["id"]
+    let userIdOfDirector = data["directorById"]["0"]["user"]["id"]
 
     const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
 
@@ -139,6 +143,7 @@ function DirectorPage(props) {
                             About {name} : {description}
                         </p>
                     </Typography>
+                    { parseInt(userIdOfDirector) !== props.userID ? <Button size="large" className={classes.share}>Share</Button>: null}
                 </CardContent>
             </Card>
         </div>
@@ -218,8 +223,7 @@ function DirectorPage(props) {
                             position: "relative",
                             display: "flex",
                             bottom: "1cm"
-                        }}>Enter Your
-                            Birthday</label>
+                        }}>Enter Birthday</label>
                         <table className={classes.tr}>
                             <tbody>
                             <tr>
@@ -281,7 +285,7 @@ function DirectorPage(props) {
             <h3>&ensp;</h3>
         </div>
     ))
-    return <>{d}{props.userID !== 0 ? edit: null}{l}{loaded}</>
+    return <>{d}{props.userID === parseInt(userIdOfDirector) ? edit: null}{l}{loaded}</>
 }
 
 export default DirectorPage;

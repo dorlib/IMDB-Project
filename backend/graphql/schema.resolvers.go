@@ -61,8 +61,9 @@ func (r *mutationResolver) CreateDirector(ctx context.Context, director Director
 func (r *mutationResolver) EditDirectorDetails(ctx context.Context, directorID int, director DirectorInput) (*ent.Director, error) {
 	return r.client.Director.UpdateOneID(directorID).
 		SetName(director.Name).
-		SetProfileImage("https://hope.be/wp-content/uploads/2015/05/no-user-image.gif").
-		SetBornAt("1.1.1111").
+		SetProfileImage(director.ProfileImage).
+		SetBornAt(director.BornAt).
+		SetDescription(director.Description).
 		Save(ctx)
 }
 

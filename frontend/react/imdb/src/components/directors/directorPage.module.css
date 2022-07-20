@@ -137,7 +137,16 @@
     font-size: xxx-large;
     right: 20cm;
     bottom: 11cm;
-    rotate: ;
+    rotate: 180deg;
 }
+
+.share {
+    position: absolute;
+    display: flex;
+    left: 29rem;
+    bottom: 0.5rem;
+}
+
+
 
 
