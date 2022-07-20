@@ -33,20 +33,30 @@
     position: absolute;
     display: flex;
     left: 36.6%;
-    top: 66.7%;
+    top: 60%;
     border-radius: 20px;
-    width: 23%;
-    height: 23.52%;
+    width: 25%;
+    height: 25%;
+}
+
+.Achievements {
+    position: absolute;
+    display: flex;
+    left: 63%;
+    top: 60%;
+    border-radius: 20px;
+    width: 25%;
+    height: 25%;
 }
 
 .contrib {
     position: absolute;
     display: flex;
-    left: 64%;
-    top: 66.7%;
+    left: 36.5%;
+    top: 87%;
     border-radius: 20px;
-    width: 24%;
-    height: 23.52%;
+    width: 51.5%;
+    height: 25%;
 }
 
 .desc {

@@ -184,9 +184,18 @@ function UserPage(props) {
                 </CardActions>
             </React.Fragment>
             <React.Fragment>
+                <CardContent style={{backgroundColor: "darkslategray"}} className={classes.Achievements}>
+                    <Typography variant="h5" component="div">
+                        Achievements Of {firstName}
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                </CardActions>
+            </React.Fragment>
+            <React.Fragment>
                 <CardContent style={{backgroundColor: "darkslategray"}} className={classes.contrib}>
                     <Typography variant="h5" component="div">
-                        Contributes Of {firstName}
+                        Achievements Of {firstName}
                     </Typography>
                 </CardContent>
                 <CardActions>
