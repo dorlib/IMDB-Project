@@ -113,7 +113,7 @@ type ComplexityRoot struct {
 		DeleteReview           func(childComplexity int, reviewID int, userID int) int
 		EditComment            func(childComplexity int, commentID int, text string) int
 		EditDirectorDetails    func(childComplexity int, directorID int, director DirectorInput) int
-		EditMovieDetails       func(childComplexity int, movieID int, movie MovieInput) int
+		EditMovieDetails       func(childComplexity int, movieID int, title string, genre string, image string, description string, year int) int
 		EditReview             func(childComplexity int, reviewID int, rank int, text string, topic string) int
 		RemoveFromFavorites    func(childComplexity int, movieID int, userID int) int
 		UpdateDirectorDetails  func(childComplexity int, id int, bornAt string, profileImage string, description string) int
@@ -198,7 +198,7 @@ type MutationResolver interface {
 	DeleteLike(ctx context.Context, likeID int, userID int, reviewID int) ([]*ent.Like, error)
 	DeleteReview(ctx context.Context, reviewID int, userID int) (int, error)
 	EditReview(ctx context.Context, reviewID int, rank int, text string, topic string) (*ent.Review, error)
-	EditMovieDetails(ctx context.Context, movieID int, movie MovieInput) (*ent.Movie, error)
+	EditMovieDetails(ctx context.Context, movieID int, title string, genre string, image string, description string, year int) (*ent.Movie, error)
 	EditDirectorDetails(ctx context.Context, directorID int, director DirectorInput) (*ent.Director, error)
 }
 type QueryResolver interface {
@@ -656,7 +656,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.EditMovieDetails(childComplexity, args["movieID"].(int), args["movie"].(MovieInput)), true
+		return e.complexity.Mutation.EditMovieDetails(childComplexity, args["movieID"].(int), args["title"].(string), args["genre"].(string), args["image"].(string), args["description"].(string), args["year"].(int)), true
 
 	case "Mutation.editReview":
 		if e.complexity.Mutation.EditReview == nil {
@@ -1376,7 +1376,7 @@ type Mutation {
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
     deleteReview(reviewID: ID!, userID: ID!) : ID!
     editReview(reviewID: ID!, rank: Int!, text: String!, topic: String!) : Review!
-    editMovieDetails(movieID: ID!, movie: MovieInput!): Movie!
+    editMovieDetails(movieID: ID!, title: String!, genre: String!, image: String!, description: String!, year: Int!): Movie!
     editDirectorDetails(DirectorID: ID!, director: DirectorInput!): Director!
 }
 
@@ -1879,15 +1879,51 @@ func (ec *executionContext) field_Mutation_editMovieDetails_args(ctx context.Con
 		}
 	}
 	args["movieID"] = arg0
-	var arg1 MovieInput
-	if tmp, ok := rawArgs["movie"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("movie"))
-		arg1, err = ec.unmarshalNMovieInput2imdbv2ᚋgraphqlᚐMovieInput(ctx, tmp)
+	var arg1 string
+	if tmp, ok := rawArgs["title"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["movie"] = arg1
+	args["title"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["genre"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("genre"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["genre"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["image"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["image"] = arg3
+	var arg4 string
+	if tmp, ok := rawArgs["description"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+		arg4, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["description"] = arg4
+	var arg5 int
+	if tmp, ok := rawArgs["year"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("year"))
+		arg5, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["year"] = arg5
 	return args, nil
 }
 
@@ -4355,7 +4391,7 @@ func (ec *executionContext) _Mutation_editMovieDetails(ctx context.Context, fiel
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().EditMovieDetails(rctx, args["movieID"].(int), args["movie"].(MovieInput))
+		return ec.resolvers.Mutation().EditMovieDetails(rctx, args["movieID"].(int), args["title"].(string), args["genre"].(string), args["image"].(string), args["description"].(string), args["year"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
