@@ -38,7 +38,7 @@ function Layout(props) {
             <Footer>
                 <div>
                     <Link>About</Link> &ensp; &ensp; * &ensp; &ensp; <Link>contact</Link> &ensp; &ensp; *  &ensp; &ensp;
-                    <Link to={"https://github.com/dorlib"}>Github</Link>
+                    <Link href={"https://github.com/dorlib"} target="_blank">Github</Link>
                 </div>
             </Footer>
         </div>
