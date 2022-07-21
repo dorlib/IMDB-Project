@@ -164,7 +164,7 @@ function UserPage(props) {
                     <Typography variant="h5" component="div">
                         Movies Contributed By {firstName}
                     </Typography>
-                    <MoviesByUser userID={props.LoggedInUser}/>
+                    <MoviesByUser userID={id}/>
                 </CardContent>
             </React.Fragment>
             <React.Fragment>
@@ -172,7 +172,7 @@ function UserPage(props) {
                     <Typography variant="h5" component="div">
                         Directors Contributed By {firstName}
                     </Typography>
-                    <DirectorsByUser userID={props.LoggedInUser}/>
+                    <DirectorsByUser userID={id}/>
                 </CardContent>
             </React.Fragment>
             <React.Fragment>
