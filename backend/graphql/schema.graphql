@@ -218,6 +218,8 @@ type Query {
     likesOfUser(userID : ID!): [Like]
     LikeByUserAndReview(userID: ID!, reviewID: ID!): Like
     totalLikesOfReviewsOfMovie(movieID: ID!): [Like]
+    moviesOfUser(userID: ID!): [Movie]
+    directorsOfUser(userID: ID!): [Director]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node

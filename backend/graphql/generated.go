@@ -128,6 +128,7 @@ type ComplexityRoot struct {
 		DirectorByID               func(childComplexity int, id int) int
 		DirectorIDByName           func(childComplexity int, name string) int
 		Directors                  func(childComplexity int) int
+		DirectorsOfUser            func(childComplexity int, userID int) int
 		FavoritesOfUser            func(childComplexity int, userID int) int
 		Last5Added                 func(childComplexity int) int
 		LikeByUserAndReview        func(childComplexity int, userID int, reviewID int) int
@@ -135,6 +136,7 @@ type ComplexityRoot struct {
 		MovieByID                  func(childComplexity int, id int) int
 		Movies                     func(childComplexity int) int
 		MoviesByGenre              func(childComplexity int, genre string) int
+		MoviesOfUser               func(childComplexity int, userID int) int
 		Node                       func(childComplexity int, id int) int
 		Nodes                      func(childComplexity int, ids []int) int
 		Reviews                    func(childComplexity int) int
@@ -219,6 +221,8 @@ type QueryResolver interface {
 	LikesOfUser(ctx context.Context, userID int) ([]*ent.Like, error)
 	LikeByUserAndReview(ctx context.Context, userID int, reviewID int) (*ent.Like, error)
 	TotalLikesOfReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Like, error)
+	MoviesOfUser(ctx context.Context, userID int) ([]*ent.Movie, error)
+	DirectorsOfUser(ctx context.Context, userID int) ([]*ent.Director, error)
 	Users(ctx context.Context) ([]*ent.User, error)
 	Top10Movies(ctx context.Context) ([]*ent.Movie, error)
 	Node(ctx context.Context, id int) (ent.Noder, error)
@@ -785,6 +789,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Directors(childComplexity), true
 
+	case "Query.directorsOfUser":
+		if e.complexity.Query.DirectorsOfUser == nil {
+			break
+		}
+
+		args, err := ec.field_Query_directorsOfUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.DirectorsOfUser(childComplexity, args["userID"].(int)), true
+
 	case "Query.favoritesOfUser":
 		if e.complexity.Query.FavoritesOfUser == nil {
 			break
@@ -858,6 +874,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.MoviesByGenre(childComplexity, args["genre"].(string)), true
+
+	case "Query.moviesOfUser":
+		if e.complexity.Query.MoviesOfUser == nil {
+			break
+		}
+
+		args, err := ec.field_Query_moviesOfUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.MoviesOfUser(childComplexity, args["userID"].(int)), true
 
 	case "Query.node":
 		if e.complexity.Query.Node == nil {
@@ -1399,6 +1427,8 @@ type Query {
     likesOfUser(userID : ID!): [Like]
     LikeByUserAndReview(userID: ID!, reviewID: ID!): Like
     totalLikesOfReviewsOfMovie(movieID: ID!): [Like]
+    moviesOfUser(userID: ID!): [Movie]
+    directorsOfUser(userID: ID!): [Director]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node
@@ -2269,6 +2299,21 @@ func (ec *executionContext) field_Query_directorIdByName_args(ctx context.Contex
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_directorsOfUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["userID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_favoritesOfUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2326,6 +2371,21 @@ func (ec *executionContext) field_Query_moviesByGenre_args(ctx context.Context, 
 		}
 	}
 	args["genre"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_moviesOfUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["userID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg0
 	return args, nil
 }
 
@@ -5083,6 +5143,84 @@ func (ec *executionContext) _Query_totalLikesOfReviewsOfMovie(ctx context.Contex
 	res := resTmp.([]*ent.Like)
 	fc.Result = res
 	return ec.marshalOLike2ᚕᚖimdbv2ᚋentᚐLike(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_moviesOfUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_moviesOfUser_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().MoviesOfUser(rctx, args["userID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Movie)
+	fc.Result = res
+	return ec.marshalOMovie2ᚕᚖimdbv2ᚋentᚐMovie(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_directorsOfUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_directorsOfUser_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().DirectorsOfUser(rctx, args["userID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Director)
+	fc.Result = res
+	return ec.marshalODirector2ᚕᚖimdbv2ᚋentᚐDirector(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_users(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8883,6 +9021,46 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_totalLikesOfReviewsOfMovie(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "moviesOfUser":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_moviesOfUser(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "directorsOfUser":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_directorsOfUser(ctx, field)
 				return res
 			}
 
