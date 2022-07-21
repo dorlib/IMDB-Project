@@ -16,6 +16,7 @@ import CardContent from '@mui/material/CardContent';
 
 import classes from "./userPage.module.css"
 import styled from "styled-components";
+import DirectorsByUser from "../components/directors/directorsByUser";
 
 function UserPage(props) {
     const USER_DATA = gql`
@@ -169,6 +170,7 @@ function UserPage(props) {
                     <Typography variant="h5" component="div">
                         Directors Contributed By {firstName}
                     </Typography>
+                    <DirectorsByUser userID={props.LoggedInUser}/>
                 </CardContent>
             </React.Fragment>
             <React.Fragment>

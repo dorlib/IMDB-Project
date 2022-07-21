@@ -7,17 +7,17 @@ import Typography from "@mui/material/Typography";
 import classes from "./directorsByUser.module.css";
 import {Link} from "react-router-dom";
 
-function DirectorsByUser(props) {
-    const DIRECTORS_OF_USER = gql`
-        query DirectorsOfUser($userID: ID!) {
-            directorsOfUser(userID: $userID) {
+function MoviesByUser(props) {
+    const MOVIE_OF_USER = gql`
+        query MoviesOfUser($userID: ID!) {
+            moviesOfUser(userID: $userID) {
                 id
-                name
-                profileImage
+                title
+                image
             }
         }
     `
-    const {loading, error, data} = useQuery(DIRECTORS_OF_USER,
+    const {loading, error, data} = useQuery(MOVIE_OF_USER,
         {
             variables: {
                 userID: props.userID
@@ -29,7 +29,7 @@ function DirectorsByUser(props) {
 
     let loaded = (
         <ul className={classes.list}>
-            {data.directorsOfUser.map(( {id, name, profileImage} ) => (
+            {data.directorsOfUser.map(( {id, title, image} ) => (
                 <div>
                     <Card sx={{maxWidth: 100}} style={{backgroundColor: "#cc2062", borderRadius: "50px", width: "90px", display: "inline-block", marginTop:"0.7cm"}} key={id}>
                         <CardMedia
@@ -40,8 +40,8 @@ function DirectorsByUser(props) {
                         />
                         <CardContent className={classes.card}>
                             <Typography gutterBottom variant="h5" component="div">
-                                <p style={{color: "yellow"}} className={classes.director}>
-                                    <Link to={"/directorPage/" + id} className={classes.directorName}> {name}</Link>
+                                <p style={{color: "yellow"}} className={classes.movie}>
+                                    <Link to={"/directorPage/" + id} className={classes.movieTitle}> {title}</Link>
                                 </p>
                             </Typography>
                         </CardContent>
