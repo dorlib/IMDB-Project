@@ -6,8 +6,8 @@
     border-radius: 200px;
     max-height: 40%;
     max-width: 60%;
-    top: -7rem;
-    left: -24rem;
+    top: -5.5rem;
+    left: -25rem;
 }
 
 .changeProfile {
@@ -20,10 +20,10 @@
 }
 
 .mainCard {
-    position: relative;
+    position: absolute;
     display: flex;
-    left: 3rem;
-    bottom: 30rem;
+    left: 46.3rem;
+    bottom: 26rem;
     border-radius: 20px;
     width: 65rem;
     height: 21rem;
@@ -33,27 +33,47 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 28.3rem;
+    bottom: 5.7rem;
     border-radius: 20px;
     width: 31rem;
     height: 15rem;
 }
 
 .Achievements {
-    position: relative;
+    position: absolute;
     display: flex;
-    right: -35.5rem;
-    bottom: 43.3rem;
+    right: 15.2rem;
+    bottom: 9.5rem;
     border-radius: 20px;
     width: 32.5rem;
     height: 15rem;
 }
 
-.contrib {
+.contribMov {
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 41.5rem;
+    bottom: 4.5rem;
+    border-radius: 20px;
+    width: 65rem;
+    height: 17rem;
+}
+
+.contribDirec {
+    position: relative;
+    display: flex;
+    left: 3rem;
+    bottom: 3rem;
+    border-radius: 20px;
+    width: 65rem;
+    height: 17rem;
+}
+
+.contribRev {
+    position: relative;
+    display: flex;
+    left: 3rem;
+    bottom: 1rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;

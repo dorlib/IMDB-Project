@@ -36,10 +36,10 @@ function Layout(props) {
             <MainNavigation firstname={userFirstName} id={userId} profile={profile} sumOfFavorites={sumOfFavorites}/>
             <main className={classes.main}>{props.children}</main>
             <Footer>
-                <div>
+                <h4>
                     <Link>About</Link> &ensp; &ensp; * &ensp; &ensp; <Link>contact</Link> &ensp; &ensp; *  &ensp; &ensp;
                     <Link href={"https://github.com/dorlib"} target="_blank">Github</Link>
-                </div>
+                </h4>
             </Footer>
         </div>
     );

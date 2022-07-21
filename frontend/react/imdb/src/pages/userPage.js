@@ -93,16 +93,14 @@ function UserPage(props) {
     const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
 
     let loaded = (
-        <div>
+        <Card>
             <p className={classes.name}>
                 {firstName} {lastName}
             </p>
             <p className={classes.nick}>
                 {nickName}
             </p>
-            <div className={classes.image}>
-                <img src={Profile}/>
-            </div>
+            <img className={classes.image} src={Profile} alt={"none"}/>
             <Stack direction="row" spacing={1} className={classes.changeProfile}>
                 <IconButton color="primary" aria-label="change image" style={{color: "yellow"}}>
                     {props.LoggedInUser === id ? <SettingsSuggestIcon style={{fontSize: "xx-large"}}/> : null}
@@ -160,13 +158,27 @@ function UserPage(props) {
                 </CardContent>
             </React.Fragment>
             <React.Fragment>
-                <CardContent style={{backgroundColor: "darkslategray"}} className={classes.contrib}>
+                <CardContent style={{backgroundColor: "darkslategray"}} className={classes.contribMov}>
                     <Typography variant="h5" component="div">
-                        Contributes Of {firstName}
+                        Movies Contributed By {firstName}
                     </Typography>
                 </CardContent>
             </React.Fragment>
-        </div>
+            <React.Fragment>
+                <CardContent style={{backgroundColor: "darkslategray"}} className={classes.contribDirec}>
+                    <Typography variant="h5" component="div">
+                        Directors Contributed By {firstName}
+                    </Typography>
+                </CardContent>
+            </React.Fragment>
+            <React.Fragment>
+                <CardContent style={{backgroundColor: "darkslategray"}} className={classes.contribRev}>
+                    <Typography variant="h5" component="div">
+                        Top Reviews By {firstName}
+                    </Typography>
+                </CardContent>
+            </React.Fragment>
+        </Card>
 
     )
 
