@@ -1,90 +1,114 @@
 .image {
-    position: absolute;
+    position: relative;
     display: flex;
     height: 25rem;
     overflow: hidden;
     border-radius: 200px;
     max-height: 40%;
-    max-width: 18%;
-    top: 17%;
-    left: 15%;
+    max-width: 60%;
+    top: -5.5rem;
+    left: -25rem;
 }
 
 .changeProfile {
-    position: absolute;
+    position: relative;
     display: flex;
     color: yellow;
     font-size: x-large;
-    bottom: 43%;
-    left: 29.5%;
+    bottom: 8.5rem;
+    left: -6.5rem;
 }
 
 .mainCard {
     position: absolute;
     display: flex;
-    left: 36.5%;
-    top: 5cm;
+    left: 46.3rem;
+    bottom: 26rem;
     border-radius: 20px;
-    width: 51.5%;
-    height: 38%;
+    width: 65rem;
+    height: 21rem;
 }
 
 .pined {
-    position: absolute;
+    position: relative;
     display: flex;
-    left: 36.6%;
-    top: 60%;
+    left: 3rem;
+    bottom: 5.7rem;
     border-radius: 20px;
-    width: 25%;
-    height: 25%;
+    width: 31rem;
+    height: 15rem;
 }
 
 .Achievements {
     position: absolute;
     display: flex;
-    left: 63%;
-    top: 60%;
+    right: 15.2rem;
+    bottom: 9.5rem;
     border-radius: 20px;
-    width: 25%;
-    height: 25%;
+    width: 32.5rem;
+    height: 15rem;
 }
 
-.contrib {
-    position: absolute;
+.contribMov {
+    position: relative;
     display: flex;
-    left: 36.5%;
-    top: 87%;
+    left: 3rem;
+    bottom: 4.5rem;
     border-radius: 20px;
-    width: 51.5%;
-    height: 25%;
+    width: 65rem;
+    height: 17rem;
+}
+
+.contribDirec {
+    position: relative;
+    display: flex;
+    left: 3rem;
+    bottom: 3rem;
+    border-radius: 20px;
+    width: 65rem;
+    height: 17rem;
+}
+
+.contribRev {
+    position: relative;
+    display: flex;
+    left: 3rem;
+    bottom: 1rem;
+    border-radius: 20px;
+    width: 65rem;
+    height: 17rem;
 }
 
 .desc {
     position: absolute;
     display: flex;
-    left: 3.5%;
-    top: 1.3cm;
+    top: 4rem;
+    left: 2rem;
+    font-weight: bold;
 }
 
 .fav {
     position: absolute;
     display: flex;
-    left: 3.5%;
-    top: 26%;
+    top: 6.5rem;
+    left: 2rem;
+    font-weight: bold;
 }
 
 .birth {
     position: absolute;
     display: flex;
-    left: 1cm;
-    top: 39%;
+    top: 9rem;
+    left: 2rem;
+    font-weight: bold;
 }
 
 .contact {
     position: absolute;
     display: flex;
-    left: 3.5%;
-    top: 52%;
+    top: 11.5rem;
+    left: 2rem;
+    font-weight: bold;
 }
 
 .name {
@@ -176,7 +200,7 @@
     position: absolute;
     display: flex;
     left: 61rem;
-    bottom: 19rem;
+    bottom: 17.5rem;
 }
 
 .editDetails {

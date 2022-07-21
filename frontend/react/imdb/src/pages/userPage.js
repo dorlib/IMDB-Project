@@ -1,11 +1,9 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {gql, useQuery} from "@apollo/client";
 import Card from "../components/ui/Card";
-import {Link} from "react-router-dom";
 
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import {colors} from "@mui/material";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import Typography from "@mui/material/Typography";
@@ -13,16 +11,11 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-
-import Box from '@mui/material/Box';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import EditDetails from "../components/accounts/editDetails";
-
 
 import classes from "./userPage.module.css"
 import styled from "styled-components";
-
 
 function UserPage(props) {
     const USER_DATA = gql`
@@ -78,7 +71,7 @@ function UserPage(props) {
         })
 
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :</p>;
+    if (error) return <p>Error : {error}</p>;
 
     let id = lastSegment
     let firstName = data["userById"]["0"]["firstname"]
@@ -90,89 +83,65 @@ function UserPage(props) {
     let Country = data["userById"]["0"]["country"]
     let Profile = data["userById"]["0"]["profile"] || "https://hope.be/wp-content/uploads/2015/05/no-user-image.gif"
 
-    const bull = (
-        <Box
-            component="span"
-            sx={{display: 'inline-block', mx: '2px', transform: 'scale(0.8)'}}
-        >
-            •
-        </Box>
-    );
-
     const handleClick = () => {
         return (
             window.location.replace("/editUserDetails/" + JSON.stringify(id))
         )
     }
 
-    let Birth =  Birthday.slice(2,4) + '.' + Birthday.slice(0,2) + '.' + Birthday.slice(4,8)
+    let Birth = Birthday.slice(2, 4) + '.' + Birthday.slice(0, 2) + '.' + Birthday.slice(4, 8)
     const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
 
     let loaded = (
         <Card>
-            <div>
-                <p className={classes.name}>
-                    {firstName} {lastName}
-                </p>
-                <p className={classes.nick}>
-                    {nickName}
-                </p>
-            </div>
-            <div className={classes.image}>
-                <img src={Profile}/>
-            </div>
+            <p className={classes.name}>
+                {firstName} {lastName}
+            </p>
+            <p className={classes.nick}>
+                {nickName}
+            </p>
+            <img className={classes.image} src={Profile} alt={"none"}/>
             <Stack direction="row" spacing={1} className={classes.changeProfile}>
                 <IconButton color="primary" aria-label="change image" style={{color: "yellow"}}>
-                    {props.LoggedInUser === id? <SettingsSuggestIcon style={{fontSize: "xx-large"}}/>: null}
+                    {props.LoggedInUser === id ? <SettingsSuggestIcon style={{fontSize: "xx-large"}}/> : null}
                 </IconButton>
             </Stack>
-
-            <div>
-                <PeopleAltIcon className={classes.followIcon}/>
-                <Typography className={classes.follows}>Following</Typography>
-                <FiberManualRecordIcon className={classes.dot}/>
-                <Typography className={classes.followers}>Followers</Typography>
-            </div>
-            <div>
-                <LocationOnIcon className={classes.location}/>
-                <Typography className={classes.country}>{Country}</Typography>
-
-            </div>
+            <PeopleAltIcon className={classes.followIcon}/>
+            <Typography className={classes.follows}>Following</Typography>
+            <FiberManualRecordIcon className={classes.dot}/>
+            <Typography className={classes.followers}>Followers</Typography>
+            <LocationOnIcon className={classes.location}/>
+            <Typography className={classes.country}>{Country}</Typography>
             <Stack direction="row" spacing={2} className={classes.edit}>
-                {props.LoggedInUser === id? <Button variant="edit" className={classes.editBut} onClick={handleClick}>Edit Profile</Button> : null}
+                {props.LoggedInUser === id ? <Button variant="edit" className={classes.editBut} onClick={handleClick}>Edit
+                    Profile</Button> : null}
             </Stack>
             <React.Fragment>
                 <CardContent style={{backgroundColor: "darkslategray"}} className={classes.mainCard}>
                     <IconButton color="primary" aria-label="update details" className={classes.editDetails}>
-                        {props.LoggedInUser === id ?<EditIcon className={classes.editDetailsBut}/>: null}
+                        {props.LoggedInUser === id ? <EditIcon className={classes.editDetailsBut}/> : null}
                         <Details>
                             <TextBox>
-                                <text>Click To Update Your Details</text>
+                                Click To Update Your Details
                             </TextBox>
                         </Details>
                     </IconButton>
                     <Typography variant="h5" component="div">
                         Hi, i'm {firstName}
                     </Typography>
-                    <div>
-                        <h4 className={classes.desc}>
-                            If I Had To Describe Myself I Would Say : {Description}
-                        </h4>
-                        <h4 className={classes.fav}>
-                            My Favorite Movies Are : ...
-                        </h4>
-                    </div>
-                    <div>
-                        <h4 className={classes.birth}>
-                            I Was Born In {Birth} So Im {getAge(Birth)} Years Old
-                        </h4>
-                    </div>
-                    <h4 className={classes.contact}>
+                    <span className={classes.desc}>
+                        If I Had To Describe Myself I Would Say : {Description}
+                    </span>
+                    <span className={classes.fav}>
+                        My Favorite Movies Are : ...
+                    </span>
+                    <span className={classes.birth}>
+                        I Was Born In {Birth} So Im {getAge(Birth)} Years Old
+                    </span>
+                    <span className={classes.contact}>
                         Wants To Contact {firstName} ? {Email}
-                    </h4>
+                    </span>
                 </CardContent>
-                <CardActions>
-                </CardActions>
             </React.Fragment>
             <React.Fragment>
                 <CardContent style={{backgroundColor: "darkslategray"}} className={classes.pined}>
@@ -180,8 +149,6 @@ function UserPage(props) {
                         Pined Movies Of {firstName}
                     </Typography>
                 </CardContent>
-                <CardActions>
-                </CardActions>
             </React.Fragment>
             <React.Fragment>
                 <CardContent style={{backgroundColor: "darkslategray"}} className={classes.Achievements}>
@@ -189,20 +156,32 @@ function UserPage(props) {
                         Achievements Of {firstName}
                     </Typography>
                 </CardContent>
-                <CardActions>
-                </CardActions>
             </React.Fragment>
             <React.Fragment>
-                <CardContent style={{backgroundColor: "darkslategray"}} className={classes.contrib}>
+                <CardContent style={{backgroundColor: "darkslategray"}} className={classes.contribMov}>
                     <Typography variant="h5" component="div">
-                        Achievements Of {firstName}
+                        Movies Contributed By {firstName}
                     </Typography>
                 </CardContent>
-                <CardActions>
-                </CardActions>
+            </React.Fragment>
+            <React.Fragment>
+                <CardContent style={{backgroundColor: "darkslategray"}} className={classes.contribDirec}>
+                    <Typography variant="h5" component="div">
+                        Directors Contributed By {firstName}
+                    </Typography>
+                </CardContent>
+            </React.Fragment>
+            <React.Fragment>
+                <CardContent style={{backgroundColor: "darkslategray"}} className={classes.contribRev}>
+                    <Typography variant="h5" component="div">
+                        Top Reviews By {firstName}
+                    </Typography>
+                </CardContent>
             </React.Fragment>
         </Card>
+
     )
+
     return loaded
 }
 

@@ -58,7 +58,6 @@ function Last5Added() {
                 marginRight: "-35.6rem",
                 marginLeft: "35.6rem",
                 marginTop: "-31rem",
-                marginBottom: "31rem",
                 borderRadius: "100px"
             }}>
                 <CardMedia component="img" alt="movie image" height="300" src={data.last5Added["0"]["image"]}
@@ -93,7 +92,6 @@ function Last5Added() {
                 marginRight: "-35.6rem",
                 marginLeft: "35.6rem",
                 marginTop: "-31rem",
-                marginBottom: "31rem",
                 borderRadius: "100px"
             }}>
                 <CardMedia component="img" alt="movie image" height="300" src={data.last5Added["1"]["image"]}
@@ -128,7 +126,6 @@ function Last5Added() {
                 marginRight: "-35.6rem",
                 marginLeft: "35.6rem",
                 marginTop: "-31rem",
-                marginBottom: "31rem",
                 borderRadius: "100px"
             }}>
                 <CardMedia component="img" alt="movie image" height="300" src={data.last5Added["2"]["image"]}
@@ -163,7 +160,6 @@ function Last5Added() {
                 marginRight: "-35.6rem",
                 marginLeft: "35.6rem",
                 marginTop: "-31rem",
-                marginBottom: "31rem",
                 borderRadius: "100px"
             }}>
                 <CardMedia component="img" alt="movie image" height="300" src={data.last5Added["3"]["image"]}
@@ -198,7 +194,6 @@ function Last5Added() {
                 marginRight: "-35.6rem",
                 marginLeft: "35.6rem",
                 marginTop: "-31rem",
-                marginBottom: "31rem",
                 borderRadius: "100px"
             }}>
                 <CardMedia component="img" alt="movie image" height="300" src={data.last5Added["4"]["image"]}
@@ -247,8 +242,8 @@ function Last5Added() {
 
     return (
         <div>
-        <Button><ArrowForwardIosIcon className={classes.forward} style={{fontSize:"xxx-large"}} id={"Forward"} onClick={forwardInput}/></Button>
-        <Button><ArrowBackIosNewIcon className={classes.backward} style={{fontSize:"xxx-large"}} id={"Backward"} onClick={backwardInput}/></Button>
+        <ArrowForwardIosIcon className={classes.forward} style={{fontSize:"xxx-large"}} id={"Forward"} onClick={forwardInput}/>
+        <ArrowBackIosNewIcon className={classes.backward} style={{fontSize:"xxx-large"}} id={"Backward"} onClick={backwardInput}/>
         <Swapper/>
         </div>
         )

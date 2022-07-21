@@ -419,3 +419,13 @@ func (r *mutationResolver) DeleteReview(ctx context.Context, reviewID int, userI
 
 	return userID, nil
 }
+
+func (r *queryResolver) MoviesOfUser(ctx context.Context, id int) ([]*ent.Movie, error) {
+	data := r.client.User.QueryMovies(r.client.User.GetX(ctx, id)).AllX(ctx)
+	return data, nil
+}
+
+func (r *queryResolver) DirectorsOfUser(ctx context.Context, id int) ([]*ent.Director, error) {
+	data := r.client.User.QueryDirectors(r.client.User.GetX(ctx, id)).AllX(ctx)
+	return data, nil
+}

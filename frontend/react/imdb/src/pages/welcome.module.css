@@ -1,6 +1,4 @@
 html,body {
-
-    height: 100%;
     background: url("https://xbox-store-checker.com/assets/upload/game/2019/02/optimize/9wzdncrfj3tj-background.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -72,9 +70,9 @@ html,body {
 
 .fresh {
     display: flex;
-    position: relative;
-    top: -13.6rem;
-    right: -38.5rem;
+    position: absolute;
+    top: 10rem;
+    right: 13.5rem;
     width: 31rem;
     border-radius: 20px;
     color: white;
