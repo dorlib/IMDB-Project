@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import classes from "./directorsByUser.module.css";
+import classes from "./moviesByUser.module.css";
 import {Link} from "react-router-dom";
 
 function MoviesByUser(props) {
@@ -29,14 +29,14 @@ function MoviesByUser(props) {
 
     let loaded = (
         <ul className={classes.list}>
-            {data.directorsOfUser.map(( {id, title, image} ) => (
+            {data.moviesOfUser.map(( {id, title, image} ) => (
                 <div>
                     <Card sx={{maxWidth: 100}} style={{backgroundColor: "#cc2062", borderRadius: "50px", width: "90px", display: "inline-block", marginTop:"0.7cm"}} key={id}>
                         <CardMedia
                             component="img"
                             alt="movie image"
                             height="90"
-                            src={profileImage || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
+                            src={image || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
                         />
                         <CardContent className={classes.card}>
                             <Typography gutterBottom variant="h5" component="div">
@@ -55,4 +55,4 @@ function MoviesByUser(props) {
 
 }
 
-export default DirectorsByUser
+export default MoviesByUser
