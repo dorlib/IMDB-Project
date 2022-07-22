@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {gql, useQuery} from "@apollo/client";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
@@ -10,6 +10,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 function DirectorsByUser(props) {
+    const [numOfSet, setNumOfSet] = useState(0)
     const DIRECTORS_OF_USER = gql`
         query DirectorsOfUser($userID: ID!) {
             directorsOfUser(userID: $userID) {
@@ -29,12 +30,30 @@ function DirectorsByUser(props) {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error : {error}</p>;
 
+    let numOfDirectors = data.directorsOfUser.length
+    let numOfSets = 1 + numOfDirectors % 9
+
+    function handleClickForward () {
+        if (numOfSet >= 0 && numOfSet < numOfSets) {
+            setNumOfSet(numOfSet + 1)
+        }
+    }
+
+    function handleClickBackward () {
+        if (numOfSet > 0 && numOfSet <= numOfSets) {
+            setNumOfSet(numOfSet - 1)
+        }
+    }
+
+
+    let newData = data.directorsOfUser.slice(numOfSet , numOfSet + 8)
+
     let loaded = (
         <div>
-            <ArrowForwardIosIcon className={classes.forward} style={{fontSize: "xx-large"}} id={"Forward"}/>
-            <ArrowBackIosNewIcon className={classes.backward} style={{fontSize: "xx-large"}} id={"Backward"}/>
+            {numOfSet === numOfSets || numOfDirectors <= 8 ? null : <ArrowForwardIosIcon className={classes.forward} onClick={handleClickForward} style={{fontSize: "xx-large"}} id={"Forward"}/>}
+            {numOfSet === 0 || numOfDirectors <= 8 ? null : <ArrowBackIosNewIcon className={classes.backward} onClick={handleClickBackward} style={{fontSize: "xx-large"}} id={"Backward"}/>}
             <ul className={classes.list}>
-                {data.directorsOfUser.map(({id, name, profileImage}) => (
+                {newData.map(({id, name, profileImage}) => (
                     <div>
                         <Card sx={{maxWidth: 100}} style={{
                             backgroundColor: "#cc2062",
