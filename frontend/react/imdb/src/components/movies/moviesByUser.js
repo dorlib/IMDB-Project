@@ -50,7 +50,7 @@ function MoviesByUser(props) {
     let newData = data.moviesOfUser.slice(numOfSet , numOfSet + 8)
 
     let loaded = (
-        <div>
+        <div style={{position: "absolute"}}>
             {numOfSet === numOfSets || numOfMovies <= 8 ? null : <ArrowForwardIosIcon className={classes.forward} onClick={handleClickForward} style={{fontSize: "xx-large"}} id={"Forward"}/>}
             {numOfSet === 0 || numOfMovies <= 8 ? null : <ArrowBackIosNewIcon className={classes.backward} onClick={handleClickBackward} style={{fontSize: "xx-large"}} id={"Backward"}/>}
             <ul className={classes.list}>

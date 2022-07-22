@@ -11,12 +11,12 @@
 }
 
 .changeProfile {
-    position: relative;
+    position: absolute;
     display: flex;
     color: yellow;
     font-size: x-large;
-    bottom: 8.5rem;
-    left: -6.5rem;
+    bottom: 26.5rem;
+    left: 36.5rem;
 }
 
 .mainCard {
@@ -33,7 +33,7 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 5.7rem;
+    bottom: 4.3rem;
     border-radius: 20px;
     width: 31rem;
     height: 15rem;
@@ -43,7 +43,7 @@
     position: absolute;
     display: flex;
     right: 15.2rem;
-    bottom: 9.5rem;
+    bottom: 9rem;
     border-radius: 20px;
     width: 32.5rem;
     height: 15rem;
@@ -53,7 +53,7 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 4.5rem;
+    bottom: 2.5rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;
@@ -63,7 +63,7 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 3rem;
+    bottom: 1rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;
@@ -73,7 +73,7 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 1rem;
+    bottom: -1rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;

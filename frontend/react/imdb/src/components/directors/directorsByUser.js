@@ -49,12 +49,11 @@ function DirectorsByUser(props) {
     let newData = data.directorsOfUser.slice(numOfSet , numOfSet + 8)
 
     let loaded = (
-        <div>
+        <div style={{position: "absolute"}}>
             {numOfSet === numOfSets || numOfDirectors <= 8 ? null : <ArrowForwardIosIcon className={classes.forward} onClick={handleClickForward} style={{fontSize: "xx-large"}} id={"Forward"}/>}
             {numOfSet === 0 || numOfDirectors <= 8 ? null : <ArrowBackIosNewIcon className={classes.backward} onClick={handleClickBackward} style={{fontSize: "xx-large"}} id={"Backward"}/>}
             <ul className={classes.list}>
                 {newData.map(({id, name, profileImage}) => (
-                    <div>
                         <Card sx={{maxWidth: 100}} style={{
                             backgroundColor: "#cc2062",
                             borderRadius: "50px",
@@ -76,7 +75,6 @@ function DirectorsByUser(props) {
                                 </Typography>
                             </CardContent>
                         </Card>
-                    </div>
                 ))}
             </ul>
         </div>
