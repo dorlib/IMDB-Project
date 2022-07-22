@@ -100,13 +100,22 @@ function DirectorPage(props) {
     let profileImage = data["directorById"]["0"]["profileImage"] || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'
     let description = data["directorById"]["0"]["description"]
     let bornAt = data["directorById"]["0"]["bornAt"]
+
+    if (bornAt.length !== 10 && bornAt[1] === ".") {
+        bornAt = "0" + bornAt
+    }
+
+    if (bornAt.length !== 10 && bornAt[4] === ".") {
+        bornAt = bornAt.slice(0,3) + "0" + bornAt.slice(3,9)
+    }
+
     let yearBirth = bornAt.slice(6, 10)
     let monthBirth = bornAt.slice(3, 5)
     let dayBirth = bornAt.slice(0, 2)
     let id = data["directorById"]["0"]["id"]
     let userIdOfDirector = data["directorById"]["0"]["user"]["id"]
 
-    const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
+    const getAge = birthDate => Math.floor( (new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
 
     let d = (
         <div>

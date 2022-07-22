@@ -84,8 +84,16 @@ export function EditDirectorDetails(props) {
     let bornAt = data1["directorById"]["0"]["bornAt"]
     let description = data1["directorById"]["0"]["description"]
 
-    let yearBirth = bornAt.slice(4, 8)
-    let monthBirth = bornAt.slice(2, 4)
+    if (bornAt.length !== 10 && bornAt[1] === ".") {
+        bornAt = "0" + bornAt
+    }
+
+    if (bornAt.length !== 10 && bornAt[4] === ".") {
+        bornAt = bornAt.slice(0,3) + "0" + bornAt.slice(3,9)
+    }
+
+    let yearBirth = bornAt.slice(6, 10)
+    let monthBirth = bornAt.slice(3, 5)
     let dayBirth = bornAt.slice(0, 2)
 
 
