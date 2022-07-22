@@ -4,23 +4,24 @@ import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import classes from "./directorsByUser.module.css";
+import classes from "./moviesByUser.module.css";
 import {Link} from "react-router-dom";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
-function DirectorsByUser(props) {
+function MoviesByUser(props) {
     const [numOfSet, setNumOfSet] = useState(0)
-    const DIRECTORS_OF_USER = gql`
-        query DirectorsOfUser($userID: ID!) {
-            directorsOfUser(userID: $userID) {
+
+    const MOVIE_OF_USER = gql`
+        query MoviesOfUser($userID: ID!) {
+            moviesOfUser(userID: $userID) {
                 id
-                name
-                profileImage
+                title
+                image
             }
         }
     `
-    const {loading, error, data} = useQuery(DIRECTORS_OF_USER,
+    const {loading, error, data} = useQuery(MOVIE_OF_USER,
         {
             variables: {
                 userID: props.userID
@@ -30,8 +31,8 @@ function DirectorsByUser(props) {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error : {error}</p>;
 
-    let numOfDirectors = data.directorsOfUser.length
-    let numOfSets = 1 + numOfDirectors % 9
+    let numOfMovies = data.moviesOfUser.length
+    let numOfSets = 1 + numOfMovies % 9
 
     function handleClickForward () {
         if (numOfSet >= 0 && numOfSet < numOfSets) {
@@ -46,14 +47,15 @@ function DirectorsByUser(props) {
     }
 
 
-    let newData = data.directorsOfUser.slice(numOfSet , numOfSet + 8)
+    let newData = data.moviesOfUser.slice(numOfSet , numOfSet + 8)
 
     let loaded = (
         <div style={{position: "absolute"}}>
-            {numOfSet === numOfSets || numOfDirectors <= 8 ? null : <ArrowForwardIosIcon className={classes.forward} onClick={handleClickForward} style={{fontSize: "xx-large"}} id={"Forward"}/>}
-            {numOfSet === 0 || numOfDirectors <= 8 ? null : <ArrowBackIosNewIcon className={classes.backward} onClick={handleClickBackward} style={{fontSize: "xx-large"}} id={"Backward"}/>}
+            {numOfSet === numOfSets || numOfMovies <= 8 ? null : <ArrowForwardIosIcon className={classes.forward} onClick={handleClickForward} style={{fontSize: "xx-large"}} id={"Forward"}/>}
+            {numOfSet === 0 || numOfMovies <= 8 ? null : <ArrowBackIosNewIcon className={classes.backward} onClick={handleClickBackward} style={{fontSize: "xx-large"}} id={"Backward"}/>}
             <ul className={classes.list}>
-                {newData.map(({id, name, profileImage}) => (
+                {newData.map(({id, title, image}) => (
+                    <div>
                         <Card sx={{maxWidth: 100}} style={{
                             backgroundColor: "#cc2062",
                             borderRadius: "50px",
@@ -65,16 +67,17 @@ function DirectorsByUser(props) {
                                 component="img"
                                 alt="movie image"
                                 height="90"
-                                src={profileImage || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
+                                src={image || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
                             />
                             <CardContent className={classes.card}>
                                 <Typography gutterBottom variant="h5" component="div">
-                                    <p style={{color: "yellow"}} className={classes.director}>
-                                        <Link to={"/directorPage/" + id} className={classes.directorName}> {name}</Link>
+                                    <p style={{color: "yellow"}} className={classes.movie}>
+                                        <Link to={"/moviePage/" + id} className={classes.movieTitle}> {title}</Link>
                                     </p>
                                 </Typography>
                             </CardContent>
                         </Card>
+                    </div>
                 ))}
             </ul>
         </div>
@@ -84,4 +87,4 @@ function DirectorsByUser(props) {
 
 }
 
-export default DirectorsByUser
+export default MoviesByUser
