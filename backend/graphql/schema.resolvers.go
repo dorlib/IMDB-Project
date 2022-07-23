@@ -429,3 +429,8 @@ func (r *queryResolver) DirectorsOfUser(ctx context.Context, id int) ([]*ent.Dir
 	data := r.client.User.QueryDirectors(r.client.User.GetX(ctx, id)).AllX(ctx)
 	return data, nil
 }
+
+func (r *queryResolver) MostLikedReviews(ctx context.Context, userID int) ([]*ent.Review, error) {
+	data := r.client.User.QueryReviews(r.client.User.GetX(ctx, userID)).Order(ent.Desc(movie.FieldID)).Limit(5).AllX(ctx)
+	return data, nil
+}

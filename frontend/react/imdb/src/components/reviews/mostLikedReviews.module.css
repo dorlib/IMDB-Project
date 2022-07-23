@@ -1,0 +1,17 @@
+.forward {
+    color: yellow;
+    position: absolute;
+    display: flex;
+    right: 1.5cm;
+    bottom: 6cm;
+    cursor: pointer;
+}
+
+.backward {
+    color: yellow;
+    position: absolute;
+    display: flex;
+    bottom: 6cm;
+    right: 4cm;
+    cursor: pointer;
+}
