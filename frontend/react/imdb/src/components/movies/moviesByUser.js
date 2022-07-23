@@ -75,6 +75,7 @@ function MoviesByUser(props) {
                                         <Link to={"/moviePage/" + id} className={classes.movieTitle}> {title}</Link>
                                     </p>
                                 </Typography>
+                                <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>
                             </CardContent>
                         </Card>
                     </div>

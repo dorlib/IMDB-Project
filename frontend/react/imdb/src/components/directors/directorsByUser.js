@@ -72,6 +72,7 @@ function DirectorsByUser(props) {
                                     <p style={{color: "yellow"}} className={classes.director}>
                                         <Link to={"/directorPage/" + id} className={classes.directorName}> {name}</Link>
                                     </p>
+                                    <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>
                                 </Typography>
                             </CardContent>
                         </Card>

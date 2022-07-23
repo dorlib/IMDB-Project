@@ -18,6 +18,7 @@ import classes from "./userPage.module.css"
 import styled from "styled-components";
 import DirectorsByUser from "../components/directors/directorsByUser";
 import MoviesByUser from "../components/movies/moviesByUser";
+import MostLikedReviews from "../components/reviews/mostLikedReviews";
 
 function UserPage(props) {
     const USER_DATA = gql`
@@ -180,6 +181,7 @@ function UserPage(props) {
                     <Typography variant="h5" component="div">
                         Top Reviews By {firstName}
                     </Typography>
+                    <MostLikedReviews userID={id}/>
                 </CardContent>
             </React.Fragment>
         </Card>

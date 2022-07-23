@@ -49,9 +49,9 @@ type Actor {
 type Review {
     id: ID!
     movieID: Int!
-    topic: String!
-    text: String!
-    rank: Int!
+    topic: String
+    text: String
+    rank: Int
     numOfLikes: Int!
     numOfComments: Int!
     like : Like
@@ -209,6 +209,7 @@ type Query {
     movieById(id: ID!) : [Movie!]
     moviesByGenre(genre: String!) : [Movie]
     last5Added: [Movie!]
+    mostLikedReviews(userID: ID!): [Review]
     directorById(id: ID!): [Director!]
     actorsOfMovie(id: ID!): [Actor]
     actorById(id: ID!): [Actor!]
