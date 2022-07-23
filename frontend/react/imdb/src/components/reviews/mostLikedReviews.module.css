@@ -15,3 +15,39 @@
     right: 4cm;
     cursor: pointer;
 }
+
+.outOf {
+    position: absolute;
+    display: flex;
+    font-size: x-large;
+    right: 6.5rem;
+    bottom: 14rem;
+}
+
+.topic {
+    display: flex;
+    position: absolute;
+    top: 3.5rem;
+    left: 2rem;
+    font-style: italic;
+    font-size: 20px;
+    color: darkblue;
+}
+
+.text {
+    display: flex;
+    position: absolute;
+    top: 7rem;
+    left: 3.5rem;
+    font-style: oblique;
+    font-size: 20px;
+    color: midnightblue;
+}
+
+.rank {
+    display: flex;
+    position: absolute;
+    font-size: xx-large;
+    right: 7rem;
+    top: 4rem;
+}

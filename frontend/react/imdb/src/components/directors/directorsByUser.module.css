@@ -32,7 +32,7 @@
     position: absolute;
     display: flex;
     right: 1.5cm;
-    bottom: 5.5cm;
+    bottom: 13.5rem;
     cursor: pointer;
 }
 
@@ -40,7 +40,15 @@
     color: yellow;
     position: absolute;
     display: flex;
-    bottom: 5.5cm;
+    bottom: 13.5rem;
     right: 4cm;
     cursor: pointer;
+}
+
+.outOf {
+    position: absolute;
+    display: flex;
+    font-size: x-large;
+    right: 6.5rem;
+    bottom: 13.5rem;
 }
