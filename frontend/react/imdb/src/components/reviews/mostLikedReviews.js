@@ -22,6 +22,10 @@ function MostLikedReviews(props) {
                 rank
                 numOfLikes
                 numOfComments
+                movie {
+                    id
+                    title
+                }
             }
         }
     `;
@@ -59,11 +63,9 @@ function MostLikedReviews(props) {
     let review1 = (
         <div>
                 <CardContent>
-                    {/*<Typography gutterBottom variant="h5" component="div">*/}
-                    {/*    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>*/}
-                    {/*        <Link to={"/moviePage/" + data.mostLikedReviews["0"]["movie"]["id"]}>{data.mostLikedReviews["0"]["movie"]["title"]}</Link>*/}
-                    {/*    </p>*/}
-                    {/*</Typography>*/}
+                    <Typography gutterBottom variant="h5" component="div" className={classes.movie}>
+                            - <Link style={{color: "darkblue"}} to={"/moviePage/" + data.mostLikedReviews["0"]["movie"]["id"]}>{data.mostLikedReviews["0"]["movie"]["title"]}</Link>
+                    </Typography>
                     {data.mostLikedReviews["0"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["0"]["topic"]}</Typography> : null}
                     {data.mostLikedReviews["0"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["0"]["rank"]+ " /100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["0"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["0"]["text"]}" </Typography> : null}
@@ -75,11 +77,9 @@ function MostLikedReviews(props) {
     let review2 = (
         <div>
                 <CardContent>
-                    {/*<Typography gutterBottom variant="h5" component="div">*/}
-                    {/*    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>*/}
-                    {/*        <Link to={"/moviePage/" + data.mostLikedReviews["1"]["movie"]["id"]}>{data.mostLikedReviews["1"]["movie"]["title"]}</Link>*/}
-                    {/*    </p>*/}
-                    {/*</Typography>*/}
+                    <Typography gutterBottom variant="h5" component="div" className={classes.movie}>
+                        - <Link style={{color: "darkblue"}} to={"/moviePage/" + data.mostLikedReviews["1"]["movie"]["id"]}>{data.mostLikedReviews["1"]["movie"]["title"]}</Link>
+                    </Typography>
                     {data.mostLikedReviews["1"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["1"]["topic"]}</Typography> : null}
                     {data.mostLikedReviews["1"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["1"]["rank"] + " / 100"}</Typography>: <Typography className={classes.rank}>rank not given</Typography>}
                     <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["1"]["text"]}" </Typography>
@@ -91,11 +91,9 @@ function MostLikedReviews(props) {
     let review3 = (
         <div>
                 <CardContent>
-                    {/*<Typography gutterBottom variant="h5" component="div">*/}
-                    {/*    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>*/}
-                    {/*        <Link to={"/moviePage/" + data.mostLikedReviews["2"]["movie"]["id"]}>{data.mostLikedReviews["2"]["movie"]["title"]}</Link>*/}
-                    {/*    </p>*/}
-                    {/*</Typography>*/}
+                    <Typography gutterBottom variant="h5" component="div" className={classes.movie}>
+                        - <Link style={{color: "darkblue"}} to={"/moviePage/" + data.mostLikedReviews["2"]["movie"]["id"]}>{data.mostLikedReviews["2"]["movie"]["title"]}</Link>
+                    </Typography>
                     {data.mostLikedReviews["2"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["2"]["topic"]}</Typography> : null}
                     {data.mostLikedReviews["2"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["2"]["rank"] + " / 100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["2"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["2"]["text"]}" </Typography> : null}
@@ -107,11 +105,9 @@ function MostLikedReviews(props) {
     let review4 = (
         <div>
                 <CardContent>
-                    {/*<Typography gutterBottom variant="h5" component="div">*/}
-                    {/*    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>*/}
-                    {/*        <Link to={"/moviePage/" + data.mostLikedReviews["3"]["movie"]["id"]}>{data.mostLikedReviews["3"]["movie"]["title"]}</Link>*/}
-                    {/*    </p>*/}
-                    {/*</Typography>*/}
+                    <Typography gutterBottom variant="h5" component="div" className={classes.movie}>
+                        - <Link style={{color: "darkblue"}} to={"/moviePage/" + data.mostLikedReviews["3"]["movie"]["id"]}>{data.mostLikedReviews["3"]["movie"]["title"]}</Link>
+                    </Typography>
                     {data.mostLikedReviews["3"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["3"]["topic"]}</Typography> : null}
                     {data.mostLikedReviews["3"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["3"]["rank"] + " / 100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["3"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["3"]["text"]}" </Typography> : null}
@@ -123,11 +119,9 @@ function MostLikedReviews(props) {
     let review5 = (
         <div>
                 <CardContent>
-                    {/*<Typography gutterBottom variant="h5" component="div">*/}
-                    {/*    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>*/}
-                    {/*        <Link to={"/moviePage/" + data.mostLikedReviews["4"]["movie"]["id"]}>{data.mostLikedReviews["4"]["movie"]["title"]}</Link>*/}
-                    {/*    </p>*/}
-                    {/*</Typography>*/}
+                    <Typography gutterBottom variant="h5" component="div" className={classes.movie}>
+                        - <Link style={{color: "darkblue"}} to={"/moviePage/" + data.mostLikedReviews["4"]["movie"]["id"]}>{data.mostLikedReviews["4"]["movie"]["title"]}</Link>
+                    </Typography>
                     {data.mostLikedReviews["4"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["4"]["topic"]}</Typography> : null}
                     {data.mostLikedReviews["4"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["4"]["rank"] + " / 100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["4"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["4"]["text"]}" </Typography> : null}
