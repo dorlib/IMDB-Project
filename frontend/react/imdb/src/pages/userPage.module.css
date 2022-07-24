@@ -15,15 +15,15 @@
     display: flex;
     color: yellow;
     font-size: x-large;
-    bottom: 26.5rem;
-    left: 36.5rem;
+    bottom: 25rem;
+    left: 38rem;
 }
 
 .mainCard {
-    position: absolute;
+    position: relative;
     display: flex;
-    left: 46.3rem;
-    bottom: 26rem;
+    left: 3rem;
+    bottom: 24rem;
     border-radius: 20px;
     width: 65rem;
     height: 21rem;
@@ -33,17 +33,17 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 4.3rem;
+    bottom: 22rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;
 }
 
 .Achievements {
-    position: absolute;
+    position: relative;
     display: flex;
-    left: 20rem;
-    top: 53rem;
+    left: -22.5rem;
+    top: -25.5rem;
     border-radius: 20px;
     width: 18rem;
     height: 15rem;
@@ -53,7 +53,7 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 2.5rem;
+    bottom: 35rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;
@@ -63,7 +63,7 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 1rem;
+    bottom: 33rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;
@@ -73,7 +73,7 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: -1rem;
+    bottom: 31rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;

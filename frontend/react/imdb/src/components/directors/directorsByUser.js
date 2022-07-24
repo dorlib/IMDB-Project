@@ -32,6 +32,9 @@ function DirectorsByUser(props) {
 
     let numOfDirectors = data.directorsOfUser.length
     let numOfSets = numOfDirectors - 8
+    if (numOfSets < 0) {
+        numOfSets = 0
+    }
 
     function handleClickForward () {
         if (numOfSet >= 0 && numOfSet < numOfSets) {
