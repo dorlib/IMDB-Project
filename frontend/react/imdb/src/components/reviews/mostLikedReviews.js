@@ -19,6 +19,7 @@ function MostLikedReviews(props) {
                 id
                 topic
                 text
+                rank
                 numOfLikes
                 numOfComments
             }
@@ -56,7 +57,7 @@ function MostLikedReviews(props) {
     console.log(numOfReviews)
 
     let review1 = (
-        data.mostLikedReviews["0"]["text"] !== "" ? <div>
+        <div>
                 <CardContent>
                     {/*<Typography gutterBottom variant="h5" component="div">*/}
                     {/*    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>*/}
@@ -64,15 +65,15 @@ function MostLikedReviews(props) {
                     {/*    </p>*/}
                     {/*</Typography>*/}
                     {data.mostLikedReviews["0"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["0"]["topic"]}</Typography> : null}
-                    {data.mostLikedReviews["0"]["rank"] ? <Typography className={classes.rank}>{data.mostLikedReviews["0"]["rank"] / 100}</Typography>: null}
+                    {data.mostLikedReviews["0"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["0"]["rank"]+ " /100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["0"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["0"]["text"]}" </Typography> : null}
                     <div className={classes.outOf}>{numOfSet + 1  + "/" + 5}</div>
                 </CardContent>
-        </div> : null
+        </div>
     )
 
     let review2 = (
-        data.mostLikedReviews["1"]["text"] !== ""? <div>
+        <div>
                 <CardContent>
                     {/*<Typography gutterBottom variant="h5" component="div">*/}
                     {/*    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>*/}
@@ -80,15 +81,15 @@ function MostLikedReviews(props) {
                     {/*    </p>*/}
                     {/*</Typography>*/}
                     {data.mostLikedReviews["1"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["1"]["topic"]}</Typography> : null}
-                    {data.mostLikedReviews["1"]["rank"] ? <Typography className={classes.rank}>{data.mostLikedReviews["1"]["rank"] / 100}</Typography>: null}
-                    {data.mostLikedReviews["1"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["1"]["text"]}" </Typography> : null}
+                    {data.mostLikedReviews["1"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["1"]["rank"] + " / 100"}</Typography>: <Typography className={classes.rank}>rank not given</Typography>}
+                    <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["1"]["text"]}" </Typography>
                     <div className={classes.outOf}>{numOfSet + 1  + "/" + 5}</div>
                 </CardContent>
-        </div>: null
+        </div>
     )
 
     let review3 = (
-        data.mostLikedReviews["2"]["text"] !== "" ? <div>
+        <div>
                 <CardContent>
                     {/*<Typography gutterBottom variant="h5" component="div">*/}
                     {/*    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>*/}
@@ -96,15 +97,15 @@ function MostLikedReviews(props) {
                     {/*    </p>*/}
                     {/*</Typography>*/}
                     {data.mostLikedReviews["2"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["2"]["topic"]}</Typography> : null}
-                    {data.mostLikedReviews["2"]["rank"] ? <Typography className={classes.rank}>{data.mostLikedReviews["2"]["rank"] / 100}</Typography>: null}
+                    {data.mostLikedReviews["2"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["2"]["rank"] + " / 100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["2"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["2"]["text"]}" </Typography> : null}
                     <div className={classes.outOf}>{numOfSet + 1  + "/" + 5}</div>
                 </CardContent>
-        </div> : null
+        </div>
     )
 
     let review4 = (
-        data.mostLikedReviews["3"]["text"] !== "" ? <div>
+        <div>
                 <CardContent>
                     {/*<Typography gutterBottom variant="h5" component="div">*/}
                     {/*    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>*/}
@@ -112,15 +113,15 @@ function MostLikedReviews(props) {
                     {/*    </p>*/}
                     {/*</Typography>*/}
                     {data.mostLikedReviews["3"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["3"]["topic"]}</Typography> : null}
-                    {data.mostLikedReviews["3"]["rank"] ? <Typography className={classes.rank}>{data.mostLikedReviews["3"]["rank"] / 100}</Typography>: null}
+                    {data.mostLikedReviews["3"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["3"]["rank"] + " / 100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["3"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["3"]["text"]}" </Typography> : null}
                     <div className={classes.outOf}>{numOfSet + 1  + "/" + 5}</div>
                 </CardContent>
-        </div> : null
+        </div>
     )
 
     let review5 = (
-        data.mostLikedReviews["4"]["text"] !== "" ? <div>
+        <div>
                 <CardContent>
                     {/*<Typography gutterBottom variant="h5" component="div">*/}
                     {/*    <p style={{color: "yellow", fontSize: "xx-large"}} className={classes.movie}>*/}
@@ -128,11 +129,11 @@ function MostLikedReviews(props) {
                     {/*    </p>*/}
                     {/*</Typography>*/}
                     {data.mostLikedReviews["4"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["4"]["topic"]}</Typography> : null}
-                    {data.mostLikedReviews["4"]["rank"] ? <Typography className={classes.rank}>{data.mostLikedReviews["4"]["rank"] / 100}</Typography>: null}
+                    {data.mostLikedReviews["4"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["4"]["rank"] + " / 100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["4"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["4"]["text"]}" </Typography> : null}
                     <div className={classes.outOf}>{numOfSet + 1  + "/" + 5}</div>
                 </CardContent>
-        </div> : null
+        </div>
     )
 
     let reviews = [review1, review2, review3, review4, review5]

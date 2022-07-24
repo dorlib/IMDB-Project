@@ -47,7 +47,8 @@
 .rank {
     display: flex;
     position: absolute;
-    font-size: xx-large;
     right: 7rem;
     top: 4rem;
+    font-style: oblique;
+    color: mediumblue;
 }
