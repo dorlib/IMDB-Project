@@ -35,17 +35,17 @@
     left: 3rem;
     bottom: 4.3rem;
     border-radius: 20px;
-    width: 31rem;
-    height: 15rem;
+    width: 65rem;
+    height: 17rem;
 }
 
 .Achievements {
     position: absolute;
     display: flex;
-    right: 15.2rem;
-    bottom: 9rem;
+    left: 20rem;
+    top: 53rem;
     border-radius: 20px;
-    width: 32.5rem;
+    width: 18rem;
     height: 15rem;
 }
 

@@ -19,6 +19,10 @@ import styled from "styled-components";
 import DirectorsByUser from "../components/directors/directorsByUser";
 import MoviesByUser from "../components/movies/moviesByUser";
 import MostLikedReviews from "../components/reviews/mostLikedReviews";
+import Favorites from "./Favorites";
+import FavoritesPage from "./Favorites";
+import FavoriteList from "../favorites/FavoriteList";
+import FavoritesOfUser from "../favorites/favoritesOfUser";
 
 function UserPage(props) {
     const USER_DATA = gql`
@@ -151,12 +155,13 @@ function UserPage(props) {
                     <Typography variant="h5" component="div">
                         Pined Movies Of {firstName}
                     </Typography>
+                    <FavoritesOfUser userID={id}/>
                 </CardContent>
             </React.Fragment>
             <React.Fragment>
                 <CardContent style={{backgroundColor: "darkslategray"}} className={classes.Achievements}>
                     <Typography variant="h5" component="div">
-                        Achievements Of {firstName}
+                        Achievements
                     </Typography>
                 </CardContent>
             </React.Fragment>
