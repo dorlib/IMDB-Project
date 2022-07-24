@@ -40,3 +40,47 @@
     position: relative;
     width: 230px;
 }
+
+
+.listUserPage {
+    border: 5px solid none;
+    margin-left: -14cm;
+    width: 1700px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 440px);
+    grid-gap: 70px;
+    justify-content: center;
+}
+
+.movieUserPage {
+    background-color: #cc2062;
+    color: white;
+    border-radius: 12px;
+    padding: 0 1rem;
+    margin-left: 0.5rem;
+    margin-bottom: 1.4rem;
+    display: flex;
+    width: 16.3cm;
+}
+
+.nameUserPage {
+    display: flex;
+    position: relative;
+    margin-left: 4.2cm;
+    margin-top: 30px;
+}
+
+.favUserPage {
+    color: white;
+    position: absolute;
+    display: flex;
+    right: 27.6cm;
+}
+
+.movieTitleUserPage {
+    color: yellow;
+    text-decoration: none;
+    display: flex;
+    position: relative;
+    width: 230px;
+}

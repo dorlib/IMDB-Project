@@ -47,7 +47,18 @@
 .rank {
     display: flex;
     position: absolute;
-    font-size: xx-large;
     right: 7rem;
     top: 4rem;
+    font-style: oblique;
+    color: mediumblue;
+}
+
+.movie {
+    display: flex;
+    position: absolute;
+    max-height: 2cm;
+    color: darkblue;
+    border-radius: 50px;
+    bottom: 1rem;
+    left: 2rem;
 }

@@ -1,27 +1,29 @@
+// this files contains favorites of user in order to show them on userPage
+
 import React, {useState} from 'react'
 import {gql, useQuery} from "@apollo/client";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import classes from "./moviesByUser.module.css";
+import classes from "./favoritesOfUser.module.css";
 import {Link} from "react-router-dom";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
-function MoviesByUser(props) {
+function FavoritesOfUser(props) {
     const [numOfSet, setNumOfSet] = useState(0)
 
-    const MOVIE_OF_USER = gql`
-        query MoviesOfUser($userID: ID!) {
-            moviesOfUser(userID: $userID) {
-                id
-                title
-                image
+    const FAVORITRES_OF_USER = gql`
+        query FavoritesOfUser($userID: ID!) {
+            favoritesOfUser(userID: $userID) {
+                movieID
+                movieTitle
+                movieImage
             }
         }
     `
-    const {loading, error, data} = useQuery(MOVIE_OF_USER,
+    const {loading, error, data} = useQuery(FAVORITRES_OF_USER,
         {
             variables: {
                 userID: props.userID
@@ -31,8 +33,8 @@ function MoviesByUser(props) {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error : {error}</p>;
 
-    let numOfMovies = data.moviesOfUser.length
-    let numOfSets = numOfMovies - 8
+    let numOfFavorites = data.favoritesOfUser.length
+    let numOfSets = 1 + Math.floor(numOfFavorites / 9)
 
     function handleClickForward () {
         if (numOfSet >= 0 && numOfSet < numOfSets) {
@@ -47,14 +49,14 @@ function MoviesByUser(props) {
     }
 
 
-    let newData = data.moviesOfUser.slice(numOfSet , numOfSet + 8)
+    let newData = data.favoritesOfUser.slice(numOfSet , numOfSet + 8)
 
     let loaded = (
         <div style={{position: "absolute"}}>
-            {numOfSet === numOfSets || numOfMovies <= 8 ? null : <ArrowForwardIosIcon className={classes.forward} onClick={handleClickForward} style={{fontSize: "xx-large"}} id={"Forward"}/>}
-            {numOfSet === 0 || numOfMovies <= 8 ? null : <ArrowBackIosNewIcon className={classes.backward} onClick={handleClickBackward} style={{fontSize: "xx-large"}} id={"Backward"}/>}
+            {numOfSet === numOfSets || numOfFavorites <= 8 ? null : <ArrowForwardIosIcon className={classes.forward} onClick={handleClickForward} style={{fontSize: "xx-large"}} id={"Forward"}/>}
+            {numOfSet === 0 || numOfFavorites <= 8 ? null : <ArrowBackIosNewIcon className={classes.backward} onClick={handleClickBackward} style={{fontSize: "xx-large"}} id={"Backward"}/>}
             <ul className={classes.list}>
-                {newData.map(({id, title, image}) => (
+                {newData.map(({movieID, movieTitle, movieImage}) => (
                     <div>
                         <Card sx={{maxWidth: 100}} style={{
                             backgroundColor: "#cc2062",
@@ -62,17 +64,17 @@ function MoviesByUser(props) {
                             width: "90px",
                             display: "inline-block",
                             marginTop: "0.7cm"
-                        }} key={id}>
+                        }} key={movieID}>
                             <CardMedia
                                 component="img"
                                 alt="movie image"
                                 height="90"
-                                src={image || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png'}
+                                src={movieImage || 'https://pharem-project.eu/wp-content/themes/consultix/images/no-image-found-360x250.png'}
                             />
                             <CardContent className={classes.card}>
                                 <Typography gutterBottom variant="h5" component="div">
                                     <p style={{color: "yellow"}} className={classes.movie}>
-                                        <Link to={"/moviePage/" + id} className={classes.movieTitle}> {title}</Link>
+                                        <Link to={"/moviePage/" + movieID} className={classes.movieTitle}> {movieTitle}</Link>
                                     </p>
                                 </Typography>
                                 <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>
@@ -88,4 +90,4 @@ function MoviesByUser(props) {
 
 }
 
-export default MoviesByUser
+export default FavoritesOfUser
