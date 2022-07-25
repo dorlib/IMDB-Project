@@ -6,24 +6,24 @@
     border-radius: 200px;
     max-height: 40%;
     max-width: 60%;
-    top: -5.5rem;
+    top: -14rem;
     left: -25rem;
 }
 
 .changeProfile {
-    position: absolute;
+    position: relative;
     display: flex;
     color: yellow;
     font-size: x-large;
-    bottom: 26.5rem;
-    left: 36.5rem;
+    bottom: 17rem;
+    left: -4rem;
 }
 
 .mainCard {
-    position: absolute;
+    position: relative;
     display: flex;
-    left: 46.3rem;
-    bottom: 26rem;
+    left: 3rem;
+    bottom: 47rem;
     border-radius: 20px;
     width: 65rem;
     height: 21rem;
@@ -33,17 +33,17 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 4.3rem;
+    bottom: 45rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;
 }
 
 .Achievements {
-    position: absolute;
+    position: relative;
     display: flex;
-    left: 20rem;
-    top: 53rem;
+    left: -22rem;
+    bottom: 48rem;
     border-radius: 20px;
     width: 18rem;
     height: 15rem;
@@ -53,7 +53,7 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 2.5rem;
+    bottom: 58rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;
@@ -63,7 +63,7 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: 1rem;
+    bottom: 56rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;
@@ -73,14 +73,14 @@
     position: relative;
     display: flex;
     left: 3rem;
-    bottom: -1rem;
+    bottom: 54rem;
     border-radius: 20px;
     width: 65rem;
     height: 17rem;
 }
 
 .desc {
-    position: absolute;
+        position: absolute;
     display: flex;
     top: 4rem;
     left: 2rem;
@@ -112,29 +112,30 @@
 }
 
 .name {
-    position: absolute;
+    position: relative;
     display: flex;
-    bottom: 30%;
-    left: 16.9%;
+    top: 22rem;
+    left: -22rem;
     color: yellow;
     font-size: xxx-large;
 }
 
 .nick {
-    position: absolute;
+    position: relative;
     display: flex;
     font-size: x-large;
     color: yellow;
-    bottom: 28%;
-    left: 16.9%;
+    top: 20rem;
+    left: -21.7rem;
 }
 
 .edit {
     background-color: #2c292b;
     display: flex;
-    position: absolute;
-    bottom: 25%;
-    left: 16.9%;
+    position: relative;
+    bottom: 18rem;
+    right: 22rem;
+    width: 18rem;
     color: white;
 }
 
@@ -145,54 +146,54 @@
 
 .followIcon {
     display: flex;
-    position: absolute;
+    position: relative;
     font-size: x-large;
     color: yellow;
-    bottom: 20%;
-    left: 16.9%;
+    top: -4.5rem;
+    right: 22rem;
 }
 
 .dot {
     display: flex;
-    position: absolute;
+    position: relative;
     color: yellow;
-    bottom: 19.8%;
-    left: 23.3%;
+    top: -7.5rem;
+    right: 13.3rem;
 }
 
 .followers {
     display: flex;
-    position: absolute;
+    position: relative;
     font-size: large;
     color: yellow;
-    left: 19%;
-    bottom: 19.8%;
+    right: 10rem;
+    bottom: 9.2rem;
 }
 
 .follows {
     display: flex;
-    position: absolute;
+    position: relative;
     font-size: large;
     color: yellow;
-    left: 25.3%;
-    bottom: 19.8%;
+    right: 19rem;
+    top: -6rem;
 }
 
 .location {
     display: flex;
-    position: absolute;
+    position: relative;
     color: yellow;
-    bottom: 16%;
-    left: 16.9%;
+    bottom: 8rem;
+    right: 22rem;
 }
 
 .country {
     display: flex;
-    position: absolute;
+    position: relative;
     color: yellow;
-    bottom: 16%;
+    bottom: 9.7rem;
     font-size: large;
-    left: 19%;
+    right: 19rem;
 }
 
 .editDetailsBut {
@@ -205,4 +206,14 @@
 
 .editDetails {
     display: flex;
+}
+
+.pageMask {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 9999;
 }

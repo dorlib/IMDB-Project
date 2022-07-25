@@ -104,6 +104,7 @@ type ComplexityRoot struct {
 		AddComment             func(childComplexity int, userID int, reviewID int, text string) int
 		AddLike                func(childComplexity int, userID int, reviewID int) int
 		AddToFavorites         func(childComplexity int, movieID int, userID int, movieTitle string, movieImage string) int
+		ChangeUserProfile      func(childComplexity int, userID int, profile string) int
 		CreateDirector         func(childComplexity int, director DirectorInput) int
 		CreateMovie            func(childComplexity int, movie MovieInput) int
 		CreateMovieAndDirector func(childComplexity int, title string, description string, rank int, genre string, directorName string, image string, topic string, text string, profileImage string, bornAt string, year int, userID int) int
@@ -198,6 +199,7 @@ type MutationResolver interface {
 	EditComment(ctx context.Context, commentID int, text string) (*ent.Comment, error)
 	DeleteComment(ctx context.Context, commentID int, reviewID int, userID int) (int, error)
 	AddLike(ctx context.Context, userID int, reviewID int) (*ent.Like, error)
+	ChangeUserProfile(ctx context.Context, userID int, profile string) (*ent.User, error)
 	DeleteLike(ctx context.Context, likeID int, userID int, reviewID int) ([]*ent.Like, error)
 	DeleteReview(ctx context.Context, reviewID int, userID int) (int, error)
 	EditReview(ctx context.Context, reviewID int, rank int, text string, topic string) (*ent.Review, error)
@@ -543,6 +545,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.AddToFavorites(childComplexity, args["movieID"].(int), args["userID"].(int), args["movieTitle"].(string), args["movieImage"].(string)), true
+
+	case "Mutation.changeUserProfile":
+		if e.complexity.Mutation.ChangeUserProfile == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_changeUserProfile_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ChangeUserProfile(childComplexity, args["userID"].(int), args["profile"].(string)), true
 
 	case "Mutation.createDirector":
 		if e.complexity.Mutation.CreateDirector == nil {
@@ -1415,6 +1429,7 @@ type Mutation {
     editComment(commentID: ID!, text: String!) : Comment!
     deleteComment(commentID: ID!, reviewID: ID!, userID: ID!) : ID!
     addLike(userID: ID!, reviewID: ID!) : Like!
+    changeUserProfile(userID: ID!, profile: String!) : User!
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
     deleteReview(reviewID: ID!, userID: ID!) : ID!
     editReview(reviewID: ID!, rank: Int!, text: String!, topic: String!) : Review!
@@ -1576,6 +1591,30 @@ func (ec *executionContext) field_Mutation_addToFavorites_args(ctx context.Conte
 		}
 	}
 	args["movieImage"] = arg3
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_changeUserProfile_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["userID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+		arg0, err = ec.unmarshalNID2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["profile"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("profile"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["profile"] = arg1
 	return args, nil
 }
 
@@ -4331,6 +4370,48 @@ func (ec *executionContext) _Mutation_addLike(ctx context.Context, field graphql
 	res := resTmp.(*ent.Like)
 	fc.Result = res
 	return ec.marshalNLike2ᚖimdbv2ᚋentᚐLike(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_changeUserProfile(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_changeUserProfile_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ChangeUserProfile(rctx, args["userID"].(int), args["profile"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖimdbv2ᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_deleteLike(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8667,6 +8748,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "addLike":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_addLike(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "changeUserProfile":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_changeUserProfile(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)

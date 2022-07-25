@@ -34,7 +34,11 @@ function FavoritesOfUser(props) {
     if (error) return <p>Error : {error}</p>;
 
     let numOfFavorites = data.favoritesOfUser.length
-    let numOfSets = 1 + Math.floor(numOfFavorites / 9)
+    let numOfSets = numOfFavorites - 8
+    if (numOfSets < 0) {
+        numOfSets = 0
+    }
+
 
     function handleClickForward () {
         if (numOfSet >= 0 && numOfSet < numOfSets) {
@@ -77,7 +81,7 @@ function FavoritesOfUser(props) {
                                         <Link to={"/moviePage/" + movieID} className={classes.movieTitle}> {movieTitle}</Link>
                                     </p>
                                 </Typography>
-                                <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>
+                                {numOfSets === 0 ? null : <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>}
                             </CardContent>
                         </Card>
                     </div>

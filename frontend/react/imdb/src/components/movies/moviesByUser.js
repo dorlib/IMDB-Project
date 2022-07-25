@@ -33,6 +33,9 @@ function MoviesByUser(props) {
 
     let numOfMovies = data.moviesOfUser.length
     let numOfSets = numOfMovies - 8
+    if (numOfSets < 0) {
+        numOfSets = 0
+    }
 
     function handleClickForward () {
         if (numOfSet >= 0 && numOfSet < numOfSets) {
