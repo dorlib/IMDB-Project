@@ -70,7 +70,7 @@ function ChangeProfile(props) {
                             accept="image/*"
                             type="file"
                             id="contained-button-file"
-                            defaultValue={props.profile}
+                            value={profileImage2}
                             onChange={event => setProfileImage2(event.target.value)}
                         />
                         <Button variant="contained" component="span">
@@ -81,7 +81,7 @@ function ChangeProfile(props) {
 
                 <Marginer direction="vertical" margin={10}/>
                 <SubmitButton type="button" onClick={sure ? handleSure : handleSubmit}
-                              value="submit">{sure ? 'Are You Sure?' : spinner ? 'loading' : 'Update!'}</SubmitButton>
+                              value="submit" >{sure ? 'Are You Sure?' : spinner ? 'loading' : 'Update!'}</SubmitButton>
             </form>
         </Card>
     );

@@ -113,7 +113,7 @@ function UserPage(props) {
             </p>
             <img className={classes.image} src={Profile} alt={"none"}/>
             <Stack direction="row" spacing={1} className={classes.changeProfile}>
-                <IconButton color="primary" aria-label="change image" style={{color: "yellow"}} onClick={setChangeProfile(true)}>
+                <IconButton color="primary" aria-label="change image" style={{color: "yellow"}} onClick={() => setChangeProfile(true)}>
                     {props.LoggedInUser === id ? <SettingsSuggestIcon style={{fontSize: "xx-large"}}/> : null}
                 </IconButton>
                 {changeProfile ? <div className={classes.pageMask}><ChangeProfile userID={props.LoggedInUser} profile={Profile}/></div> : null}
