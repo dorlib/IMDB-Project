@@ -439,3 +439,8 @@ func (r *queryResolver) MostLikedReviews(ctx context.Context, userID int) ([]*en
 		Limit(5).AllX(ctx)
 	return data, nil
 }
+
+func (r *mutationResolver) ChangeUserProfile(ctx context.Context, userID int, profile string) (*ent.User, error) {
+	data := r.client.User.UpdateOneID(userID).SetProfile(profile).SaveX(ctx)
+	return data, nil
+}

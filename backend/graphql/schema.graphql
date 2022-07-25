@@ -192,6 +192,7 @@ type Mutation {
     editComment(commentID: ID!, text: String!) : Comment!
     deleteComment(commentID: ID!, reviewID: ID!, userID: ID!) : ID!
     addLike(userID: ID!, reviewID: ID!) : Like!
+    changeUserProfile(userID: ID!, profile: String!) : User!
     deleteLike(likeID: ID!, userID: ID!, reviewID: ID!) : [Like]
     deleteReview(reviewID: ID!, userID: ID!) : ID!
     editReview(reviewID: ID!, rank: Int!, text: String!, topic: String!) : Review!

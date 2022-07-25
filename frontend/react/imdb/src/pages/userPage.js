@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {gql, useQuery} from "@apollo/client";
 import Card from "../components/ui/Card";
 
@@ -14,6 +14,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 
+import ChangeProfile from '../components/accounts/changeProfile'
+
 import classes from "./userPage.module.css"
 import styled from "styled-components";
 import DirectorsByUser from "../components/directors/directorsByUser";
@@ -25,6 +27,8 @@ import FavoriteList from "../favorites/FavoriteList";
 import FavoritesOfUser from "../favorites/favoritesOfUser";
 
 function UserPage(props) {
+    const [changeProfile, setChangeProfile] = useState(false);
+
     const USER_DATA = gql`
         query UserByID($id : ID!) {
             userById(id: $id) {
@@ -109,9 +113,10 @@ function UserPage(props) {
             </p>
             <img className={classes.image} src={Profile} alt={"none"}/>
             <Stack direction="row" spacing={1} className={classes.changeProfile}>
-                <IconButton color="primary" aria-label="change image" style={{color: "yellow"}}>
+                <IconButton color="primary" aria-label="change image" style={{color: "yellow"}} onClick={setChangeProfile(true)}>
                     {props.LoggedInUser === id ? <SettingsSuggestIcon style={{fontSize: "xx-large"}}/> : null}
                 </IconButton>
+                {changeProfile ? <div className={classes.pageMask}><ChangeProfile userID={props.LoggedInUser} profile={Profile}/></div> : null}
             </Stack>
             <PeopleAltIcon className={classes.followIcon}/>
             <Typography className={classes.follows}>Following</Typography>
