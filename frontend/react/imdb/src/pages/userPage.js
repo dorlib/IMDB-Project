@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {gql, useQuery} from "@apollo/client";
 import Card from "../components/ui/Card";
 
@@ -15,8 +15,6 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 
 import ChangeProfile from '../components/accounts/changeProfile'
-
-import classes from "./userPage.module.css"
 import styled from "styled-components";
 import DirectorsByUser from "../components/directors/directorsByUser";
 import MoviesByUser from "../components/movies/moviesByUser";
@@ -25,6 +23,9 @@ import Favorites from "./Favorites";
 import FavoritesPage from "./Favorites";
 import FavoriteList from "../favorites/FavoriteList";
 import FavoritesOfUser from "../favorites/favoritesOfUser";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import classes from "./userPage.module.css"
+
 
 function UserPage(props) {
     const [changeProfile, setChangeProfile] = useState(false);
@@ -104,7 +105,7 @@ function UserPage(props) {
     const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
 
     let loaded = (
-        <Card>
+        <Card >
             <p className={classes.name}>
                 {firstName} {lastName}
             </p>
@@ -113,10 +114,18 @@ function UserPage(props) {
             </p>
             <img className={classes.image} src={Profile} alt={"none"}/>
             <Stack direction="row" spacing={1} className={classes.changeProfile}>
-                <IconButton color="primary" aria-label="change image" style={{color: "yellow"}} onClick={() => setChangeProfile(true)}>
+                <IconButton color="primary" aria-label="change image" style={{color: "yellow"}}
+                            onClick={() => setChangeProfile(true)}>
                     {props.LoggedInUser === id ? <SettingsSuggestIcon style={{fontSize: "xx-large"}}/> : null}
                 </IconButton>
-                {changeProfile ? <div className={classes.pageMask}><ChangeProfile userID={props.LoggedInUser} profile={Profile}/></div> : null}
+                {
+                    changeProfile ?
+                        <div className={classes.pageMask}>
+                            <ChangeProfile userID={props.LoggedInUser} profile={Profile}/>
+                            <HighlightOffIcon onClick={() => setChangeProfile(false)} style={{fontSize: "xxx-large"}} className={classes.close}/>
+                        </div>
+                        : null
+                }
             </Stack>
             <PeopleAltIcon className={classes.followIcon}/>
             <Typography className={classes.follows}>Following</Typography>
@@ -128,7 +137,7 @@ function UserPage(props) {
                 {props.LoggedInUser === id ? <Button variant="edit" className={classes.editBut} onClick={handleClick}>Edit
                     Profile</Button> : null}
             </Stack>
-            <React.Fragment>
+            <React.Fragment >
                 <CardContent style={{backgroundColor: "darkslategray"}} className={classes.mainCard}>
                     <IconButton color="primary" aria-label="update details" className={classes.editDetails}>
                         {props.LoggedInUser === id ? <EditIcon className={classes.editDetailsBut}/> : null}

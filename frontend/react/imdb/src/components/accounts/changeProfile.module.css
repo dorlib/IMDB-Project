@@ -33,19 +33,27 @@
 
 .form {
     padding: 1rem;
+    width: 40rem;
 }
 
-.im,
-.control {
+.im {
     margin-bottom: 0.5rem;
 }
 
 .but {
     position: relative;
     display: flex;
-    top: -42px;
-    left: 85%;
+    top: -1.5rem;
+    left: 29rem;
 }
+
+.but input {
+    position: relative;
+    display: flex;
+    left: -5cm;
+    z-index: -1;
+}
+
 
 .im input {
     position: relative;
@@ -54,76 +62,42 @@
     border-radius: 4px;
     border: 1px solid rgba(255, 255, 255, 0.87);
     padding: 0.25rem;
-    width: 30%;
-    left: 40rem;
+    width: 210%;
+    left: -17rem;
+    top: 4.5rem;
 }
 
-.im label,
-.ctrl label,
-.control label {
-    display: block;
-    color: yellow;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.control input,
-.control textarea {
-    display: block;
-    font: inherit;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.87);
-    padding: 0.25rem;
-    width: 100%;
-}
-
-.ctrl input {
-    display: block;
-    font: inherit;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    padding: 0.25rem;
-    width: 30%;
-}
-
-.actions {
-    margin-top: 1rem;
-    text-align: right;
-}
-
-.actions button {
-    font: inherit;
-    cursor: pointer;
-    background-color: #77002e;
-    color: white;
-    padding: 0.5rem 1.5rem;
-    border: 1px solid #77002e;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.actions button:hover,
-.actions button:active {
-    background-color: #a50e48;
-    border-color: #a50e48;
-}
-
-.genreInput {
-    width: 4cm;
-    height: 1cm;
-    marginBottom: 0.3cm;
-    border-width: 3px;
-    background-color: white;
-    border-color: yellow;
-}
-
-.tr input{
-    display: flex;
+.card {
+    background-color: darkslategray;
+    width: 55rem;
+    height: inherit;
     position: relative;
-    bottom: 0.6cm;
-    font: inherit;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    padding: 0.25rem;
-    width: 100%
+    display: flex;
+    top: 17rem;
+    left: 40rem;
+    border-radius: 20px;
 }
+
+.title {
+    position: relative;
+    display: flex;
+    left: 18rem;
+    width: 30rem;
+    bottom: 3rem;
+}
+
+.image {
+    position: relative;
+    margin-top: 1rem;
+    display: inline;
+    height: 30rem;
+    width: 25rem;
+    overflow: hidden;
+    border-radius: 200px;
+    max-height: 60%;
+    max-width: 90%;
+    top: 8.5rem;
+    left: -21rem;
+}
+
+
