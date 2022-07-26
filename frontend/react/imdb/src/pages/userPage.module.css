@@ -217,3 +217,13 @@
     background-color: rgba(0,0,0,0.6);
     z-index: 9999;
 }
+
+.close {
+    position: inherit;
+    display: flex;
+    left: 93rem;
+    top: 13rem;
+    font-size: xxx-large;
+    cursor: pointer;
+}
+

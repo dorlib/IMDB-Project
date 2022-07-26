@@ -1,13 +1,14 @@
 import CardContent from "@mui/material/CardContent";
-import classes from "./changeProfile.module.css";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Card from "../ui/Card";
 import {Stack} from "@mui/material";
 import {Marginer} from "../marginer";
-import {Input, SubmitButton} from "./common";
+import {Input, SubmitButton} from "./change";
 import {gql, useMutation, useQuery} from "@apollo/client";
+import classes from "./changeProfile.module.css";
+
 
 function ChangeProfile(props) {
     const [sure, setSure] = useState(false);
@@ -82,13 +83,12 @@ function ChangeProfile(props) {
                         </label>
                     </Stack>
                     <Marginer direction="vertical" margin={10}/>
-                    <SubmitButton type="button" onClick={sure ? handleSure : handleSubmit} value="submit"
-                                  className={classes.submit}>{sure ? 'Are You Sure?' : spinner ? 'loading...' : 'Update!'}</SubmitButton>
                 </form>
                     <div>
                         <img className={classes.image} src={profileImage1 || noPic} alt={"none"}/>
                         {profileImage2 && profileImage1 === '' ? <img className={classes.image} src={profileImage2 || noPic} alt={"none"}/> : null}
                     </div>
+                <SubmitButton type="button" onClick={sure ? handleSure : handleSubmit} value="submit">{sure ? 'Are You Sure?' : spinner ? 'loading...' : 'Update!'}</SubmitButton>
             </CardContent>
         </Card>
     );

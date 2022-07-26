@@ -67,15 +67,6 @@
     top: 4.5rem;
 }
 
-.submit {
-    width: 20rem;
-    height: 2.5rem;
-    left: -2.5rem;
-    top: 18.5rem;
-    margin-top: 20rem;
-
-}
-
 .card {
     background-color: darkslategray;
     width: 55rem;
@@ -108,3 +99,5 @@
     top: 8.5rem;
     left: -21rem;
 }
+
+
