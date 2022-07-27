@@ -272,21 +272,6 @@ func (r *queryResolver) ActorByID(ctx context.Context, actorID int) ([]*ent.Acto
 	return data, nil
 }
 
-func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, name string) (*ent.Actor, error) {
-	newActor, err := r.client.Actor.Create().SetName(name).Save(ctx)
-	if err != nil {
-		return nil, ent.MaskNotFound(err)
-	}
-
-	newActorToMovie, err1 := r.client.Movie.Update().AddActorIDs(newActor.ID).Save(ctx)
-	if err1 != nil {
-		return nil, ent.MaskNotFound(err1)
-	}
-	fmt.Println("new actor added to movie", newActorToMovie)
-
-	return newActor, nil
-}
-
 func (r *mutationResolver) AddComment(ctx context.Context, userID int, reviewID int, text string) (*ent.Comment, error) {
 	reviewData := r.client.Review.GetX(ctx, reviewID)
 	numOfCommentsBefore := reviewData.NumOfComments
@@ -448,4 +433,19 @@ func (r *mutationResolver) ChangeUserProfile(ctx context.Context, userID int, pr
 func (r *mutationResolver) CreateActor(ctx context.Context, name string, image string) (*ent.Actor, error) {
 	data := r.client.Actor.Create().SetName(name).SetImage(image).SaveX(ctx)
 	return data, nil
+}
+
+func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, image string, name string) (*ent.Actor, error) {
+
+	// lets check if the actor exist
+	actorId := r.client.Actor.Query().Where(actor.Name(name)).OnlyIDX(ctx)
+
+	if actorId > 0 {
+		r.client.Movie.UpdateOneID(movieID).AddActor(r.client.Actor.GetX(ctx, actorId)).SaveX(ctx)
+		return r.client.Actor.GetX(ctx, actorId), nil
+	} else {
+		data := r.client.Actor.Create().SetName(name).SetImage(image).SaveX(ctx)
+		r.client.Movie.UpdateOneID(movieID).AddActor(data)
+		return data, nil
+	}
 }
