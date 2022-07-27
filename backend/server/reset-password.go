@@ -51,7 +51,7 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 			log.Fatal("error while querying user by email", err2)
 		}
 
-		if userMail == nil || email != Forgot.Email {
+		if userMail == nil {
 			fmt.Println("email not found")
 			return
 		}
@@ -67,7 +67,6 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 
 		host := "smtp.gmail.com"
 		port := "587"
-		address := host + ":" + port
 
 		url := "http://localhost:3000/reset/" + token
 
@@ -83,7 +82,6 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 		auth := smtp.PlainAuth("", from, password, host)
 
 		err3 := smtp.SendMail(host+":"+port, auth, from, to, []byte(msg))
-
 
 		if err3 != nil {
 			log.Println(err3)
