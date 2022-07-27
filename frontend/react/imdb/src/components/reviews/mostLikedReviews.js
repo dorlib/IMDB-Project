@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {gql, useQuery} from "@apollo/client";
 import {Link} from "react-router-dom";
-
-import Button from "@mui/material/Button";
 import classes from "./mostLikedReviews.module.css"
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';

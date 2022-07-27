@@ -444,3 +444,8 @@ func (r *mutationResolver) ChangeUserProfile(ctx context.Context, userID int, pr
 	data := r.client.User.UpdateOneID(userID).SetProfile(profile).SaveX(ctx)
 	return data, nil
 }
+
+func (r *mutationResolver) CreateActor(ctx context.Context, name string, image string) (*ent.Actor, error) {
+	data := r.client.Actor.Create().SetName(name).SetImage(image).SaveX(ctx)
+	return data, nil
+}

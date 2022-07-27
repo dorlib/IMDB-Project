@@ -43,7 +43,7 @@ type Director {
 type Actor {
     id: ID!
     name: String!
-    description: String!
+    image: String!
 }
 
 type Review {
@@ -161,7 +161,7 @@ input UserInput {
 
 input ActorInput {
     name: String!
-    description: String!
+    image: String!
 }
 
 input FavoriteInput {
@@ -198,6 +198,7 @@ type Mutation {
     editReview(reviewID: ID!, rank: Int!, text: String!, topic: String!) : Review!
     editMovieDetails(movieID: ID!, title: String!, genre: String!, image: String!, description: String!, year: Int!): Movie!
     editDirectorDetails(directorID: ID!, director: DirectorInput!): Director!
+    createActor (name: String!, Image: String!) : Actor!
 }
 
 # Define a query for getting all movies.

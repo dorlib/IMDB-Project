@@ -9,8 +9,6 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldDescription holds the string denoting the description field in the database.
-	FieldDescription = "description"
 	// FieldImage holds the string denoting the image field in the database.
 	FieldImage = "image"
 	// EdgeActors holds the string denoting the actors edge name in mutations.
@@ -28,7 +26,6 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldName,
-	FieldDescription,
 	FieldImage,
 }
 

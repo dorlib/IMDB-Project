@@ -3,8 +3,8 @@
 package graphql
 
 type ActorInput struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Name  string `json:"name"`
+	Image string `json:"image"`
 }
 
 type CommentInput struct {
