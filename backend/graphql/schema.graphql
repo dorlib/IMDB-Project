@@ -187,7 +187,6 @@ type Mutation {
     updateDirectorDetails(id: ID!, bornAt: String!, profileImage: String!, description: String!): Director!
     addToFavorites(movieID: ID!, userID: ID!, movieTitle: String!, movieImage: String!): Favorite!
     removeFromFavorites(movieID: ID!, userID: ID!): [Favorite]
-    addActorToMovie(movieId: ID!, name: String!) : Actor!
     addComment(userID: ID!, reviewID: ID!, text: String!) : Comment!
     editComment(commentID: ID!, text: String!) : Comment!
     deleteComment(commentID: ID!, reviewID: ID!, userID: ID!) : ID!
@@ -199,6 +198,7 @@ type Mutation {
     editMovieDetails(movieID: ID!, title: String!, genre: String!, image: String!, description: String!, year: Int!): Movie!
     editDirectorDetails(directorID: ID!, director: DirectorInput!): Director!
     createActor (name: String!, Image: String!) : Actor!
+    addActorToMovie (movieID: ID!, image: String!, name: String!) : Actor!
 }
 
 # Define a query for getting all movies.
