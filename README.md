@@ -66,7 +66,7 @@ The app has fully working authentication and authorization processes!
 
 Here's what you need to do to get this running locally on your computer.
 
-1. Clone the project to your machine with `git clone https://github.com/dorlib/imdbv3.git`
+1. Clone the project to your machine with `git clone https://github.com/dorlib/IMDB-Project.git`
 2. Install Go on your machine from [here](https://go.dev/doc/install)
 3. Install MySQL on your machine from [here](https://www.mysql.com/downloads/)
 4. On a command line inside of the application's folder, run `npm start`
