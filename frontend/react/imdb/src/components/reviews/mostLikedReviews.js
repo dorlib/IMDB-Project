@@ -69,6 +69,8 @@ function MostLikedReviews(props) {
                     {data.mostLikedReviews["0"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["0"]["topic"]}</Typography> : null}
                     {data.mostLikedReviews["0"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["0"]["rank"]+ " /100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["0"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["0"]["text"]}" </Typography> : null}
+                    <Typography className={classes.likes} style={{fontSize: "large"}}>Likes : {data.mostLikedReviews["0"]["numOfLikes"]}</Typography>
+                    <Typography className={classes.comments} style={{fontSize: "large"}}>Comments : {data.mostLikedReviews["0"]["numOfComments"]}</Typography>
                     <div className={classes.outOf}>{numOfSet + 1  + "/" + 5}</div>
                 </CardContent>
         </div>
@@ -83,6 +85,8 @@ function MostLikedReviews(props) {
                     {data.mostLikedReviews["1"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["1"]["topic"]}</Typography> : null}
                     {data.mostLikedReviews["1"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["1"]["rank"] + " / 100"}</Typography>: <Typography className={classes.rank}>rank not given</Typography>}
                     <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["1"]["text"]}" </Typography>
+                    <Typography className={classes.likes} style={{fontSize: "large"}}>Likes : {data.mostLikedReviews["1"]["numOfLikes"]}</Typography>
+                    <Typography className={classes.comments} style={{fontSize: "large"}}>Comments : {data.mostLikedReviews["1"]["numOfComments"]}</Typography>
                     <div className={classes.outOf}>{numOfSet + 1  + "/" + 5}</div>
                 </CardContent>
         </div>
@@ -97,6 +101,8 @@ function MostLikedReviews(props) {
                     {data.mostLikedReviews["2"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["2"]["topic"]}</Typography> : null}
                     {data.mostLikedReviews["2"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["2"]["rank"] + " / 100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["2"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["2"]["text"]}" </Typography> : null}
+                    <Typography className={classes.likes} style={{fontSize: "large"}}>Likes : {data.mostLikedReviews["2"]["numOfLikes"]}</Typography>
+                    <Typography className={classes.comments} style={{fontSize: "large"}}>Comments : {data.mostLikedReviews["2"]["numOfComments"]}</Typography>
                     <div className={classes.outOf}>{numOfSet + 1  + "/" + 5}</div>
                 </CardContent>
         </div>
@@ -111,6 +117,8 @@ function MostLikedReviews(props) {
                     {data.mostLikedReviews["3"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["3"]["topic"]}</Typography> : null}
                     {data.mostLikedReviews["3"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["3"]["rank"] + " / 100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["3"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["3"]["text"]}" </Typography> : null}
+                    <Typography className={classes.likes} style={{fontSize: "large"}}>Likes : {data.mostLikedReviews["3"]["numOfLikes"]}</Typography>
+                    <Typography className={classes.comments} style={{fontSize: "large"}}>Comments : {data.mostLikedReviews["3"]["numOfComments"]}</Typography>
                     <div className={classes.outOf}>{numOfSet + 1  + "/" + 5}</div>
                 </CardContent>
         </div>
@@ -125,6 +133,8 @@ function MostLikedReviews(props) {
                     {data.mostLikedReviews["4"]["topic"] ? <Typography className={classes.topic} style={{fontSize: "xx-large"}}>{data.mostLikedReviews["4"]["topic"]}</Typography> : null}
                     {data.mostLikedReviews["4"]["rank"] ? <Typography className={classes.rank} style={{fontSize: "x-large"}}>{data.mostLikedReviews["4"]["rank"] + " / 100"}</Typography>:  <Typography className={classes.rank}>rank not given</Typography>}
                     {data.mostLikedReviews["4"]["text"] ? <Typography className={classes.text} style={{fontSize: "x-large"}}>"{data.mostLikedReviews["4"]["text"]}" </Typography> : null}
+                    <Typography className={classes.likes} style={{fontSize: "large"}}>Likes : {data.mostLikedReviews["4"]["numOfLikes"]}</Typography>
+                    <Typography className={classes.comments} style={{fontSize: "large"}}>Comments : {data.mostLikedReviews["4"]["numOfComments"]}</Typography>
                     <div className={classes.outOf}>{numOfSet + 1  + "/" + 5}</div>
                 </CardContent>
         </div>

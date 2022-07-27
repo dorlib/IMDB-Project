@@ -50,7 +50,7 @@
     right: 7rem;
     top: 4rem;
     font-style: oblique;
-    color: mediumblue;
+    color: darkblue;
 }
 
 .movie {
@@ -61,4 +61,22 @@
     border-radius: 50px;
     bottom: 1rem;
     left: 2rem;
+}
+
+.likes {
+    display: flex;
+    position: absolute;
+    right: 7.6rem;
+    top: 7rem;
+    font-style: oblique;
+    color: darkblue;
+}
+
+.comments {
+    display: flex;
+    position: absolute;
+    right: 5rem;
+    top: 9.5rem;
+    font-style: oblique;
+    color: darkblue;
 }
