@@ -174,13 +174,18 @@ export function SignUpForm(props) {
 
                     <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
                         <label htmlFor="fileProfile">
-                            <Button variant="contained" component="span">
+                            <Button
+                                variant="contained"
+                                component="label"
+                            >
                                 Upload
-                                <Input
+                                <input
+                                    type="file"
+                                    hidden
                                     accept="image/*"
-                                    id="fileProfile"
-                                    name="fileProfile"
-                                    value={givenFileProfile} onChange={event => setFileProfile(event.target.value)}
+                                    id="contained-button-file"
+                                    value={givenFileProfile}
+                                    onChange={event => setFileProfile(event.target.value)}
                                 />
                             </Button>
                         </label>

@@ -217,17 +217,19 @@ function DirectorPage(props) {
                     </div>
                     <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
                         <label htmlFor="contained-button-file">
-                            <Input
-                                accept="image/*"
-                                type="file"
-                                id="contained-button-file"
-                                style={{display: "none"}}
-                                value={profileImageGiven2}
-                                onChange={event => setProfileImage2(event.target.value)}
-                            />
-                            <Button variant="contained" component="span"
-                                    style={{position: "relative", display: "flex", bottom: "0.1cm", right: "7.3cm"}}>
+                            <Button
+                                variant="contained"
+                                component="span"
+                                style={{position: "relative", display: "flex", bottom: "0.1cm", right: "7.3cm"}}>
                                 Upload
+                                <input
+                                    type="file"
+                                    hidden
+                                    accept="image/*"
+                                    id="contained-button-file"
+                                    value={profileImageGiven2}
+                                    onChange={event => setProfileImage2(event.target.value)}
+                                />
                             </Button>
                         </label>
                     </Stack>

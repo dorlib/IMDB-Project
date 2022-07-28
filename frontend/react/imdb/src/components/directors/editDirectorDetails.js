@@ -140,15 +140,19 @@ export function EditDirectorDetails(props) {
 
                 <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
                     <label htmlFor="contained-button-file">
-                        <Input
-                            accept="image/*"
-                            type="file"
-                            id="contained-button-file"
-                            value={givenProfileImage2}
-                            onChange={event => setProfileImage2(event.target.value)}
-                        />
-                        <Button variant="contained" component="span">
+                        <Button
+                            variant="contained"
+                            component="label"
+                        >
                             Upload
+                            <input
+                                type="file"
+                                hidden
+                                accept="image/*"
+                                id="contained-button-file"
+                                value={givenProfileImage2}
+                                onChange={event => setProfileImage2(event.target.value)}
+                            />
                         </Button>
                     </label>
                 </Stack>
