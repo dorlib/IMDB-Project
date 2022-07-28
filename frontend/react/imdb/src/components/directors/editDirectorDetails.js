@@ -40,6 +40,7 @@ export function EditDirectorDetails(props) {
     const [spinner, setSpinner] = useState(false);
     const [sure, setSure] = useState(false);
     const [sureClicked, setSureClicked] = useState(false);
+    const [profileError, setProfileError] = useState(false);
 
     const {loading: loading1, error: error1, data: data1} = useQuery(DIRECTOR_DATA,
         {
@@ -106,7 +107,13 @@ export function EditDirectorDetails(props) {
         if (givenDescription === "") {setDescription(description)}
         if (givenProfileImage1 === "") {setProfileImage1(profileImage)}
 
-        setSure(true)
+        console.log(givenProfileImage2, givenProfileImage1)
+
+        if (givenProfileImage2 !== "" && givenProfileImage1 !== "") {
+            setProfileError(true);
+        } else {
+            setSure(true)
+        }
     }
 
     const handleSure = () => {
@@ -134,6 +141,8 @@ export function EditDirectorDetails(props) {
 
                 <div className={classes.im}>
                     <label htmlFor="image">Director's Image</label>
+                    {profileError || (givenProfileImage1 !== "" && givenProfileImage2 !== "")? <span className={classes.imageErr}>choose file image OR url image</span> : null }
+
                     <input type="url" datatype="string" id="image" defaultValue={profileImage}
                            onChange={event => setProfileImage1(event.target.value)}/>
                 </div>
@@ -153,8 +162,8 @@ export function EditDirectorDetails(props) {
                                 value={givenProfileImage2}
                                 onChange={event => setProfileImage2(event.target.value)}
                             />
-                            <span id="upload-file-name">&ensp;  {givenProfileImage2}</span>
                         </Button>
+                        <Typography className={classes.file}>{givenProfileImage2}</Typography>
                     </label>
                 </Stack>
 
