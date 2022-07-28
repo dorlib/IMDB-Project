@@ -90,9 +90,9 @@
 .but {
     position: relative;
     display: flex;
-    top: -1.2cm;
-    left: 85%;
+    top: 0.3rem;
     width: 0.25cm;
+    margin-bottom: 3.7rem;
 
 }
 
@@ -146,6 +146,24 @@
     left: 29rem;
     bottom: -4rem;
 }
+
+.image2 {
+    position: absolute;
+    display: flex;
+    left: 4rem;
+    top: 0.5rem;
+    width: 20rem;
+}
+
+.imageErr {
+    position: absolute;
+    display: flex;
+    color: darkred;
+    width: 30rem;
+    right: 9rem;
+    top: 12.8rem;
+}
+
 
 
 

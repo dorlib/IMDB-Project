@@ -38,7 +38,8 @@ function DirectorPage(props) {
     const [monthOfBirthGiven, setMonth] = useState()
     const [yearOfBirthGiven, setYear] = useState()
 
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(false);
+    const [imageError, setImageError] = useState(false);
 
     let desc = descriptionGiven
     let prof = profileImageGiven || profileImageGiven2
@@ -205,13 +206,14 @@ function DirectorPage(props) {
 
                     <div className={classes.control} style={{color: "yellow", fontWeight: "bold"}}>
                         <label htmlFor="profileImage">Profile Image</label>
+                        {imageError && (profileImageGiven !== "" && profileImageGiven2 !== "")? <span className={classes.imageErr}>choose file image OR url image</span> : null }
                         <textarea
                             id="topic"
                             type="text"
                             datatype="String"
                             required
                             rows="1"
-                            style={{width: "11.8cm", height: "0.7cm"}}
+                            style={{width: "17cm", height: "1.2cm", lineHeight: "0.6cm"}}
                             defaultValue={profileImage} onChange={event => setProfileImage(event.target.value)}
                         ></textarea>
                     </div>
@@ -219,8 +221,7 @@ function DirectorPage(props) {
                         <label htmlFor="contained-button-file">
                             <Button
                                 variant="contained"
-                                component="span"
-                                style={{position: "relative", display: "flex", bottom: "0.1cm", right: "7.3cm"}}>
+                                component="span">
                                 Upload
                                 <input
                                     type="file"
@@ -231,7 +232,7 @@ function DirectorPage(props) {
                                     onChange={event => setProfileImage2(event.target.value)}
                                 />
                             </Button>
-                            <span id="upload-file-name">&ensp;  {profileImageGiven2}</span>
+                            <span id="upload-file-name" className={classes.image2}>&ensp; {profileImageGiven2}</span>
                         </label>
                     </Stack>
                     <div>
@@ -261,8 +262,8 @@ function DirectorPage(props) {
                         </table>
                     </div>
                     <div className={classes.actions}>
-                        <button onClick={() => setVisible(true)}>SUBMIT</button>
-                        {visible ? <UpdateDirectorInfo prof={prof || profileImage} desc={desc || description} birthday={birthday || bornAt} id={lastSegment}
+                        <button onClick={() => (setVisible(true), profileImageGiven !== "" && profileImageGiven2 !== "" ? setImageError(true): null)}>SUBMIT</button>
+                        {visible && !imageError ? <UpdateDirectorInfo prof={prof || profileImage} desc={desc || description} birthday={birthday || bornAt} id={lastSegment}
                                                        currentDesc={description} currentBornAt={bornAt}
                                                        currentProfile={profileImage}/> : console.log("none")}
                     </div>
