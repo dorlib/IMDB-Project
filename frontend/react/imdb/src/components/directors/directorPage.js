@@ -231,6 +231,7 @@ function DirectorPage(props) {
                                     onChange={event => setProfileImage2(event.target.value)}
                                 />
                             </Button>
+                            <span id="upload-file-name">&ensp;  {profileImageGiven2}</span>
                         </label>
                     </Stack>
                     <div>

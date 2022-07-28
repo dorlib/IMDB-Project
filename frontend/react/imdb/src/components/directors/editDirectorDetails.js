@@ -147,12 +147,13 @@ export function EditDirectorDetails(props) {
                             Upload
                             <input
                                 type="file"
-                                hidden
                                 accept="image/*"
-                                id="contained-button-file"
+                                id="file-upload-button"
+                                hidden
                                 value={givenProfileImage2}
                                 onChange={event => setProfileImage2(event.target.value)}
                             />
+                            <span id="upload-file-name">&ensp;  {givenProfileImage2}</span>
                         </Button>
                     </label>
                 </Stack>

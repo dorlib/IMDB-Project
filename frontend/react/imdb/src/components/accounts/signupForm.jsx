@@ -27,6 +27,7 @@ export function SignUpForm(props) {
     const [emailError, setEmailError] = useState(false);
     const [emailErrorValid, setEmailErrorValid] = useState(false);
     const [PassError, setPassError] = useState(false);
+    const [imageError, setImageError] = useState(false);
 
 
     const [givenFirstName, setFirstName] = useState('')
@@ -65,10 +66,12 @@ export function SignUpForm(props) {
 
         if (givenEmail !== givenEmailVer) {
             setEmailError(true);
-        } else if (givenEmail.indexOf("@")) {
+        } else if (givenEmail.indexOf("@") === -1) {
             setEmailErrorValid(true);
         } else if (givenPassword.length < 8) {
             setPassError(true);
+        } else if (givenFileProfile !== "" && givenTextProfile !== "") {
+            setImageError(true);
         } else {
             setSpinner(true);
             fetch('http://localhost:8081/signupForm', {
@@ -153,8 +156,8 @@ export function SignUpForm(props) {
                     <div className={classes.control}>
                         <label htmlFor="email">
                             <span>Enter Your E-mail</span>
-                            <span style={{color: "red", marginLeft: "5cm"}}>{emailError? "address doesnt match": null}</span>
-                            <span style={{color: "red", marginLeft: "1cm"}}>{emailErrorValid? "address not valid": null}</span>
+                            {emailError && givenEmail !== givenEmailVer ? <span style={{color: "red", marginLeft: "5cm"}}>address doesnt match</span> : null }
+                            {emailErrorValid && givenEmail.indexOf("@") === -1  ?<span style={{color: "red", marginLeft: "1cm"}}>address not valid</span> : null }
                         </label>
                         <input type="text" required id="email" name="email" value={givenEmail}
                                onChange={event => setEmail(event.target.value)} autoComplete="on"/>
@@ -174,6 +177,7 @@ export function SignUpForm(props) {
 
                     <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
                         <label htmlFor="fileProfile">
+                            {imageError && (givenTextProfile !== "" && givenFileProfile !== "")? <span className={classes.imageErr}>choose file image OR url image</span> : null }
                             <Button
                                 variant="contained"
                                 component="label"
@@ -188,6 +192,7 @@ export function SignUpForm(props) {
                                     onChange={event => setFileProfile(event.target.value)}
                                 />
                             </Button>
+                            <Typography className={classes.error}>{givenFileProfile}</Typography>
                         </label>
                     </Stack>
 
@@ -233,7 +238,7 @@ export function SignUpForm(props) {
 
                     <div className={classes.ctrl}>
                         <label htmlFor="password">Choose Your password (8 characters minimum)
-                            <span style={{color: "red", marginLeft: "5cm"}}>{PassError? "password has les then 8 characters": null}</span>
+                            {PassError && givenPassword.length < 8 ?<span style={{color: "red", marginLeft: "5cm"}}> "password has les then 8 characters"</span> : null}
                         </label>
                         <input type="password" id="password" name="password" minLength="8" value={givenPassword}
                                onChange={event => setPassword(event.target.value)}

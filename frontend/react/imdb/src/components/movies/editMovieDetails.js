@@ -159,6 +159,7 @@ export function EditMovieDetails(props) {
                                 value={givenImage2}
                                 onChange={event => setImage2(event.target.value)}
                             />
+                            <span id="upload-file-name">&ensp;  {givenImage2}</span>
                         </Button>
                     </label>
                 </Stack>
