@@ -141,8 +141,7 @@ export function EditDirectorDetails(props) {
 
                 <div className={classes.im}>
                     <label htmlFor="image">Director's Image</label>
-                    {profileError || (givenProfileImage1 !== "" && givenProfileImage2 !== "")? <span className={classes.imageErr}>choose file image OR url image</span> : null }
-
+                    {profileError && (givenProfileImage1 !== "" && givenProfileImage2 !== "")? <span className={classes.imageErr}>choose file image OR url image</span> : null }
                     <input type="url" datatype="string" id="image" defaultValue={profileImage}
                            onChange={event => setProfileImage1(event.target.value)}/>
                 </div>

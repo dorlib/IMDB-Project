@@ -144,3 +144,20 @@
   left: 11.5cm;
   border-radius: 30px;
 }
+
+.file {
+  position: absolute;
+  display: flex;
+  color: yellow;
+  top: 2.8rem;
+  left: -7rem;
+}
+
+.imageErr {
+  position: absolute;
+  display: flex;
+  color: red;
+  width: 18rem;
+  right: 49rem;
+  top: 24.5rem;
+}

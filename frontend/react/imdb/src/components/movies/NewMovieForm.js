@@ -49,6 +49,7 @@ function NewMovieForm(props) {
         }
     `;
 
+    const [imageError, setImageError] = useState(false);
 
     const [givenTitle, setTitle] = useState('')
     const [givenYear, setYear] = useState('')
@@ -178,6 +179,7 @@ function NewMovieForm(props) {
 
                     <div className={classes.im}>
                         <label htmlFor="image">Movie Image</label>
+                        {imageError && (givenImage1 !== "" && givenImage2 !== "")? <span className={classes.imageErr}>choose file image OR url image</span> : null }
                         <input type="url" datatype="string" id="image" value={givenImage1}
                                onChange={event => setImage1(event.target.value)}/>
                     </div>
@@ -197,8 +199,8 @@ function NewMovieForm(props) {
                                     value={givenImage2}
                                     onChange={event => setImage2(event.target.value)}
                                 />
-                                <span id="upload-file-name">&ensp;  {givenImage2}</span>
                             </Button>
+                            <Typography className={classes.file}>{givenImage2}</Typography>
                         </label>
                     </Stack>
 
@@ -286,7 +288,7 @@ function NewMovieForm(props) {
                     </div>
 
                     <div className={classes.actions}>
-                        <button type="button" onClick={addMovie}>Add Movie</button>
+                        <button type="button" onClick={() => givenImage1 !== "" && givenImage2 !== "" ? setImageError(true) : addMovie}>Add Movie</button>
                     </div>
                 </form>
             </Card>
