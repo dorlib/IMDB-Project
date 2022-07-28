@@ -49,6 +49,7 @@ function NewMovieForm(props) {
         }
     `;
 
+    const [imageError, setImageError] = useState(false);
 
     const [givenTitle, setTitle] = useState('')
     const [givenYear, setYear] = useState('')
@@ -61,6 +62,8 @@ function NewMovieForm(props) {
     const [givenImage1, setImage1] = useState('')
     const [givenImage2, setImage2] = useState('')
     const [givenTopic, setTopic] = useState('')
+
+    console.log(givenImage2)
 
     const [name, setName] = useState('');
 
@@ -176,22 +179,28 @@ function NewMovieForm(props) {
 
                     <div className={classes.im}>
                         <label htmlFor="image">Movie Image</label>
+                        {imageError && (givenImage1 !== "" && givenImage2 !== "")? <span className={classes.imageErr}>choose file image OR url image</span> : null }
                         <input type="url" datatype="string" id="image" value={givenImage1}
                                onChange={event => setImage1(event.target.value)}/>
                     </div>
 
                     <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
                         <label htmlFor="contained-button-file">
-                            <Input
-                                accept="image/*"
-                                type="file"
-                                id="contained-button-file"
-                                value={givenImage2}
-                                onChange={event => setImage2(event.target.value)}
-                            />
-                            <Button variant="contained" component="span">
+                            <Button
+                                variant="contained"
+                                component="label"
+                            >
                                 Upload
+                                <input
+                                    type="file"
+                                    hidden
+                                    accept="image/*"
+                                    id="contained-button-file"
+                                    value={givenImage2}
+                                    onChange={event => setImage2(event.target.value)}
+                                />
                             </Button>
+                            <Typography className={classes.file}>{givenImage2}</Typography>
                         </label>
                     </Stack>
 
@@ -279,7 +288,7 @@ function NewMovieForm(props) {
                     </div>
 
                     <div className={classes.actions}>
-                        <button type="button" onClick={addMovie}>Add Movie</button>
+                        <button type="button" onClick={() => givenImage1 !== "" && givenImage2 !== "" ? setImageError(true) : addMovie}>Add Movie</button>
                     </div>
                 </form>
             </Card>

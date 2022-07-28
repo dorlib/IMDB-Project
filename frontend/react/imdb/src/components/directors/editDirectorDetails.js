@@ -40,6 +40,7 @@ export function EditDirectorDetails(props) {
     const [spinner, setSpinner] = useState(false);
     const [sure, setSure] = useState(false);
     const [sureClicked, setSureClicked] = useState(false);
+    const [profileError, setProfileError] = useState(false);
 
     const {loading: loading1, error: error1, data: data1} = useQuery(DIRECTOR_DATA,
         {
@@ -106,7 +107,13 @@ export function EditDirectorDetails(props) {
         if (givenDescription === "") {setDescription(description)}
         if (givenProfileImage1 === "") {setProfileImage1(profileImage)}
 
-        setSure(true)
+        console.log(givenProfileImage2, givenProfileImage1)
+
+        if (givenProfileImage2 !== "" && givenProfileImage1 !== "") {
+            setProfileError(true);
+        } else {
+            setSure(true)
+        }
     }
 
     const handleSure = () => {
@@ -134,22 +141,28 @@ export function EditDirectorDetails(props) {
 
                 <div className={classes.im}>
                     <label htmlFor="image">Director's Image</label>
+                    {profileError && (givenProfileImage1 !== "" && givenProfileImage2 !== "")? <span className={classes.imageErr}>choose file image OR url image</span> : null }
                     <input type="url" datatype="string" id="image" defaultValue={profileImage}
                            onChange={event => setProfileImage1(event.target.value)}/>
                 </div>
 
                 <Stack direction="row" alignItems="center" spacing={2} className={classes.but}>
                     <label htmlFor="contained-button-file">
-                        <Input
-                            accept="image/*"
-                            type="file"
-                            id="contained-button-file"
-                            value={givenProfileImage2}
-                            onChange={event => setProfileImage2(event.target.value)}
-                        />
-                        <Button variant="contained" component="span">
+                        <Button
+                            variant="contained"
+                            component="label"
+                        >
                             Upload
+                            <input
+                                type="file"
+                                accept="image/*"
+                                id="file-upload-button"
+                                hidden
+                                value={givenProfileImage2}
+                                onChange={event => setProfileImage2(event.target.value)}
+                            />
                         </Button>
+                        <Typography className={classes.file}>{givenProfileImage2}</Typography>
                     </label>
                 </Stack>
 
