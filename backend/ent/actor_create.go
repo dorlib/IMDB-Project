@@ -26,6 +26,12 @@ func (ac *ActorCreate) SetName(s string) *ActorCreate {
 	return ac
 }
 
+// SetCharacterName sets the "character_name" field.
+func (ac *ActorCreate) SetCharacterName(s string) *ActorCreate {
+	ac.mutation.SetCharacterName(s)
+	return ac
+}
+
 // SetImage sets the "image" field.
 func (ac *ActorCreate) SetImage(s string) *ActorCreate {
 	ac.mutation.SetImage(s)
@@ -120,6 +126,9 @@ func (ac *ActorCreate) check() error {
 	if _, ok := ac.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Actor.name"`)}
 	}
+	if _, ok := ac.mutation.CharacterName(); !ok {
+		return &ValidationError{Name: "character_name", err: errors.New(`ent: missing required field "Actor.character_name"`)}
+	}
 	if _, ok := ac.mutation.Image(); !ok {
 		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Actor.image"`)}
 	}
@@ -157,6 +166,14 @@ func (ac *ActorCreate) createSpec() (*Actor, *sqlgraph.CreateSpec) {
 			Column: actor.FieldName,
 		})
 		_node.Name = value
+	}
+	if value, ok := ac.mutation.CharacterName(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: actor.FieldCharacterName,
+		})
+		_node.CharacterName = value
 	}
 	if value, ok := ac.mutation.Image(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

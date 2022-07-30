@@ -99,6 +99,13 @@ func Name(v string) predicate.Actor {
 	})
 }
 
+// CharacterName applies equality check predicate on the "character_name" field. It's identical to CharacterNameEQ.
+func CharacterName(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCharacterName), v))
+	})
+}
+
 // Image applies equality check predicate on the "image" field. It's identical to ImageEQ.
 func Image(v string) predicate.Actor {
 	return predicate.Actor(func(s *sql.Selector) {
@@ -214,6 +221,117 @@ func NameEqualFold(v string) predicate.Actor {
 func NameContainsFold(v string) predicate.Actor {
 	return predicate.Actor(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldName), v))
+	})
+}
+
+// CharacterNameEQ applies the EQ predicate on the "character_name" field.
+func CharacterNameEQ(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCharacterName), v))
+	})
+}
+
+// CharacterNameNEQ applies the NEQ predicate on the "character_name" field.
+func CharacterNameNEQ(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCharacterName), v))
+	})
+}
+
+// CharacterNameIn applies the In predicate on the "character_name" field.
+func CharacterNameIn(vs ...string) predicate.Actor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Actor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCharacterName), v...))
+	})
+}
+
+// CharacterNameNotIn applies the NotIn predicate on the "character_name" field.
+func CharacterNameNotIn(vs ...string) predicate.Actor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Actor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCharacterName), v...))
+	})
+}
+
+// CharacterNameGT applies the GT predicate on the "character_name" field.
+func CharacterNameGT(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCharacterName), v))
+	})
+}
+
+// CharacterNameGTE applies the GTE predicate on the "character_name" field.
+func CharacterNameGTE(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCharacterName), v))
+	})
+}
+
+// CharacterNameLT applies the LT predicate on the "character_name" field.
+func CharacterNameLT(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCharacterName), v))
+	})
+}
+
+// CharacterNameLTE applies the LTE predicate on the "character_name" field.
+func CharacterNameLTE(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCharacterName), v))
+	})
+}
+
+// CharacterNameContains applies the Contains predicate on the "character_name" field.
+func CharacterNameContains(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCharacterName), v))
+	})
+}
+
+// CharacterNameHasPrefix applies the HasPrefix predicate on the "character_name" field.
+func CharacterNameHasPrefix(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCharacterName), v))
+	})
+}
+
+// CharacterNameHasSuffix applies the HasSuffix predicate on the "character_name" field.
+func CharacterNameHasSuffix(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCharacterName), v))
+	})
+}
+
+// CharacterNameEqualFold applies the EqualFold predicate on the "character_name" field.
+func CharacterNameEqualFold(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCharacterName), v))
+	})
+}
+
+// CharacterNameContainsFold applies the ContainsFold predicate on the "character_name" field.
+func CharacterNameContainsFold(v string) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCharacterName), v))
 	})
 }
 

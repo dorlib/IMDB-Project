@@ -34,6 +34,12 @@ func (au *ActorUpdate) SetName(s string) *ActorUpdate {
 	return au
 }
 
+// SetCharacterName sets the "character_name" field.
+func (au *ActorUpdate) SetCharacterName(s string) *ActorUpdate {
+	au.mutation.SetCharacterName(s)
+	return au
+}
+
 // SetImage sets the "image" field.
 func (au *ActorUpdate) SetImage(s string) *ActorUpdate {
 	au.mutation.SetImage(s)
@@ -160,6 +166,13 @@ func (au *ActorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: actor.FieldName,
 		})
 	}
+	if value, ok := au.mutation.CharacterName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: actor.FieldCharacterName,
+		})
+	}
 	if value, ok := au.mutation.Image(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -243,6 +256,12 @@ type ActorUpdateOne struct {
 // SetName sets the "name" field.
 func (auo *ActorUpdateOne) SetName(s string) *ActorUpdateOne {
 	auo.mutation.SetName(s)
+	return auo
+}
+
+// SetCharacterName sets the "character_name" field.
+func (auo *ActorUpdateOne) SetCharacterName(s string) *ActorUpdateOne {
+	auo.mutation.SetCharacterName(s)
 	return auo
 }
 
@@ -394,6 +413,13 @@ func (auo *ActorUpdateOne) sqlSave(ctx context.Context) (_node *Actor, err error
 			Type:   field.TypeString,
 			Value:  value,
 			Column: actor.FieldName,
+		})
+	}
+	if value, ok := auo.mutation.CharacterName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: actor.FieldCharacterName,
 		})
 	}
 	if value, ok := auo.mutation.Image(); ok {

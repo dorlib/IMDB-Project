@@ -43,6 +43,7 @@ type Director {
 type Actor {
     id: ID!
     name: String!
+    characterName: String!
     image: String!
 }
 
@@ -161,6 +162,7 @@ input UserInput {
 
 input ActorInput {
     name: String!
+    characterName: String!
     image: String!
 }
 
@@ -198,7 +200,7 @@ type Mutation {
     editMovieDetails(movieID: ID!, title: String!, genre: String!, image: String!, description: String!, year: Int!): Movie!
     editDirectorDetails(directorID: ID!, director: DirectorInput!): Director!
     createActor (name: String!, Image: String!) : Actor!
-    addActorToMovie (movieID: ID!, image: String!, name: String!) : Actor!
+    addActorToMovie (movieID: ID!,name: String!, characterName: String!, image: String!) : Actor!
 }
 
 # Define a query for getting all movies.
@@ -213,7 +215,7 @@ type Query {
     last5Added: [Movie!]
     mostLikedReviews(userID: ID!): [Review]
     directorById(id: ID!): [Director!]
-    actorsOfMovie(id: ID!): [Actor]
+    actorsOfMovie(movieID: ID!): [Actor]
     actorById(id: ID!): [Actor!]
     reviewsOfMovie(movieID: Int!) : [Review]
     commentsOfReview(reviewID: ID!) : [Comment]

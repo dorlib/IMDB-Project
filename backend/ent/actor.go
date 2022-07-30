@@ -17,6 +17,8 @@ type Actor struct {
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
+	// CharacterName holds the value of the "character_name" field.
+	CharacterName string `json:"character_name,omitempty"`
 	// Image holds the value of the "image" field.
 	Image string `json:"image,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -49,7 +51,7 @@ func (*Actor) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case actor.FieldID:
 			values[i] = new(sql.NullInt64)
-		case actor.FieldName, actor.FieldImage:
+		case actor.FieldName, actor.FieldCharacterName, actor.FieldImage:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Actor", columns[i])
@@ -77,6 +79,12 @@ func (a *Actor) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				a.Name = value.String
+			}
+		case actor.FieldCharacterName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field character_name", values[i])
+			} else if value.Valid {
+				a.CharacterName = value.String
 			}
 		case actor.FieldImage:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -119,6 +127,8 @@ func (a *Actor) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", a.ID))
 	builder.WriteString(", name=")
 	builder.WriteString(a.Name)
+	builder.WriteString(", character_name=")
+	builder.WriteString(a.CharacterName)
 	builder.WriteString(", image=")
 	builder.WriteString(a.Image)
 	builder.WriteByte(')')

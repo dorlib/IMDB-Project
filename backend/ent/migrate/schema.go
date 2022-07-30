@@ -12,6 +12,7 @@ var (
 	ActorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "character_name", Type: field.TypeString},
 		{Name: "image", Type: field.TypeString},
 	}
 	// ActorsTable holds the schema information for the "actors" table.

@@ -4,7 +4,6 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	_ "imdbv2/ent/hook"
 )
 
 // Review holds the schema definition for the Review entity.
