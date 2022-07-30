@@ -77,10 +77,10 @@
 .card {
     background-color: darkslategray;
     width: 55rem;
-    height: 40rem;
+    height: 45rem;
     position: relative;
     display: flex;
-    top: 10rem;
+    top: 5rem;
     left: 40rem;
     border-radius: 20px;
 }
@@ -90,12 +90,12 @@
     display: flex;
     left: 20rem;
     width: 30rem;
-    bottom: 36rem;
+    bottom: 41rem;
 }
 
 .image {
     position: relative;
-    margin-top: 1rem;
+    margin-top: 6rem;
     display: inline;
     height: 19rem;
     width: 25rem;
@@ -125,7 +125,7 @@
 }
 
 .name {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .name input {
@@ -141,6 +141,29 @@
 }
 
 .name label {
+    position: relative;
+    display: flex;
+    top: 3.3rem;
+    font-size: large;
+}
+
+.characterName {
+    margin-bottom: 1rem;
+}
+
+.characterName input {
+    position: relative;
+    display: flex;
+    font: inherit;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.87);
+    padding: 0.25rem;
+    width: 80%;
+    left: 0rem;
+    top: 4rem;
+}
+
+.characterName label {
     position: relative;
     display: flex;
     top: 3.3rem;

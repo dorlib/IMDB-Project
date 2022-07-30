@@ -42,18 +42,19 @@ const (
 // ActorMutation represents an operation that mutates the Actor nodes in the graph.
 type ActorMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	name          *string
-	image         *string
-	clearedFields map[string]struct{}
-	actors        map[int]struct{}
-	removedactors map[int]struct{}
-	clearedactors bool
-	done          bool
-	oldValue      func(context.Context) (*Actor, error)
-	predicates    []predicate.Actor
+	op             Op
+	typ            string
+	id             *int
+	name           *string
+	character_name *string
+	image          *string
+	clearedFields  map[string]struct{}
+	actors         map[int]struct{}
+	removedactors  map[int]struct{}
+	clearedactors  bool
+	done           bool
+	oldValue       func(context.Context) (*Actor, error)
+	predicates     []predicate.Actor
 }
 
 var _ ent.Mutation = (*ActorMutation)(nil)
@@ -190,6 +191,42 @@ func (m *ActorMutation) ResetName() {
 	m.name = nil
 }
 
+// SetCharacterName sets the "character_name" field.
+func (m *ActorMutation) SetCharacterName(s string) {
+	m.character_name = &s
+}
+
+// CharacterName returns the value of the "character_name" field in the mutation.
+func (m *ActorMutation) CharacterName() (r string, exists bool) {
+	v := m.character_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCharacterName returns the old "character_name" field's value of the Actor entity.
+// If the Actor object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ActorMutation) OldCharacterName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCharacterName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCharacterName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCharacterName: %w", err)
+	}
+	return oldValue.CharacterName, nil
+}
+
+// ResetCharacterName resets all changes to the "character_name" field.
+func (m *ActorMutation) ResetCharacterName() {
+	m.character_name = nil
+}
+
 // SetImage sets the "image" field.
 func (m *ActorMutation) SetImage(s string) {
 	m.image = &s
@@ -299,9 +336,12 @@ func (m *ActorMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ActorMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 3)
 	if m.name != nil {
 		fields = append(fields, actor.FieldName)
+	}
+	if m.character_name != nil {
+		fields = append(fields, actor.FieldCharacterName)
 	}
 	if m.image != nil {
 		fields = append(fields, actor.FieldImage)
@@ -316,6 +356,8 @@ func (m *ActorMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case actor.FieldName:
 		return m.Name()
+	case actor.FieldCharacterName:
+		return m.CharacterName()
 	case actor.FieldImage:
 		return m.Image()
 	}
@@ -329,6 +371,8 @@ func (m *ActorMutation) OldField(ctx context.Context, name string) (ent.Value, e
 	switch name {
 	case actor.FieldName:
 		return m.OldName(ctx)
+	case actor.FieldCharacterName:
+		return m.OldCharacterName(ctx)
 	case actor.FieldImage:
 		return m.OldImage(ctx)
 	}
@@ -346,6 +390,13 @@ func (m *ActorMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
+		return nil
+	case actor.FieldCharacterName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCharacterName(v)
 		return nil
 	case actor.FieldImage:
 		v, ok := value.(string)
@@ -405,6 +456,9 @@ func (m *ActorMutation) ResetField(name string) error {
 	switch name {
 	case actor.FieldName:
 		m.ResetName()
+		return nil
+	case actor.FieldCharacterName:
+		m.ResetCharacterName()
 		return nil
 	case actor.FieldImage:
 		m.ResetImage()

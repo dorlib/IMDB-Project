@@ -186,7 +186,7 @@ function MovieItem(props) {
                     <Typography component="div">
                         Actors:
                     </Typography>
-                    <ActorsOfMovie movieID={movieID}/>
+                    {/*<ActorsOfMovie movieID={movieID}/>*/}
                     { parseInt(userId) === props.userID ?
                     <ControlPointIcon color="primary" aria-label="change image" style={{fontSize: "xxx-large", color: "yellow"}} className={classes.addActorsBut}
                                 onClick={() => setAddActors(true)} /> : null}

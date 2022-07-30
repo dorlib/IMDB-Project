@@ -19,10 +19,11 @@ function AddActor(props) {
     const [image1, setImage1] = useState(props.profile || '')
     const [image2, setImage2] = useState('')
     const [givenName, setGivenName] = useState('')
+    const [givenCharacterName, setGivenCharacterName] = useState('')
 
     let ADD_ACTOR = gql`
-        mutation ChangeUserProfile ($movieID: ID!, $image: String!, $name: String!) {
-            changeUserProfile (movieID: $movieID, image: $image, name: $name) {
+        mutation AddActorToMovie ($movieID: ID!, $image: String!, $name: String!) {
+            addActorToMovie (movieID: $movieID, image: $image, name: $name) {
                 id
             }
         }
@@ -35,7 +36,7 @@ function AddActor(props) {
             variables: {
                 movieID: props.movieID,
                 profile: image1 || image2 || noPic,
-                name: givenName
+                name: givenName,
             },
             onCompleted: function (data, variant) {
                 setSpinner(false)
@@ -73,9 +74,15 @@ function AddActor(props) {
                 <form className={classes.form}>
 
                     <div className={classes.name}>
-                        <label htmlFor="title">Actor's Name</label>
+                        <label htmlFor="name">Actor's Name</label>
                         <input type="text" datatype="String" required id="title" value={givenName}
                                onChange={event => setGivenName(event.target.value)}/>
+                    </div>
+
+                    <div className={classes.characterName}>
+                        <label htmlFor="name">Character's Name</label>
+                        <input type="text" datatype="String" required id="title" value={givenCharacterName}
+                               onChange={event => setGivenCharacterName(event.target.value)}/>
                     </div>
 
                     <label htmlFor="title" className={classes.imageLabel}>Actor's Image</label>
