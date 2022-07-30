@@ -73,10 +73,12 @@ function AddActor(props) {
                 <form className={classes.form}>
 
                     <div className={classes.name}>
+                        <label htmlFor="title">Actor's Name</label>
                         <input type="text" datatype="String" required id="title" value={givenName}
                                onChange={event => setGivenName(event.target.value)}/>
                     </div>
 
+                    <label htmlFor="title" className={classes.imageLabel}>Actor's Image</label>
                     <div className={classes.im}>
                         <input type="url" datatype="string" id="image" defaultValue={props.profile}
                                onChange={event => setImage1(event.target.value)}/>
@@ -107,7 +109,7 @@ function AddActor(props) {
                     <img className={classes.image} src={image1 || noPic} alt={"none"}/>
                     {image2 && image1 === '' ? <img className={classes.image} src={image2 || noPic} alt={"none"}/> : null}
                 </div>
-                <SubmitButton type="button" onClick={sure ? handleSure : handleSubmit} value="submit">{sure ? 'Are You Sure?' : spinner ? 'loading...' : 'Update!'}</SubmitButton>
+                <SubmitButton type="button" onClick={sure ? handleSure : handleSubmit} value="submit">{sure ? 'Are You Sure?' : spinner ? 'loading...' : 'Add Actor!'}</SubmitButton>
             </CardContent>
         </Card>
     );

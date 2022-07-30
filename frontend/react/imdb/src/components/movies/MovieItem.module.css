@@ -220,3 +220,22 @@
   top: 1rem;
   cursor: pointer;
 }
+
+.pageMask {
+  position: fixed;
+  left: -0.5cm;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 9999;
+}
+
+.close {
+  position: inherit;
+  display: flex;
+  left: 94rem;
+  top: 7rem;
+  font-size: xxx-large;
+  cursor: pointer;
+}

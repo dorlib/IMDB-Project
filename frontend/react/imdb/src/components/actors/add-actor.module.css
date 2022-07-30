@@ -43,7 +43,7 @@
 .but {
     position: relative;
     display: flex;
-    top: 1.9rem;
+    top: 2.4rem;
     left: 45rem;
 }
 
@@ -67,13 +67,20 @@
     top: 5rem;
 }
 
+.imageLabel {
+    position: relative;
+    display: flex;
+    font-size: large;
+    top: 4rem;
+}
+
 .card {
     background-color: darkslategray;
     width: 55rem;
-    height: inherit;
+    height: 40rem;
     position: relative;
     display: flex;
-    top: 17rem;
+    top: 10rem;
     left: 40rem;
     border-radius: 20px;
 }
@@ -81,22 +88,22 @@
 .title {
     position: absolute;
     display: flex;
-    left: 18rem;
+    left: 20rem;
     width: 30rem;
-    bottom: 30rem;
+    bottom: 36rem;
 }
 
 .image {
     position: relative;
     margin-top: 1rem;
     display: inline;
-    height: 30rem;
+    height: 19rem;
     width: 25rem;
     overflow: hidden;
     border-radius: 200px;
     max-height: 60%;
     max-width: 90%;
-    top: 8.5rem;
+    top: 14rem;
     left: -17rem;
 }
 
@@ -118,6 +125,24 @@
 }
 
 .name {
-
+    margin-bottom: 1rem;
 }
 
+.name input {
+    position: relative;
+    display: flex;
+    font: inherit;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.87);
+    padding: 0.25rem;
+    width: 80%;
+    left: 0rem;
+    top: 4rem;
+}
+
+.name label {
+    position: relative;
+    display: flex;
+    top: 3.3rem;
+    font-size: large;
+}
