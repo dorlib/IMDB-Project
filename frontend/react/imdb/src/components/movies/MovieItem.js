@@ -17,6 +17,7 @@ import IconButton from "@mui/material/IconButton";
 import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import ChangeProfile from "../accounts/changeProfile";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import ActorsOfMovie from "../actors/actorsOfMovie";
 
 
 function MovieItem(props) {
@@ -185,13 +186,7 @@ function MovieItem(props) {
                     <Typography component="div">
                         Actors:
                     </Typography>
-                    <h4 style={{color: "yellow"}}>
-                        {/*{data.actors.map(({id, name}) => (*/}
-                        {/*    <li key={actors.id}>*/}
-                        {/*        <Link to={"/actorPage/" + id}  style={{color: "yellow"}}> {name} </Link>*/}
-                        {/*    </li>*/}
-                        {/*))}*/}
-                    </h4>
+                    <ActorsOfMovie movieID={movieID}/>
                     { parseInt(userId) === props.userID ?
                     <ControlPointIcon color="primary" aria-label="change image" style={{fontSize: "xxx-large", color: "yellow"}} className={classes.addActorsBut}
                                 onClick={() => setAddActors(true)} /> : null}
