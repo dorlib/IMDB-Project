@@ -1,6 +1,6 @@
 import React, {useContext, useRef, useState} from "react";
 import {Link} from 'react-router-dom';
-
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import Card from "../ui/Card";
 import classes from "./MovieItem.module.css";
 import {gql, useMutation, useQuery} from "@apollo/client";
@@ -12,6 +12,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import ToggleFavorite from "../../favorites/toggle-favorite";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import AddActor from "../actors/add-actor";
+
 
 function MovieItem(props) {
     const [toggle, setToggle] = useState(false)
@@ -135,6 +137,14 @@ function MovieItem(props) {
         )
     }
 
+    const handleAddActor = () => {
+        return (
+            <div>
+                <AddActor movieID={movieID}/>
+            </div>
+        )
+    }
+
     let load = (
         <div>
             <ToggleFavorite userID={props.userID} movieID={movieID} movieTitle={title} movieImage={image} removeOrAdd={favorites.includes(parseInt(movieID)) && movieID !== 0} toggle={toggle}/>
@@ -159,7 +169,7 @@ function MovieItem(props) {
             </div>
             <div>
                 <CardContent className={classes.about}>
-                    <EditIcon className={classes.editDetailsBut}/>
+                    {parseInt(userId) === props.userID ? <EditIcon className={classes.editDetailsBut}/> : null}
                     <Typography component="div">
                         About {title}
                     </Typography>
@@ -168,7 +178,7 @@ function MovieItem(props) {
                     </Typography>
                 </CardContent>
                 <CardContent className={classes.director}>
-                    <EditIcon className={classes.editDirectorPhotoBut}/>
+                    {parseInt(userIdOfDirector) === props.userID ? <EditIcon className={classes.editDirectorPhotoBut}/> : null}
                     <Typography component="div">
                         Directed by: <Link style={{color: "yellow"}} to={"/directorPage/" + directorId}>{director}</Link>
                         <img src={directorImage} className={classes.directorImage}/>
@@ -185,6 +195,9 @@ function MovieItem(props) {
                         {/*    </li>*/}
                         {/*))}*/}
                     </h4>
+                    { parseInt(userId) === props.userID ?
+                        <ControlPointIcon style={{fontSize: "xxx-large"}} className={classes.addActorsBut} onClick={handleAddActor}/>
+                    : null}
                 </CardContent>
                 {props.userID === parseInt(userId)? <Stack direction="row" spacing={2} className={classes.edit}>
                     {props.userID === parseInt(userId)? <Button variant="edit" className={classes.editBut} onClick={handleClick}>Edit Movie's Details</Button> : null}

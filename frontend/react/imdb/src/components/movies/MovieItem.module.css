@@ -154,12 +154,14 @@
   display: flex;
   position: absolute;
   right: 45rem;
+  cursor: pointer;
 }
 
 .editDirectorPhotoBut {
   display: flex;
   position: absolute;
   right: 2rem;
+  cursor: pointer;
 }
 
 .actors {
@@ -209,4 +211,12 @@
 .editButDirec {
   display: flex;
   width: 17rem;
+}
+
+.addActorsBut {
+  position: relative;
+  display: flex;
+  left: 34rem;
+  top: 1rem;
+  cursor: pointer;
 }

@@ -1,0 +1,123 @@
+.about {
+    position: absolute;
+    display: flex;
+    z-index: 1000;
+    margin-top: 1.6cm;
+    border-radius: 13px;
+    color: yellow;
+    height: 3cm;
+    right: 18cm;
+    width: 22cm;
+    background-color: #cc2062;
+}
+
+.textSure {
+    font-size: x-large;
+}
+
+.no {
+    position: absolute;
+    display: flex;
+    top: 1.5cm;
+    left: 9cm;
+    font-size: large;
+}
+
+.yes {
+    position: absolute;
+    display: flex;
+    top: 1.5cm;
+    left: 11cm;
+    font-size: large;
+}
+
+.form {
+    padding: 1rem;
+    width: 40rem;
+}
+
+.im {
+    margin-bottom: 0.5rem;
+}
+
+.but {
+    position: relative;
+    display: flex;
+    top: 1.9rem;
+    left: 45rem;
+}
+
+.but input {
+    position: absolute;
+    display: flex;
+    left: -5cm;
+    z-index: -1;
+}
+
+
+.im input {
+    position: relative;
+    display: flex;
+    font: inherit;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.87);
+    padding: 0.25rem;
+    width: 140%;
+    left: 0rem;
+    top: 5rem;
+}
+
+.card {
+    background-color: darkslategray;
+    width: 55rem;
+    height: inherit;
+    position: relative;
+    display: flex;
+    top: 17rem;
+    left: 40rem;
+    border-radius: 20px;
+}
+
+.title {
+    position: absolute;
+    display: flex;
+    left: 18rem;
+    width: 30rem;
+    bottom: 30rem;
+}
+
+.image {
+    position: relative;
+    margin-top: 1rem;
+    display: inline;
+    height: 30rem;
+    width: 25rem;
+    overflow: hidden;
+    border-radius: 200px;
+    max-height: 60%;
+    max-width: 90%;
+    top: 8.5rem;
+    left: -17rem;
+}
+
+.error {
+    position: absolute;
+    display: flex;
+    color: red;
+    font-size: 22px;
+    left: 15rem;
+    top: 4rem;
+}
+
+.profile2 {
+    position: absolute;
+    display: flex;
+    color: #1976D2;
+    left: -10rem;
+    top: 3.4rem;
+}
+
+.name {
+
+}
+
