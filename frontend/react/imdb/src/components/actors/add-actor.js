@@ -22,8 +22,8 @@ function AddActor(props) {
     const [givenCharacterName, setGivenCharacterName] = useState('')
 
     let ADD_ACTOR = gql`
-        mutation AddActorToMovie ($movieID: ID!, $image: String!, $name: String!, $characterName: String!) {
-            addActorToMovie (movieID: $movieID, image: $image, name: $name, characterName: $characterName) {
+        mutation AddActorToMovie ($movieID: ID!, $name: String!, $characterName: String! $image: String!) {
+            addActorToMovie (movieID: $movieID, name: $name, characterName: $characterName, image: $image) {
                 id
             }
         }
@@ -35,9 +35,9 @@ function AddActor(props) {
         {
             variables: {
                 movieID: props.movieID,
-                image: image1 || image2 || noPic,
                 name: givenName,
                 characterName: givenCharacterName,
+                image: image1 || image2 || noPic,
             },
             onCompleted: function (data, variant) {
                 setSpinner(false)

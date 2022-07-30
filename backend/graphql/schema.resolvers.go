@@ -435,13 +435,14 @@ func (r *mutationResolver) CreateActor(ctx context.Context, name string, image s
 func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, name string, characterName string, image string) (*ent.Actor, error) {
 
 	// let's check if the actor exist
-	actorId := r.client.Actor.Query().Where(actor.Name(name)).OnlyIDX(ctx)
+	actorExist := r.client.Actor.Query().Where(actor.Name(name)).ExistX(ctx)
 
-	if actorId > 0 {
+	if actorExist {
+		actorId := r.client.Actor.Query().Where(actor.Name(name)).OnlyIDX(ctx)
 		r.client.Movie.UpdateOneID(movieID).AddActor(r.client.Actor.GetX(ctx, actorId)).SaveX(ctx)
 		return r.client.Actor.GetX(ctx, actorId), nil
 	} else {
-		data := r.client.Actor.Create().SetName(name).SetCharacterName(characterName).SetImage(image).SaveX(ctx)
+		data := r.client.Actor.Create().SetMovieID(movieID).SetName(name).SetCharacterName(characterName).SetImage(image).SaveX(ctx)
 		r.client.Movie.UpdateOneID(movieID).AddActor(data).SaveX(ctx)
 		return data, nil
 	}

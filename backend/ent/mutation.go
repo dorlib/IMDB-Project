@@ -48,6 +48,8 @@ type ActorMutation struct {
 	name           *string
 	character_name *string
 	image          *string
+	movie_id       *int
+	addmovie_id    *int
 	clearedFields  map[string]struct{}
 	actors         map[int]struct{}
 	removedactors  map[int]struct{}
@@ -263,6 +265,62 @@ func (m *ActorMutation) ResetImage() {
 	m.image = nil
 }
 
+// SetMovieID sets the "movie_id" field.
+func (m *ActorMutation) SetMovieID(i int) {
+	m.movie_id = &i
+	m.addmovie_id = nil
+}
+
+// MovieID returns the value of the "movie_id" field in the mutation.
+func (m *ActorMutation) MovieID() (r int, exists bool) {
+	v := m.movie_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMovieID returns the old "movie_id" field's value of the Actor entity.
+// If the Actor object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ActorMutation) OldMovieID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMovieID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMovieID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMovieID: %w", err)
+	}
+	return oldValue.MovieID, nil
+}
+
+// AddMovieID adds i to the "movie_id" field.
+func (m *ActorMutation) AddMovieID(i int) {
+	if m.addmovie_id != nil {
+		*m.addmovie_id += i
+	} else {
+		m.addmovie_id = &i
+	}
+}
+
+// AddedMovieID returns the value that was added to the "movie_id" field in this mutation.
+func (m *ActorMutation) AddedMovieID() (r int, exists bool) {
+	v := m.addmovie_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetMovieID resets all changes to the "movie_id" field.
+func (m *ActorMutation) ResetMovieID() {
+	m.movie_id = nil
+	m.addmovie_id = nil
+}
+
 // AddActorIDs adds the "actors" edge to the Movie entity by ids.
 func (m *ActorMutation) AddActorIDs(ids ...int) {
 	if m.actors == nil {
@@ -336,7 +394,7 @@ func (m *ActorMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ActorMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.name != nil {
 		fields = append(fields, actor.FieldName)
 	}
@@ -345,6 +403,9 @@ func (m *ActorMutation) Fields() []string {
 	}
 	if m.image != nil {
 		fields = append(fields, actor.FieldImage)
+	}
+	if m.movie_id != nil {
+		fields = append(fields, actor.FieldMovieID)
 	}
 	return fields
 }
@@ -360,6 +421,8 @@ func (m *ActorMutation) Field(name string) (ent.Value, bool) {
 		return m.CharacterName()
 	case actor.FieldImage:
 		return m.Image()
+	case actor.FieldMovieID:
+		return m.MovieID()
 	}
 	return nil, false
 }
@@ -375,6 +438,8 @@ func (m *ActorMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldCharacterName(ctx)
 	case actor.FieldImage:
 		return m.OldImage(ctx)
+	case actor.FieldMovieID:
+		return m.OldMovieID(ctx)
 	}
 	return nil, fmt.Errorf("unknown Actor field %s", name)
 }
@@ -405,6 +470,13 @@ func (m *ActorMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetImage(v)
 		return nil
+	case actor.FieldMovieID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMovieID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Actor field %s", name)
 }
@@ -412,13 +484,21 @@ func (m *ActorMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *ActorMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addmovie_id != nil {
+		fields = append(fields, actor.FieldMovieID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *ActorMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case actor.FieldMovieID:
+		return m.AddedMovieID()
+	}
 	return nil, false
 }
 
@@ -427,6 +507,13 @@ func (m *ActorMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *ActorMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case actor.FieldMovieID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMovieID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Actor numeric field %s", name)
 }
@@ -462,6 +549,9 @@ func (m *ActorMutation) ResetField(name string) error {
 		return nil
 	case actor.FieldImage:
 		m.ResetImage()
+		return nil
+	case actor.FieldMovieID:
+		m.ResetMovieID()
 		return nil
 	}
 	return fmt.Errorf("unknown Actor field %s", name)

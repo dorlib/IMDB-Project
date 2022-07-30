@@ -13,8 +13,8 @@ function ActorsOfMovie(props) {
     const [numOfSet, setNumOfSet] = useState(0)
 
     const ACTORS_OF_MOVIE = gql`
-        query MoviesOfUser($movieID: ID!) {
-            moviesOfUser(movieID: $movieID) {
+        query ActorsOfMovie($movieID: ID!) {
+            actorsOfMovie(movieID: $movieID) {
                 id
                 name
                 image
