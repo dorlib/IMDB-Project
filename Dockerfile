@@ -1,6 +1,6 @@
 FROM golang:1.18
 
-COPY . ../imdbv3
+COPY . ../IMDB-Project
 
 RUN   sudo apt-get update \
     && \ sudo apt-get install mysql-shell  \
