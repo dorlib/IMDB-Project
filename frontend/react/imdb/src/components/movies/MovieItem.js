@@ -198,6 +198,7 @@ function MovieItem(props) {
                             </div>
                             : null
                     }
+                    <ActorsOfMovie movieID={lastSegment}/>
                 </CardContent>
                 {props.userID === parseInt(userId)? <Stack direction="row" spacing={2} className={classes.edit}>
                     {props.userID === parseInt(userId)? <Button variant="edit" className={classes.editBut} onClick={handleClick}>Edit Movie's Details</Button> : null}

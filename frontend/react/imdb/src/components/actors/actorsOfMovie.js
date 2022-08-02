@@ -17,6 +17,7 @@ function ActorsOfMovie(props) {
             actorsOfMovie(movieID: $movieID) {
                 id
                 name
+                characterName
                 image
             }
         }
@@ -59,28 +60,41 @@ function ActorsOfMovie(props) {
             <ul className={classes.list}>
                 {newData.map(({id, name, image}) => (
                     <div>
-                        <Card sx={{maxWidth: 100}} style={{
-                            backgroundColor: "#cc2062",
-                            borderRadius: "50px",
-                            width: "90px",
-                            display: "inline-block",
-                            marginTop: "0.7cm"
-                        }} key={id}>
-                            <CardMedia
-                                component="img"
-                                alt="movie image"
-                                height="90"
-                                src={image || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
-                            />
-                            <CardContent className={classes.card}>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    <p style={{color: "yellow"}} className={classes.movie}>
-                                        <Link to={"/moviePage/" + id} className={classes.movieTitle}> {name}</Link>
-                                    </p>
-                                </Typography>
-                                <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>
-                            </CardContent>
-                        </Card>
+                        <img
+                            className={classes.image}
+                            alt="movie image"
+                            height="90"
+                            src={image || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
+                        />
+                        <Typography gutterBottom variant="h5" component="div">*/}
+                            <p style={{color: "yellow"}} className={classes.movie}>
+                            <Link to={"/moviePage/" + id} className={classes.movieTitle}> {name}</Link>
+                                        </p>
+                                    </Typography>
+                                    <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>
+
+                        {/*<Card sx={{maxWidth: 100}} style={{*/}
+                        {/*    backgroundColor: "#cc2062",*/}
+                        {/*    borderRadius: "50px",*/}
+                        {/*    width: "90px",*/}
+                        {/*    display: "inline-block",*/}
+                        {/*    marginTop: "0.7cm"*/}
+                        {/*}} key={id}>*/}
+                        {/*    <CardMedia*/}
+                        {/*        component="img"*/}
+                        {/*        alt="movie image"*/}
+                        {/*        height="90"*/}
+                        {/*        src={image || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}*/}
+                        {/*    />*/}
+                        {/*    <CardContent className={classes.card}>*/}
+                        {/*        <Typography gutterBottom variant="h5" component="div">*/}
+                        {/*            <p style={{color: "yellow"}} className={classes.movie}>*/}
+                        {/*                <Link to={"/moviePage/" + id} className={classes.movieTitle}> {name}</Link>*/}
+                        {/*            </p>*/}
+                        {/*        </Typography>*/}
+                        {/*        <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>*/}
+                        {/*    </CardContent>*/}
+                        {/*</Card>*/}
                     </div>
                 ))}
             </ul>
