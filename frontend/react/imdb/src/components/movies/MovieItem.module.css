@@ -214,10 +214,10 @@
 }
 
 .addActorsBut {
-  position: relative;
+  position: absolute;
   display: flex;
-  left: 34rem;
-  top: 2.5rem;
+  right: 46.7rem;
+  top: 34.5rem;
   cursor: pointer;
 }
 
