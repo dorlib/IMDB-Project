@@ -166,11 +166,11 @@
 
 .actors {
   width: 100%;
-  margin-top: 4%;
+  margin-top: 3%;
   border-radius: 13px;
   color: yellow;
   background-color: #cc2062;
-  height: 12.5rem;
+  height: 13rem;
 }
 
 .directorImage {
@@ -216,6 +216,7 @@
 .addActorsBut {
   position: absolute;
   display: flex;
+  z-index: 99999;
   right: 46.7rem;
   top: 34.5rem;
   cursor: pointer;
