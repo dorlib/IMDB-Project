@@ -13,6 +13,8 @@ const (
 	FieldCharacterName = "character_name"
 	// FieldImage holds the string denoting the image field in the database.
 	FieldImage = "image"
+	// FieldMovieID holds the string denoting the movie_id field in the database.
+	FieldMovieID = "movie_id"
 	// EdgeActors holds the string denoting the actors edge name in mutations.
 	EdgeActors = "actors"
 	// Table holds the table name of the actor in the database.
@@ -30,6 +32,7 @@ var Columns = []string{
 	FieldName,
 	FieldCharacterName,
 	FieldImage,
+	FieldMovieID,
 }
 
 var (

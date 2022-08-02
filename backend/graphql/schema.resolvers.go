@@ -256,11 +256,6 @@ func (r *mutationResolver) RemoveFromFavorites(ctx context.Context, movieID int,
 	return data, nil
 }
 
-func (r *queryResolver) ActorsOfMovie(ctx context.Context, movieID int) ([]*ent.Actor, error) {
-	data := r.client.Movie.Query().Where(movie.ID(movieID)).QueryActor().AllX(ctx)
-	return data, nil
-}
-
 func (r *queryResolver) ActorByID(ctx context.Context, actorID int) ([]*ent.Actor, error) {
 	data, err := r.client.Actor.Query().Where(actor.ID(actorID)).All(ctx)
 	if err != nil {
@@ -427,22 +422,23 @@ func (r *mutationResolver) ChangeUserProfile(ctx context.Context, userID int, pr
 	return data, nil
 }
 
-func (r *mutationResolver) CreateActor(ctx context.Context, name string, image string) (*ent.Actor, error) {
-	data := r.client.Actor.Create().SetName(name).SetImage(image).SaveX(ctx)
-	return data, nil
-}
-
 func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, name string, characterName string, image string) (*ent.Actor, error) {
 
 	// let's check if the actor exist
-	actorId := r.client.Actor.Query().Where(actor.Name(name)).OnlyIDX(ctx)
+	actorExist := r.client.Actor.Query().Where(actor.Name(name)).ExistX(ctx)
 
-	if actorId > 0 {
+	if actorExist {
+		actorId := r.client.Actor.Query().Where(actor.Name(name)).OnlyIDX(ctx)
 		r.client.Movie.UpdateOneID(movieID).AddActor(r.client.Actor.GetX(ctx, actorId)).SaveX(ctx)
 		return r.client.Actor.GetX(ctx, actorId), nil
 	} else {
-		data := r.client.Actor.Create().SetName(name).SetCharacterName(characterName).SetImage(image).SaveX(ctx)
+		data := r.client.Actor.Create().SetMovieID(movieID).SetName(name).SetCharacterName(characterName).SetImage(image).SaveX(ctx)
 		r.client.Movie.UpdateOneID(movieID).AddActor(data).SaveX(ctx)
 		return data, nil
 	}
+}
+
+func (r *queryResolver) ActorsOfMovie(ctx context.Context, movieID int) ([]*ent.Actor, error) {
+	data := r.client.Actor.Query().Where(actor.MovieID(movieID)).AllX(ctx)
+	return data, nil
 }

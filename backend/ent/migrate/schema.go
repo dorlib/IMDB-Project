@@ -14,6 +14,7 @@ var (
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "character_name", Type: field.TypeString},
 		{Name: "image", Type: field.TypeString},
+		{Name: "movie_id", Type: field.TypeInt},
 	}
 	// ActorsTable holds the schema information for the "actors" table.
 	ActorsTable = &schema.Table{

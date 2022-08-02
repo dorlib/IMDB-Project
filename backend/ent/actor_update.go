@@ -46,6 +46,19 @@ func (au *ActorUpdate) SetImage(s string) *ActorUpdate {
 	return au
 }
 
+// SetMovieID sets the "movie_id" field.
+func (au *ActorUpdate) SetMovieID(i int) *ActorUpdate {
+	au.mutation.ResetMovieID()
+	au.mutation.SetMovieID(i)
+	return au
+}
+
+// AddMovieID adds i to the "movie_id" field.
+func (au *ActorUpdate) AddMovieID(i int) *ActorUpdate {
+	au.mutation.AddMovieID(i)
+	return au
+}
+
 // AddActorIDs adds the "actors" edge to the Movie entity by IDs.
 func (au *ActorUpdate) AddActorIDs(ids ...int) *ActorUpdate {
 	au.mutation.AddActorIDs(ids...)
@@ -180,6 +193,20 @@ func (au *ActorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: actor.FieldImage,
 		})
 	}
+	if value, ok := au.mutation.MovieID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: actor.FieldMovieID,
+		})
+	}
+	if value, ok := au.mutation.AddedMovieID(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: actor.FieldMovieID,
+		})
+	}
 	if au.mutation.ActorsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -268,6 +295,19 @@ func (auo *ActorUpdateOne) SetCharacterName(s string) *ActorUpdateOne {
 // SetImage sets the "image" field.
 func (auo *ActorUpdateOne) SetImage(s string) *ActorUpdateOne {
 	auo.mutation.SetImage(s)
+	return auo
+}
+
+// SetMovieID sets the "movie_id" field.
+func (auo *ActorUpdateOne) SetMovieID(i int) *ActorUpdateOne {
+	auo.mutation.ResetMovieID()
+	auo.mutation.SetMovieID(i)
+	return auo
+}
+
+// AddMovieID adds i to the "movie_id" field.
+func (auo *ActorUpdateOne) AddMovieID(i int) *ActorUpdateOne {
+	auo.mutation.AddMovieID(i)
 	return auo
 }
 
@@ -427,6 +467,20 @@ func (auo *ActorUpdateOne) sqlSave(ctx context.Context) (_node *Actor, err error
 			Type:   field.TypeString,
 			Value:  value,
 			Column: actor.FieldImage,
+		})
+	}
+	if value, ok := auo.mutation.MovieID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: actor.FieldMovieID,
+		})
+	}
+	if value, ok := auo.mutation.AddedMovieID(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: actor.FieldMovieID,
 		})
 	}
 	if auo.mutation.ActorsCleared() {

@@ -17,6 +17,7 @@ func (Actor) Fields() []ent.Field {
 		field.String("name").Unique(),
 		field.String("character_name"),
 		field.String("image"),
+		field.Int("movie_id"),
 	}
 }
 

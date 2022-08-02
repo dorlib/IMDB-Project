@@ -13,10 +13,11 @@ function ActorsOfMovie(props) {
     const [numOfSet, setNumOfSet] = useState(0)
 
     const ACTORS_OF_MOVIE = gql`
-        query MoviesOfUser($movieID: ID!) {
-            moviesOfUser(movieID: $movieID) {
+        query ActorsOfMovie($movieID: ID!) {
+            actorsOfMovie(movieID: $movieID) {
                 id
                 name
+                characterName
                 image
             }
         }
@@ -32,7 +33,7 @@ function ActorsOfMovie(props) {
     if (error) return <p>Error : {error}</p>;
 
     let numOfActors = data.actorsOfMovie.length
-    let numOfSets = numOfActors - 4
+    let numOfSets = numOfActors - 3
     if (numOfSets < 0) {
         numOfSets = 0
     }
@@ -54,33 +55,22 @@ function ActorsOfMovie(props) {
 
     let loaded = (
         <div style={{position: "absolute"}}>
-            {numOfSet === numOfSets || numOfActors <= 8 ? null : <ArrowForwardIosIcon className={classes.forward} onClick={handleClickForward} style={{fontSize: "xx-large"}} id={"Forward"}/>}
-            {numOfSet === 0 || numOfActors <= 8 ? null : <ArrowBackIosNewIcon className={classes.backward} onClick={handleClickBackward} style={{fontSize: "xx-large"}} id={"Backward"}/>}
+            {numOfSet === numOfSets || numOfActors <= 3 ? null : <ArrowForwardIosIcon className={classes.forward} onClick={handleClickForward} style={{fontSize: "xx-large"}} id={"Forward"}/>}
+            {numOfSet === 0 || numOfActors <= 3 ? null : <ArrowBackIosNewIcon className={classes.backward} onClick={handleClickBackward} style={{fontSize: "xx-large"}} id={"Backward"}/>}
             <ul className={classes.list}>
-                {newData.map(({id, name, image}) => (
+                {newData.map(({id, name, characterName, image}) => (
                     <div>
-                        <Card sx={{maxWidth: 100}} style={{
-                            backgroundColor: "#cc2062",
-                            borderRadius: "50px",
-                            width: "90px",
-                            display: "inline-block",
-                            marginTop: "0.7cm"
-                        }} key={id}>
-                            <CardMedia
-                                component="img"
-                                alt="movie image"
-                                height="90"
-                                src={image || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
-                            />
-                            <CardContent className={classes.card}>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    <p style={{color: "yellow"}} className={classes.movie}>
-                                        <Link to={"/moviePage/" + id} className={classes.movieTitle}> {name}</Link>
-                                    </p>
-                                </Typography>
-                                <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>
-                            </CardContent>
-                        </Card>
+                        <img
+                            className={classes.image}
+                            alt="movie image"
+                            height="90"
+                            src={image || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
+                        />
+                        <Typography >
+                            <Link to={"/moviePage/" + id} className={classes.actorName}>{name}</Link>
+                        </Typography>
+                        <Typography className={classes.actorName} style={{color: "rgba(0,0,0,0.61)"}}>{characterName}</Typography>
+                        <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>
                     </div>
                 ))}
             </ul>

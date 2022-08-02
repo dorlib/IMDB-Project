@@ -113,6 +113,13 @@ func Image(v string) predicate.Actor {
 	})
 }
 
+// MovieID applies equality check predicate on the "movie_id" field. It's identical to MovieIDEQ.
+func MovieID(v int) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldMovieID), v))
+	})
+}
+
 // NameEQ applies the EQ predicate on the "name" field.
 func NameEQ(v string) predicate.Actor {
 	return predicate.Actor(func(s *sql.Selector) {
@@ -443,6 +450,82 @@ func ImageEqualFold(v string) predicate.Actor {
 func ImageContainsFold(v string) predicate.Actor {
 	return predicate.Actor(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldImage), v))
+	})
+}
+
+// MovieIDEQ applies the EQ predicate on the "movie_id" field.
+func MovieIDEQ(v int) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldMovieID), v))
+	})
+}
+
+// MovieIDNEQ applies the NEQ predicate on the "movie_id" field.
+func MovieIDNEQ(v int) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldMovieID), v))
+	})
+}
+
+// MovieIDIn applies the In predicate on the "movie_id" field.
+func MovieIDIn(vs ...int) predicate.Actor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Actor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldMovieID), v...))
+	})
+}
+
+// MovieIDNotIn applies the NotIn predicate on the "movie_id" field.
+func MovieIDNotIn(vs ...int) predicate.Actor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Actor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldMovieID), v...))
+	})
+}
+
+// MovieIDGT applies the GT predicate on the "movie_id" field.
+func MovieIDGT(v int) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldMovieID), v))
+	})
+}
+
+// MovieIDGTE applies the GTE predicate on the "movie_id" field.
+func MovieIDGTE(v int) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldMovieID), v))
+	})
+}
+
+// MovieIDLT applies the LT predicate on the "movie_id" field.
+func MovieIDLT(v int) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldMovieID), v))
+	})
+}
+
+// MovieIDLTE applies the LTE predicate on the "movie_id" field.
+func MovieIDLTE(v int) predicate.Actor {
+	return predicate.Actor(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldMovieID), v))
 	})
 }
 

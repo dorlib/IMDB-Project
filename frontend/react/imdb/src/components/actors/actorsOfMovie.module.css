@@ -1,22 +1,23 @@
 .list {
     border: 5px solid none;
-    margin-left: -1cm;
-    margin-bottom: 0.3rem;
-    width: 1050px;
+    margin-left: 0cm;
+    margin-bottom: 4rem;
+    width: 580px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, 80px);
-    grid-gap: 40px;
+    grid-template-columns: repeat(auto-fill, 90px);
+    grid-gap: 60px;
     justify-content: center;
 }
 
-.movieTitle {
+.actorName {
     color: yellow;
     text-decoration: none;
     display: flex;
-    position: relative;
+    position: center;
     font-size: medium;
-    width: 100px;
-    bottom: 2rem;
+    width: 150px;
+    right: 1rem;
+    bottom: 3rem;
 }
 
 .movie {
@@ -32,8 +33,8 @@
     color: yellow;
     position: absolute;
     display: flex;
-    right: 1.5cm;
-    bottom: 14rem;
+    right: -2rem;
+    bottom: 13rem;
     cursor: pointer;
 }
 
@@ -41,8 +42,8 @@
     color: yellow;
     position: absolute;
     display: flex;
-    bottom: 14rem;
-    right: 4cm;
+    bottom: 13rem;
+    right: 4.5rem;
     cursor: pointer;
 }
 
@@ -50,6 +51,15 @@
     position: absolute;
     display: flex;
     font-size: x-large;
-    right: 6.5rem;
-    bottom: 14rem;
+    right: 1rem;
+    bottom: 13rem;
+}
+
+.image {
+    border-radius: 50px;
+    position: relative;
+    display: flex;
+    width: 6rem;
+    height: 6rem;
+    top: -0.5rem;
 }

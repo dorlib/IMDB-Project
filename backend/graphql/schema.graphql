@@ -199,7 +199,6 @@ type Mutation {
     editReview(reviewID: ID!, rank: Int!, text: String!, topic: String!) : Review!
     editMovieDetails(movieID: ID!, title: String!, genre: String!, image: String!, description: String!, year: Int!): Movie!
     editDirectorDetails(directorID: ID!, director: DirectorInput!): Director!
-    createActor (name: String!, Image: String!) : Actor!
     addActorToMovie (movieID: ID!,name: String!, characterName: String!, image: String!) : Actor!
 }
 
@@ -215,7 +214,6 @@ type Query {
     last5Added: [Movie!]
     mostLikedReviews(userID: ID!): [Review]
     directorById(id: ID!): [Director!]
-    actorsOfMovie(movieID: ID!): [Actor]
     actorById(id: ID!): [Actor!]
     reviewsOfMovie(movieID: Int!) : [Review]
     commentsOfReview(reviewID: ID!) : [Comment]
@@ -225,6 +223,7 @@ type Query {
     totalLikesOfReviewsOfMovie(movieID: ID!): [Like]
     moviesOfUser(userID: ID!): [Movie]
     directorsOfUser(userID: ID!): [Director]
+    actorsOfMovie(movieID: ID!): [Actor]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node
