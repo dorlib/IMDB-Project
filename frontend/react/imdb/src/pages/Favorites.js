@@ -65,7 +65,7 @@ function FavoritesPage(props) {
 
     return (
         <section>
-            <h1 style={{color: "yellow"}}>My Favorites</h1>
+            <h1 style={{color: "yellow", position: "relative", left: "10rem", top: "-1rem", fontSize: "50px"}}>My Favorites</h1>
             {content}
         </section>
     );
