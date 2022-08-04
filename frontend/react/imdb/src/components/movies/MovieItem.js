@@ -167,7 +167,7 @@ function MovieItem(props) {
             </div>
             <div>
                 <CardContent className={classes.about}>
-                    {parseInt(userId) === props.userID ? <EditIcon className={classes.editDetailsBut}/> : null}
+                    {parseInt(userId) === props.userID ? <EditIcon className={classes.editDetailsBut} /> : null}
                     <Typography component="div">
                         About {title}
                     </Typography>
