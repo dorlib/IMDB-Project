@@ -194,7 +194,7 @@ func logInHandler(c *ent.Client) http.Handler {
 
 		SecretKey = privateKey
 
-		//// initialize Cookie because login was successful
+		// initialize Cookie because login was successful
 		userCookie := http.Cookie{
 			Name:     "jwt",
 			Value:    tokenString,
