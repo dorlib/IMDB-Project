@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"imdbv2/ent/achievement"
 	"imdbv2/ent/comment"
 	"imdbv2/ent/director"
 	"imdbv2/ent/like"
@@ -163,6 +164,21 @@ func (uc *UserCreate) AddDirectors(d ...*Director) *UserCreate {
 		ids[i] = d[i].ID
 	}
 	return uc.AddDirectorIDs(ids...)
+}
+
+// AddAchievementIDs adds the "achievements" edge to the Achievement entity by IDs.
+func (uc *UserCreate) AddAchievementIDs(ids ...int) *UserCreate {
+	uc.mutation.AddAchievementIDs(ids...)
+	return uc
+}
+
+// AddAchievements adds the "achievements" edges to the Achievement entity.
+func (uc *UserCreate) AddAchievements(a ...*Achievement) *UserCreate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return uc.AddAchievementIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -490,6 +506,25 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: director.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.AchievementsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.AchievementsTable,
+			Columns: user.AchievementsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: achievement.FieldID,
 				},
 			},
 		}

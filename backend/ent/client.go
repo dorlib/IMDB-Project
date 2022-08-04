@@ -9,6 +9,7 @@ import (
 
 	"imdbv2/ent/migrate"
 
+	"imdbv2/ent/achievement"
 	"imdbv2/ent/actor"
 	"imdbv2/ent/comment"
 	"imdbv2/ent/director"
@@ -28,6 +29,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// Achievement is the client for interacting with the Achievement builders.
+	Achievement *AchievementClient
 	// Actor is the client for interacting with the Actor builders.
 	Actor *ActorClient
 	// Comment is the client for interacting with the Comment builders.
@@ -59,6 +62,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.Achievement = NewAchievementClient(c.config)
 	c.Actor = NewActorClient(c.config)
 	c.Comment = NewCommentClient(c.config)
 	c.Director = NewDirectorClient(c.config)
@@ -98,16 +102,17 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:      ctx,
-		config:   cfg,
-		Actor:    NewActorClient(cfg),
-		Comment:  NewCommentClient(cfg),
-		Director: NewDirectorClient(cfg),
-		Favorite: NewFavoriteClient(cfg),
-		Like:     NewLikeClient(cfg),
-		Movie:    NewMovieClient(cfg),
-		Review:   NewReviewClient(cfg),
-		User:     NewUserClient(cfg),
+		ctx:         ctx,
+		config:      cfg,
+		Achievement: NewAchievementClient(cfg),
+		Actor:       NewActorClient(cfg),
+		Comment:     NewCommentClient(cfg),
+		Director:    NewDirectorClient(cfg),
+		Favorite:    NewFavoriteClient(cfg),
+		Like:        NewLikeClient(cfg),
+		Movie:       NewMovieClient(cfg),
+		Review:      NewReviewClient(cfg),
+		User:        NewUserClient(cfg),
 	}, nil
 }
 
@@ -125,23 +130,24 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:      ctx,
-		config:   cfg,
-		Actor:    NewActorClient(cfg),
-		Comment:  NewCommentClient(cfg),
-		Director: NewDirectorClient(cfg),
-		Favorite: NewFavoriteClient(cfg),
-		Like:     NewLikeClient(cfg),
-		Movie:    NewMovieClient(cfg),
-		Review:   NewReviewClient(cfg),
-		User:     NewUserClient(cfg),
+		ctx:         ctx,
+		config:      cfg,
+		Achievement: NewAchievementClient(cfg),
+		Actor:       NewActorClient(cfg),
+		Comment:     NewCommentClient(cfg),
+		Director:    NewDirectorClient(cfg),
+		Favorite:    NewFavoriteClient(cfg),
+		Like:        NewLikeClient(cfg),
+		Movie:       NewMovieClient(cfg),
+		Review:      NewReviewClient(cfg),
+		User:        NewUserClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Actor.
+//		Achievement.
 //		Query().
 //		Count(ctx)
 //
@@ -164,6 +170,7 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.Achievement.Use(hooks...)
 	c.Actor.Use(hooks...)
 	c.Comment.Use(hooks...)
 	c.Director.Use(hooks...)
@@ -172,6 +179,112 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Movie.Use(hooks...)
 	c.Review.Use(hooks...)
 	c.User.Use(hooks...)
+}
+
+// AchievementClient is a client for the Achievement schema.
+type AchievementClient struct {
+	config
+}
+
+// NewAchievementClient returns a client for the Achievement from the given config.
+func NewAchievementClient(c config) *AchievementClient {
+	return &AchievementClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `achievement.Hooks(f(g(h())))`.
+func (c *AchievementClient) Use(hooks ...Hook) {
+	c.hooks.Achievement = append(c.hooks.Achievement, hooks...)
+}
+
+// Create returns a create builder for Achievement.
+func (c *AchievementClient) Create() *AchievementCreate {
+	mutation := newAchievementMutation(c.config, OpCreate)
+	return &AchievementCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Achievement entities.
+func (c *AchievementClient) CreateBulk(builders ...*AchievementCreate) *AchievementCreateBulk {
+	return &AchievementCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Achievement.
+func (c *AchievementClient) Update() *AchievementUpdate {
+	mutation := newAchievementMutation(c.config, OpUpdate)
+	return &AchievementUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AchievementClient) UpdateOne(a *Achievement) *AchievementUpdateOne {
+	mutation := newAchievementMutation(c.config, OpUpdateOne, withAchievement(a))
+	return &AchievementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AchievementClient) UpdateOneID(id int) *AchievementUpdateOne {
+	mutation := newAchievementMutation(c.config, OpUpdateOne, withAchievementID(id))
+	return &AchievementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Achievement.
+func (c *AchievementClient) Delete() *AchievementDelete {
+	mutation := newAchievementMutation(c.config, OpDelete)
+	return &AchievementDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *AchievementClient) DeleteOne(a *Achievement) *AchievementDeleteOne {
+	return c.DeleteOneID(a.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *AchievementClient) DeleteOneID(id int) *AchievementDeleteOne {
+	builder := c.Delete().Where(achievement.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AchievementDeleteOne{builder}
+}
+
+// Query returns a query builder for Achievement.
+func (c *AchievementClient) Query() *AchievementQuery {
+	return &AchievementQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Achievement entity by its id.
+func (c *AchievementClient) Get(ctx context.Context, id int) (*Achievement, error) {
+	return c.Query().Where(achievement.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AchievementClient) GetX(ctx context.Context, id int) *Achievement {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryUser queries the user edge of a Achievement.
+func (c *AchievementClient) QueryUser(a *Achievement) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := a.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(achievement.Table, achievement.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, achievement.UserTable, achievement.UserPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *AchievementClient) Hooks() []Hook {
+	return c.hooks.Achievement
 }
 
 // ActorClient is a client for the Actor schema.
@@ -1202,6 +1315,22 @@ func (c *UserClient) QueryDirectors(u *User) *DirectorQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(director.Table, director.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.DirectorsTable, user.DirectorsColumn),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryAchievements queries the achievements edge of a User.
+func (c *UserClient) QueryAchievements(u *User) *AchievementQuery {
+	query := &AchievementQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(achievement.Table, achievement.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, user.AchievementsTable, user.AchievementsPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil

@@ -8,6 +8,19 @@ import (
 	"imdbv2/ent"
 )
 
+// The AchievementFunc type is an adapter to allow the use of ordinary
+// function as Achievement mutator.
+type AchievementFunc func(context.Context, *ent.AchievementMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AchievementFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AchievementMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AchievementMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The ActorFunc type is an adapter to allow the use of ordinary
 // function as Actor mutator.
 type ActorFunc func(context.Context, *ent.ActorMutation) (ent.Value, error)
