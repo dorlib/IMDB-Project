@@ -12,7 +12,7 @@ var (
 	AchievementsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
-		{Name: "user_id", Type: field.TypeInt},
+		{Name: "image", Type: field.TypeString},
 	}
 	// AchievementsTable holds the schema information for the "achievements" table.
 	AchievementsTable = &schema.Table{

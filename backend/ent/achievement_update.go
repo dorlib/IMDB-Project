@@ -34,16 +34,9 @@ func (au *AchievementUpdate) SetName(s string) *AchievementUpdate {
 	return au
 }
 
-// SetUserID sets the "user_id" field.
-func (au *AchievementUpdate) SetUserID(i int) *AchievementUpdate {
-	au.mutation.ResetUserID()
-	au.mutation.SetUserID(i)
-	return au
-}
-
-// AddUserID adds i to the "user_id" field.
-func (au *AchievementUpdate) AddUserID(i int) *AchievementUpdate {
-	au.mutation.AddUserID(i)
+// SetImage sets the "image" field.
+func (au *AchievementUpdate) SetImage(s string) *AchievementUpdate {
+	au.mutation.SetImage(s)
 	return au
 }
 
@@ -167,18 +160,11 @@ func (au *AchievementUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: achievement.FieldName,
 		})
 	}
-	if value, ok := au.mutation.UserID(); ok {
+	if value, ok := au.mutation.Image(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: achievement.FieldUserID,
-		})
-	}
-	if value, ok := au.mutation.AddedUserID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: achievement.FieldUserID,
+			Column: achievement.FieldImage,
 		})
 	}
 	if au.mutation.UserCleared() {
@@ -260,16 +246,9 @@ func (auo *AchievementUpdateOne) SetName(s string) *AchievementUpdateOne {
 	return auo
 }
 
-// SetUserID sets the "user_id" field.
-func (auo *AchievementUpdateOne) SetUserID(i int) *AchievementUpdateOne {
-	auo.mutation.ResetUserID()
-	auo.mutation.SetUserID(i)
-	return auo
-}
-
-// AddUserID adds i to the "user_id" field.
-func (auo *AchievementUpdateOne) AddUserID(i int) *AchievementUpdateOne {
-	auo.mutation.AddUserID(i)
+// SetImage sets the "image" field.
+func (auo *AchievementUpdateOne) SetImage(s string) *AchievementUpdateOne {
+	auo.mutation.SetImage(s)
 	return auo
 }
 
@@ -417,18 +396,11 @@ func (auo *AchievementUpdateOne) sqlSave(ctx context.Context) (_node *Achievemen
 			Column: achievement.FieldName,
 		})
 	}
-	if value, ok := auo.mutation.UserID(); ok {
+	if value, ok := auo.mutation.Image(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: achievement.FieldUserID,
-		})
-	}
-	if value, ok := auo.mutation.AddedUserID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: achievement.FieldUserID,
+			Column: achievement.FieldImage,
 		})
 	}
 	if auo.mutation.UserCleared() {

@@ -17,8 +17,8 @@ type Achievement struct {
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
-	// UserID holds the value of the "user_id" field.
-	UserID int `json:"user_id,omitempty"`
+	// Image holds the value of the "image" field.
+	Image string `json:"image,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the AchievementQuery when eager-loading is set.
 	Edges AchievementEdges `json:"edges"`
@@ -47,9 +47,9 @@ func (*Achievement) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case achievement.FieldID, achievement.FieldUserID:
+		case achievement.FieldID:
 			values[i] = new(sql.NullInt64)
-		case achievement.FieldName:
+		case achievement.FieldName, achievement.FieldImage:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Achievement", columns[i])
@@ -78,11 +78,11 @@ func (a *Achievement) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				a.Name = value.String
 			}
-		case achievement.FieldUserID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field user_id", values[i])
+		case achievement.FieldImage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field image", values[i])
 			} else if value.Valid {
-				a.UserID = int(value.Int64)
+				a.Image = value.String
 			}
 		}
 	}
@@ -119,8 +119,8 @@ func (a *Achievement) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", a.ID))
 	builder.WriteString(", name=")
 	builder.WriteString(a.Name)
-	builder.WriteString(", user_id=")
-	builder.WriteString(fmt.Sprintf("%v", a.UserID))
+	builder.WriteString(", image=")
+	builder.WriteString(a.Image)
 	builder.WriteByte(')')
 	return builder.String()
 }

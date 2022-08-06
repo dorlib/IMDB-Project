@@ -9,8 +9,8 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldUserID holds the string denoting the user_id field in the database.
-	FieldUserID = "user_id"
+	// FieldImage holds the string denoting the image field in the database.
+	FieldImage = "image"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// Table holds the table name of the achievement in the database.
@@ -26,7 +26,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldName,
-	FieldUserID,
+	FieldImage,
 }
 
 var (

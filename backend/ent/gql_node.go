@@ -70,12 +70,12 @@ func (a *Achievement) Node(ctx context.Context) (node *Node, err error) {
 		Name:  "name",
 		Value: string(buf),
 	}
-	if buf, err = json.Marshal(a.UserID); err != nil {
+	if buf, err = json.Marshal(a.Image); err != nil {
 		return nil, err
 	}
 	node.Fields[1] = &Field{
-		Type:  "int",
-		Name:  "user_id",
+		Type:  "string",
+		Name:  "image",
 		Value: string(buf),
 	}
 	node.Edges[0] = &Edge{

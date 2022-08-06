@@ -48,8 +48,7 @@ type AchievementMutation struct {
 	typ           string
 	id            *int
 	name          *string
-	user_id       *int
-	adduser_id    *int
+	image         *string
 	clearedFields map[string]struct{}
 	user          map[int]struct{}
 	removeduser   map[int]struct{}
@@ -193,60 +192,40 @@ func (m *AchievementMutation) ResetName() {
 	m.name = nil
 }
 
-// SetUserID sets the "user_id" field.
-func (m *AchievementMutation) SetUserID(i int) {
-	m.user_id = &i
-	m.adduser_id = nil
+// SetImage sets the "image" field.
+func (m *AchievementMutation) SetImage(s string) {
+	m.image = &s
 }
 
-// UserID returns the value of the "user_id" field in the mutation.
-func (m *AchievementMutation) UserID() (r int, exists bool) {
-	v := m.user_id
+// Image returns the value of the "image" field in the mutation.
+func (m *AchievementMutation) Image() (r string, exists bool) {
+	v := m.image
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldUserID returns the old "user_id" field's value of the Achievement entity.
+// OldImage returns the old "image" field's value of the Achievement entity.
 // If the Achievement object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AchievementMutation) OldUserID(ctx context.Context) (v int, err error) {
+func (m *AchievementMutation) OldImage(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+		return v, errors.New("OldImage is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUserID requires an ID field in the mutation")
+		return v, errors.New("OldImage requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+		return v, fmt.Errorf("querying old value for OldImage: %w", err)
 	}
-	return oldValue.UserID, nil
+	return oldValue.Image, nil
 }
 
-// AddUserID adds i to the "user_id" field.
-func (m *AchievementMutation) AddUserID(i int) {
-	if m.adduser_id != nil {
-		*m.adduser_id += i
-	} else {
-		m.adduser_id = &i
-	}
-}
-
-// AddedUserID returns the value that was added to the "user_id" field in this mutation.
-func (m *AchievementMutation) AddedUserID() (r int, exists bool) {
-	v := m.adduser_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetUserID resets all changes to the "user_id" field.
-func (m *AchievementMutation) ResetUserID() {
-	m.user_id = nil
-	m.adduser_id = nil
+// ResetImage resets all changes to the "image" field.
+func (m *AchievementMutation) ResetImage() {
+	m.image = nil
 }
 
 // AddUserIDs adds the "user" edge to the User entity by ids.
@@ -326,8 +305,8 @@ func (m *AchievementMutation) Fields() []string {
 	if m.name != nil {
 		fields = append(fields, achievement.FieldName)
 	}
-	if m.user_id != nil {
-		fields = append(fields, achievement.FieldUserID)
+	if m.image != nil {
+		fields = append(fields, achievement.FieldImage)
 	}
 	return fields
 }
@@ -339,8 +318,8 @@ func (m *AchievementMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case achievement.FieldName:
 		return m.Name()
-	case achievement.FieldUserID:
-		return m.UserID()
+	case achievement.FieldImage:
+		return m.Image()
 	}
 	return nil, false
 }
@@ -352,8 +331,8 @@ func (m *AchievementMutation) OldField(ctx context.Context, name string) (ent.Va
 	switch name {
 	case achievement.FieldName:
 		return m.OldName(ctx)
-	case achievement.FieldUserID:
-		return m.OldUserID(ctx)
+	case achievement.FieldImage:
+		return m.OldImage(ctx)
 	}
 	return nil, fmt.Errorf("unknown Achievement field %s", name)
 }
@@ -370,12 +349,12 @@ func (m *AchievementMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
-	case achievement.FieldUserID:
-		v, ok := value.(int)
+	case achievement.FieldImage:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetUserID(v)
+		m.SetImage(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Achievement field %s", name)
@@ -384,21 +363,13 @@ func (m *AchievementMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *AchievementMutation) AddedFields() []string {
-	var fields []string
-	if m.adduser_id != nil {
-		fields = append(fields, achievement.FieldUserID)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *AchievementMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case achievement.FieldUserID:
-		return m.AddedUserID()
-	}
 	return nil, false
 }
 
@@ -407,13 +378,6 @@ func (m *AchievementMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *AchievementMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case achievement.FieldUserID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddUserID(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Achievement numeric field %s", name)
 }
@@ -444,8 +408,8 @@ func (m *AchievementMutation) ResetField(name string) error {
 	case achievement.FieldName:
 		m.ResetName()
 		return nil
-	case achievement.FieldUserID:
-		m.ResetUserID()
+	case achievement.FieldImage:
+		m.ResetImage()
 		return nil
 	}
 	return fmt.Errorf("unknown Achievement field %s", name)

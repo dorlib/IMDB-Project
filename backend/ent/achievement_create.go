@@ -26,9 +26,9 @@ func (ac *AchievementCreate) SetName(s string) *AchievementCreate {
 	return ac
 }
 
-// SetUserID sets the "user_id" field.
-func (ac *AchievementCreate) SetUserID(i int) *AchievementCreate {
-	ac.mutation.SetUserID(i)
+// SetImage sets the "image" field.
+func (ac *AchievementCreate) SetImage(s string) *AchievementCreate {
+	ac.mutation.SetImage(s)
 	return ac
 }
 
@@ -120,8 +120,8 @@ func (ac *AchievementCreate) check() error {
 	if _, ok := ac.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Achievement.name"`)}
 	}
-	if _, ok := ac.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Achievement.user_id"`)}
+	if _, ok := ac.mutation.Image(); !ok {
+		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Achievement.image"`)}
 	}
 	return nil
 }
@@ -158,13 +158,13 @@ func (ac *AchievementCreate) createSpec() (*Achievement, *sqlgraph.CreateSpec) {
 		})
 		_node.Name = value
 	}
-	if value, ok := ac.mutation.UserID(); ok {
+	if value, ok := ac.mutation.Image(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: achievement.FieldUserID,
+			Column: achievement.FieldImage,
 		})
-		_node.UserID = value
+		_node.Image = value
 	}
 	if nodes := ac.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

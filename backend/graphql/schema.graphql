@@ -47,6 +47,13 @@ type Actor {
     image: String!
 }
 
+type Achievement {
+    id: ID!
+    name: String!
+    image: String!
+    userID: ID!
+}
+
 type Review {
     id: ID!
     movieID: Int!
@@ -224,6 +231,7 @@ type Query {
     moviesOfUser(userID: ID!): [Movie]
     directorsOfUser(userID: ID!): [Director]
     actorsOfMovie(movieID: ID!): [Actor]
+    achievementOfUser(userID: ID!) : [Achievement]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node
