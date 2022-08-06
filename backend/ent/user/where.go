@@ -1536,7 +1536,7 @@ func HasAchievements() predicate.User {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(AchievementsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, AchievementsTable, AchievementsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.O2M, false, AchievementsTable, AchievementsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -1548,7 +1548,7 @@ func HasAchievementsWith(preds ...predicate.Achievement) predicate.User {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(AchievementsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, AchievementsTable, AchievementsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.O2M, false, AchievementsTable, AchievementsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

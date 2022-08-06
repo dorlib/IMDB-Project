@@ -19,27 +19,9 @@ type Achievement struct {
 	Name string `json:"name,omitempty"`
 	// Image holds the value of the "image" field.
 	Image string `json:"image,omitempty"`
-	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the AchievementQuery when eager-loading is set.
-	Edges AchievementEdges `json:"edges"`
-}
-
-// AchievementEdges holds the relations/edges for other nodes in the graph.
-type AchievementEdges struct {
-	// User holds the value of the user edge.
-	User []*User `json:"user,omitempty"`
-	// loadedTypes holds the information for reporting if a
-	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
-}
-
-// UserOrErr returns the User value or an error if the edge
-// was not loaded in eager-loading.
-func (e AchievementEdges) UserOrErr() ([]*User, error) {
-	if e.loadedTypes[0] {
-		return e.User, nil
-	}
-	return nil, &NotLoadedError{edge: "user"}
+	// Description holds the value of the "description" field.
+	Description       string `json:"description,omitempty"`
+	user_achievements *int
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -49,8 +31,10 @@ func (*Achievement) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case achievement.FieldID:
 			values[i] = new(sql.NullInt64)
-		case achievement.FieldName, achievement.FieldImage:
+		case achievement.FieldName, achievement.FieldImage, achievement.FieldDescription:
 			values[i] = new(sql.NullString)
+		case achievement.ForeignKeys[0]: // user_achievements
+			values[i] = new(sql.NullInt64)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Achievement", columns[i])
 		}
@@ -84,14 +68,22 @@ func (a *Achievement) assignValues(columns []string, values []interface{}) error
 			} else if value.Valid {
 				a.Image = value.String
 			}
+		case achievement.FieldDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field description", values[i])
+			} else if value.Valid {
+				a.Description = value.String
+			}
+		case achievement.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field user_achievements", value)
+			} else if value.Valid {
+				a.user_achievements = new(int)
+				*a.user_achievements = int(value.Int64)
+			}
 		}
 	}
 	return nil
-}
-
-// QueryUser queries the "user" edge of the Achievement entity.
-func (a *Achievement) QueryUser() *UserQuery {
-	return (&AchievementClient{config: a.config}).QueryUser(a)
 }
 
 // Update returns a builder for updating this Achievement.
@@ -121,6 +113,8 @@ func (a *Achievement) String() string {
 	builder.WriteString(a.Name)
 	builder.WriteString(", image=")
 	builder.WriteString(a.Image)
+	builder.WriteString(", description=")
+	builder.WriteString(a.Description)
 	builder.WriteByte(')')
 	return builder.String()
 }

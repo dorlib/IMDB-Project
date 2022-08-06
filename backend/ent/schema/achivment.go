@@ -16,6 +16,7 @@ func (Achievement) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").Unique(),
 		field.String("image"),
+		field.String("description"),
 	}
 }
 
@@ -23,6 +24,6 @@ func (Achievement) Fields() []ent.Field {
 func (Achievement) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("user", User.Type).
-			Ref("achievements"),
+			Ref("achievements"),-
 	}
 }

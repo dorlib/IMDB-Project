@@ -442,3 +442,8 @@ func (r *queryResolver) ActorsOfMovie(ctx context.Context, movieID int) ([]*ent.
 	data := r.client.Actor.Query().Where(actor.MovieID(movieID)).AllX(ctx)
 	return data, nil
 }
+
+func (r *queryResolver) achievementOfUser() ([]*ent.Achievement, error) {
+	//check for king of movies - more than 10 movies contributed
+	panic("panic")
+}

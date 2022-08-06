@@ -266,22 +266,6 @@ func (c *AchievementClient) GetX(ctx context.Context, id int) *Achievement {
 	return obj
 }
 
-// QueryUser queries the user edge of a Achievement.
-func (c *AchievementClient) QueryUser(a *Achievement) *UserQuery {
-	query := &UserQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := a.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(achievement.Table, achievement.FieldID, id),
-			sqlgraph.To(user.Table, user.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, achievement.UserTable, achievement.UserPrimaryKey...),
-		)
-		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // Hooks returns the client hooks.
 func (c *AchievementClient) Hooks() []Hook {
 	return c.hooks.Achievement
@@ -1330,7 +1314,7 @@ func (c *UserClient) QueryAchievements(u *User) *AchievementQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(achievement.Table, achievement.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, user.AchievementsTable, user.AchievementsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.AchievementsTable, user.AchievementsColumn),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
