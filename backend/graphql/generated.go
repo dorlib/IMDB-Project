@@ -131,7 +131,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		AchievementOfUser          func(childComplexity int, userID int) int
+		AchievementsOfUser         func(childComplexity int, userID int) int
 		ActorByID                  func(childComplexity int, id int) int
 		ActorsOfMovie              func(childComplexity int, movieID int) int
 		CommentsOfReview           func(childComplexity int, reviewID int) int
@@ -236,7 +236,7 @@ type QueryResolver interface {
 	MoviesOfUser(ctx context.Context, userID int) ([]*ent.Movie, error)
 	DirectorsOfUser(ctx context.Context, userID int) ([]*ent.Director, error)
 	ActorsOfMovie(ctx context.Context, movieID int) ([]*ent.Actor, error)
-	AchievementOfUser(ctx context.Context, userID int) ([]*ent.Achievement, error)
+	AchievementsOfUser(ctx context.Context, userID int) ([]*ent.Achievement, error)
 	Users(ctx context.Context) ([]*ent.User, error)
 	Top10Movies(ctx context.Context) ([]*ent.Movie, error)
 	Node(ctx context.Context, id int) (ent.Noder, error)
@@ -783,17 +783,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateUserDetails(childComplexity, args["userID"].(int), args["firstname"].(string), args["lastname"].(string), args["nickname"].(string), args["description"].(string), args["profile"].(string), args["email"].(string), args["birthday"].(string), args["country"].(string), args["gender"].(string)), true
 
-	case "Query.achievementOfUser":
-		if e.complexity.Query.AchievementOfUser == nil {
+	case "Query.achievementsOfUser":
+		if e.complexity.Query.AchievementsOfUser == nil {
 			break
 		}
 
-		args, err := ec.field_Query_achievementOfUser_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_achievementsOfUser_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.AchievementOfUser(childComplexity, args["userID"].(int)), true
+		return e.complexity.Query.AchievementsOfUser(childComplexity, args["userID"].(int)), true
 
 	case "Query.actorById":
 		if e.complexity.Query.ActorByID == nil {
@@ -1474,6 +1474,12 @@ input FavoriteInput {
     movieImage: String!
 }
 
+input AchievementInput {
+    name: String!
+    image: String!
+    description: String!
+}
+
 input CommentInput {
     text: String!
 }
@@ -1525,7 +1531,7 @@ type Query {
     moviesOfUser(userID: ID!): [Movie]
     directorsOfUser(userID: ID!): [Director]
     actorsOfMovie(movieID: ID!): [Actor]
-    achievementOfUser(userID: ID!) : [Achievement]
+    achievementsOfUser(userID: ID!) : [Achievement]
     users: [User!]
     top10Movies: [Movie!]
     node(id: ID!): Node
@@ -2363,7 +2369,7 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_achievementOfUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_achievementsOfUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
@@ -5648,7 +5654,7 @@ func (ec *executionContext) _Query_actorsOfMovie(ctx context.Context, field grap
 	return ec.marshalOActor2ᚕᚖimdbv2ᚋentᚐActor(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_achievementOfUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_achievementsOfUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5665,7 +5671,7 @@ func (ec *executionContext) _Query_achievementOfUser(ctx context.Context, field 
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_achievementOfUser_args(ctx, rawArgs)
+	args, err := ec.field_Query_achievementsOfUser_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -5673,7 +5679,7 @@ func (ec *executionContext) _Query_achievementOfUser(ctx context.Context, field 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().AchievementOfUser(rctx, args["userID"].(int))
+		return ec.resolvers.Query().AchievementsOfUser(rctx, args["userID"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7943,6 +7949,45 @@ func (ec *executionContext) ___Type_specifiedByURL(ctx context.Context, field gr
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputAchievementInput(ctx context.Context, obj interface{}) (AchievementInput, error) {
+	var it AchievementInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "image":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
+			it.Image, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputActorInput(ctx context.Context, obj interface{}) (ActorInput, error) {
 	var it ActorInput
 	asMap := map[string]interface{}{}
@@ -9635,7 +9680,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "achievementOfUser":
+		case "achievementsOfUser":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -9644,7 +9689,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_achievementOfUser(ctx, field)
+				res = ec._Query_achievementsOfUser(ctx, field)
 				return res
 			}
 

@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"imdbv2/ent"
+	achievement2 "imdbv2/ent/achievement"
 	"imdbv2/ent/actor"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
@@ -443,15 +444,37 @@ func (r *queryResolver) ActorsOfMovie(ctx context.Context, movieID int) ([]*ent.
 	return data, nil
 }
 
-func (r *queryResolver) AchievementOfUser(ctx context.Context, userID int) ([]*ent.Achievement, error) {
-	//var result []*ent.Achievement
-	//userData := r.client.User.GetX(ctx, userID)
-	//
-	////check for movie lover - has contributed more than 10 movies
-	//numOfMoviesContributed := r.client.User.QueryMovies(userData).IDsX(ctx)
-	//if len(numOfMoviesContributed) > 10 {
-	//	achievement := r.client.Achievement.Query().Where(achievemt.)
-	//}
+func (r *queryResolver) AchievementsOfUser(ctx context.Context, userID int) ([]*ent.Achievement, error) {
+	var result []*ent.Achievement
+	userData := r.client.User.GetX(ctx, userID)
 
-	panic("panic")
+	// check for movies lover - has contributed more than 10 movies
+	numOfMoviesContributed := r.client.User.QueryMovies(userData).IDsX(ctx)
+	if len(numOfMoviesContributed) > 10 {
+		achievement := r.client.Achievement.Query().Where(achievement2.Name("movies lover")).OnlyX(ctx)
+		result = append(result, achievement)
+	}
+
+	// check for king of likes - has a review with more than 10 likes
+	reviewsOfUser := r.client.User.Query().Where(user.ID(userID)).QueryReviews().AllX(ctx)
+	for i := 0; i < len(reviewsOfUser); i++ {
+		if reviewsOfUser[i].NumOfLikes > 10 {
+			achievement := r.client.Achievement.Query().Where(achievement2.Name("king of likes")).OnlyX(ctx)
+			result = append(result, achievement)
+		}
+	}
+
+	// check for the reviewer - reviewed more than 20 movies
+	if len(reviewsOfUser) > 20 {
+		achievement := r.client.Achievement.Query().Where(achievement2.Name("the reviewer")).OnlyX(ctx)
+		result = append(result, achievement)
+	}
+
+	// check of the commenter - commented on  more than 15 reviews
+	commentsOfUser := r.client.User.Query().Where(user.ID(userID)).QueryComments().IDsX(ctx)
+	if len(commentsOfUser) > 15 {
+		achievement := r.client.Achievement.Query().Where(achievement2.Name("the commenter")).OnlyX(ctx)
+		result = append(result, achievement)
+	}
+
 }
