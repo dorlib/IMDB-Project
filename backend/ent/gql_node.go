@@ -59,7 +59,7 @@ func (a *Achievement) Node(ctx context.Context) (node *Node, err error) {
 		ID:     a.ID,
 		Type:   "Achievement",
 		Fields: make([]*Field, 3),
-		Edges:  make([]*Edge, 0),
+		Edges:  make([]*Edge, 1),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(a.Name); err != nil {
@@ -85,6 +85,16 @@ func (a *Achievement) Node(ctx context.Context) (node *Node, err error) {
 		Type:  "string",
 		Name:  "description",
 		Value: string(buf),
+	}
+	node.Edges[0] = &Edge{
+		Type: "User",
+		Name: "user",
+	}
+	err = a.QueryUser().
+		Select(user.FieldID).
+		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
 	}
 	return node, nil
 }

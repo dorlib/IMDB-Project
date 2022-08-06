@@ -24,6 +24,6 @@ func (Achievement) Fields() []ent.Field {
 func (Achievement) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("user", User.Type).
-			Ref("achievements"),-
+			Ref("achievements"),
 	}
 }

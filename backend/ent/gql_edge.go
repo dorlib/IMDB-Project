@@ -4,6 +4,14 @@ package ent
 
 import "context"
 
+func (a *Achievement) User(ctx context.Context) ([]*User, error) {
+	result, err := a.Edges.UserOrErr()
+	if IsNotLoaded(err) {
+		result, err = a.QueryUser().All(ctx)
+	}
+	return result, err
+}
+
 func (a *Actor) Actors(ctx context.Context) ([]*Movie, error) {
 	result, err := a.Edges.ActorsOrErr()
 	if IsNotLoaded(err) {

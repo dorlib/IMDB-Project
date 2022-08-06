@@ -146,6 +146,31 @@ func insertHandler(c *ent.Client, seeded bool) http.Handler {
 			c.Review.Create().SetTopic("the best movie!").SetText("this movie is great i love it").SetRank(78).SetMovieID(movie12ID).SetUserID(user2ID).ExecX(r.Context())
 			c.Review.Create().SetTopic("the best movie").SetText("this movie is great").SetRank(98).SetMovieID(movie12ID).SetUserID(user1ID).ExecX(r.Context())
 
+			//create achievements
+			c.Achievement.Create().
+				SetName("Movies Lovier").
+				SetDescription("has contributed more than 10 movies").
+				SetImage("https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg").
+				ExecX(r.Context())
+
+			c.Achievement.Create().
+				SetName("King Of Likes").
+				SetDescription("has a comment with more than 10 likes").
+				SetImage("https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg").
+				ExecX(r.Context())
+
+			c.Achievement.Create().
+				SetName("The Reviewer").
+				SetDescription("reviewed more than 20 movies").
+				SetImage("https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg").
+				ExecX(r.Context())
+
+			c.Achievement.Create().
+				SetName("The Commenter").
+				SetDescription("commented on  more than 15 reviews").
+				SetImage("https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg").
+				ExecX(r.Context())
+
 			seeded = true
 		}
 	})

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"imdbv2/ent/achievement"
+	"imdbv2/ent/user"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -35,6 +36,21 @@ func (ac *AchievementCreate) SetImage(s string) *AchievementCreate {
 func (ac *AchievementCreate) SetDescription(s string) *AchievementCreate {
 	ac.mutation.SetDescription(s)
 	return ac
+}
+
+// AddUserIDs adds the "user" edge to the User entity by IDs.
+func (ac *AchievementCreate) AddUserIDs(ids ...int) *AchievementCreate {
+	ac.mutation.AddUserIDs(ids...)
+	return ac
+}
+
+// AddUser adds the "user" edges to the User entity.
+func (ac *AchievementCreate) AddUser(u ...*User) *AchievementCreate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return ac.AddUserIDs(ids...)
 }
 
 // Mutation returns the AchievementMutation object of the builder.
@@ -166,6 +182,25 @@ func (ac *AchievementCreate) createSpec() (*Achievement, *sqlgraph.CreateSpec) {
 			Column: achievement.FieldDescription,
 		})
 		_node.Description = value
+	}
+	if nodes := ac.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   achievement.UserTable,
+			Columns: achievement.UserPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

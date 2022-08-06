@@ -4,10 +4,12 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"imdbv2/ent/achievement"
 	"imdbv2/ent/predicate"
+	"imdbv2/ent/user"
 	"math"
 
 	"entgo.io/ent/dialect/sql"
@@ -24,7 +26,8 @@ type AchievementQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.Achievement
-	withFKs    bool
+	// eager-loading edges.
+	withUser *UserQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -59,6 +62,28 @@ func (aq *AchievementQuery) Unique(unique bool) *AchievementQuery {
 func (aq *AchievementQuery) Order(o ...OrderFunc) *AchievementQuery {
 	aq.order = append(aq.order, o...)
 	return aq
+}
+
+// QueryUser chains the current query on the "user" edge.
+func (aq *AchievementQuery) QueryUser() *UserQuery {
+	query := &UserQuery{config: aq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := aq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := aq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(achievement.Table, achievement.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, achievement.UserTable, achievement.UserPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(aq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Achievement entity from the query.
@@ -242,11 +267,23 @@ func (aq *AchievementQuery) Clone() *AchievementQuery {
 		offset:     aq.offset,
 		order:      append([]OrderFunc{}, aq.order...),
 		predicates: append([]predicate.Achievement{}, aq.predicates...),
+		withUser:   aq.withUser.Clone(),
 		// clone intermediate query.
 		sql:    aq.sql.Clone(),
 		path:   aq.path,
 		unique: aq.unique,
 	}
+}
+
+// WithUser tells the query-builder to eager-load the nodes that are connected to
+// the "user" edge. The optional arguments are used to configure the query builder of the edge.
+func (aq *AchievementQuery) WithUser(opts ...func(*UserQuery)) *AchievementQuery {
+	query := &UserQuery{config: aq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	aq.withUser = query
+	return aq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -312,13 +349,12 @@ func (aq *AchievementQuery) prepareQuery(ctx context.Context) error {
 
 func (aq *AchievementQuery) sqlAll(ctx context.Context) ([]*Achievement, error) {
 	var (
-		nodes   = []*Achievement{}
-		withFKs = aq.withFKs
-		_spec   = aq.querySpec()
+		nodes       = []*Achievement{}
+		_spec       = aq.querySpec()
+		loadedTypes = [1]bool{
+			aq.withUser != nil,
+		}
 	)
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, achievement.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		node := &Achievement{config: aq.config}
 		nodes = append(nodes, node)
@@ -329,6 +365,7 @@ func (aq *AchievementQuery) sqlAll(ctx context.Context) ([]*Achievement, error) 
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	if err := sqlgraph.QueryNodes(ctx, aq.driver, _spec); err != nil {
@@ -337,6 +374,72 @@ func (aq *AchievementQuery) sqlAll(ctx context.Context) ([]*Achievement, error) 
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := aq.withUser; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		ids := make(map[int]*Achievement, len(nodes))
+		for _, node := range nodes {
+			ids[node.ID] = node
+			fks = append(fks, node.ID)
+			node.Edges.User = []*User{}
+		}
+		var (
+			edgeids []int
+			edges   = make(map[int][]*Achievement)
+		)
+		_spec := &sqlgraph.EdgeQuerySpec{
+			Edge: &sqlgraph.EdgeSpec{
+				Inverse: true,
+				Table:   achievement.UserTable,
+				Columns: achievement.UserPrimaryKey,
+			},
+			Predicate: func(s *sql.Selector) {
+				s.Where(sql.InValues(achievement.UserPrimaryKey[1], fks...))
+			},
+			ScanValues: func() [2]interface{} {
+				return [2]interface{}{new(sql.NullInt64), new(sql.NullInt64)}
+			},
+			Assign: func(out, in interface{}) error {
+				eout, ok := out.(*sql.NullInt64)
+				if !ok || eout == nil {
+					return fmt.Errorf("unexpected id value for edge-out")
+				}
+				ein, ok := in.(*sql.NullInt64)
+				if !ok || ein == nil {
+					return fmt.Errorf("unexpected id value for edge-in")
+				}
+				outValue := int(eout.Int64)
+				inValue := int(ein.Int64)
+				node, ok := ids[outValue]
+				if !ok {
+					return fmt.Errorf("unexpected node id in edges: %v", outValue)
+				}
+				if _, ok := edges[inValue]; !ok {
+					edgeids = append(edgeids, inValue)
+				}
+				edges[inValue] = append(edges[inValue], node)
+				return nil
+			},
+		}
+		if err := sqlgraph.QueryEdges(ctx, aq.driver, _spec); err != nil {
+			return nil, fmt.Errorf(`query edges "user": %w`, err)
+		}
+		query.Where(user.IDIn(edgeids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := edges[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected "user" node returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.User = append(nodes[i].Edges.User, n)
+			}
+		}
+	}
+
 	return nodes, nil
 }
 
