@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"imdbv2/ent/achievement"
 	"imdbv2/ent/comment"
 	"imdbv2/ent/director"
 	"imdbv2/ent/like"
@@ -174,21 +173,6 @@ func (uu *UserUpdate) AddDirectors(d ...*Director) *UserUpdate {
 	return uu.AddDirectorIDs(ids...)
 }
 
-// AddAchievementIDs adds the "achievements" edge to the Achievement entity by IDs.
-func (uu *UserUpdate) AddAchievementIDs(ids ...int) *UserUpdate {
-	uu.mutation.AddAchievementIDs(ids...)
-	return uu
-}
-
-// AddAchievements adds the "achievements" edges to the Achievement entity.
-func (uu *UserUpdate) AddAchievements(a ...*Achievement) *UserUpdate {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return uu.AddAchievementIDs(ids...)
-}
-
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -297,27 +281,6 @@ func (uu *UserUpdate) RemoveDirectors(d ...*Director) *UserUpdate {
 		ids[i] = d[i].ID
 	}
 	return uu.RemoveDirectorIDs(ids...)
-}
-
-// ClearAchievements clears all "achievements" edges to the Achievement entity.
-func (uu *UserUpdate) ClearAchievements() *UserUpdate {
-	uu.mutation.ClearAchievements()
-	return uu
-}
-
-// RemoveAchievementIDs removes the "achievements" edge to Achievement entities by IDs.
-func (uu *UserUpdate) RemoveAchievementIDs(ids ...int) *UserUpdate {
-	uu.mutation.RemoveAchievementIDs(ids...)
-	return uu
-}
-
-// RemoveAchievements removes "achievements" edges to Achievement entities.
-func (uu *UserUpdate) RemoveAchievements(a ...*Achievement) *UserUpdate {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return uu.RemoveAchievementIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -770,60 +733,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if uu.mutation.AchievementsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   user.AchievementsTable,
-			Columns: user.AchievementsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: achievement.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uu.mutation.RemovedAchievementsIDs(); len(nodes) > 0 && !uu.mutation.AchievementsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   user.AchievementsTable,
-			Columns: user.AchievementsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: achievement.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uu.mutation.AchievementsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   user.AchievementsTable,
-			Columns: user.AchievementsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: achievement.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -984,21 +893,6 @@ func (uuo *UserUpdateOne) AddDirectors(d ...*Director) *UserUpdateOne {
 	return uuo.AddDirectorIDs(ids...)
 }
 
-// AddAchievementIDs adds the "achievements" edge to the Achievement entity by IDs.
-func (uuo *UserUpdateOne) AddAchievementIDs(ids ...int) *UserUpdateOne {
-	uuo.mutation.AddAchievementIDs(ids...)
-	return uuo
-}
-
-// AddAchievements adds the "achievements" edges to the Achievement entity.
-func (uuo *UserUpdateOne) AddAchievements(a ...*Achievement) *UserUpdateOne {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return uuo.AddAchievementIDs(ids...)
-}
-
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
@@ -1107,27 +1001,6 @@ func (uuo *UserUpdateOne) RemoveDirectors(d ...*Director) *UserUpdateOne {
 		ids[i] = d[i].ID
 	}
 	return uuo.RemoveDirectorIDs(ids...)
-}
-
-// ClearAchievements clears all "achievements" edges to the Achievement entity.
-func (uuo *UserUpdateOne) ClearAchievements() *UserUpdateOne {
-	uuo.mutation.ClearAchievements()
-	return uuo
-}
-
-// RemoveAchievementIDs removes the "achievements" edge to Achievement entities by IDs.
-func (uuo *UserUpdateOne) RemoveAchievementIDs(ids ...int) *UserUpdateOne {
-	uuo.mutation.RemoveAchievementIDs(ids...)
-	return uuo
-}
-
-// RemoveAchievements removes "achievements" edges to Achievement entities.
-func (uuo *UserUpdateOne) RemoveAchievements(a ...*Achievement) *UserUpdateOne {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return uuo.RemoveAchievementIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -1596,60 +1469,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: director.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if uuo.mutation.AchievementsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   user.AchievementsTable,
-			Columns: user.AchievementsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: achievement.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uuo.mutation.RemovedAchievementsIDs(); len(nodes) > 0 && !uuo.mutation.AchievementsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   user.AchievementsTable,
-			Columns: user.AchievementsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: achievement.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uuo.mutation.AchievementsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   user.AchievementsTable,
-			Columns: user.AchievementsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: achievement.FieldID,
 				},
 			},
 		}

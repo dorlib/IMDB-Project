@@ -39,8 +39,6 @@ const (
 	EdgeMovies = "movies"
 	// EdgeDirectors holds the string denoting the directors edge name in mutations.
 	EdgeDirectors = "directors"
-	// EdgeAchievements holds the string denoting the achievements edge name in mutations.
-	EdgeAchievements = "achievements"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// ReviewsTable is the table that holds the reviews relation/edge.
@@ -76,11 +74,6 @@ const (
 	DirectorsInverseTable = "directors"
 	// DirectorsColumn is the table column denoting the directors relation/edge.
 	DirectorsColumn = "user_id"
-	// AchievementsTable is the table that holds the achievements relation/edge. The primary key declared below.
-	AchievementsTable = "user_achievements"
-	// AchievementsInverseTable is the table name for the Achievement entity.
-	// It exists in this package in order to avoid circular dependency with the "achievement" package.
-	AchievementsInverseTable = "achievements"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -103,9 +96,6 @@ var (
 	// LikesPrimaryKey and LikesColumn2 are the table columns denoting the
 	// primary key for the likes relation (M2M).
 	LikesPrimaryKey = []string{"user_id", "like_id"}
-	// AchievementsPrimaryKey and AchievementsColumn2 are the table columns denoting the
-	// primary key for the achievements relation (M2M).
-	AchievementsPrimaryKey = []string{"user_id", "achievement_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).

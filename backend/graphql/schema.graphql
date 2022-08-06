@@ -51,7 +51,7 @@ type Achievement {
     id: ID!
     name: String!
     image: String!
-    description: string!
+    description: String!
 }
 
 type Review {

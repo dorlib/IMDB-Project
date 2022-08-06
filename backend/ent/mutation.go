@@ -51,9 +51,6 @@ type AchievementMutation struct {
 	image         *string
 	description   *string
 	clearedFields map[string]struct{}
-	user          map[int]struct{}
-	removeduser   map[int]struct{}
-	cleareduser   bool
 	done          bool
 	oldValue      func(context.Context) (*Achievement, error)
 	predicates    []predicate.Achievement
@@ -265,60 +262,6 @@ func (m *AchievementMutation) ResetDescription() {
 	m.description = nil
 }
 
-// AddUserIDs adds the "user" edge to the User entity by ids.
-func (m *AchievementMutation) AddUserIDs(ids ...int) {
-	if m.user == nil {
-		m.user = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.user[ids[i]] = struct{}{}
-	}
-}
-
-// ClearUser clears the "user" edge to the User entity.
-func (m *AchievementMutation) ClearUser() {
-	m.cleareduser = true
-}
-
-// UserCleared reports if the "user" edge to the User entity was cleared.
-func (m *AchievementMutation) UserCleared() bool {
-	return m.cleareduser
-}
-
-// RemoveUserIDs removes the "user" edge to the User entity by IDs.
-func (m *AchievementMutation) RemoveUserIDs(ids ...int) {
-	if m.removeduser == nil {
-		m.removeduser = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.user, ids[i])
-		m.removeduser[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedUser returns the removed IDs of the "user" edge to the User entity.
-func (m *AchievementMutation) RemovedUserIDs() (ids []int) {
-	for id := range m.removeduser {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// UserIDs returns the "user" edge IDs in the mutation.
-func (m *AchievementMutation) UserIDs() (ids []int) {
-	for id := range m.user {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetUser resets all changes to the "user" edge.
-func (m *AchievementMutation) ResetUser() {
-	m.user = nil
-	m.cleareduser = false
-	m.removeduser = nil
-}
-
 // Where appends a list predicates to the AchievementMutation builder.
 func (m *AchievementMutation) Where(ps ...predicate.Achievement) {
 	m.predicates = append(m.predicates, ps...)
@@ -471,85 +414,49 @@ func (m *AchievementMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *AchievementMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.user != nil {
-		edges = append(edges, achievement.EdgeUser)
-	}
+	edges := make([]string, 0, 0)
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *AchievementMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case achievement.EdgeUser:
-		ids := make([]ent.Value, 0, len(m.user))
-		for id := range m.user {
-			ids = append(ids, id)
-		}
-		return ids
-	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *AchievementMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.removeduser != nil {
-		edges = append(edges, achievement.EdgeUser)
-	}
+	edges := make([]string, 0, 0)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *AchievementMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	case achievement.EdgeUser:
-		ids := make([]ent.Value, 0, len(m.removeduser))
-		for id := range m.removeduser {
-			ids = append(ids, id)
-		}
-		return ids
-	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *AchievementMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.cleareduser {
-		edges = append(edges, achievement.EdgeUser)
-	}
+	edges := make([]string, 0, 0)
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *AchievementMutation) EdgeCleared(name string) bool {
-	switch name {
-	case achievement.EdgeUser:
-		return m.cleareduser
-	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *AchievementMutation) ClearEdge(name string) error {
-	switch name {
-	}
 	return fmt.Errorf("unknown Achievement unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *AchievementMutation) ResetEdge(name string) error {
-	switch name {
-	case achievement.EdgeUser:
-		m.ResetUser()
-		return nil
-	}
 	return fmt.Errorf("unknown Achievement edge %s", name)
 }
 
@@ -5446,42 +5353,39 @@ func (m *ReviewMutation) ResetEdge(name string) error {
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op                  Op
-	typ                 string
-	id                  *int
-	firstname           *string
-	lastname            *string
-	nickname            *string
-	description         *string
-	password            *string
-	email               *string
-	birthDay            *string
-	profile             *string
-	country             *string
-	gender              *string
-	signup_at           *string
-	clearedFields       map[string]struct{}
-	reviews             map[int]struct{}
-	removedreviews      map[int]struct{}
-	clearedreviews      bool
-	comments            map[int]struct{}
-	removedcomments     map[int]struct{}
-	clearedcomments     bool
-	likes               map[int]struct{}
-	removedlikes        map[int]struct{}
-	clearedlikes        bool
-	movies              map[int]struct{}
-	removedmovies       map[int]struct{}
-	clearedmovies       bool
-	directors           map[int]struct{}
-	removeddirectors    map[int]struct{}
-	cleareddirectors    bool
-	achievements        map[int]struct{}
-	removedachievements map[int]struct{}
-	clearedachievements bool
-	done                bool
-	oldValue            func(context.Context) (*User, error)
-	predicates          []predicate.User
+	op               Op
+	typ              string
+	id               *int
+	firstname        *string
+	lastname         *string
+	nickname         *string
+	description      *string
+	password         *string
+	email            *string
+	birthDay         *string
+	profile          *string
+	country          *string
+	gender           *string
+	signup_at        *string
+	clearedFields    map[string]struct{}
+	reviews          map[int]struct{}
+	removedreviews   map[int]struct{}
+	clearedreviews   bool
+	comments         map[int]struct{}
+	removedcomments  map[int]struct{}
+	clearedcomments  bool
+	likes            map[int]struct{}
+	removedlikes     map[int]struct{}
+	clearedlikes     bool
+	movies           map[int]struct{}
+	removedmovies    map[int]struct{}
+	clearedmovies    bool
+	directors        map[int]struct{}
+	removeddirectors map[int]struct{}
+	cleareddirectors bool
+	done             bool
+	oldValue         func(context.Context) (*User, error)
+	predicates       []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -6248,60 +6152,6 @@ func (m *UserMutation) ResetDirectors() {
 	m.removeddirectors = nil
 }
 
-// AddAchievementIDs adds the "achievements" edge to the Achievement entity by ids.
-func (m *UserMutation) AddAchievementIDs(ids ...int) {
-	if m.achievements == nil {
-		m.achievements = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.achievements[ids[i]] = struct{}{}
-	}
-}
-
-// ClearAchievements clears the "achievements" edge to the Achievement entity.
-func (m *UserMutation) ClearAchievements() {
-	m.clearedachievements = true
-}
-
-// AchievementsCleared reports if the "achievements" edge to the Achievement entity was cleared.
-func (m *UserMutation) AchievementsCleared() bool {
-	return m.clearedachievements
-}
-
-// RemoveAchievementIDs removes the "achievements" edge to the Achievement entity by IDs.
-func (m *UserMutation) RemoveAchievementIDs(ids ...int) {
-	if m.removedachievements == nil {
-		m.removedachievements = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.achievements, ids[i])
-		m.removedachievements[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedAchievements returns the removed IDs of the "achievements" edge to the Achievement entity.
-func (m *UserMutation) RemovedAchievementsIDs() (ids []int) {
-	for id := range m.removedachievements {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// AchievementsIDs returns the "achievements" edge IDs in the mutation.
-func (m *UserMutation) AchievementsIDs() (ids []int) {
-	for id := range m.achievements {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetAchievements resets all changes to the "achievements" edge.
-func (m *UserMutation) ResetAchievements() {
-	m.achievements = nil
-	m.clearedachievements = false
-	m.removedachievements = nil
-}
-
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -6590,7 +6440,7 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 5)
 	if m.reviews != nil {
 		edges = append(edges, user.EdgeReviews)
 	}
@@ -6605,9 +6455,6 @@ func (m *UserMutation) AddedEdges() []string {
 	}
 	if m.directors != nil {
 		edges = append(edges, user.EdgeDirectors)
-	}
-	if m.achievements != nil {
-		edges = append(edges, user.EdgeAchievements)
 	}
 	return edges
 }
@@ -6646,19 +6493,13 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case user.EdgeAchievements:
-		ids := make([]ent.Value, 0, len(m.achievements))
-		for id := range m.achievements {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 5)
 	if m.removedreviews != nil {
 		edges = append(edges, user.EdgeReviews)
 	}
@@ -6673,9 +6514,6 @@ func (m *UserMutation) RemovedEdges() []string {
 	}
 	if m.removeddirectors != nil {
 		edges = append(edges, user.EdgeDirectors)
-	}
-	if m.removedachievements != nil {
-		edges = append(edges, user.EdgeAchievements)
 	}
 	return edges
 }
@@ -6714,19 +6552,13 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case user.EdgeAchievements:
-		ids := make([]ent.Value, 0, len(m.removedachievements))
-		for id := range m.removedachievements {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 5)
 	if m.clearedreviews {
 		edges = append(edges, user.EdgeReviews)
 	}
@@ -6741,9 +6573,6 @@ func (m *UserMutation) ClearedEdges() []string {
 	}
 	if m.cleareddirectors {
 		edges = append(edges, user.EdgeDirectors)
-	}
-	if m.clearedachievements {
-		edges = append(edges, user.EdgeAchievements)
 	}
 	return edges
 }
@@ -6762,8 +6591,6 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 		return m.clearedmovies
 	case user.EdgeDirectors:
 		return m.cleareddirectors
-	case user.EdgeAchievements:
-		return m.clearedachievements
 	}
 	return false
 }
@@ -6794,9 +6621,6 @@ func (m *UserMutation) ResetEdge(name string) error {
 		return nil
 	case user.EdgeDirectors:
 		m.ResetDirectors()
-		return nil
-	case user.EdgeAchievements:
-		m.ResetAchievements()
 		return nil
 	}
 	return fmt.Errorf("unknown User edge %s", name)

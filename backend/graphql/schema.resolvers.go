@@ -443,7 +443,15 @@ func (r *queryResolver) ActorsOfMovie(ctx context.Context, movieID int) ([]*ent.
 	return data, nil
 }
 
-func (r *queryResolver) achievementOfUser() ([]*ent.Achievement, error) {
-	//check for king of movies - more than 10 movies contributed
+func (r *queryResolver) AchievementOfUser(ctx context.Context, userID int) ([]*ent.Achievement, error) {
+	//var result []*ent.Achievement
+	//userData := r.client.User.GetX(ctx, userID)
+	//
+	////check for movie lover - has contributed more than 10 movies
+	//numOfMoviesContributed := r.client.User.QueryMovies(userData).IDsX(ctx)
+	//if len(numOfMoviesContributed) > 10 {
+	//	achievement := r.client.Achievement.Query().Where(achievemt.)
+	//}
+
 	panic("panic")
 }
