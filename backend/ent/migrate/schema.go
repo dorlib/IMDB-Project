@@ -12,7 +12,8 @@ var (
 	AchievementsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
-		{Name: "user_id", Type: field.TypeInt},
+		{Name: "image", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString},
 	}
 	// AchievementsTable holds the schema information for the "achievements" table.
 	AchievementsTable = &schema.Table{
@@ -269,31 +270,6 @@ var (
 			},
 		},
 	}
-	// UserAchievementsColumns holds the columns for the "user_achievements" table.
-	UserAchievementsColumns = []*schema.Column{
-		{Name: "user_id", Type: field.TypeInt},
-		{Name: "achievement_id", Type: field.TypeInt},
-	}
-	// UserAchievementsTable holds the schema information for the "user_achievements" table.
-	UserAchievementsTable = &schema.Table{
-		Name:       "user_achievements",
-		Columns:    UserAchievementsColumns,
-		PrimaryKey: []*schema.Column{UserAchievementsColumns[0], UserAchievementsColumns[1]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "user_achievements_user_id",
-				Columns:    []*schema.Column{UserAchievementsColumns[0]},
-				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-			{
-				Symbol:     "user_achievements_achievement_id",
-				Columns:    []*schema.Column{UserAchievementsColumns[1]},
-				RefColumns: []*schema.Column{AchievementsColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-		},
-	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AchievementsTable,
@@ -308,7 +284,6 @@ var (
 		ActorActorsTable,
 		LikeReviewTable,
 		UserLikesTable,
-		UserAchievementsTable,
 	}
 )
 
@@ -326,6 +301,4 @@ func init() {
 	LikeReviewTable.ForeignKeys[1].RefTable = ReviewsTable
 	UserLikesTable.ForeignKeys[0].RefTable = UsersTable
 	UserLikesTable.ForeignKeys[1].RefTable = LikesTable
-	UserAchievementsTable.ForeignKeys[0].RefTable = UsersTable
-	UserAchievementsTable.ForeignKeys[1].RefTable = AchievementsTable
 }

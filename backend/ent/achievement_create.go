@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"imdbv2/ent/achievement"
-	"imdbv2/ent/user"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -26,25 +25,16 @@ func (ac *AchievementCreate) SetName(s string) *AchievementCreate {
 	return ac
 }
 
-// SetUserID sets the "user_id" field.
-func (ac *AchievementCreate) SetUserID(i int) *AchievementCreate {
-	ac.mutation.SetUserID(i)
+// SetImage sets the "image" field.
+func (ac *AchievementCreate) SetImage(s string) *AchievementCreate {
+	ac.mutation.SetImage(s)
 	return ac
 }
 
-// AddUserIDs adds the "user" edge to the User entity by IDs.
-func (ac *AchievementCreate) AddUserIDs(ids ...int) *AchievementCreate {
-	ac.mutation.AddUserIDs(ids...)
+// SetDescription sets the "description" field.
+func (ac *AchievementCreate) SetDescription(s string) *AchievementCreate {
+	ac.mutation.SetDescription(s)
 	return ac
-}
-
-// AddUser adds the "user" edges to the User entity.
-func (ac *AchievementCreate) AddUser(u ...*User) *AchievementCreate {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
-	}
-	return ac.AddUserIDs(ids...)
 }
 
 // Mutation returns the AchievementMutation object of the builder.
@@ -120,8 +110,11 @@ func (ac *AchievementCreate) check() error {
 	if _, ok := ac.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Achievement.name"`)}
 	}
-	if _, ok := ac.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Achievement.user_id"`)}
+	if _, ok := ac.mutation.Image(); !ok {
+		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Achievement.image"`)}
+	}
+	if _, ok := ac.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Achievement.description"`)}
 	}
 	return nil
 }
@@ -158,32 +151,21 @@ func (ac *AchievementCreate) createSpec() (*Achievement, *sqlgraph.CreateSpec) {
 		})
 		_node.Name = value
 	}
-	if value, ok := ac.mutation.UserID(); ok {
+	if value, ok := ac.mutation.Image(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: achievement.FieldUserID,
+			Column: achievement.FieldImage,
 		})
-		_node.UserID = value
+		_node.Image = value
 	}
-	if nodes := ac.mutation.UserIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: true,
-			Table:   achievement.UserTable,
-			Columns: achievement.UserPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: user.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
+	if value, ok := ac.mutation.Description(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: achievement.FieldDescription,
+		})
+		_node.Description = value
 	}
 	return _node, _spec
 }

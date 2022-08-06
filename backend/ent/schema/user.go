@@ -37,6 +37,5 @@ func (User) Edges() []ent.Edge {
 		edge.To("likes", Like.Type),
 		edge.To("movies", Movie.Type),
 		edge.To("directors", Director.Type),
-		edge.To("achievements", Achievement.Type),
 	}
 }

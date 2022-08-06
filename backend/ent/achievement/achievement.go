@@ -9,31 +9,21 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldUserID holds the string denoting the user_id field in the database.
-	FieldUserID = "user_id"
-	// EdgeUser holds the string denoting the user edge name in mutations.
-	EdgeUser = "user"
+	// FieldImage holds the string denoting the image field in the database.
+	FieldImage = "image"
+	// FieldDescription holds the string denoting the description field in the database.
+	FieldDescription = "description"
 	// Table holds the table name of the achievement in the database.
 	Table = "achievements"
-	// UserTable is the table that holds the user relation/edge. The primary key declared below.
-	UserTable = "user_achievements"
-	// UserInverseTable is the table name for the User entity.
-	// It exists in this package in order to avoid circular dependency with the "user" package.
-	UserInverseTable = "users"
 )
 
 // Columns holds all SQL columns for achievement fields.
 var Columns = []string{
 	FieldID,
 	FieldName,
-	FieldUserID,
+	FieldImage,
+	FieldDescription,
 }
-
-var (
-	// UserPrimaryKey and UserColumn2 are the table columns denoting the
-	// primary key for the user relation (M2M).
-	UserPrimaryKey = []string{"user_id", "achievement_id"}
-)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {

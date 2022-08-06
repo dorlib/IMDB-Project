@@ -54,11 +54,9 @@ type UserEdges struct {
 	Movies []*Movie `json:"movies,omitempty"`
 	// Directors holds the value of the directors edge.
 	Directors []*Director `json:"directors,omitempty"`
-	// Achievements holds the value of the achievements edge.
-	Achievements []*Achievement `json:"achievements,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [5]bool
 }
 
 // ReviewsOrErr returns the Reviews value or an error if the edge
@@ -104,15 +102,6 @@ func (e UserEdges) DirectorsOrErr() ([]*Director, error) {
 		return e.Directors, nil
 	}
 	return nil, &NotLoadedError{edge: "directors"}
-}
-
-// AchievementsOrErr returns the Achievements value or an error if the edge
-// was not loaded in eager-loading.
-func (e UserEdges) AchievementsOrErr() ([]*Achievement, error) {
-	if e.loadedTypes[5] {
-		return e.Achievements, nil
-	}
-	return nil, &NotLoadedError{edge: "achievements"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -239,11 +228,6 @@ func (u *User) QueryMovies() *MovieQuery {
 // QueryDirectors queries the "directors" edge of the User entity.
 func (u *User) QueryDirectors() *DirectorQuery {
 	return (&UserClient{config: u.config}).QueryDirectors(u)
-}
-
-// QueryAchievements queries the "achievements" edge of the User entity.
-func (u *User) QueryAchievements() *AchievementQuery {
-	return (&UserClient{config: u.config}).QueryAchievements(u)
 }
 
 // Update returns a builder for updating this User.
