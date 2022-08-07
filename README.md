@@ -99,7 +99,7 @@ but, if your looking for pre-made data to insert, Here's what you need to do to 
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Please make sure to update tests as appropriate.
 
-### _notise the "mission.txt" file in "public" directory to see futre fitchers which planned to be added!_
+### _notise the "mission.txt" file in "public" directory to see futre features which planned to be added!_
 
 ### How To Contribute
 
