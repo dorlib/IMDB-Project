@@ -67,13 +67,13 @@ The app has fully working authentication and authorization processes!
 Here's what you need to do to get this running locally on your computer.
 
 1. Clone the project to your machine with `git clone https://github.com/dorlib/IMDB-Project.git`
-2. Install Go on your machine from [here](https://go.dev/doc/install)
-3. Install MySQL on your machine from [here](https://www.mysql.com/downloads/)
+2. Install Go on your machine from [here](https://go.dev/doc/install).
+3. Install MySQL on your machine from [here](https://www.mysql.com/downloads/).
 4. On a command line inside of the application's folder, run `npm start`
 5. On another terminal run the server with `go run ./server -emailAdd <your mail> -Pass <your pass>`
 6. Provided email address and password will not be saved, and they are provided only to make reset password possible.
 7. Make sure that you allow less secure apps From your Google Account and also done 2 step-verification, check [this](https://stackoverflow.com/questions/60701936/error-invalid-login-application-specific-password-required) post for more Info.
-8. Open [http://localhost:3000](http://localhost:3000) to view it in the browser
+8. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ---
 
@@ -83,9 +83,9 @@ In my opinion, the best way to test this app is by createing a user, add your fa
 
 but, if your looking for pre-made data to insert, Here's what you need to do to get it:
 
-1. Create a user in the registration form
-2. Sign in with your user
-3. Click on you avatar on the top - right corner and then click on "insert data" option
+1. Create a user in the registration form.
+2. Sign in with your user.
+3. Click on you avatar on the top - right corner and then click on "insert data" option.
 
 ![insert](https://user-images.githubusercontent.com/90474428/174502797-c17bec2d-2ed1-416e-828a-87e1e1c691b9.png)
 
