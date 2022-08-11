@@ -19,7 +19,7 @@ COPY backend/go.sum ./
 RUN go mod download
 
 RUN sudo apt-get update \
-    && \ sudo apt-get install mysql-shell  \
+    && sudo apt-get install mysql-shell  \
     && go install entgo.io/ent/cmd/ent@latest \
     && go get -d github.com/99designs/gqlgen@VERSION \
     && npx create-react-app my-app \
