@@ -476,5 +476,5 @@ func (r *queryResolver) AchievementsOfUser(ctx context.Context, userID int) ([]*
 		achievement := r.client.Achievement.Query().Where(achievement2.Name("the commenter")).OnlyX(ctx)
 		result = append(result, achievement)
 	}
-
+	return result, nil
 }
