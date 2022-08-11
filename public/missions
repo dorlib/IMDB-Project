@@ -6,9 +6,7 @@
 
 # add option to crop profile image  (include updateUserImage resolver)     ### TOP PRIORITY
 
-# make review system by users, set height properly    ### TOP PRIORITY
-
-# make actors (visible on movie page with pic and name, option for users to add actors or remove, make actor page)    ### TOP PRIORITY
+# make actors (make actor page)    ### TOP PRIORITY
 
 
 ##########################
@@ -18,10 +16,6 @@
 # tab indexses
 
 # make the app match any screen size       ### TOP PRIORITY
-
-# add option to add actors (clip open in tab)
-
-# add a connection between movies and users - we want to know who contributed each movie
 
 # make photos match their size
 

@@ -1,8 +1,8 @@
 FROM golang:1.19
 
-WORKDIR C:/Users/dorli/Desktop/go/imdbv4/IMDB-Project
+WORKDIR C:/Users/dorli/Desktop/go/imdbv4/IMDB-Project/backend
 
-COPY . ../imdbv4/IMDB-Project
+COPY .. ../imdbv4/IMDB-Project/backend
 
 ARG emailAdd
 ARG Pass
@@ -11,22 +11,17 @@ ENV emailAdd $emailAdd
 ENV Pass $Pass
 
 EXPOSE 8081
-EXPOSE 3000
 
-COPY backend/go.mod ./
-COPY backend/go.sum ./
+COPY go.mod ./
+COPY go.sum ./
 
 RUN go mod download
 
 RUN apt-get update \
-    && apt-get install mysql-server  \
     && mysql -u root -pass -e "CREATE DATABASE test" \
     && go install entgo.io/ent/cmd/ent@latest \
     && go get -d github.com/99designs/gqlgen@VERSION \
-    && npx create-react-app my-app \
-    && npm install @mui/material @emotion/react @emotion/styled \
     && go build -o /docker-gs-ping \
-    && npm start \
     && go run ./server -emailAdd emailAdd -Pass Pass
 
 CMD ["./serve/"]
