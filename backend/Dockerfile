@@ -24,5 +24,5 @@ RUN apt-get update \
     && go build -o /docker-gs-ping \
     && go run ./server -emailAdd emailAdd -Pass Pass
 
-CMD ["./serve/"]
+CMD ["./server/"]
 
