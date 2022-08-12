@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./frontend/react/imdb
+    ports:
+      - "3000:3000"
+  backend:
+    build: ./backend
+    ports:
+      - "8081:8081"
+    entrypoint:
+      DB_URL: mysql://db/test
+  database:
+    image: mysql:8.0.30
+    ports:
+      - "3306:3306"

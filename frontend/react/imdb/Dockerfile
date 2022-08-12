@@ -12,5 +12,5 @@ RUN apt-get update \
     && go build -o /docker-gs-ping \
     && npm start \
 
-CMD ["./server/"]
+CMD ["npm", "start"]
 

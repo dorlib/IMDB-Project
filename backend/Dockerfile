@@ -17,12 +17,10 @@ COPY go.sum ./
 
 RUN go mod download
 
-RUN apt-get update \
-    && mysql -u root -pass -e "CREATE DATABASE test" \
-    && go install entgo.io/ent/cmd/ent@latest \
+RUN go install entgo.io/ent/cmd/ent@latest \
     && go get -d github.com/99designs/gqlgen@VERSION \
     && go build -o /docker-gs-ping \
     && go run ./server -emailAdd emailAdd -Pass Pass
 
-CMD ["./server/"]
+CMD ["go run ./server -emailAdd emailAdd -Pass Pass"]
 
