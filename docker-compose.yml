@@ -9,9 +9,17 @@ services:
     build: ./backend
     ports:
       - "8081:8081"
-    entrypoint:
+    environment:
       DB_URL: mysql://db/test
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'pass'
+      MYSQL_ROOT_PASSWORD: 'pass'
   database:
     image: mysql:8.0.30
     ports:
       - "3306:3306"
+    volumes:
+      - test:data/db
+      
+  volumes:
