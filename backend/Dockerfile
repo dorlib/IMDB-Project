@@ -17,10 +17,9 @@ COPY go.sum ./
 
 RUN go mod download
 
-RUN go install entgo.io/ent/cmd/ent@latest \
-    && go get -d github.com/99designs/gqlgen@VERSION \
-    && go build -o /docker-gs-ping \
-    && go run ./server -emailAdd emailAdd -Pass Pass
+RUN go install entgo.io/ent/cmd/ent@latest
+RUN go get -d github.com/99designs/gqlgen@latest
+RUN go run ./server -emailAdd $emailAdd -Pass $Pass
 
 CMD ["go run ./server -emailAdd emailAdd -Pass Pass"]
 
