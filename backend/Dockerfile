@@ -4,12 +4,6 @@ WORKDIR C:/Users/dorli/Desktop/go/imdbv4/IMDB-Project/backend
 
 COPY .. ../imdbv4/IMDB-Project/backend
 
-ARG emailAdd
-ARG Pass
-
-ENV emailAdd $emailAdd
-ENV Pass $Pass
-
 EXPOSE 8081
 
 COPY go.mod ./
@@ -19,7 +13,7 @@ RUN go mod download
 
 RUN go install entgo.io/ent/cmd/ent@latest
 RUN go get -d github.com/99designs/gqlgen@latest
-RUN go run ./server -emailAdd $emailAdd -Pass $Pass
+RUN go run ./server -emailAdd imdbclonead@gmail.com -Pass ycrzfpxzbfntcaxp
 
 CMD ["go run ./server -emailAdd emailAdd -Pass Pass"]
 
