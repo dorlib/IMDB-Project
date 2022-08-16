@@ -1,25 +1,34 @@
 version: "3.8"
-
 services:
   frontend:
-    build: ./frontend/react/imdb
+    container_name: frontend
+    restart: always
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
     ports:
-      - "3000:3000"
+      - "3001:3000"
   backend:
-    build: ./backend
+    restart: always
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
       - "8081:8081"
     environment:
-      DB_URL: mysql://db/test
-      MYSQL_DATABASE: 'db'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'pass'
-      MYSQL_ROOT_PASSWORD: 'pass'
+      DB_URL: root:pass@tcp(database:3306)/test?parseTime=true
+
   database:
     image: mysql:8.0.30
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'test'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'pass'
+      MYSQL_ROOT_PASSWORD: 'pass'
     ports:
-      - "3306:3306"
-    volumes:
-      - test:data/db
+      - '3307:3306'
+
 volumes:
-  test:
+  db:
+    driver: local
