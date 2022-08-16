@@ -5,11 +5,15 @@ WORKDIR /app
 
 ENV PATH="/app/node_modules/.bin:$PATH"
 
-COPY ./frontend/react/imdb/package-lock.json ./
-COPY ./frontend/react/imdb/package.json ./
-COPY ./frontend/react/imdb/node_modules ./
-COPY ./frontend/react/package.json ./
-COPY ./frontend/react/package-lock.json ./
+COPY ./frontend/react/imdb/package.json . /app/
+COPY ./frontend/react/imdb/package-lock.json . /app/
+COPY ./frontend/react/package.json . /app/
+COPY ./frontend/react/package-lock.json . /app/
+COPY ./frontend/react/node_modules/ ./ /app/
+COPY ./frontend/react/imdb/node_modules/ ./ /app/
+
+
+
 
 RUN npm install
 RUN npm install react-scripts@3.4.1 -g
