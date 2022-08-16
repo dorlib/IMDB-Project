@@ -5,7 +5,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: frontend/Dockerfile
+      dockerfile: frontend/react/imdb/Dockerfile
     ports:
       - "3001:3000"
   backend:
