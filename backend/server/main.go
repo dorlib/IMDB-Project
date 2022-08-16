@@ -14,6 +14,7 @@ import (
 	"imdbv2/graphql"
 	"log"
 	"net/http"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -30,7 +31,7 @@ func main() {
 	}).Handler)
 
 	// Create an ent.Client with in-memory MySQL database.
-	client, err := ent.Open("mysql", "root:pass@tcp(127.0.0.1:3306)/test")
+	client, err := ent.Open("mysql", os.Getenv("DB_URL"))
 	if err != nil {
 		log.Fatalf("failed opening connection to mysql: %v", err)
 	}

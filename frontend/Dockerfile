@@ -11,10 +11,10 @@ COPY ./frontend/react/imdb/node_modules ./
 COPY ./frontend/react/package.json ./
 COPY ./frontend/react/package-lock.json ./
 
-RUN npm install --silent
-RUN npm install react-scripts@3.4.1 -g --silent
-RUN npm install @mui/material @emotion/react @emotion/styled
-RUN npm install --save styled-components
+RUN npm install
+RUN npm install react-scripts@3.4.1 -g
+#RUN npm install @mui/material @emotion/react @emotion/styled
+#RUN npm install --save styled-components
 
 # add app
 COPY ./ .
