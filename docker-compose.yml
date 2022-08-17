@@ -17,7 +17,6 @@ services:
       - "8082:8081"
     environment:
       DB_URL: root:pass@tcp(database:3306)/test?parseTime=true
-
   database:
     image: mysql:8.0.30
     restart: always
