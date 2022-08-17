@@ -4,17 +4,17 @@ services:
     container_name: frontend
     restart: always
     build:
-      context: .
-      dockerfile: frontend/react/imdb/Dockerfile
+      context: ./frontend/react/imdb
+      dockerfile: ./Dockerfile
     ports:
       - "3001:3000"
   backend:
     restart: always
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: ./Dockerfile
     ports:
-      - "8081:8081"
+      - "8082:8081"
     environment:
       DB_URL: root:pass@tcp(database:3306)/test?parseTime=true
 

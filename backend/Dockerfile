@@ -1,8 +1,8 @@
 FROM golang:1.19
 
-WORKDIR /src
+WORKDIR /src/server
 
-COPY ./backend/ .
+COPY ./ ./
 
 EXPOSE 8081
 
