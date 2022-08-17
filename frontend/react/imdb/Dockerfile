@@ -1,16 +1,16 @@
 FROM node:18.7.0-alpine3.15
 RUN apk update && apk add git
 
-WORKDIR /app
-
 ENV PATH="/app/node_modules/.bin:$PATH"
 
-COPY ./frontend/react/imdb/package.json . /app/
-COPY ./frontend/react/imdb/package-lock.json . /app/
-COPY ./frontend/react/package.json . /app/
-COPY ./frontend/react/package-lock.json . /app/
-COPY ./frontend/react/node_modules/ ./ /app/
-COPY ./frontend/react/imdb/node_modules/ ./ /app/
+WORKDIR /src/app
+
+COPY ./package.json . /src/
+COPY ./package-lock.json . /src/
+COPY .././package.json . /src/
+COPY .././package-lock.json . /src/
+COPY .././node_modules/ ./ /src/
+COPY ./node_modules/ ./ /src/
 
 
 RUN npm install
@@ -23,4 +23,7 @@ COPY ./ .
 
 EXPOSE 3000
 
+CMD ["cd", "./frontend"]
+CMD ["cd", "./react"]
+CMD ["cd", "./imdb"]
 CMD ["npm", "start"]
