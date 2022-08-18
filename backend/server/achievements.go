@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi"
-	"google.golang.org/genproto/googleapis/type/date"
 	"imdbv2/ent"
 	"imdbv2/ent/movie"
+	"imdbv2/ent/review"
+	"imdbv2/ent/user"
 	"io"
 	"log"
 	"net/http"
@@ -44,23 +45,19 @@ func check(c *ent.Client) http.Handler {
 		}
 
 		// checks for king-of-likes
-		res2 := c.
+		// reviews id's
+		var reviewsIDS []int
+		reviewsIDS = c.Review.Query().Where(review.HasUserWith(user.ID(userID))).IDsX(r.Context())
 
-		newUser := c.User.
-			Create().
-			SetFirstname(userData.GivenFirstName).
-			SetLastname(userData.GivenLastName).
-			SetNickname(userData.GivenNickName).
-			SetDescription(userData.GivenDesc).
-			SetPassword(string(bcrypedPassword)).
-			SetProfile(profile).
-			SetBirthDay(birthday).
-			SetEmail(userData.GivenEmail).
-			SetCountry(userData.GivenCountry).
-			SetGender(userData.GivenGender).
-			SetSignupAt(date.String()).
-			SaveX(r.Context())
-		fmt.Println("new user added:", newUser)
+		for i := 0; i < len(reviewsIDS); i++ {
+			numOfLikes := c.Review.Query().Where(review.ID(reviewsIDS[i])).QueryLikes().AllX(r.Context())
+			if len(numOfLikes) > 10 {
+				result = append([]string{"king-of-likes"}, result...)
+				break
+			}
+		}
+
+		// che
 
 		newID, err1 := json.Marshal(newUser.ID)
 		if err != nil {
