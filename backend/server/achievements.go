@@ -57,7 +57,22 @@ func check(c *ent.Client) http.Handler {
 			}
 		}
 
-		// che
+		// check for the-reviewer
+		reviewsIDS := c.Review.Query().Where(review.HasUserWith(user.ID(userID))).IDsX(r.Context())
+		var moviesReviewed = make(map[*ent.MovieQuery]int)
+
+		for i := 0; i < len(reviewsIDS); i++ {
+			movieID := c.Movie.Query().Where(movie.HasReviewsWith(review.ID(reviewsIDS[i])))
+			if moviesReviewed[movieID] == 0.0 {
+				moviesReviewed[movieID] = reviewsIDS[i]
+			}
+		}
+
+		if len(moviesReviewed) > 20 {
+			result = append([]string{"the-reviewer"}, result...)
+		}
+
+		// check for the-commenter
 
 		newID, err1 := json.Marshal(newUser.ID)
 		if err != nil {
