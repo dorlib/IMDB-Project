@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi"
 	"google.golang.org/genproto/googleapis/type/date"
 	"imdbv2/ent"
+	"imdbv2/ent/movie"
 	"io"
 	"log"
 	"net/http"
@@ -23,19 +24,27 @@ func check(c *ent.Client) http.Handler {
 
 		var userData struct {
 			GivenUserID string `json:"givenUserID"`
-			GivenEmail  string `json:"givenEmail"`
 		}
 
-		err = json.Unmarshal(buf, &userData)
-		if err != nil {
-			log.Fatal(err)
+		var userID int
+
+		er := json.Unmarshal(buf, &userID)
+		if er != nil {
+			log.Fatal(er)
 		}
+
+		fmt.Println("user's id: ", userID)
 
 		var result []string
 
-		//checks for movies-lover
+		// checks for movies-lover
+		res1 := c.Movie.Query().Where(movie.UserID(userID)).AllX(r.Context())
+		if len(res1) >= 10 {
+			result = append([]string{"movies-lover"}, result...)
+		}
 
-		res1 := c.User.QueryMovies()
+		// checks for king-of-likes
+		res2 := c.
 
 		newUser := c.User.
 			Create().
