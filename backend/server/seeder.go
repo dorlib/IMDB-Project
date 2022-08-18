@@ -148,7 +148,7 @@ func insertHandler(c *ent.Client, seeded bool) http.Handler {
 
 			//create achievements
 			c.Achievement.Create().
-				SetName("Movies Lovier").
+				SetName("Movies Lover").
 				SetDescription("has contributed more than 10 movies").
 				SetImage("https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg").
 				ExecX(r.Context())
