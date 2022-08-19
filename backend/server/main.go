@@ -59,6 +59,7 @@ func main() {
 
 	authentication(router, client, string(*email), string(*password))
 	seeder(router, client, seeded)
+	achievementsCheck(router, client)
 
 	srv := handler.NewDefaultServer(graphql.NewSchema(client))
 	srv.Use(entgql.Transactioner{TxOpener: client})

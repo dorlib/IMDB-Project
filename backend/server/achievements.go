@@ -101,6 +101,6 @@ func check(c *ent.Client) http.Handler {
 	})
 }
 
-func achievementsCheck(router *chi.Mux, client *ent.Client, email string, password string) {
+func achievementsCheck(router *chi.Mux, client *ent.Client) {
 	router.Handle("/achievementsCheck", check(client))
 }

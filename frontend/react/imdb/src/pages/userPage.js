@@ -25,6 +25,7 @@ import FavoriteList from "../favorites/FavoriteList";
 import FavoritesOfUser from "../favorites/favoritesOfUser";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import classes from "./userPage.module.css"
+import {AchievementsCheck} from "../components/accounts/achievements-check";
 
 
 function UserPage(props) {
@@ -177,6 +178,7 @@ function UserPage(props) {
                     <Typography variant="h5" component="div">
                         Achievements
                     </Typography>
+                    <AchievementsCheck userID={props.LoggedInUser}/>
                 </CardContent>
             </React.Fragment>
             <React.Fragment>
