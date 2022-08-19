@@ -8,8 +8,8 @@ export function AchievementsCheck(props) {
 
     let result
 
-    fetch('http://localhost:8081/signupForm', {
-        method: 'post',
+    fetch('http://localhost:8081/achievementsCheck', {
+        method: 'get',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(userData)
     })

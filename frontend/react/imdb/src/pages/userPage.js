@@ -105,6 +105,8 @@ function UserPage(props) {
     let Birth = Birthday.slice(2, 4) + '.' + Birthday.slice(0, 2) + '.' + Birthday.slice(4, 8)
     const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
 
+    let achievementsList;
+
     let loaded = (
         <Card >
             <p className={classes.name}>
@@ -178,7 +180,11 @@ function UserPage(props) {
                     <Typography variant="h5" component="div">
                         Achievements
                     </Typography>
-                    <AchievementsCheck userID={props.LoggedInUser}/>
+                    {achievementsList = <AchievementsCheck userID={props.LoggedInUser}/>}
+                    {achievementsList.includes("movies-lover") ? <Typography>movies lover</Typography> : null}
+                    {achievementsList.includes("king-of-likes") ? <Typography>king of likes</Typography> : null}
+                    {achievementsList.includes("the-reviewer") ? <Typography>the reviewer</Typography> : null}
+                    {achievementsList.includes("the-commenter") ? <Typography>the commenter</Typography> : null}
                 </CardContent>
             </React.Fragment>
             <React.Fragment>
