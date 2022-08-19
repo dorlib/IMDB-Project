@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi"
 	"imdbv2/ent"
+	"imdbv2/ent/comment"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -28,7 +29,7 @@ func check(c *ent.Client) http.Handler {
 		}
 
 		userID := userData.GivenUserID
-		
+
 		er := json.Unmarshal(buf, &userID)
 		if er != nil {
 			log.Fatal(er)
@@ -58,17 +59,13 @@ func check(c *ent.Client) http.Handler {
 		}
 
 		// check for the-reviewer
-<<<<<<< HEAD
-		reviewsIDS = c.Review.Query().Where(review.HasUserWith(user.ID(userID))).IDsX(r.Context())
-=======
-		reviewsIDS := c.Review.Query().Where(review.HasUserWith(user.ID(userID))).IDsX(r.Context())
->>>>>>> bf1fbbf02cc709dc8f2ce0e644549303642a379a
+		reviewsIDS2 := c.Review.Query().Where(review.HasUserWith(user.ID(userID))).IDsX(r.Context())
 		var moviesReviewed = make(map[*ent.MovieQuery]int)
 
 		for i := 0; i < len(reviewsIDS); i++ {
-			movieID := c.Movie.Query().Where(movie.HasReviewsWith(review.ID(reviewsIDS[i])))
+			movieID := c.Movie.Query().Where(movie.HasReviewsWith(review.ID(reviewsIDS2[i])))
 			if moviesReviewed[movieID] == 0.0 {
-				moviesReviewed[movieID] = reviewsIDS[i]
+				moviesReviewed[movieID] = reviewsIDS2[i]
 			}
 		}
 
@@ -77,12 +74,21 @@ func check(c *ent.Client) http.Handler {
 		}
 
 		// check for the-commenter
+		commentsIDS := c.Comment.Query().Where(comment.HasUserWith(user.ID(userID))).IDsX(r.Context())
+		var reviewsCommented = make(map[*ent.ReviewQuery]int)
 
-<<<<<<< HEAD
+		for i := 0; i < len(commentsIDS); i++ {
+			reviewID := c.Review.Query().Where(review.HasCommentsWith(comment.ID(commentsIDS[i])))
+			if reviewsCommented[reviewID] == 0.0 {
+				reviewsCommented[reviewID] = commentsIDS[i]
+			}
+		}
+
+		if len(reviewsCommented) > 15 {
+			result = append([]string{"the-commenter"}, result...)
+		}
+
 		res, err1 := json.Marshal(result)
-=======
-		newID, err1 := json.Marshal(newUser.ID)
->>>>>>> bf1fbbf02cc709dc8f2ce0e644549303642a379a
 		if err != nil {
 			fmt.Println(err1)
 		}
