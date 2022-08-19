@@ -24,18 +24,11 @@ func check(c *ent.Client) http.Handler {
 		fmt.Println(err, string(buf))
 
 		var userData struct {
-<<<<<<< HEAD
 			GivenUserID int `json:"givenUserID"`
 		}
 
 		userID := userData.GivenUserID
-=======
-			GivenUserID string `json:"givenUserID"`
-		}
-
-		var userID int
->>>>>>> bf1fbbf02cc709dc8f2ce0e644549303642a379a
-
+		
 		er := json.Unmarshal(buf, &userID)
 		if er != nil {
 			log.Fatal(er)
