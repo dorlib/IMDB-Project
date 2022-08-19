@@ -24,10 +24,17 @@ func check(c *ent.Client) http.Handler {
 		fmt.Println(err, string(buf))
 
 		var userData struct {
+<<<<<<< HEAD
 			GivenUserID int `json:"givenUserID"`
 		}
 
 		userID := userData.GivenUserID
+=======
+			GivenUserID string `json:"givenUserID"`
+		}
+
+		var userID int
+>>>>>>> bf1fbbf02cc709dc8f2ce0e644549303642a379a
 
 		er := json.Unmarshal(buf, &userID)
 		if er != nil {
@@ -58,7 +65,11 @@ func check(c *ent.Client) http.Handler {
 		}
 
 		// check for the-reviewer
+<<<<<<< HEAD
 		reviewsIDS = c.Review.Query().Where(review.HasUserWith(user.ID(userID))).IDsX(r.Context())
+=======
+		reviewsIDS := c.Review.Query().Where(review.HasUserWith(user.ID(userID))).IDsX(r.Context())
+>>>>>>> bf1fbbf02cc709dc8f2ce0e644549303642a379a
 		var moviesReviewed = make(map[*ent.MovieQuery]int)
 
 		for i := 0; i < len(reviewsIDS); i++ {
@@ -74,7 +85,11 @@ func check(c *ent.Client) http.Handler {
 
 		// check for the-commenter
 
+<<<<<<< HEAD
 		res, err1 := json.Marshal(result)
+=======
+		newID, err1 := json.Marshal(newUser.ID)
+>>>>>>> bf1fbbf02cc709dc8f2ce0e644549303642a379a
 		if err != nil {
 			fmt.Println(err1)
 		}
