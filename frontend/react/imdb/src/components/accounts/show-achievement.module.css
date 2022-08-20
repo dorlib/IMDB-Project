@@ -1,0 +1,54 @@
+.list {
+    border: 5px solid none;
+    margin-left: -1cm;
+    margin-bottom: 0.3rem;
+    width: 1050px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 80px);
+    grid-gap: 40px;
+    justify-content: center;
+}
+
+.directorName {
+    color: yellow;
+    text-decoration: none;
+    display: flex;
+    position: relative;
+    font-size: medium;
+    width: 100px;
+    bottom: 2rem;
+}
+
+.director {
+    background-color: #cc2062;
+    color: white;
+    border-radius: 50px;
+    margin-bottom: -2rem;
+    display: flex;
+}
+
+.forward {
+    color: yellow;
+    position: absolute;
+    display: flex;
+    right: 1.5cm;
+    bottom: 13.5rem;
+    cursor: pointer;
+}
+
+.backward {
+    color: yellow;
+    position: absolute;
+    display: flex;
+    bottom: 13.5rem;
+    right: 4cm;
+    cursor: pointer;
+}
+
+.outOf {
+    position: absolute;
+    display: flex;
+    font-size: x-large;
+    right: 6.2rem;
+    bottom: 13.5rem;
+}
