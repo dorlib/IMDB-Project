@@ -26,6 +26,7 @@ import FavoritesOfUser from "../favorites/favoritesOfUser";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import classes from "./userPage.module.css"
 import {AchievementsCheck} from "../components/accounts/achievements-check";
+import ShowAchievement from "../components/accounts/show-achievement";
 
 
 function UserPage(props) {
@@ -181,10 +182,10 @@ function UserPage(props) {
                         Achievements
                     </Typography>
                     {achievementsList = <AchievementsCheck userID={props.LoggedInUser}/>}
-                    {achievementsList.includes("movies-lover") ? <Typography>movies lover</Typography> : null}
-                    {achievementsList.includes("king-of-likes") ? <Typography>king of likes</Typography> : null}
-                    {achievementsList.includes("the-reviewer") ? <Typography>the reviewer</Typography> : null}
-                    {achievementsList.includes("the-commenter") ? <Typography>the commenter</Typography> : null}
+                    {achievementsList.includes("movies-lover") ? <ShowAchievement name={"movies-lover"} />: null}
+                    {achievementsList.includes("king-of-likes") ? <ShowAchievement name={"king-of-likes"} /> : null}
+                    {achievementsList.includes("the-reviewer") ? <ShowAchievement name={"the-reviewer"} /> : null}
+                    {achievementsList.includes("the-commenter") ? <ShowAchievement name={"the-commenter"} /> : null}
                 </CardContent>
             </React.Fragment>
             <React.Fragment>
