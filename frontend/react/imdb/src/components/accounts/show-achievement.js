@@ -39,7 +39,6 @@ function ShowAchievement(props) {
         </div>
     )
 
-
     if (image !== "") {
         return load
     }
