@@ -148,6 +148,7 @@ func logInHandler(c *ent.Client) http.Handler {
 
 		var userID int
 
+		// logic for checking if the user is authenticated
 		if userData.GivenNickName != string("") {
 			userID = c.User.Query().Where(user.Nickname(userData.GivenNickName)).OnlyIDX(r.Context())
 		} else {
@@ -158,6 +159,7 @@ func logInHandler(c *ent.Client) http.Handler {
 
 		currentPassword := data.Password
 
+		// comparing given password with hashed password
 		err2 := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(userData.GivenPassword))
 		if err2 != nil {
 			http.Error(w, fmt.Sprintf("error executing template (%s)", err2), http.StatusInternalServerError)
@@ -245,6 +247,7 @@ func logInHandler(c *ent.Client) http.Handler {
 	})
 }
 
+// pemKeyPair function generates a key for the login process
 func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err error) {
 	der, err6 := x509.MarshalECPrivateKey(key)
 	if err6 != nil {
@@ -269,6 +272,7 @@ func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err
 	return
 }
 
+// UserHandler function makes sure that the user is authenticated and in authenticated zone
 func UserHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		private, err6 := jwt.ParseECPrivateKeyFromPEM(SecretKey)
@@ -321,8 +325,11 @@ func UserHandler(c *ent.Client) http.Handler {
 	})
 }
 
+// LogoutHandler function responsible for the logout process
 func LogoutHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		// set the cookie in the past, same affect as deleting the cookie
 		cookie := http.Cookie{
 			Name:     "jwt",
 			Value:    "",
@@ -350,6 +357,7 @@ func LogoutHandler() http.Handler {
 	})
 }
 
+// authentication makes the routes and handler to any function of the authentication process
 func authentication(router *chi.Mux, client *ent.Client, email string, password string) {
 	router.Handle("/signupForm", signHandler(client))
 	router.Handle("/loginForm", logInHandler(client))
