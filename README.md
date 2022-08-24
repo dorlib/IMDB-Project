@@ -68,6 +68,8 @@ Here's what you need to do to get this running locally on your computer.
 
 ### Run Docker container with:
 
+coming soon...
+
 ### Or follow those steps:
 
 1. Clone the project to your machine with `git clone https://github.com/dorlib/IMDB-Project.git`
