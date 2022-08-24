@@ -12,9 +12,11 @@ import (
 	"net/http"
 )
 
+// insertHandler function is responsible for inserting data
 func insertHandler(c *ent.Client, seeded bool) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
+		// check if the method is post
 		if r.Method != "POST" {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return

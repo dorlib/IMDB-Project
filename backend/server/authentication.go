@@ -20,18 +20,23 @@ import (
 	"time"
 )
 
+// signHandler function is responsible for making new users
 func signHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		// makes sure that the method is post
 		if r.Method != "POST" {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
 
+		// parsing the form sent from the client
 		err := r.ParseForm()
 		if err != nil {
 			log.Fatal(err)
 		}
 
+		// read the parsed data
 		buf, err := io.ReadAll(r.Body)
 		fmt.Println(err, string(buf))
 
@@ -52,11 +57,13 @@ func signHandler(c *ent.Client) http.Handler {
 			GivenDate         string `json:"GivenDate"`
 		}
 
+		// from json to format that go can work with
 		err = json.Unmarshal(buf, &userData)
 		if err != nil {
 			log.Fatal(err)
 		}
 
+		// decrypting password
 		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.GivenPassword), 14)
 
 		profile := userData.GivenTextProfile
@@ -68,6 +75,7 @@ func signHandler(c *ent.Client) http.Handler {
 
 		date := time.Now()
 
+		// creating new user with ent client
 		newUser := c.User.
 			Create().
 			SetFirstname(userData.GivenFirstName).
@@ -84,11 +92,13 @@ func signHandler(c *ent.Client) http.Handler {
 			SaveX(r.Context())
 		fmt.Println("new user added:", newUser)
 
+		// converting new user data back to json
 		newID, err1 := json.Marshal(newUser.ID)
 		if err != nil {
 			fmt.Println(err1)
 		}
 
+		// sending response to the client
 		res, err2 := w.Write(newID)
 		if err2 != nil {
 			fmt.Println(err2)
@@ -106,6 +116,7 @@ type loaded struct {
 var SecretKey []byte
 var cookieData string
 
+// logInHandler function is responsible for the authentication progress when user tries to login
 func logInHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
@@ -113,11 +124,13 @@ func logInHandler(c *ent.Client) http.Handler {
 			return
 		}
 
+		// parsing the form sent from the client
 		err := r.ParseForm()
 		if err != nil {
 			log.Fatal(err)
 		}
 
+		// reading the data
 		buf, er := io.ReadAll(r.Body)
 		fmt.Println(er, string(buf))
 
@@ -127,6 +140,7 @@ func logInHandler(c *ent.Client) http.Handler {
 			GivenPassword string `json:"givenPassword"`
 		}
 
+		// converting the data from json to a format thar golang can work with
 		er = json.Unmarshal(buf, &userData)
 		if er != nil {
 			log.Fatal(er)
