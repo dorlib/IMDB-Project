@@ -12,6 +12,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import ToggleFavorite from "../favorites/toggle-favorite";
 
+// Top10Page function makes the top 10-page on client side
 function Top10Page(props) {
     const [itemClickedID, setItemClickedID] = useState(0)
     const [itemClickedTitle, setItemClickedTitle] = useState('')

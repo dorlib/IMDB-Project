@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi"
 	"imdbv2/ent"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/favorite"
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
@@ -87,6 +88,16 @@ func check(c *ent.Client) http.Handler {
 		if len(reviewsCommented) > 15 {
 			result = append([]string{"the-commenter"}, result...)
 		}
+
+		// check for fast-contributer
+		
+		// check for favorites-lover
+		favoritesOfUser := c.Favorite.Query().Where(favorite.UserID(userID)).AllX(r.Context())
+		if len(favoritesOfUser) > 20 {
+			result = append([]string{"favorites-lover"}, result...)
+		}
+
+		// end of checks
 
 		res, err1 := json.Marshal(result)
 		if err != nil {

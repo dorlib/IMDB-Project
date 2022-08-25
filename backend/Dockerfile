@@ -9,6 +9,8 @@ ADD ./ . /src/server/
 EXPOSE 8081
 
 RUN go mod download
+RUN go get go.mod ./
+RUN go get go.sum ./
 RUN go get ./server/ ./
 RUN go install ./server/
 RUN go install entgo.io/ent/cmd/ent@latest

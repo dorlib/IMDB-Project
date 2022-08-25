@@ -14,7 +14,7 @@ services:
       context: ./backend
       dockerfile: ./Dockerfile
     ports:
-      - "8082:8081"
+      - "8081:8081"
     environment:
       DB_URL: root:pass@tcp(database:3306)/test?parseTime=true
   database:
