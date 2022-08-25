@@ -90,7 +90,8 @@ func check(c *ent.Client) http.Handler {
 		}
 
 		// check for fast-contributer
-		
+		// need to add time to favorites table in order to make this happend...
+
 		// check for favorites-lover
 		favoritesOfUser := c.Favorite.Query().Where(favorite.UserID(userID)).AllX(r.Context())
 		if len(favoritesOfUser) > 20 {

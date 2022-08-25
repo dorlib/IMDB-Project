@@ -178,6 +178,7 @@ function UserPage(props) {
             </React.Fragment>
             <React.Fragment>
                 <CardContent style={{backgroundColor: "darkslategray"}} className={classes.Achievements}>
+                    {/*need to add css in the achievements' area in the user page */}
                     <Typography variant="h5" component="div">
                         Achievements
                     </Typography>
@@ -186,6 +187,7 @@ function UserPage(props) {
                     {achievementsList.includes("king-of-likes") ? <ShowAchievement name={"king-of-likes"} /> : null}
                     {achievementsList.includes("the-reviewer") ? <ShowAchievement name={"the-reviewer"} /> : null}
                     {achievementsList.includes("the-commenter") ? <ShowAchievement name={"the-commenter"} /> : null}
+                    {achievementsList.includes("fast-contributor") ? <ShowAchievement name={"fast-contributor"} /> : null}
                 </CardContent>
             </React.Fragment>
             <React.Fragment>
