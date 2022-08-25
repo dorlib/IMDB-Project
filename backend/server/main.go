@@ -64,11 +64,13 @@ func main() {
 	srv := handler.NewDefaultServer(graphql.NewSchema(client))
 	srv.Use(entgql.Transactioner{TxOpener: client})
 
+	// graphql
 	router.Handle("/query", srv)
 	router.Handle("/playground",
 		playground.Handler("Movie", "/query"),
 	)
 
+	// server on port 8081
 	log.Println("listening on", "localhost:8081")
 	if err := http.ListenAndServe("localhost:8081", router); err != nil {
 		log.Fatalf("error running server (%s)", err)

@@ -13,7 +13,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 
-
+// AllDirectorsPage function makes the all directors' page on the client side
 function AllDirectorsPage() {
     const GET_DIRECTORS = gql`
         query Directors {

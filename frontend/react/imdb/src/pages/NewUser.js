@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-
 import {SignUpForm} from "../components/accounts/signupForm";
 
+// NewUserPage function makes the request to make a new user to the server
 function NewUserPage() {
     const navigate = useNavigate();
 

@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import classes from "../components/movies/NewMovieForm.module.css";
 import Typography from "@mui/material/Typography";
 
-// this function component get user's favorite list data and send it to another component that shows those movies on by one
+// FavoritesPage function component get user's favorite list data and send it to another component that shows those movies on by one
 function FavoritesPage(props) {
     const GET_FAVORITES = gql`
         query FavoritesOfUser($userID : ID!){

@@ -10,6 +10,7 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import ToggleFavorite from "../favorites/toggle-favorite";
 
+// AllMoviesPage function makes the all movies page on the client side
 function AllMoviesPage(props) {
     const [itemClickedID, setItemClickedID] = useState(0)
     const [itemClickedTitle, setItemClickedTitle] = useState('')
