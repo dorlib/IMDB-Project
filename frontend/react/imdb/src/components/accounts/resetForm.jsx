@@ -8,7 +8,7 @@ import Card from "../ui/Card";
 import classes from "./resetForm.module.css";
 import {styled} from "@mui/material/styles";
 
-
+// ResetForm show the reset password form on the client side
 function ResetForm(props) {
     const [spinner, setSpinner] = useState(false);
     const [givenPassword, setPassword] = useState('')
