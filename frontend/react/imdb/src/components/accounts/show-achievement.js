@@ -8,6 +8,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import {Link} from "react-router-dom";
 
+// ShowAchievement function show the achievements on the client side on the user's profile
 function ShowAchievement(props) {
     let image
     if (props.name === "king-of-likes") {
