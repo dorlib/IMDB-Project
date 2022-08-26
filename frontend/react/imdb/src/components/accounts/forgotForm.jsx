@@ -10,7 +10,7 @@ import {BoldLink, BoxContainer, FormContainer, MutedLink, SubmitButton,} from ".
 import {Typography} from "@mui/material";
 import styledComponentsBrowserEsm from "styled-components/dist/styled-components.browser.esm";
 
-
+// ForgotForm responsible for the reset password from the client side
 export function ForgotForm() {
     const {switchToSignin} = useContext(AccountContext);
 

@@ -4,6 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 
+// Welcome function responsible to show the welcome page on the client side
 function Welcome() {
 
     function handleSignClick() {
