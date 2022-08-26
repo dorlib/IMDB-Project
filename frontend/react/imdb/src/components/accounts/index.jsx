@@ -100,6 +100,7 @@ const expandingTransition = {
   stiffness: 30,
 };
 
+// AccountBox function responsible for switching form in the authentication progress in the client side
 export function AccountBox(props) {
   const [isExpanded, setExpanded] = useState(false);
   const [active, setActive] = useState("signin");
