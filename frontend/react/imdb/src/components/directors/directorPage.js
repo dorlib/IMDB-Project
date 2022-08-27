@@ -20,6 +20,7 @@ import IconButton from "@mui/material/IconButton";
 import styled from "styled-components";
 import {motion, transform} from "framer-motion";
 
+// DirectorPage function make the director's page on the client side
 function DirectorPage(props) {
     const Arrow = styled(motion.div)`
         position: absolute;

@@ -1,6 +1,7 @@
 import DirectorItem from './DirectorItem';
 import classes from './DirectorList.module.css';
 
+// DirectorList function shows a list of the directors on the client side
 function DirectorList(props) {
     return (
         <ul className={classes.list}>

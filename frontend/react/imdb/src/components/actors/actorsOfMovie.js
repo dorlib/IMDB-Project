@@ -9,6 +9,7 @@ import {Link} from "react-router-dom";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
+// ActorsOfMovie function show a list of actors in the movie's page
 function ActorsOfMovie(props) {
     const [numOfSet, setNumOfSet] = useState(0)
 
