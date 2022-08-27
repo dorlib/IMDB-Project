@@ -22,6 +22,7 @@ type Movie implements Node   {
     genre: String!
     image: String!
     year: Int!
+    createdAt: String!
     userID: Int!
     director: Director!
     reviews: [Review!]

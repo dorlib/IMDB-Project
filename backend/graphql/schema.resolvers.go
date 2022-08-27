@@ -15,9 +15,12 @@ import (
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
+	"time"
 )
 
 func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error) {
+	createdAt := time.Now()
+
 	mov, err := r.client.Movie.Create().
 		SetTitle(movie.Title).
 		SetGenre(movie.Genre).
@@ -25,6 +28,7 @@ func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*
 		SetRank(movie.Rank).
 		SetDirectorID(movie.DirectorID).
 		SetYear(movie.Year).
+		setCreatedAt(createdAt).
 		SetUserID(movie.UserID).
 		SetUser(r.client.User.GetX(ctx, movie.UserID)).
 		Save(ctx)
