@@ -1,19 +1,16 @@
-import React, {useContext, useState} from "react";
-import {BoldLink, BoxContainer, FormContainer, Input, MutedLink, SubmitButton,} from "../accounts/common"
+import React, {useState} from "react";
+import {SubmitButton} from "../accounts/common"
 import {Marginer} from "../marginer";
 
 import {Typography} from "@mui/material";
 import {Button, Stack} from "@mui/material";
 import Card from "../ui/Card";
 import {styled} from "@mui/material/styles";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import {gql, useMutation, useQuery} from "@apollo/client";
 
 import classes from "./editDirectorDetails.module.css"
 
-
+// EditDirectorDetails function responsible for updating the director's details on the client side
 export function EditDirectorDetails(props) {
     const DIRECTOR_DATA = gql`
         query DirectorById($id : ID!) {

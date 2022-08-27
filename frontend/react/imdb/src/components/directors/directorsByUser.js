@@ -9,6 +9,7 @@ import {Link} from "react-router-dom";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
+// DirectorsByUser function gets all the directors that a user contributed
 function DirectorsByUser(props) {
     const [numOfSet, setNumOfSet] = useState(0)
     const DIRECTORS_OF_USER = gql`
