@@ -92,12 +92,12 @@ func check(c *ent.Client) http.Handler {
 
 		// check for fast-contributor
 		userData2 := c.User.GetX(r.Context(), userID)
-		creationTimeOfUser := userData2.SignupAt
+		creationTimeOfUser, _ := time.Parse(userData2.SignupAt)
 		moviesOfUser := c.User.QueryMovies(c.User.GetX(r.Context(), userID)).AllX(r.Context())
 
 		for i := 0; i < len(moviesOfUser); i++ {
-			creationTime := moviesOfUser[i].createdAt
-			if time.Parse(creationTime)-time.Parse(creationTimeOfUser) < time.Hour {
+			creationTime, _ := time.Parse(moviesOfUser[i].createdAt)
+			if creationTime.Sub(creationTimeOfUser) < time.Hour {
 				result = append([]string{"fast-contributor"}, result...)
 				break
 			}
