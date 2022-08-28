@@ -94,6 +94,7 @@ type ComplexityRoot struct {
 
 	Movie struct {
 		Actors      func(childComplexity int) int
+		CreatedAt   func(childComplexity int) int
 		Description func(childComplexity int) int
 		Director    func(childComplexity int) int
 		Genre       func(childComplexity int) int
@@ -191,6 +192,8 @@ type ComplexityRoot struct {
 }
 
 type MovieResolver interface {
+	CreatedAt(ctx context.Context, obj *ent.Movie) (string, error)
+
 	Actors(ctx context.Context, obj *ent.Movie) ([]*ent.Actor, error)
 }
 type MutationResolver interface {
@@ -465,6 +468,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Movie.Actors(childComplexity), true
+
+	case "Movie.createdAt":
+		if e.complexity.Movie.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Movie.CreatedAt(childComplexity), true
 
 	case "Movie.description":
 		if e.complexity.Movie.Description == nil {
@@ -1316,6 +1326,7 @@ type Movie implements Node   {
     genre: String!
     image: String!
     year: Int!
+    createdAt: String!
     userID: Int!
     director: Director!
     reviews: [Review!]
@@ -1429,6 +1440,7 @@ input MovieInput {
     topic: String!
     text: String!
     year: Int!
+    createdAt: String!
     userID: Int!
 }
 
@@ -3897,6 +3909,41 @@ func (ec *executionContext) _Movie_year(ctx context.Context, field graphql.Colle
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Movie_createdAt(ctx context.Context, field graphql.CollectedField, obj *ent.Movie) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Movie",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Movie().CreatedAt(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Movie_userID(ctx context.Context, field graphql.CollectedField, obj *ent.Movie) (ret graphql.Marshaler) {
@@ -8225,6 +8272,14 @@ func (ec *executionContext) unmarshalInputMovieInput(ctx context.Context, obj in
 			if err != nil {
 				return it, err
 			}
+		case "createdAt":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdAt"))
+			it.CreatedAt, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "userID":
 			var err error
 
@@ -8942,6 +8997,26 @@ func (ec *executionContext) _Movie(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "createdAt":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Movie_createdAt(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "userID":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Movie_userID(ctx, field, obj)
