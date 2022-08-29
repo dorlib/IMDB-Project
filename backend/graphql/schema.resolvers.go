@@ -15,34 +15,34 @@ import (
 	"imdbv2/ent/movie"
 	"imdbv2/ent/review"
 	"imdbv2/ent/user"
+	"time"
 )
 
 func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*ent.Movie, error) {
-	//createdAt := time.Now()
-	//
-	//mov, err := r.client.Movie.Create().
-	//	SetTitle(movie.Title).
-	//	SetGenre(movie.Genre).
-	//	SetDescription(movie.Description).
-	//	SetRank(movie.Rank).
-	//	SetDirectorID(movie.DirectorID).
-	//	SetYear(movie.Year).
-	//	setCreatedAt(createdAt).
-	//	SetUserID(movie.UserID).
-	//	SetUser(r.client.User.GetX(ctx, movie.UserID)).
-	//	Save(ctx)
-	//if err != nil {
-	//	return nil, ent.MaskNotFound(err)
-	//}
-	//
-	//review, error := r.client.Review.Create().SetTopic(movie.Topic).SetText(movie.Text).SetRank(movie.Rank).SetMovieID(mov.ID).Save(ctx)
-	//fmt.Println("new review made", review)
-	//if error != nil {
-	//	return nil, ent.MaskNotFound(err)
-	//}
-	//
-	//return mov, err
-	panic("panic")
+	createdAt := time.Now().String()
+
+	mov, err := r.client.Movie.Create().
+		SetTitle(movie.Title).
+		SetGenre(movie.Genre).
+		SetDescription(movie.Description).
+		SetRank(movie.Rank).
+		SetDirectorID(movie.DirectorID).
+		SetYear(movie.Year).
+		SetCreatedAt(createdAt).
+		SetUserID(movie.UserID).
+		SetUser(r.client.User.GetX(ctx, movie.UserID)).
+		Save(ctx)
+	if err != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+
+	review, error := r.client.Review.Create().SetTopic(movie.Topic).SetText(movie.Text).SetRank(movie.Rank).SetMovieID(mov.ID).Save(ctx)
+	fmt.Println("new review made", review)
+	if error != nil {
+		return nil, ent.MaskNotFound(err)
+	}
+
+	return mov, err
 }
 
 func (r *mutationResolver) EditMovieDetails(ctx context.Context, movieID int, title string, genre string, image string, description string, year int) (*ent.Movie, error) {

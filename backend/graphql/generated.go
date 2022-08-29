@@ -192,8 +192,6 @@ type ComplexityRoot struct {
 }
 
 type MovieResolver interface {
-	CreatedAt(ctx context.Context, obj *ent.Movie) (string, error)
-
 	Actors(ctx context.Context, obj *ent.Movie) ([]*ent.Actor, error)
 }
 type MutationResolver interface {
@@ -1440,7 +1438,6 @@ input MovieInput {
     topic: String!
     text: String!
     year: Int!
-    createdAt: String!
     userID: Int!
 }
 
@@ -3922,14 +3919,14 @@ func (ec *executionContext) _Movie_createdAt(ctx context.Context, field graphql.
 		Object:     "Movie",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Movie().CreatedAt(rctx, obj)
+		return obj.CreatedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8272,14 +8269,6 @@ func (ec *executionContext) unmarshalInputMovieInput(ctx context.Context, obj in
 			if err != nil {
 				return it, err
 			}
-		case "createdAt":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdAt"))
-			it.CreatedAt, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "userID":
 			var err error
 
@@ -8998,25 +8987,15 @@ func (ec *executionContext) _Movie(ctx context.Context, sel ast.SelectionSet, ob
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "createdAt":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Movie_createdAt(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+				return ec._Movie_createdAt(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "userID":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Movie_userID(ctx, field, obj)

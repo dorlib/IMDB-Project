@@ -42,7 +42,6 @@ type MovieInput struct {
 	Topic       string `json:"topic"`
 	Text        string `json:"text"`
 	Year        int    `json:"year"`
-	CreatedAt   string `json:"createdAt"`
 	UserID      int    `json:"userID"`
 }
 

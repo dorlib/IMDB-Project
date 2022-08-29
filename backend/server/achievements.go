@@ -13,6 +13,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 )
 
 func check(c *ent.Client) http.Handler {
@@ -90,17 +91,17 @@ func check(c *ent.Client) http.Handler {
 		}
 
 		// check for fast-contributor
-		//userData2 := c.User.GetX(r.Context(), userID)
-		//creationTimeOfUser, _ := time.Parse("2021-11-22", userData2.SignupAt)
-		//moviesOfUser := c.User.QueryMovies(c.User.GetX(r.Context(), userID)).AllX(r.Context())
-		//
-		//for i := 0; i < len(moviesOfUser); i++ {
-		//	creationTime, _ := time.Parse("2021-11-22", moviesOfUser[i].createdAt)
-		//	if creationTime.Sub(creationTimeOfUser) < time.Hour {
-		//		result = append([]string{"fast-contributor"}, result...)
-		//		break
-		//	}
-		//}
+		userData2 := c.User.GetX(r.Context(), userID)
+		creationTimeOfUser, _ := time.Parse("2021-11-22", userData2.SignupAt)
+		moviesOfUser := c.User.QueryMovies(c.User.GetX(r.Context(), userID)).AllX(r.Context())
+
+		for i := 0; i < len(moviesOfUser); i++ {
+			creationTime, _ := time.Parse("2021-11-22", moviesOfUser[i].CreatedAt)
+			if creationTime.Sub(creationTimeOfUser) < time.Hour {
+				result = append([]string{"fast-contributor"}, result...)
+				break
+			}
+		}
 
 		// check for favorites-lover
 		favoritesOfUser := c.Favorite.Query().Where(favorite.UserID(userID)).AllX(r.Context())
