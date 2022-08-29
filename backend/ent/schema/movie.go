@@ -20,10 +20,10 @@ func (Movie) Fields() []ent.Field {
 		field.Int("rank").Annotations(entgql.OrderField("MOVIE_RANK")),
 		field.String("genre").Annotations(entgql.OrderField("GENRE")),
 		field.Int("year").Annotations(entgql.OrderField("YEAR")),
-		field.String("created_at"),
 		field.Int("director_id").Optional(),
 		field.Int("user_id").Optional(),
 		field.String("image").Optional(),
+		field.String("created_at"),
 	}
 }
 
