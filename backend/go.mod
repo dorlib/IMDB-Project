@@ -1,6 +1,6 @@
 module imdbv2
 
-go 1.17
+go 1.19
 
 require (
 	entgo.io/contrib v0.2.0
