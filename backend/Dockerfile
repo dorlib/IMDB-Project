@@ -6,7 +6,7 @@ COPY ./ ./ ./
 
 ADD ./ ./ ./
 
-EXPOSE 8081
+EXPOSE 8082
 
 RUN go get ./server/
 RUN go mod download

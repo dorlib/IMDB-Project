@@ -22,7 +22,7 @@ RUN npm install --save styled-components
 # add app
 COPY ./ .
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD ["cd", "./frontend"]
 CMD ["cd", "./react"]
