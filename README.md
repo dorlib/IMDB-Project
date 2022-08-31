@@ -85,7 +85,7 @@ coming soon...
 
 ## Seed data to your database
 
-In my opinion, the best way to test this app is by createing a user, add your favoritre movies, actors and directors and nake some review and rating!
+In my opinion, the best way to test this app is by createing a user, add your favoritre movies, actors and directors and make some reviews and ratings!
 
 but, if your looking for pre-made data to insert, Here's what you need to do to get it:
 
