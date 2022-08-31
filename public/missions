@@ -26,6 +26,7 @@
 ###   code missions    ###
 ##########################
 
+# make docker-compose work and upload to docker hub      ### TOP PRIORITY
 # add comments to functions
 
 
