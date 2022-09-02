@@ -1,6 +1,6 @@
 ## [IMDB - Searching, Rating and Reviewing movies !](https://localhost:8081)
 
-Hello everyone 👋
+Helleveryone 👋
 This is my first self-learned FullStack project!
 the main purpose of this project is practice code that includes both the client and the server side, working with web servers and databases.
 
