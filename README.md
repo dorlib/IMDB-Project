@@ -56,7 +56,7 @@ Let's cover them up!
 3. rate - the app let you rate your favorite movies
 4. search - we have search engine by: users, movies, directors and genres (only users can search for other users)
 
-And also, This app works with new cool technologies like Ent, which communicate with MySQL DB.
+And also, This app works with new cool technologies like Ent, which communicate with MySQL.
 Also grapqhl and gqlgen, which makes the client Request to the server.
 The app has fully working authentication and authorization processes!
 
