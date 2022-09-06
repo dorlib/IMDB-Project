@@ -2,9 +2,9 @@
 
 Hello everyone 👋
 This is my first self-learned FullStack project!
-the main purpose of this project is practice code that includes both the client and the server side, working with web servers and databases.
+the main purpose of the project is to practice code that includes both the client and the server side, working with web servers and databases.
 
-The client side is written with javascript, css and ReactJS (including materialUI and styled-components) while using GraphQL and react-apollo.
+The client's side is written with javascript, css and ReactJS (including materialUI and styled-components) while using GraphQL and react-apollo.
 The sever is written with GO (including ent and gqlgen) and the database we use is is MySQL.
 
 _I am not associated with nor speak for IMDB site._
@@ -56,7 +56,7 @@ Let's cover them up!
 3. rate - the app let you rate your favorite movies
 4. search - we have search engine by: users, movies, directors and genres (only users can search for other users)
 
-And also, This app works with new cool technologies like Ent, which communicate with MySQL DB.
+And also, This app works with new cool technologies like Ent, which communicate with MySQL.
 Also grapqhl and gqlgen, which makes the client Request to the server.
 The app has fully working authentication and authorization processes!
 
@@ -66,7 +66,7 @@ The app has fully working authentication and authorization processes!
 
 Here's what you need to do to get this running locally on your computer.
 
-### Run Docker container with:
+### Run with Docker container:
 
 coming soon...
 
@@ -78,14 +78,14 @@ coming soon...
 4. On a command line inside of the application's folder, run `npm start`
 5. On another terminal run the server with `go run ./server -emailAdd <your mail> -Pass <your pass>`
 6. Provided email address and password will not be saved, and they are provided only to make reset password possible.
-7. Make sure that you allow less secure apps From your Google Account and also done 2 step-verification, check [this](https://stackoverflow.com/questions/60701936/error-invalid-login-application-specific-password-required) post for more Info.
+7. Make sure that you allow less secure apps From your Google Account and also done 2 step-verification, check [this].(https://stackoverflow.com/questions/60701936/error-invalid-login-application-specific-password-required) post for more Info.
 8. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ---
 
 ## Seed data to your database
 
-In my opinion, the best way to test this app is by createing a user, add your favoritre movies, actors and directors and nake some review and rating!
+In my opinion, the best way to test this app is by createing a user, add your favoritre movies, actors and directors and make some reviews and ratings!
 
 but, if your looking for pre-made data to insert, Here's what you need to do to get it:
 
@@ -105,7 +105,7 @@ but, if your looking for pre-made data to insert, Here's what you need to do to 
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Please make sure to update tests as appropriate.
 
-### _notise the "mission.txt" file in "public" directory to see futre features which planned to be added!_
+### _notise the "mission.txt" file in "public" directory to see futre features which planned to be added!_.
 
 ### How To Contribute
 
