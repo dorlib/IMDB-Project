@@ -18,6 +18,8 @@ RUN npm install react-scripts@3.4.1 -g
 RUN npm install @apollo/client graphql
 RUN npm install @mui/material @emotion/react @emotion/styled
 RUN npm install --save styled-components
+RUN npx browserslist@latest --update-db
+
 
 # add app
 COPY ./ .
