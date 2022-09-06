@@ -78,7 +78,7 @@ coming soon...
 4. On a command line inside of the application's folder, run `npm start`
 5. On another terminal run the server with `go run ./server -emailAdd <your mail> -Pass <your pass>`
 6. Provided email address and password will not be saved, and they are provided only to make reset password possible.
-7. Make sure that you allow less secure apps From your Google Account and also done 2 step-verification, check [this](https://stackoverflow.com/questions/60701936/error-invalid-login-application-specific-password-required) post for more Info.
+7. Make sure that you allow less secure apps From your Google Account and also done 2 step-verification, check [this].(https://stackoverflow.com/questions/60701936/error-invalid-login-application-specific-password-required) post for more Info.
 8. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ---
@@ -105,7 +105,7 @@ but, if your looking for pre-made data to insert, Here's what you need to do to 
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Please make sure to update tests as appropriate.
 
-### _notise the "mission.txt" file in "public" directory to see futre features which planned to be added!_
+### _notise the "mission.txt" file in "public" directory to see futre features which planned to be added!_.
 
 ### How To Contribute
 
