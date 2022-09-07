@@ -1,0 +1,170 @@
+.director {
+    background-color: #cc2062;
+    color: white;
+    border-radius: 12px;
+    padding: 0 1rem;
+    margin-left: 0.5rem;
+    margin-bottom: 1.4rem;
+    display: flex;
+    width: 16.3cm;
+}
+
+.name {
+    display: flex;
+    position: relative;
+    margin-left: 4.2cm;
+    margin-top: 30px;
+}
+
+.moviesTitle {
+    display: flex;
+    position: center;
+    left: 3cm;
+    font-size: xx-large;
+    font-weight: bolder;
+    color: yellow;
+    margin-bottom: 0.5rem;
+}
+
+.card {
+    right: 20cm;
+}
+
+.image {
+    position: absolute;
+    width: 12cm;
+    display: flex;
+    z-index: 10;
+    right: 51%;
+    bottom: 27%;
+    border-radius: 50%;
+}
+
+.control input,
+.control textarea {
+    display: flex;
+    position: relative;
+    font: inherit;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.87);
+    padding: 0.25rem;
+    width: 200%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+}
+
+.control {
+    margin-bottom: 0.5rem;
+}
+
+.ctrl input {
+    display: flex;
+    position: relative;
+    font: inherit;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 0.25rem;
+    width: 30%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tr input{
+    display: flex;
+    position: relative;
+    bottom: 0.6cm;
+    font: inherit;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 0.25rem;
+    width: 100%
+}
+
+.accordion {
+    position: relative;
+    display: flex;
+    right: 3cm;
+}
+
+.but {
+    position: relative;
+    display: flex;
+    top: 0.3rem;
+    width: 0.25cm;
+    margin-bottom: 3.7rem;
+
+}
+
+.im input {
+    display: flex;
+    font: inherit;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.87);
+    padding: 0.25rem;
+    width: 80%;
+}
+
+.im label,
+.ctrl label,
+.control label {
+    display: block;
+    color: yellow;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+.actions button {
+    font: inherit;
+    cursor: pointer;
+    background-color: #77002e;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #77002e;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.actions button:hover,
+.actions button:active {
+    background-color: #a50e48;
+    border-color: #a50e48;
+}
+
+.Arrow {
+    position: absolute;
+    display: flex;
+    color: #1976D2;
+    font-size: xxx-large;
+    right: 20cm;
+    bottom: 11cm;
+    rotate: 180deg;
+}
+
+.share {
+    position: absolute;
+    display: flex;
+    left: 29rem;
+    bottom: -4rem;
+}
+
+.image2 {
+    position: absolute;
+    display: flex;
+    left: 4rem;
+    top: 0.5rem;
+    width: 20rem;
+}
+
+.imageErr {
+    position: absolute;
+    display: flex;
+    color: darkred;
+    width: 30rem;
+    right: 9rem;
+    top: 12.8rem;
+}
+
+
+
+
+
