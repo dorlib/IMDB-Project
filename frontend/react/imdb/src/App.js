@@ -26,6 +26,7 @@ import EditMovieDetails from "./components/movies/editMovieDetails";
 import EditDirectorDetails from "./components/directors/editDirectorDetails";
 
 import {motion, AnimateSharedLayout, AnimatePresence} from "framer-motion";
+import ActorPage from "./components/actors/actrorPage";
 
 const AppContainer = styled.div`
   width: 100%;
@@ -102,6 +103,7 @@ function App() {
                     <Route path='/editDirectorDetails/:id' element={<EditDirectorDetails userID={userId}/>}/>
                     <Route path='/reset/:token' element={<ResetForm LoggedInUser={userId}/>}/>
                     <Route path='/userPage/:id' element={<UserPage LoggedInUser={userId}/>}/>
+                    <Route path='/actorPage/:id' element={<ActorPage LoggedInUser={userId}/>}/>
                 </Routes>
             </Layout>
         </AnimateSharedLayout>
