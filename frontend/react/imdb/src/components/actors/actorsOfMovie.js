@@ -68,7 +68,7 @@ function ActorsOfMovie(props) {
                             src={image || 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'}
                         />
                         <Typography >
-                            <Link to={"/moviePage/" + id} className={classes.actorName}>{name}</Link>
+                            <Link to={"/actorPage/" + id} className={classes.actorName}>{name}</Link>
                         </Typography>
                         <Typography className={classes.actorName} style={{color: "rgba(0,0,0,0.61)"}}>{characterName}</Typography>
                         <div className={classes.outOf}>{numOfSet + 1  + "/" + (numOfSets+1)}</div>
