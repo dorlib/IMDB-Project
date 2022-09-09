@@ -131,7 +131,7 @@ If you have any questions or feedback, i would be glad if you will contact me vi
   </a>
 </p>
 
-This project was created for educational purposes and for personal and open-source use.
+This project was created for educational purposes, for personal and open-source use.
 
 If you like my content or find my code useful, give it a :star: 
 
