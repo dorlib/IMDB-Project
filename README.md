@@ -90,7 +90,7 @@ In my opinion, the best way to test this app is by createing a user, add your fa
 but, if your looking for pre-made data to insert, Here's what you need to do to get it:
 
 1. Create a user in the registration form.
-2. Sign in with your user.
+2. Log in with your user.
 3. Click on you avatar on the top - right corner and then click on "insert data" option.
 
 ![insert](https://user-images.githubusercontent.com/90474428/174502797-c17bec2d-2ed1-416e-828a-87e1e1c691b9.png)
