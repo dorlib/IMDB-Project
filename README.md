@@ -87,7 +87,7 @@ coming soon...
 
 In my opinion, the best way to test this app is by createing a user, add your favoritre movies, actors and directors and make some reviews and ratings!
 
-but, if your looking for pre-made data to insert, Here's what you need to do to get it:
+But, if your looking for pre-made data to insert, Here's what you need to do to get it:
 
 1. Create a user in the registration form.
 2. Log in to your account.
