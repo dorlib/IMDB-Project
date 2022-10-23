@@ -7,7 +7,7 @@ the main purpose of the project is to practice code that includes both the clien
 The client's side is written with javascript, css and ReactJS (including materialUI and styled-components) while using GraphQL and react-apollo.
 The sever is written with GO (including ent and gqlgen) and the database we use is is MySQL.
 
-_I'm not associated with nor speak for "IMDB" site._
+_I'm not associated/connected with nor speak for "IMDB" site._
 
 _The main welcome page's photo Belong to "NETFLIX" inc._ 
 
