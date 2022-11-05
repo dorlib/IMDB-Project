@@ -2,7 +2,7 @@
 
 Hello everyone 👋
 This is my first self-learned FullStack project!
-the main purpose of the project is to practice code that includes both the client and the server side, working with web servers, databases and frameworks.
+the main purpose of this project is to practice code that includes both the client and the server side, working with web servers, databases and frameworks.
 
 The client's side is written with javascript, css and ReactJS (including materialUI and styled-components) while using GraphQL and react-apollo.
 The sever is written with GO (including ent and gqlgen) and the database we use is MySQL.
