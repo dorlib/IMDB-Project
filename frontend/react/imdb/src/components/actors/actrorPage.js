@@ -6,16 +6,16 @@ import {Input, Stack} from "@mui/material";
 import Button from "@mui/material/Button";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import classes from "./directorPage.module.css"
+import classes from "../directors/directorPage.module.css"
 
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
-import {Footer} from "./styles";
+import {Footer} from "../directors/styles";
 
-import UpdateDirectorInfo from "./update-directors-info";
+import UpdateDirectorInfo from "./../directors/update-directors-info";
 import IconButton from "@mui/material/IconButton";
 import styled from "styled-components";
 import {motion, transform} from "framer-motion";

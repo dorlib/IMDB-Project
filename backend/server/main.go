@@ -8,15 +8,13 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/rs/cors"
 	"imdbv2/ent"
 	"imdbv2/ent/migrate"
 	"imdbv2/graphql"
 	"log"
 	"net/http"
-	"os"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -31,7 +29,8 @@ func main() {
 	}).Handler)
 
 	// Create an ent.Client with in-memory MySQL database.
-	client, err := ent.Open("mysql", os.Getenv("DB_URL"))
+	// root:pass@tcp(127.0.0.1:3306)/test
+	client, err := ent.Open("mysql", "root:pass@tcp(127.0.0.1:3306)/test")
 	if err != nil {
 		log.Fatalf("failed opening connection to mysql: %v", err)
 	}
