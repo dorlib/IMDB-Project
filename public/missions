@@ -1,4 +1,14 @@
 ##########################
+###  Backend missions  ###
+##########################
+
+# add unit tests to authentication functions
+
+# create microservice_kit to handle: starter, logger, error, http, web, middlewares, tests and graphql 
+
+# move authentication to authorizer microservice by microservices architacture. 
+
+##########################
 ###    UX missions     ###
 ##########################
 
