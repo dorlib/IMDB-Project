@@ -1,8 +1,3 @@
-# Copyright (C) 2016--2022 Lightbits Labs Ltd. - All Rights Reserved
-# Unauthorized copying of this file, via any medium is strictly prohibited
-# Proprietary and confidential
-# Intel contributions Copyright © 2021, Intel Corporation.
-
 # We've chosen to take the approach of enabling all linters, and then disable the redundant ones.
 # By this approach we were able to configure the linter exectly to our needs,
 # without leaving any good linter behind.
