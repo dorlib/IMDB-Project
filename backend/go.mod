@@ -7,9 +7,7 @@ require (
 	entgo.io/ent v0.11.3-0.20220828175610-1cf4fc88c788
 	github.com/99designs/gqlgen v0.17.2
 	github.com/go-chi/chi v1.5.4
-	github.com/go-sql-driver/mysql v1.6.0
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/rs/cors v1.8.2
 	github.com/vektah/gqlparser/v2 v2.4.0
 	github.com/vmihailenco/msgpack/v5 v5.0.0-beta.9
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
@@ -17,6 +15,8 @@ require (
 
 require (
 	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/rs/cors v1.6.0
 	golang.org/x/crypto v0.0.0-20220517005047-85d78b3ac167
 )
 
@@ -43,3 +43,5 @@ require (
 	golang.org/x/tools v0.1.13-0.20220804200503-81c7dc4e4efa // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
+
+replace middlewares => ../middlewares
