@@ -9,10 +9,10 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/rs/cors"
 	"imdbv2/ent"
 	"imdbv2/ent/migrate"
 	"imdbv2/graphql"
+	"imdbv2/middlewares"
 	"log"
 	"net/http"
 )
@@ -22,11 +22,8 @@ func main() {
 
 	// Add CORS middleware around every request
 	// See https://github.com/rs/cors for full option listing
-	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000"},
-		AllowCredentials: true,
-		Debug:            true,
-	}).Handler)
+	router.Use(middlewares.CorsMiddleware())
+	router.Use(middlewares.RecoveryMiddleware)
 
 	// Create an ent.Client with in-memory MySQL database.
 	// root:pass@tcp(127.0.0.1:3306)/test
