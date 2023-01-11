@@ -12,18 +12,18 @@ import (
 	"net/http"
 )
 
-// insertHandler function is responsible for inserting data
+// insertHandler function is responsible for inserting data.
 func insertHandler(c *ent.Client, seeded bool) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		// check if the method is post
-		if r.Method != "POST" {
+		// check if the method is post.
+		if r.Method != http.MethodPost {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+
 			return
 		}
 
 		if !seeded {
-			// creating users
+			// creating users.
 			pass1, _ := bcrypt.GenerateFromPassword([]byte("0508403898"), 14)
 			user1 := c.User.Create().
 				SetFirstname("Dor").
@@ -59,7 +59,7 @@ func insertHandler(c *ent.Client, seeded bool) http.Handler {
 			user1ID, _ := c.User.Query().Where(user.Firstname("Noam")).OnlyID(r.Context())
 			user2ID, _ := c.User.Query().Where(user.Firstname("Dor")).OnlyID(r.Context())
 
-			// creating new directors
+			// creating new directors.
 			direc1 := c.Director.Create().
 				SetName("Quantin Tarantino").
 				SetProfileImage("https://m.media-amazon.com/images/M/MV5BMTgyMjI3ODA3Nl5BMl5BanBnXkFtZTcwNzY2MDYxOQ@@._V1_.jpg").
@@ -98,7 +98,7 @@ func insertHandler(c *ent.Client, seeded bool) http.Handler {
 			direc4ID, _ := c.Director.Query().Where(director.Name("Steven Spielberg")).OnlyID(r.Context())
 			direc5ID, _ := c.Director.Query().Where(director.Name("Frank Darabont")).OnlyID(r.Context())
 
-			// creating new movies
+			// creating new movies.
 			mov1 := c.Movie.Create().SetTitle("Pulp Fiction").SetGenre("crime").SetDescription("best movie of quantin").SetRank(94).SetDirectorID(direc1ID).SetYear(1994).SaveX(r.Context())
 			mov2 := c.Movie.Create().SetTitle("Kill Bill Vol.1").SetGenre("drama").SetDescription("noam's favorite movie of quantin").SetRank(92).SetDirectorID(direc1ID).SetYear(1991).SaveX(r.Context())
 			mov3 := c.Movie.Create().SetTitle("The Shining").SetGenre("horror").SetDescription("very scary").SetRank(82).SetDirectorID(direc3ID).SetYear(1981).SaveX(r.Context())
@@ -127,7 +127,7 @@ func insertHandler(c *ent.Client, seeded bool) http.Handler {
 			movie11ID, _ := c.Movie.Query().Where(movie.Title("The Shawshank Redemption")).OnlyID(r.Context())
 			movie12ID, _ := c.Movie.Query().Where(movie.Title("Jurrasic Park")).OnlyID(r.Context())
 
-			// reviews for the movies
+			// reviews for the movies.
 			c.Review.Create().SetTopic("wow").SetText("this is my favorite movie").SetRank(85).SetMovieID(movie1ID).SetUserID(user1ID).ExecX(r.Context())
 			c.Review.Create().SetTopic("wow2").SetText("this movie is great").SetRank(88).SetMovieID(movie1ID).SetUserID(user2ID).ExecX(r.Context())
 			c.Review.Create().SetTopic("like").SetText("wowww").SetRank(90).SetMovieID(movie2ID).SetUserID(user2ID).ExecX(r.Context())
@@ -148,7 +148,7 @@ func insertHandler(c *ent.Client, seeded bool) http.Handler {
 			c.Review.Create().SetTopic("the best movie!").SetText("this movie is great i love it").SetRank(78).SetMovieID(movie12ID).SetUserID(user2ID).ExecX(r.Context())
 			c.Review.Create().SetTopic("the best movie").SetText("this movie is great").SetRank(98).SetMovieID(movie12ID).SetUserID(user1ID).ExecX(r.Context())
 
-			//create achievements
+			// create achievements.
 			c.Achievement.Create().
 				SetName("Movies Lover").
 				SetDescription("has contributed more than 10 movies").

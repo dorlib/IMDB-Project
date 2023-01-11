@@ -14,7 +14,7 @@ import (
 )
 
 var PasswordReset struct {
-	Id    uint   `json:"id"`
+	ID    uint   `json:"id"`
 	Email string `json:"email"`
 	Token string `gorm:"unique"`
 }
@@ -23,8 +23,9 @@ var emailGiven string
 
 func Forgot(c *ent.Client, email string, password string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "POST" {
+		if r.Method != http.MethodPost {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+
 			return
 		}
 
@@ -53,6 +54,7 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 
 		if userMail == nil {
 			fmt.Println("email not found")
+
 			return
 		}
 
@@ -85,6 +87,7 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 
 		if err3 != nil {
 			log.Println(err3)
+
 			return
 		}
 
@@ -93,9 +96,9 @@ func Forgot(c *ent.Client, email string, password string) http.Handler {
 		if e != nil {
 			fmt.Println(e)
 		}
+
 		fmt.Println("res : ", res2)
 		emailGiven = email
-
 	})
 }
 
@@ -106,13 +109,15 @@ func RandStringRunes(n int) string {
 	for i := range b {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
+
 	return string(b)
 }
 
 func resetHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "POST" {
+		if r.Method != http.MethodPost {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+
 			return
 		}
 
@@ -136,6 +141,7 @@ func resetHandler(c *ent.Client) http.Handler {
 
 		if userData.GivenPassword != userData.GivenPasswordConfirm {
 			fmt.Println("Passwords do not match!")
+
 			return
 		}
 
@@ -145,6 +151,5 @@ func resetHandler(c *ent.Client) http.Handler {
 			SetPassword(string(bcrypedPassword)).
 			SaveX(r.Context())
 		fmt.Println("new user added:", newUser)
-
 	})
 }

@@ -38,6 +38,7 @@ func (r *mutationResolver) CreateMovie(ctx context.Context, movie MovieInput) (*
 
 	review, error := r.client.Review.Create().SetTopic(movie.Topic).SetText(movie.Text).SetRank(movie.Rank).SetMovieID(mov.ID).Save(ctx)
 	fmt.Println("new review made", review)
+
 	if error != nil {
 		return nil, ent.MaskNotFound(err)
 	}
@@ -113,9 +114,11 @@ func (r *queryResolver) Nodes(ctx context.Context, ids []int) ([]ent.Noder, erro
 
 func (r *queryResolver) DirectorIDByName(ctx context.Context, name string) (*int, error) {
 	id, err := r.client.Director.Query().Where(director.Name(name)).OnlyID(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return &id, nil
 }
 
@@ -127,6 +130,7 @@ func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title str
 		SetUserID(userID).
 		SetUser(r.client.User.GetX(ctx, userID)).
 		Save(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
@@ -144,11 +148,13 @@ func (r *mutationResolver) CreateMovieAndDirector(ctx context.Context, title str
 		SetUserID(userID).
 		SetUser(r.client.User.GetX(ctx, userID)).
 		Save(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
 
 	review, e := r.client.Review.Create().SetTopic(topic).SetText(text).SetRank(rank).SetMovieID(movieData.ID).Save(ctx)
+
 	if e != nil {
 		return nil, ent.MaskNotFound(err)
 	}
@@ -170,9 +176,11 @@ type queryResolver struct{ *Resolver }
 
 func (r *queryResolver) MovieByID(ctx context.Context, id int) ([]*ent.Movie, error) {
 	data, err := r.client.Movie.Query().Where(movie.ID(id)).All(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
@@ -186,57 +194,71 @@ func (r *queryResolver) UserByID(ctx context.Context, id int) ([]*ent.User, erro
 
 func (r *queryResolver) ReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Review, error) {
 	data, err := r.client.Movie.Query().Where(movie.ID(movieID)).QueryReviews().All(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
 func (r *queryResolver) Top10Movies(ctx context.Context) ([]*ent.Movie, error) {
 	data, err := r.client.Movie.Query().Order(ent.Desc(movie.FieldRank)).Limit(10).All(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
 func (r *mutationResolver) UpdateRank(ctx context.Context, id int, rank int) (*ent.Movie, error) {
 	data, err := r.client.Movie.UpdateOneID(id).SetRank(rank).Save(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
 func (r *mutationResolver) UpdateDirectorDetails(ctx context.Context, id int, bornAt string, profileImage string, description string) (*ent.Director, error) {
 	data, err := r.client.Director.UpdateOneID(id).SetBornAt(bornAt).SetProfileImage(profileImage).SetDescription(description).Save(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
 func (r *queryResolver) Last5Added(ctx context.Context) ([]*ent.Movie, error) {
 	data, err := r.client.Movie.Query().Order(ent.Desc(movie.FieldID)).Limit(5).All(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
 func (r *queryResolver) MoviesByGenre(ctx context.Context, genre string) ([]*ent.Movie, error) {
 	data, err := r.client.Movie.Query().Order(ent.Desc(movie.FieldRank)).Where(movie.Genre(genre)).All(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
 func (r *queryResolver) FavoritesOfUser(ctx context.Context, userID int) ([]*ent.Favorite, error) {
 	data, err := r.client.Favorite.Query().Where(favorite.UserID(userID)).All(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
@@ -255,17 +277,21 @@ func (r *mutationResolver) RemoveFromFavorites(ctx context.Context, movieID int,
 	r.client.Favorite.DeleteOne(favoriteItem).ExecX(ctx)
 
 	data, err := r.client.Favorite.Query().Where(favorite.UserID(userID)).All(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
 func (r *queryResolver) ActorByID(ctx context.Context, actorID int) ([]*ent.Actor, error) {
 	data, err := r.client.Actor.Query().Where(actor.ID(actorID)).All(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
@@ -294,8 +320,9 @@ func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, rev
 
 	r.client.Review.UpdateOneID(reviewID).SetNumOfComments(numOfCommentsBefore - 1).SaveX(ctx)
 
-	userIdOfComment := r.client.Comment.GetX(ctx, commentID).QueryUser().OnlyIDX(ctx)
-	if userIdOfComment == userID {
+	userIDOfComment := r.client.Comment.GetX(ctx, commentID).QueryUser().OnlyIDX(ctx)
+
+	if userIDOfComment == userID {
 		comment := r.client.Comment.GetX(ctx, commentID)
 		r.client.Comment.DeleteOne(comment).ExecX(ctx)
 	}
@@ -305,24 +332,29 @@ func (r *mutationResolver) DeleteComment(ctx context.Context, commentID int, rev
 
 func (r *queryResolver) CommentsOfReview(ctx context.Context, reviewID int) ([]*ent.Comment, error) {
 	data, err := r.client.Review.Query().Where(review.ID(reviewID)).QueryComments().All(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
-func (r *queryResolver) LikesOfUser(ctx context.Context, UserID int) ([]*ent.Like, error) {
-	data := r.client.Like.Query().Where(like.UserID(UserID)).AllX(ctx)
+func (r *queryResolver) LikesOfUser(ctx context.Context, userID int) ([]*ent.Like, error) {
+	data := r.client.Like.Query().Where(like.UserID(userID)).AllX(ctx)
+
 	return data, nil
 }
 
 func (r *queryResolver) TotalLikesOfReviewsOfMovie(ctx context.Context, movieID int) ([]*ent.Like, error) {
 	data := r.client.Movie.Query().Where(movie.ID(movieID)).QueryReviews().QueryLikes().AllX(ctx)
+
 	return data, nil
 }
 
 func (r *queryResolver) LikeByUserAndReview(ctx context.Context, userID int, reviewID int) (*ent.Like, error) {
 	data := r.client.Like.Query().Where(like.UserID(userID)).Where(like.ReviewID(reviewID)).OnlyX(ctx)
+
 	return data, nil
 }
 
@@ -346,16 +378,19 @@ func (r *mutationResolver) DeleteLike(ctx context.Context, likeID int, userID in
 	numOfLikesBefore := reviewData.NumOfLikes
 	r.client.Review.UpdateOne(reviewData).SetNumOfLikes(numOfLikesBefore - 1).SaveX(ctx)
 
-	var userIdOfLike = r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
-	if userIdOfLike == userID {
+	var userIDOfLike = r.client.Like.GetX(ctx, likeID).QueryUser().OnlyIDX(ctx)
+
+	if userIDOfLike == userID {
 		like := r.client.Like.GetX(ctx, likeID)
 		r.client.Like.DeleteOne(like).ExecX(ctx)
 	}
 
 	data, err := r.client.Like.Query().Where(like.UserID(userID)).All(ctx)
+
 	if err != nil {
 		return nil, ent.MaskNotFound(err)
 	}
+
 	return data, nil
 }
 
@@ -384,14 +419,14 @@ func (r *mutationResolver) EditReview(ctx context.Context, reviewID int, rank in
 }
 
 func (r *mutationResolver) DeleteReview(ctx context.Context, reviewID int, userID int) (int, error) {
-	// when we delete a review we need to delete the comments of that review
-	userIdOfReview := r.client.Review.GetX(ctx, reviewID).QueryUser().OnlyIDX(ctx)
+	// when we delete a review we need to delete the comments of that review.
+	userIDOfReview := r.client.Review.GetX(ctx, reviewID).QueryUser().OnlyIDX(ctx)
 	rev := r.client.Review.GetX(ctx, reviewID)
 
-	if userIdOfReview == userID {
-		// here we get an array of ids of comments that need to be deleted
+	if userIDOfReview == userID {
+		// here we get an array of ids of comments that need to be deleted.
 		commentsOfReview := r.client.Review.QueryComments(rev).IDsX(ctx)
-		// here we delete every comment from the list
+		// here we delete every comment from the list.
 		for i := 0; i < len(commentsOfReview); i++ {
 			r.client.Comment.DeleteOneID(commentsOfReview[i])
 		}
@@ -404,11 +439,13 @@ func (r *mutationResolver) DeleteReview(ctx context.Context, reviewID int, userI
 
 func (r *queryResolver) MoviesOfUser(ctx context.Context, id int) ([]*ent.Movie, error) {
 	data := r.client.User.QueryMovies(r.client.User.GetX(ctx, id)).AllX(ctx)
+
 	return data, nil
 }
 
 func (r *queryResolver) DirectorsOfUser(ctx context.Context, id int) ([]*ent.Director, error) {
 	data := r.client.User.QueryDirectors(r.client.User.GetX(ctx, id)).AllX(ctx)
+
 	return data, nil
 }
 
@@ -419,48 +456,55 @@ func (r *queryResolver) MostLikedReviews(ctx context.Context, userID int) ([]*en
 		Where(review.Not(review.Topic(""))).
 		Order(ent.Desc(review.FieldNumOfLikes)).
 		Limit(5).AllX(ctx)
+
 	return data, nil
 }
 
 func (r *mutationResolver) ChangeUserProfile(ctx context.Context, userID int, profile string) (*ent.User, error) {
 	data := r.client.User.UpdateOneID(userID).SetProfile(profile).SaveX(ctx)
+
 	return data, nil
 }
 
 func (r *mutationResolver) AddActorToMovie(ctx context.Context, movieID int, name string, characterName string, image string) (*ent.Actor, error) {
-
-	// let's check if the actor exist
+	// let's check if the actor exist.
 	actorExist := r.client.Actor.Query().Where(actor.Name(name)).ExistX(ctx)
 
 	if actorExist {
-		actorId := r.client.Actor.Query().Where(actor.Name(name)).OnlyIDX(ctx)
-		r.client.Movie.UpdateOneID(movieID).AddActor(r.client.Actor.GetX(ctx, actorId)).SaveX(ctx)
-		return r.client.Actor.GetX(ctx, actorId), nil
+		actorID := r.client.Actor.Query().Where(actor.Name(name)).OnlyIDX(ctx)
+		r.client.Movie.UpdateOneID(movieID).AddActor(r.client.Actor.GetX(ctx, actorID)).SaveX(ctx)
+
+		return r.client.Actor.GetX(ctx, actorID), nil
 	} else {
 		data := r.client.Actor.Create().SetMovieID(movieID).SetName(name).SetCharacterName(characterName).SetImage(image).SaveX(ctx)
 		r.client.Movie.UpdateOneID(movieID).AddActor(data).SaveX(ctx)
+
 		return data, nil
 	}
 }
 
 func (r *queryResolver) ActorsOfMovie(ctx context.Context, movieID int) ([]*ent.Actor, error) {
 	data := r.client.Actor.Query().Where(actor.MovieID(movieID)).AllX(ctx)
+
 	return data, nil
 }
 
 func (r *queryResolver) AchievementsOfUser(ctx context.Context, userID int) ([]*ent.Achievement, error) {
 	var result []*ent.Achievement
+
 	userData := r.client.User.GetX(ctx, userID)
 
-	// check for movies lover - has contributed more than 10 movies
+	// check for movies lover - has contributed more than 10 movies.
 	numOfMoviesContributed := r.client.User.QueryMovies(userData).IDsX(ctx)
+
 	if len(numOfMoviesContributed) > 10 {
 		achievement := r.client.Achievement.Query().Where(achievement2.Name("movies lover")).OnlyX(ctx)
 		result = append(result, achievement)
 	}
 
-	// check for king of likes - has a review with more than 10 likes
+	// check for king of likes - has a review with more than 10 likes.
 	reviewsOfUser := r.client.User.Query().Where(user.ID(userID)).QueryReviews().AllX(ctx)
+
 	for i := 0; i < len(reviewsOfUser); i++ {
 		if reviewsOfUser[i].NumOfLikes > 10 {
 			achievement := r.client.Achievement.Query().Where(achievement2.Name("king of likes")).OnlyX(ctx)
@@ -468,17 +512,19 @@ func (r *queryResolver) AchievementsOfUser(ctx context.Context, userID int) ([]*
 		}
 	}
 
-	// check for the reviewer - reviewed more than 20 movies
+	// check for the reviewer - reviewed more than 20 movies.
 	if len(reviewsOfUser) > 20 {
 		achievement := r.client.Achievement.Query().Where(achievement2.Name("the reviewer")).OnlyX(ctx)
 		result = append(result, achievement)
 	}
 
-	// check of the commenter - commented on  more than 15 reviews
+	// check of the commenter - commented on  more than 15 reviews.
 	commentsOfUser := r.client.User.Query().Where(user.ID(userID)).QueryComments().IDsX(ctx)
+
 	if len(commentsOfUser) > 15 {
 		achievement := r.client.Achievement.Query().Where(achievement2.Name("the commenter")).OnlyX(ctx)
 		result = append(result, achievement)
 	}
+
 	return result, nil
 }
