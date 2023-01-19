@@ -20,55 +20,59 @@ import (
 func main() {
 	router := chi.NewRouter()
 
-	// Add CORS middleware around every request
-	// See https://github.com/rs/cors for full option listing
+	// Add CORS middleware around every request.
+	// See https://github.com/rs/cors for full option listing.
 	router.Use(middlewares.CorsMiddleware())
 	router.Use(middlewares.RecoveryMiddleware)
 
 	// Create an ent.Client with in-memory MySQL database.
-	// root:pass@tcp(127.0.0.1:3306)/test
+	// root:pass@tcp(127.0.0.1:3306)/test.
 	client, err := ent.Open("mysql", "root:pass@tcp(127.0.0.1:3306)/test")
 	if err != nil {
 		log.Fatalf("failed opening connection to mysql: %v", err)
 	}
 
 	defer client.Close()
+
 	if err != nil {
-		log.Fatalf("server closing error")
+		log.Printf("server closing error")
 	}
 
 	ctx := context.Background()
 
 	var email = flag.String("emailAdd", "", "")
+
 	var password = flag.String("Pass", "", "")
+
 	flag.Parse()
 
-	fmt.Printf("My Email: \"%v\"\n", string(*email))
-	fmt.Printf("With Password: \"%v\"\n", string(*password))
+	fmt.Printf("My Email: \"%v\"\n", *email)
+	fmt.Printf("With Password: \"%v\"\n", *password)
 
 	// Run the automatic migration tool to create all schema resources.
 	if err := client.Schema.Create(ctx, migrate.WithGlobalUniqueID(true)); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
+		log.Printf("failed creating schema resources: %v", err)
 	}
 
 	seeded := false
 
-	authentication(router, client, string(*email), string(*password))
+	authentication(router, client, *email, *password)
 	seeder(router, client, seeded)
 	achievementsCheck(router, client)
 
 	srv := handler.NewDefaultServer(graphql.NewSchema(client))
 	srv.Use(entgql.Transactioner{TxOpener: client})
 
-	// graphql
+	// graphql.
 	router.Handle("/query", srv)
 	router.Handle("/playground",
 		playground.Handler("Movie", "/query"),
 	)
 
-	// server on port 8081
+	// server on port 8081.
 	log.Println("listening on", "localhost:8081")
+
 	if err := http.ListenAndServe("localhost:8081", router); err != nil {
-		log.Fatalf("error running server (%s)", err)
+		log.Printf("error running server (%s)", err)
 	}
 }

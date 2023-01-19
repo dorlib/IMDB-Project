@@ -12,12 +12,12 @@ import (
 type Resolver struct{ client *ent.Client }
 
 func (r *Resolver) Review() ReviewResolver {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
 func (r *Resolver) Movie() MovieResolver {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 

@@ -8,9 +8,9 @@ import (
 
 func RecoveryMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		defer func() {
 			err := recover()
+
 			if err != nil {
 				fmt.Println(err) // May be log this error? Send to sentry?
 
@@ -20,12 +20,13 @@ func RecoveryMiddleware(next http.Handler) http.Handler {
 
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write(jsonBody)
+				_, err := w.Write(jsonBody)
+				if err != nil {
+					_ = fmt.Errorf(err.Error())
+				}
 			}
-
 		}()
 
 		next.ServeHTTP(w, r)
-
 	})
 }

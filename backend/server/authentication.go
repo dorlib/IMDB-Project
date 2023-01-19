@@ -20,23 +20,24 @@ import (
 	"time"
 )
 
-// signHandler function is responsible for making new users
+// signHandler function is responsible for making new users.
 func signHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		// makes sure that the method is post
-		if r.Method != "POST" {
+		// makes sure that the method is post.
+		if r.Method != http.MethodPost {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+
 			return
 		}
 
-		// parsing the form sent from the client
+		// parsing the form sent from the client.
 		err := r.ParseForm()
+
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// read the parsed data
+		// read the parsed data.
 		buf, err := io.ReadAll(r.Body)
 		fmt.Println(err, string(buf))
 
@@ -57,13 +58,13 @@ func signHandler(c *ent.Client) http.Handler {
 			GivenDate         string `json:"GivenDate"`
 		}
 
-		// from json to format that go can work with
+		// from json to format that go can work with.
 		err = json.Unmarshal(buf, &userData)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// decrypting password
+		// decrypting password.
 		bcrypedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.GivenPassword), 14)
 
 		profile := userData.GivenTextProfile
@@ -71,11 +72,11 @@ func signHandler(c *ent.Client) http.Handler {
 			profile = userData.GivenFileProfile
 		}
 
-		birthday := string(userData.GivenDayOfBirth) + string(userData.GivenMonthOfBirth) + string(userData.GivenYearOfBirth)
+		birthday := userData.GivenDayOfBirth + userData.GivenMonthOfBirth + string(userData.GivenYearOfBirth)
 
 		date := time.Now()
 
-		// creating new user with ent client
+		// creating new user with ent client.
 		newUser := c.User.
 			Create().
 			SetFirstname(userData.GivenFirstName).
@@ -92,17 +93,18 @@ func signHandler(c *ent.Client) http.Handler {
 			SaveX(r.Context())
 		fmt.Println("new user added:", newUser)
 
-		// converting new user data back to json
+		// converting new user data back to json.
 		newID, err1 := json.Marshal(newUser.ID)
 		if err != nil {
 			fmt.Println(err1)
 		}
 
-		// sending response to the client
+		// sending response to the client.
 		res, err2 := w.Write(newID)
 		if err2 != nil {
 			fmt.Println(err2)
 		}
+
 		fmt.Println(res)
 	})
 }
@@ -116,21 +118,22 @@ type loaded struct {
 var SecretKey []byte
 var cookieData string
 
-// logInHandler function is responsible for the authentication progress when user tries to login
+// logInHandler function is responsible for the authentication progress when user tries to login.
 func logInHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "POST" {
+		if r.Method != http.MethodPost {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+
 			return
 		}
 
-		// parsing the form sent from the client
+		// parsing the form sent from the client.
 		err := r.ParseForm()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// reading the data
+		// reading the data.
 		buf, er := io.ReadAll(r.Body)
 		fmt.Println(er, string(buf))
 
@@ -140,7 +143,7 @@ func logInHandler(c *ent.Client) http.Handler {
 			GivenPassword string `json:"givenPassword"`
 		}
 
-		// converting the data from json to a format thar golang can work with
+		// converting the data from json to a format thar golang can work with.
 		er = json.Unmarshal(buf, &userData)
 		if er != nil {
 			log.Fatal(er)
@@ -148,7 +151,7 @@ func logInHandler(c *ent.Client) http.Handler {
 
 		var userID int
 
-		// logic for checking if the user is authenticated
+		// logic for checking if the user is authenticated.
 		if userData.GivenNickName != string("") {
 			userID = c.User.Query().Where(user.Nickname(userData.GivenNickName)).OnlyIDX(r.Context())
 		} else {
@@ -159,7 +162,7 @@ func logInHandler(c *ent.Client) http.Handler {
 
 		currentPassword := data.Password
 
-		// comparing given password with hashed password
+		// comparing given password with hashed password.
 		err2 := bcrypt.CompareHashAndPassword([]byte(currentPassword), []byte(userData.GivenPassword))
 		if err2 != nil {
 			http.Error(w, fmt.Sprintf("error executing template (%s)", err2), http.StatusInternalServerError)
@@ -173,11 +176,13 @@ func logInHandler(c *ent.Client) http.Handler {
 			if err5 != nil {
 				fmt.Println(err5)
 			}
+
 			fmt.Println(res1)
+
 			return
 		}
 
-		// generating a key
+		// generating a key.
 		key, err5 := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err5 != nil {
 			log.Fatal(err5)
@@ -190,7 +195,7 @@ func logInHandler(c *ent.Client) http.Handler {
 		// starting a token
 		claims := &jwt.StandardClaims{
 			Issuer:    strconv.Itoa(userID),
-			ExpiresAt: jwt.NewTime(float64(time.Now().Add(time.Hour * 24).Unix())), //1 day
+			ExpiresAt: jwt.NewTime(float64(time.Now().Add(time.Hour * 24).Unix())), // 1 day
 		}
 
 		token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
@@ -200,17 +205,19 @@ func logInHandler(c *ent.Client) http.Handler {
 		if err4 != nil {
 			log.Fatal("error sign claims ", err4)
 		}
+
 		fmt.Println("token string :", tokenString)
 
 		privateKey, publicKey, err3 := pemKeyPair(key)
 		if err3 != nil {
 			fmt.Println("err with pemKey function :", err3)
 		}
+
 		_ = publicKey
 
 		SecretKey = privateKey
 
-		// initialize Cookie because login was successful
+		// initialize Cookie because login was successful.
 		userCookie := http.Cookie{
 			Name:     "jwt",
 			Value:    tokenString,
@@ -218,36 +225,38 @@ func logInHandler(c *ent.Client) http.Handler {
 			HttpOnly: true,
 		}
 
-		//setting the Cookie
+		// setting the Cookie.
 		http.SetCookie(w, &userCookie)
+
 		var cookie = userCookie.Value
+
 		cookieData = cookie
 		fmt.Println("Cookie: ", cookie)
 
-		// building the info struct that will be sent as a response
+		// building the info struct that will be sent as a response.
 		info := loaded{
 			FirstName: data.Firstname,
 			ID:        userID,
 			Cookie:    cookie,
 		}
 
-		// turns info to JSON encoding
+		// turns info to JSON encoding.
 		resInfo, err1 := json.Marshal(info)
 		if err1 != nil {
 			fmt.Println(err1)
 		}
 
-		// writing the response for successful login
+		// writing the response for successful login.
 		res2, e := w.Write(resInfo)
 		if e != nil {
 			fmt.Println(e)
 		}
-		fmt.Println("res : ", res2)
 
+		fmt.Println("res : ", res2)
 	})
 }
 
-// pemKeyPair function generates a key for the login process
+// pemKeyPair function generates a key for the login process.
 func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err error) {
 	der, err6 := x509.MarshalECPrivateKey(key)
 	if err6 != nil {
@@ -272,7 +281,7 @@ func pemKeyPair(key *ecdsa.PrivateKey) (privKeyPEM []byte, pubKeyPEM []byte, err
 	return
 }
 
-// UserHandler function makes sure that the user is authenticated and in authenticated zone
+// UserHandler function makes sure that the user is authenticated and in authenticated zone.
 func UserHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		private, err6 := jwt.ParseECPrivateKeyFromPEM(SecretKey)
@@ -285,6 +294,7 @@ func UserHandler(c *ent.Client) http.Handler {
 		token, err := jwt.ParseWithClaims(cookieData, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 			return private, nil
 		})
+
 		if err != nil {
 			fmt.Println("unauthenticated", err)
 		}
@@ -294,6 +304,7 @@ func UserHandler(c *ent.Client) http.Handler {
 		fmt.Println("issuer", claims.Issuer)
 
 		id, err2 := strconv.Atoi(claims.Issuer)
+
 		if err2 != nil {
 			fmt.Println("error with converting issuer to string", err2)
 		}
@@ -301,63 +312,68 @@ func UserHandler(c *ent.Client) http.Handler {
 		fmt.Println("id :", id)
 
 		userData, err3 := c.User.Query().Where(user.ID(id)).All(r.Context())
+
 		if err3 != nil {
 			http.Error(w, fmt.Sprintf("error executing template (%s)", err3), http.StatusInternalServerError)
 		}
 
 		fmt.Println("auth user: ", userData)
 
-		// turns info to JSON encoding
+		// turns info to JSON encoding.
 		resInfo, err1 := json.Marshal(userData)
+
 		if err1 != nil {
 			fmt.Println(err1)
 		}
 
 		fmt.Println("resInfo :", resInfo)
 
-		// writing the response for successful login
+		// writing the response for successful login.
 		res2, e := w.Write(resInfo)
+
 		if e != nil {
 			fmt.Println(e)
 		}
-		fmt.Println("res : ", res2)
 
+		fmt.Println("res : ", res2)
 	})
 }
 
-// LogoutHandler function responsible for the logout process
+// LogoutHandler function responsible for the logout process.
 func LogoutHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		// set the cookie in the past, same affect as deleting the cookie
+		// set the cookie in the past, same affect as deleting the cookie.
 		cookie := http.Cookie{
 			Name:     "jwt",
 			Value:    "",
 			Expires:  time.Now().Add(-time.Hour),
 			HttpOnly: true,
 		}
+
 		http.SetCookie(w, &cookie)
 
 		SecretKey = []byte{}
 		cookieData = ""
 
-		// turns info to JSON encoding
+		// turns info to JSON encoding.
 		msg, err1 := json.Marshal("logout successful")
+
 		if err1 != nil {
 			fmt.Println(err1)
 		}
 
-		// writing the response for successful login
+		// writing the response for successful login.
 		res, e := w.Write(msg)
+
 		if e != nil {
 			fmt.Println(e)
 		}
-		fmt.Println("result : ", res)
 
+		fmt.Println("result : ", res)
 	})
 }
 
-// authentication makes the routes and handler to any function of the authentication process
+// authentication makes the routes and handler to any function of the authentication process.
 func authentication(router *chi.Mux, client *ent.Client, email string, password string) {
 	router.Handle("/signupForm", signHandler(client))
 	router.Handle("/loginForm", logInHandler(client))
