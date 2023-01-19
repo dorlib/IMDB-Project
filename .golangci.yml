@@ -11,11 +11,11 @@ linters:
 #    - wrapcheck  # Checks that errors returned from external packages are wrapped.
 #    - varnamelen  # checks that the length of a variable's name matches its scope.
 #    - paralleltest  # paralleltest detects missing usage of t.Parallel() method in your Go test.
-#    - interfacer  # The repository of the linter has been archived by the owner.
+    - interfacer  # The repository of the linter has been archived by the owner.
 #    - exhaustivestruct  # The owner seems to have abandoned the linter. Replaced by exhaustruct.
-#    - exhaustruct  # Checks if all structure fields are initialized.
-#    - funlen  # Tool for detection of long functions.
-#    - lll  # Reports long lines.
+    - exhaustruct  # Checks if all structure fields are initialized.
+    - funlen  # Tool for detection of long functions.
+    - lll  # Reports long lines.
     - dupl  # Tool for code clone detection.
     - golint  # The repository of the linter has been archived by the owner. Replaced by revive.
     - maligned  # The repository of the linter has been archived by the owner. Replaced by govet 'fieldalignment'.
