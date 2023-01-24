@@ -41,6 +41,7 @@ _Notice That Im currently working on the app, so NEW FEATURES are been added on 
 - [graphql](https://graphql.org/)
 - [gqlgen](https://gqlgen.com/getting-started/) 
 - [Go](https://go.dev/)
+- [golangci-lint](https://golangci-lint.run/)
 
 ---
 
