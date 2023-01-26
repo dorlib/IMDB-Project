@@ -9,8 +9,12 @@
 # move authentication to authorizer microservice by microservices architacture. 
 
 # create new app for dashboard stats about the app for the developers using GO on the backend and angular on the frontend with the same database
+will be accessible from another ui but same backend and same databse
 
-# create new app for IMDB_Movies carreers for jobs and applicants with java sprint boot and react with new database which will be deployed on EC2
+# create new app for IMDB_Movies carreers for jobs and applicants with java spring boot and react with new database which will be deployed on EC2
+will be accessiable from the main app (same react project, different backend and databse)
+
+# dockerize everything
 
 ##########################
 ###    UX missions     ###
