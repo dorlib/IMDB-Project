@@ -3,6 +3,11 @@
 # without leaving any good linter behind.
 # Also, by this approach we can catch new upcoming linters,
 # and disable them if they will turn out to be unnecessary.
+run: 
+  skip-dirs:
+    - backend/ent
+    - backend/graphql
+    
 linters:
   enable-all: true
   # https://golangci-lint.run/usage/linters/#disabled-by-default
