@@ -42,10 +42,10 @@ linters:
 #    - gci  # controls golang package import order and makes it always deterministic.
     - godox  # Tool for detection of FIXME, TODO and other comment keywords.
     - nestif  # Reports deeply nested if statements.
-   - forbidigo  # Forbids identifiers.
-   - predeclared  # find code that shadows one of Go's predeclared identifiers.
-   - reassign  # Checks that package variables are not reassigned.
-   - gomoddirectives  # Manage the use of 'replace', 'retract', and 'excludes' directives in go.mod.
+    - forbidigo  # Forbids identifiers.
+    - predeclared  # find code that shadows one of Go's predeclared identifiers.
+    - reassign  # Checks that package variables are not reassigned.
+    - gomoddirectives  # Manage the use of 'replace', 'retract', and 'excludes' directives in go.mod.
     - deadcode  # The owner seems to have abandoned the linter. Replaced by unused.
 #    - ifshort  # The repository of the linter has been deprecated by the owner.
     - goimports # In addition to fixing imports, goimports also formats your code in the same style as gofmt.
