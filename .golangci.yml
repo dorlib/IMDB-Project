@@ -5,8 +5,8 @@
 # and disable them if they will turn out to be unnecessary.
 run: 
   skip-dirs:
-    - backend/ent
-    - backend/graphql
+    - ./ent
+    - ./graphql
     
 linters:
   enable-all: true
