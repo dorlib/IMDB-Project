@@ -61,6 +61,10 @@ And also, This app works with new cool technologies like Ent, which communicate 
 Also grapqhl and gqlgen, which makes the client Request to the server.
 The app has fully working authentication and authorization processes!
 
+## In progress
+1. Data dashboard with saprated UI for developers but with the same backend & database.
+2. carrerrs page which will run on the same UI but with different backend & databse.
+
 ---
 
 ## Running the Application Yourself
