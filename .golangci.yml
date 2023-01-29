@@ -51,6 +51,7 @@ linters:
     - goimports # In addition to fixing imports, goimports also formats your code in the same style as gofmt.
     - tagliatelle # Checks the struct tags.
     - nonamedreturns
+    - gosec
 
 linters-settings:
   revive:
