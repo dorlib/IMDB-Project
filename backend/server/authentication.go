@@ -72,7 +72,7 @@ func signHandler(c *ent.Client) http.Handler {
 			profile = userData.GivenFileProfile
 		}
 
-		birthday := userData.GivenDayOfBirth + userData.GivenMonthOfBirth + string(userData.GivenYearOfBirth)
+		birthday := userData.GivenDayOfBirth + userData.GivenMonthOfBirth + userData.GivenYearOfBirth
 
 		date := time.Now()
 

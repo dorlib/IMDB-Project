@@ -109,6 +109,7 @@ func fastContributorCheck(c *ent.Client, result []string, userID int, r *http.Re
 
 func theCommenterCheck(c *ent.Client, result []string, userID int, r *http.Request) []string {
 	commentsIDS := c.Comment.Query().Where(comment.HasUserWith(user.ID(userID))).IDsX(r.Context())
+
 	var reviewsCommented = make(map[*ent.ReviewQuery]int)
 
 	for i := 0; i < len(commentsIDS); i++ {
@@ -129,6 +130,7 @@ func theCommenterCheck(c *ent.Client, result []string, userID int, r *http.Reque
 func theReviewerCheck(c *ent.Client, result []string, userID int, r *http.Request) []string {
 	reviewsIDS := c.Review.Query().Where(review.HasUserWith(user.ID(userID))).IDsX(r.Context())
 	reviewsIDS2 := c.Review.Query().Where(review.HasUserWith(user.ID(userID))).IDsX(r.Context())
+
 	var moviesReviewed = make(map[*ent.MovieQuery]int)
 
 	for i := 0; i < len(reviewsIDS); i++ {
