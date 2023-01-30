@@ -52,6 +52,7 @@ linters:
     - tagliatelle # Checks the struct tags.
     - nonamedreturns
     - gosec
+    - staticcheck
 
 linters-settings:
   revive:
