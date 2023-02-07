@@ -62,7 +62,7 @@ Also grapqhl and gqlgen, which makes the client Request to the server.
 The app has fully working authentication and authorization processes!
 
 ## In progress
-1. Data dashboard with saprated UI for developers but with the same backend & database.
+1. Data dashboard with saprated UI for developers which will be integrated with the same backend & database.
 2. carrerrs page which will run on the same UI but with different backend & databse.
 
 ---
