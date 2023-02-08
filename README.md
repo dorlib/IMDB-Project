@@ -71,7 +71,7 @@ The app has fully working authentication and authorization processes!
 
 Here's what needs to be done in order to get the app running locally on your computer.
 
-### Run with Docker container:
+### Run the docker container:
 
 coming soon...
 
