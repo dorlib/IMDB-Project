@@ -4,7 +4,7 @@
 
 # add unit tests to authentication functions
 
-# create microservice_kit to handle: starter, logger, error, http, web, middlewares, tests and graphql 
+# create microservice_kit to handle: starter, logger, error, http, web, middlewares, tests and graphql or use existing ones 
 
 # move authentication to authorizer microservice by microservices architacture. 
 
@@ -14,7 +14,7 @@ will be accessible from another ui but same backend and same databse
 # create new app for IMDB_Movies carreers for jobs and applicants with java spring boot and react with new database which will be deployed on EC2
 will be accessiable from the main app (same react project, different backend and databse)
 
-# dockerize everything
+# make docker file for every component and docker-compose everything which will be uploaded to docker-hub
 
 ##########################
 ###    UX missions     ###
