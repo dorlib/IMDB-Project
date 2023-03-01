@@ -49,11 +49,14 @@
             <artifactId>spring-graphql-test</artifactId>
             <scope>test</scope>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>1.4.5</version>
         </dependency>
+=======
+>>>>>>> 70766a6 (initial spring boot app for careers service)
     </dependencies>
 
     <build>
