@@ -37,7 +37,7 @@ function Layout(props) {
             <main className={classes.main}>{props.children}</main>
             <Footer>
                 <h4>
-                    <Link>About</Link> &ensp; &ensp; * &ensp; &ensp; <Link>contact</Link> &ensp; &ensp; *  &ensp; &ensp <Link>Careers</Link>;
+                    <Link>About</Link> &ensp; &ensp; * &ensp; &ensp; <Link>contact</Link> &ensp; &ensp; *  &ensp; &ensp <Link to={/careers}>Careers</Link>;
                     <Link href={"https://github.com/dorlib"} target="_blank">Github</Link>
                 </h4>
             </Footer>
