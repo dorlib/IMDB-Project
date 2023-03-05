@@ -104,6 +104,9 @@ function App() {
                     <Route path='/reset/:token' element={<ResetForm LoggedInUser={userId}/>}/>
                     <Route path='/userPage/:id' element={<UserPage LoggedInUser={userId}/>}/>
                     <Route path='/actorPage/:id' element={<ActorPage LoggedInUser={userId}/>}/>
+                    <Route path='/careers' />
+                    <Route path='careers/position/:id' />
+                    <Route path='careers/candidate/:id' />
                 </Routes>
             </Layout>
         </AnimateSharedLayout>
