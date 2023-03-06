@@ -1,6 +1,12 @@
 package com.careerapp.careers;
 
-public class Employee {
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
+public class Candidate {
+    @Id
+    int candidateID;
     String firstName;
     String lastName;
     int age;
@@ -11,7 +17,7 @@ public class Employee {
     String[] experience;
     int positionID;
 
-    public Employee(
+    public Candidate(
             String firstName,
             String lastName,
             int age,
