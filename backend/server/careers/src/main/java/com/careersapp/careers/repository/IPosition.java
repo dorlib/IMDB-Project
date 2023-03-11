@@ -1,10 +1,13 @@
-package com.careerapp.careers;
+package com.careersapp.careers.repository;
 
+import com.careersapp.careers.model.Candidate;
+import com.careersapp.careers.model.Position;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-public interface IPosition extends IApp {
+public interface IPosition extends MongoRepository<Position, String> {
     public Position addPosition();
 
     public void removePosition(int positionID);
