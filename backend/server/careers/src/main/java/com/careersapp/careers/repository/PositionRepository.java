@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-public interface IPosition extends MongoRepository<Position, String> {
+public interface PositionRepository extends MongoRepository<Position, String> {
     public Position addPosition();
 
     public void removePosition(int positionID);

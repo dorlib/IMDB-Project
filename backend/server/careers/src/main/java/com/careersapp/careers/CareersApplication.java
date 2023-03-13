@@ -1,7 +1,7 @@
 package com.careersapp.careers;
 
 import com.careersapp.careers.model.Position;
-import com.careersapp.careers.repository.IPosition;
+import com.careersapp.careers.repository.PositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 public class CareersApplication implements CommandLineRunner {
 
     @Autowired
-    public IPosition positionRepo;
+    public PositionRepository positionRepo;
 
     public static void main(String[] args) {
 

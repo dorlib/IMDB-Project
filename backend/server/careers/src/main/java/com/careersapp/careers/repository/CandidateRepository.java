@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-public interface ICandidate extends MongoRepository<Candidate, String> {
+public interface CandidateRepository extends MongoRepository<Candidate, String> {
 
     public void applyForJob();
 

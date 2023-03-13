@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/candidate")
 public class CandidateController {
 
-    public void addCandidate() {};
-    public void removePCandidate() {};
-    public void getAllCandidates() {};
-    public void updateCandidate() {};
-    public void getCandidateByFirstName() {};
-    public void getCandidateByLastName() {};
-    public void getCandidateByID() {};
+    public void addCandidate() {}
+    public void removePCandidate() {}
+    public void getAllCandidates() {}
+    public void updateCandidate() {}
+    public void getCandidateByFirstName() {}
+    public void getCandidateByLastName() {}
+    public void getCandidateByID() {}
 }
