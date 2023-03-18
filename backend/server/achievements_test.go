@@ -9,7 +9,7 @@ import (
 
 func checkTest(t *testing.T) {
 	t.Helper()
-	
+
 	client, err := ent.Open("mysql", "root:pass@tcp(127.0.0.1:3306)/test")
 	if err != nil {
 		log.Fatalf("failed opening connection to mysql: %v", err)
