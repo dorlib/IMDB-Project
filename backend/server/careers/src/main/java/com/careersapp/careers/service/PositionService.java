@@ -31,6 +31,10 @@ public class PositionService {
                         String.format("Cannot find Position By ID %s", position.getPositionID())
                 ));
 
+        existingPosition.setTitle(position.getTitle());
+        existingPosition.setDepartment(position.getDepartment());
+        existingPosition.setDescription(position.getDescription());
+        existingPosition.setModel(position.getModel());
     }
 
     public void getPositionByDepartment() {

@@ -26,7 +26,7 @@ public class Position {
         department = description;
     }
 
-    public int getPositionID() {
+    public String getPositionID() {
         return positionID;
     }
 
