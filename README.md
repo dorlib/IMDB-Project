@@ -1,7 +1,7 @@
 ## [IMDB - Searching, Rating and Reviewing movies !](https://localhost:8081)
 
-Hello everyone 👋 <\n>
-This is my first self-learned FullStack project! <\n>
+Hello everyone 👋 </br>
+This is my first self-learned FullStack project! </br>
 The main purpose of this project is to practice code that includes both the client and the server side, working with web servers, databases and frameworks.
 
 The client side is written with javascript, css and ReactJS (including materialUI and styled-components) while using GraphQL and react-apollo.
