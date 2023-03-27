@@ -19,12 +19,15 @@ public class PositionService {
     public void addPosition(Position position) {
         positionRepository.insert(position);
     }
+    
     public void removePosition() {
 
     }
+
     public List<Position> getAllPositions() {
         return positionRepository.findAll();
     }
+
     public void updatePosition(Position position) {
         Position existingPosition = positionRepository.findById(position.getPositionID())
                 .orElseThrow(() -> new RuntimeException(
