@@ -6,14 +6,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("position")
 public class Position {
     @Id
-    int positionID;
+    String positionID;
     String title;
     String description;
     String model;
     String department;
 
     public Position(
-            int positionID,
+            String positionID,
             String title,
             String description,
             String model,
@@ -26,7 +26,7 @@ public class Position {
         department = description;
     }
 
-    public int getPositionID() {
+    public String getPositionID() {
         return positionID;
     }
 
@@ -47,7 +47,7 @@ public class Position {
     }
 
     public void setPositionID(int positionID) {
-        this.positionID = positionID;
+        this.positionID = String.valueOf(positionID);
     }
 
     public void setDepartment(String department) {
