@@ -53,9 +53,9 @@ As you can see in the welcome page of the app, the main "things" you can do are 
 Let's cover them up!
 
 1. Contribute - this app depends on active users. only the logged in users can add new movies, directors, actors and reviews!
-2. review - the app have review system, which is corrently on progress (We plan on make a review system which show the nickname and avatar of every user)
-3. rate - the app let you rate your favorite movies
-4. search - we have search engine by: users, movies, directors and genres (only users can search for other users)
+2. Review - the app have review system, which is corrently on progress (We plan on make a review system which show the nickname and avatar of every user)
+3. Rate - the app let you rate your favorite movies
+4. Search - we have search engine by: users, movies, directors and genres (only users can search for other users)
 
 And also, This app works with new cool technologies like Ent, which communicate with MySQL.
 Also grapqhl and gqlgen, which makes the client Request to the server.
