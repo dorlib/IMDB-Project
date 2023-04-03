@@ -15,6 +15,9 @@ type Actor func(*sql.Selector)
 // Comment is the predicate function for comment builders.
 type Comment func(*sql.Selector)
 
+// Dashboard is the predicate function for dashboard builders.
+type Dashboard func(*sql.Selector)
+
 // Director is the predicate function for director builders.
 type Director func(*sql.Selector)
 

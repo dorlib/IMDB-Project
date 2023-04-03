@@ -13,6 +13,7 @@ import (
 	"imdbv2/ent/migrate"
 	"imdbv2/graphql"
 	"imdbv2/middlewares"
+	"imdbv2/server/authorizer"
 	"log"
 	"net/http"
 )
@@ -56,7 +57,7 @@ func main() {
 
 	seeded := false
 
-	authentication(router, client, *email, *password)
+	authorizer.Authentication(router, client, *email, *password)
 	seeder(router, client, seeded)
 	achievementsCheck(router, client)
 

@@ -9,6 +9,7 @@ import (
 	"imdbv2/ent/achievement"
 	"imdbv2/ent/actor"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/dashboard"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/like"
@@ -177,6 +178,33 @@ func (c *Comment) Node(ctx context.Context) (node *Node, err error) {
 		Scan(ctx, &node.Edges[1].IDs)
 	if err != nil {
 		return nil, err
+	}
+	return node, nil
+}
+
+func (d *Dashboard) Node(ctx context.Context) (node *Node, err error) {
+	node = &Node{
+		ID:     d.ID,
+		Type:   "Dashboard",
+		Fields: make([]*Field, 2),
+		Edges:  make([]*Edge, 0),
+	}
+	var buf []byte
+	if buf, err = json.Marshal(d.LoggedUsers); err != nil {
+		return nil, err
+	}
+	node.Fields[0] = &Field{
+		Type:  "string",
+		Name:  "logged_users",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(d.NewUsers24Hours); err != nil {
+		return nil, err
+	}
+	node.Fields[1] = &Field{
+		Type:  "string",
+		Name:  "new_users_24_hours",
+		Value: string(buf),
 	}
 	return node, nil
 }
@@ -798,6 +826,15 @@ func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error)
 			return nil, err
 		}
 		return n, nil
+	case dashboard.Table:
+		n, err := c.Dashboard.Query().
+			Where(dashboard.ID(id)).
+			CollectFields(ctx, "Dashboard").
+			Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
 	case director.Table:
 		n, err := c.Director.Query().
 			Where(director.ID(id)).
@@ -955,6 +992,19 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 		nodes, err := c.Comment.Query().
 			Where(comment.IDIn(ids...)).
 			CollectFields(ctx, "Comment").
+			All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
+	case dashboard.Table:
+		nodes, err := c.Dashboard.Query().
+			Where(dashboard.IDIn(ids...)).
+			CollectFields(ctx, "Dashboard").
 			All(ctx)
 		if err != nil {
 			return nil, err

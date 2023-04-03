@@ -62,6 +62,18 @@ var (
 			},
 		},
 	}
+	// DashboardsColumns holds the columns for the "dashboards" table.
+	DashboardsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "logged_users", Type: field.TypeString},
+		{Name: "new_users_24_hours", Type: field.TypeString},
+	}
+	// DashboardsTable holds the schema information for the "dashboards" table.
+	DashboardsTable = &schema.Table{
+		Name:       "dashboards",
+		Columns:    DashboardsColumns,
+		PrimaryKey: []*schema.Column{DashboardsColumns[0]},
+	}
 	// DirectorsColumns holds the columns for the "directors" table.
 	DirectorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -276,6 +288,7 @@ var (
 		AchievementsTable,
 		ActorsTable,
 		CommentsTable,
+		DashboardsTable,
 		DirectorsTable,
 		FavoritesTable,
 		LikesTable,

@@ -27,6 +27,7 @@ type hooks struct {
 	Achievement []ent.Hook
 	Actor       []ent.Hook
 	Comment     []ent.Hook
+	Dashboard   []ent.Hook
 	Director    []ent.Hook
 	Favorite    []ent.Hook
 	Like        []ent.Hook
