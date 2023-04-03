@@ -52,7 +52,7 @@ The main entites in the app are : movies, directors, actors, reviews and users, 
 As you can see in the welcome page of the app, the main "things" you can do are : contibuete, review, rate and search
 Let's cover them up!
 
-1. Contribute - this app depends on active users. only the logged in users can add new movies, directors, actors and reviews!
+1. Contribute - the app depends on active users. only the logged in users can add new movies, directors, actors and reviews!
 2. Review - the app have review system, which is corrently on progress (We plan on make a review system which show the nickname and avatar of every user)
 3. Rate - the app let you rate your favorite movies
 4. Search - we have search engine by: users, movies, directors and genres (only users can search for other users)
