@@ -1,4 +1,4 @@
-package main
+package authorizer
 
 import (
 	"crypto/ecdsa"
@@ -118,7 +118,7 @@ type loaded struct {
 var SecretKey []byte
 var cookieData string
 
-// logInHandler function is responsible for the authentication progress when user tries to login.
+// logInHandler function is responsible for the Authentication progress when user tries to login.
 func logInHandler(c *ent.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -152,7 +152,7 @@ func logInHandler(c *ent.Client) http.Handler {
 		var userID int
 
 		// logic for checking if the user is authenticated.
-		if userData.GivenNickName != string("") {
+		if userData.GivenNickName != "" {
 			userID = c.User.Query().Where(user.Nickname(userData.GivenNickName)).OnlyIDX(r.Context())
 		} else {
 			userID = c.User.Query().Where(user.Email(userData.GivenEmail)).OnlyIDX(r.Context())
@@ -373,8 +373,8 @@ func LogoutHandler() http.Handler {
 	})
 }
 
-// authentication makes the routes and handler to any function of the authentication process.
-func authentication(router *chi.Mux, client *ent.Client, email string, password string) {
+// Authentication makes the routes and handler to any function of the Authentication process.
+func Authentication(router *chi.Mux, client *ent.Client, email string, password string) {
 	router.Handle("/signupForm", signHandler(client))
 	router.Handle("/loginForm", logInHandler(client))
 	router.Handle("/resetForm", resetHandler(client))
