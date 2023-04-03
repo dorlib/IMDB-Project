@@ -18,6 +18,8 @@ type Tx struct {
 	Actor *ActorClient
 	// Comment is the client for interacting with the Comment builders.
 	Comment *CommentClient
+	// Dashboard is the client for interacting with the Dashboard builders.
+	Dashboard *DashboardClient
 	// Director is the client for interacting with the Director builders.
 	Director *DirectorClient
 	// Favorite is the client for interacting with the Favorite builders.
@@ -168,6 +170,7 @@ func (tx *Tx) init() {
 	tx.Achievement = NewAchievementClient(tx.config)
 	tx.Actor = NewActorClient(tx.config)
 	tx.Comment = NewCommentClient(tx.config)
+	tx.Dashboard = NewDashboardClient(tx.config)
 	tx.Director = NewDirectorClient(tx.config)
 	tx.Favorite = NewFavoriteClient(tx.config)
 	tx.Like = NewLikeClient(tx.config)

@@ -47,6 +47,19 @@ func (f CommentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return f(ctx, mv)
 }
 
+// The DashboardFunc type is an adapter to allow the use of ordinary
+// function as Dashboard mutator.
+type DashboardFunc func(context.Context, *ent.DashboardMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DashboardFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.DashboardMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DashboardMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The DirectorFunc type is an adapter to allow the use of ordinary
 // function as Director mutator.
 type DirectorFunc func(context.Context, *ent.DirectorMutation) (ent.Value, error)

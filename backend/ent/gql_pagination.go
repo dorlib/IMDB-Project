@@ -10,6 +10,7 @@ import (
 	"imdbv2/ent/achievement"
 	"imdbv2/ent/actor"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/dashboard"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/like"
@@ -918,6 +919,233 @@ func (c *Comment) ToEdge(order *CommentOrder) *CommentEdge {
 	return &CommentEdge{
 		Node:   c,
 		Cursor: order.Field.toCursor(c),
+	}
+}
+
+// DashboardEdge is the edge representation of Dashboard.
+type DashboardEdge struct {
+	Node   *Dashboard `json:"node"`
+	Cursor Cursor     `json:"cursor"`
+}
+
+// DashboardConnection is the connection containing edges to Dashboard.
+type DashboardConnection struct {
+	Edges      []*DashboardEdge `json:"edges"`
+	PageInfo   PageInfo         `json:"pageInfo"`
+	TotalCount int              `json:"totalCount"`
+}
+
+// DashboardPaginateOption enables pagination customization.
+type DashboardPaginateOption func(*dashboardPager) error
+
+// WithDashboardOrder configures pagination ordering.
+func WithDashboardOrder(order *DashboardOrder) DashboardPaginateOption {
+	if order == nil {
+		order = DefaultDashboardOrder
+	}
+	o := *order
+	return func(pager *dashboardPager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultDashboardOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithDashboardFilter configures pagination filter.
+func WithDashboardFilter(filter func(*DashboardQuery) (*DashboardQuery, error)) DashboardPaginateOption {
+	return func(pager *dashboardPager) error {
+		if filter == nil {
+			return errors.New("DashboardQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type dashboardPager struct {
+	order  *DashboardOrder
+	filter func(*DashboardQuery) (*DashboardQuery, error)
+}
+
+func newDashboardPager(opts []DashboardPaginateOption) (*dashboardPager, error) {
+	pager := &dashboardPager{}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultDashboardOrder
+	}
+	return pager, nil
+}
+
+func (p *dashboardPager) applyFilter(query *DashboardQuery) (*DashboardQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *dashboardPager) toCursor(d *Dashboard) Cursor {
+	return p.order.Field.toCursor(d)
+}
+
+func (p *dashboardPager) applyCursors(query *DashboardQuery, after, before *Cursor) *DashboardQuery {
+	for _, predicate := range cursorsToPredicates(
+		p.order.Direction, after, before,
+		p.order.Field.field, DefaultDashboardOrder.Field.field,
+	) {
+		query = query.Where(predicate)
+	}
+	return query
+}
+
+func (p *dashboardPager) applyOrder(query *DashboardQuery, reverse bool) *DashboardQuery {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	query = query.Order(direction.orderFunc(p.order.Field.field))
+	if p.order.Field != DefaultDashboardOrder.Field {
+		query = query.Order(direction.orderFunc(DefaultDashboardOrder.Field.field))
+	}
+	return query
+}
+
+// Paginate executes the query and returns a relay based cursor connection to Dashboard.
+func (d *DashboardQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...DashboardPaginateOption,
+) (*DashboardConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newDashboardPager(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	if d, err = pager.applyFilter(d); err != nil {
+		return nil, err
+	}
+
+	conn := &DashboardConnection{Edges: []*DashboardEdge{}}
+	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
+		if hasCollectedField(ctx, totalCountField) ||
+			hasCollectedField(ctx, pageInfoField) {
+			count, err := d.Count(ctx)
+			if err != nil {
+				return nil, err
+			}
+			conn.TotalCount = count
+			conn.PageInfo.HasNextPage = first != nil && count > 0
+			conn.PageInfo.HasPreviousPage = last != nil && count > 0
+		}
+		return conn, nil
+	}
+
+	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
+		count, err := d.Clone().Count(ctx)
+		if err != nil {
+			return nil, err
+		}
+		conn.TotalCount = count
+	}
+
+	d = pager.applyCursors(d, after, before)
+	d = pager.applyOrder(d, last != nil)
+	var limit int
+	if first != nil {
+		limit = *first + 1
+	} else if last != nil {
+		limit = *last + 1
+	}
+	if limit > 0 {
+		d = d.Limit(limit)
+	}
+
+	if field := getCollectedField(ctx, edgesField, nodeField); field != nil {
+		d = d.collectField(graphql.GetOperationContext(ctx), *field)
+	}
+
+	nodes, err := d.All(ctx)
+	if err != nil || len(nodes) == 0 {
+		return conn, err
+	}
+
+	if len(nodes) == limit {
+		conn.PageInfo.HasNextPage = first != nil
+		conn.PageInfo.HasPreviousPage = last != nil
+		nodes = nodes[:len(nodes)-1]
+	}
+
+	var nodeAt func(int) *Dashboard
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *Dashboard {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *Dashboard {
+			return nodes[i]
+		}
+	}
+
+	conn.Edges = make([]*DashboardEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		conn.Edges[i] = &DashboardEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+
+	conn.PageInfo.StartCursor = &conn.Edges[0].Cursor
+	conn.PageInfo.EndCursor = &conn.Edges[len(conn.Edges)-1].Cursor
+	if conn.TotalCount == 0 {
+		conn.TotalCount = len(nodes)
+	}
+
+	return conn, nil
+}
+
+// DashboardOrderField defines the ordering field of Dashboard.
+type DashboardOrderField struct {
+	field    string
+	toCursor func(*Dashboard) Cursor
+}
+
+// DashboardOrder defines the ordering of Dashboard.
+type DashboardOrder struct {
+	Direction OrderDirection       `json:"direction"`
+	Field     *DashboardOrderField `json:"field"`
+}
+
+// DefaultDashboardOrder is the default ordering of Dashboard.
+var DefaultDashboardOrder = &DashboardOrder{
+	Direction: OrderDirectionAsc,
+	Field: &DashboardOrderField{
+		field: dashboard.FieldID,
+		toCursor: func(d *Dashboard) Cursor {
+			return Cursor{ID: d.ID}
+		},
+	},
+}
+
+// ToEdge converts Dashboard into DashboardEdge.
+func (d *Dashboard) ToEdge(order *DashboardOrder) *DashboardEdge {
+	if order == nil {
+		order = DefaultDashboardOrder
+	}
+	return &DashboardEdge{
+		Node:   d,
+		Cursor: order.Field.toCursor(d),
 	}
 }
 

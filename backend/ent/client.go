@@ -13,6 +13,7 @@ import (
 	"imdbv2/ent/achievement"
 	"imdbv2/ent/actor"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/dashboard"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/like"
@@ -36,6 +37,8 @@ type Client struct {
 	Actor *ActorClient
 	// Comment is the client for interacting with the Comment builders.
 	Comment *CommentClient
+	// Dashboard is the client for interacting with the Dashboard builders.
+	Dashboard *DashboardClient
 	// Director is the client for interacting with the Director builders.
 	Director *DirectorClient
 	// Favorite is the client for interacting with the Favorite builders.
@@ -66,6 +69,7 @@ func (c *Client) init() {
 	c.Achievement = NewAchievementClient(c.config)
 	c.Actor = NewActorClient(c.config)
 	c.Comment = NewCommentClient(c.config)
+	c.Dashboard = NewDashboardClient(c.config)
 	c.Director = NewDirectorClient(c.config)
 	c.Favorite = NewFavoriteClient(c.config)
 	c.Like = NewLikeClient(c.config)
@@ -108,6 +112,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Achievement: NewAchievementClient(cfg),
 		Actor:       NewActorClient(cfg),
 		Comment:     NewCommentClient(cfg),
+		Dashboard:   NewDashboardClient(cfg),
 		Director:    NewDirectorClient(cfg),
 		Favorite:    NewFavoriteClient(cfg),
 		Like:        NewLikeClient(cfg),
@@ -136,6 +141,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Achievement: NewAchievementClient(cfg),
 		Actor:       NewActorClient(cfg),
 		Comment:     NewCommentClient(cfg),
+		Dashboard:   NewDashboardClient(cfg),
 		Director:    NewDirectorClient(cfg),
 		Favorite:    NewFavoriteClient(cfg),
 		Like:        NewLikeClient(cfg),
@@ -173,6 +179,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Achievement.Use(hooks...)
 	c.Actor.Use(hooks...)
 	c.Comment.Use(hooks...)
+	c.Dashboard.Use(hooks...)
 	c.Director.Use(hooks...)
 	c.Favorite.Use(hooks...)
 	c.Like.Use(hooks...)
@@ -497,6 +504,96 @@ func (c *CommentClient) QueryReview(co *Comment) *ReviewQuery {
 // Hooks returns the client hooks.
 func (c *CommentClient) Hooks() []Hook {
 	return c.hooks.Comment
+}
+
+// DashboardClient is a client for the Dashboard schema.
+type DashboardClient struct {
+	config
+}
+
+// NewDashboardClient returns a client for the Dashboard from the given config.
+func NewDashboardClient(c config) *DashboardClient {
+	return &DashboardClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `dashboard.Hooks(f(g(h())))`.
+func (c *DashboardClient) Use(hooks ...Hook) {
+	c.hooks.Dashboard = append(c.hooks.Dashboard, hooks...)
+}
+
+// Create returns a builder for creating a Dashboard entity.
+func (c *DashboardClient) Create() *DashboardCreate {
+	mutation := newDashboardMutation(c.config, OpCreate)
+	return &DashboardCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Dashboard entities.
+func (c *DashboardClient) CreateBulk(builders ...*DashboardCreate) *DashboardCreateBulk {
+	return &DashboardCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Dashboard.
+func (c *DashboardClient) Update() *DashboardUpdate {
+	mutation := newDashboardMutation(c.config, OpUpdate)
+	return &DashboardUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DashboardClient) UpdateOne(d *Dashboard) *DashboardUpdateOne {
+	mutation := newDashboardMutation(c.config, OpUpdateOne, withDashboard(d))
+	return &DashboardUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DashboardClient) UpdateOneID(id int) *DashboardUpdateOne {
+	mutation := newDashboardMutation(c.config, OpUpdateOne, withDashboardID(id))
+	return &DashboardUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Dashboard.
+func (c *DashboardClient) Delete() *DashboardDelete {
+	mutation := newDashboardMutation(c.config, OpDelete)
+	return &DashboardDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *DashboardClient) DeleteOne(d *Dashboard) *DashboardDeleteOne {
+	return c.DeleteOneID(d.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *DashboardClient) DeleteOneID(id int) *DashboardDeleteOne {
+	builder := c.Delete().Where(dashboard.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DashboardDeleteOne{builder}
+}
+
+// Query returns a query builder for Dashboard.
+func (c *DashboardClient) Query() *DashboardQuery {
+	return &DashboardQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Dashboard entity by its id.
+func (c *DashboardClient) Get(ctx context.Context, id int) (*Dashboard, error) {
+	return c.Query().Where(dashboard.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DashboardClient) GetX(ctx context.Context, id int) *Dashboard {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *DashboardClient) Hooks() []Hook {
+	return c.hooks.Dashboard
 }
 
 // DirectorClient is a client for the Director schema.

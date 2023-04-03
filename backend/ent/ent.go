@@ -9,6 +9,7 @@ import (
 	"imdbv2/ent/achievement"
 	"imdbv2/ent/actor"
 	"imdbv2/ent/comment"
+	"imdbv2/ent/dashboard"
 	"imdbv2/ent/director"
 	"imdbv2/ent/favorite"
 	"imdbv2/ent/like"
@@ -42,6 +43,7 @@ func columnChecker(table string) func(string) error {
 		achievement.Table: achievement.ValidColumn,
 		actor.Table:       actor.ValidColumn,
 		comment.Table:     comment.ValidColumn,
+		dashboard.Table:   dashboard.ValidColumn,
 		director.Table:    director.ValidColumn,
 		favorite.Table:    favorite.ValidColumn,
 		like.Table:        like.ValidColumn,
