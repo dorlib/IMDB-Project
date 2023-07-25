@@ -48,7 +48,7 @@ _Notice That Im currently working on the app, so NEW FEATURES are been added on 
 
 ## What the Application include?
 
-The main entites in the app are : movies, directors, actors, reviews and users, and there are also likes, comments and favorites.
+The main entites in the app are: movies, directors, actors, reviews and users, and there are also likes, comments and favorites.
 As you can see in the welcome page of the app, the main "things" you can do are : contibuete, review, rate and search
 Let's cover them up!
 
